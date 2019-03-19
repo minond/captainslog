@@ -1,5 +1,12 @@
+NPM_BIN = ./node_modules/.bin
+
+all: lint
+
 install:
 	npm i
 
 lint:
-	./node_modules/.bin/tslint src/*/* *.js
+	$(NPM_BIN)/tslint src/*/* *.js
+
+server:
+	$(NPM_BIN)/webpack-dev-server --open
