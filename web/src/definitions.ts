@@ -1,4 +1,4 @@
-export type UnsyncedEntry = { id: string } & Pick<Entry, "text" | "createdOn">
+export type UnsyncedEntry = Pick<Entry, "guid" | "text" | "createdOn">
 
 export type Entry = {
   guid: string

@@ -8,15 +8,6 @@ import { Entry, UnsyncedEntry } from "../definitions"
 const KEY_ENTER = 13
 
 const styles = StyleSheet.create({
-  wrapper: {
-    boxSizing: "border-box",
-    height: "100vh",
-    margin: "0 auto",
-    maxWidth: "720px",
-    padding: "10px",
-    position: "relative",
-  },
-
   input: {
     bottom: "10px",
     padding: "10px",
@@ -50,10 +41,10 @@ export class Logbook extends Component<Props, State> {
   }
 
   addLog(text: string) {
-    const id = Math.random().toString()
+    const guid = Math.random().toString()
     const createdOn = Date.now()
 
-    this.state.unsynced.push({ id, text, createdOn })
+    this.state.unsynced.push({ guid, text, createdOn })
     this.setState({ unsynced: this.state.unsynced })
   }
 
@@ -65,13 +56,14 @@ export class Logbook extends Component<Props, State> {
   }
 
   render() {
-    let { name } = this.props
-    let { unsynced } = this.state
+    const { name } = this.props
+    const { unsynced, entries } = this.state
+    const logs = [...unsynced, ...entries]
 
     return (
-      <div className={css(styles.wrapper)}>
+      <div>
         <h1>{name}</h1>
-        {unsynced.map((log) => <div key={log.id}>{log.text}</div>)}
+        {logs.map((log) => <div key={log.guid}>{log.text}</div>)}
         <input
           className={css(styles.input)}
           type="text"
