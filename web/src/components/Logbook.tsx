@@ -8,11 +8,23 @@ import { Entry, UnsyncedEntry } from "../definitions"
 const KEY_ENTER = 13
 
 const styles = StyleSheet.create({
-  input: {
-    bottom: "10px",
+  wrapper: {
+    boxSizing: "border-box",
     padding: "10px",
-    position: "absolute",
-    width: "100%",
+  },
+
+  tailEntries: {
+    borderTop: "1px solid #dadada",
+  },
+
+  entry: {
+    fontSize: "1.1rem",
+    padding: "10px 0",
+  },
+
+  input: {
+    padding: "10px",
+    width: "calc(100% - 24px)",
   }
 })
 
@@ -40,6 +52,12 @@ export class Logbook extends Component<Props, State> {
     this.boundOnLogInputKeyPress = this.onLogInputKeyPress.bind(this)
   }
 
+  getLogs(): ReadonlyArray<Entry | UnsyncedEntry> {
+    const { unsynced, entries } = this.state
+    return [...unsynced, ...entries].sort((a, b) =>
+      a.createdOn < b.createdOn ? -1 : 1)
+  }
+
   addLog(text: string) {
     const guid = Math.random().toString()
     const createdOn = Date.now()
@@ -57,13 +75,15 @@ export class Logbook extends Component<Props, State> {
 
   render() {
     const { name } = this.props
-    const { unsynced, entries } = this.state
-    const logs = [...unsynced, ...entries]
+    const logs = this.getLogs().map((log, i) =>
+      <div className={css(i ? styles.tailEntries : null, styles.entry)} key={log.guid}>{log.text}</div>)
 
     return (
-      <div>
+      <div className={css(styles.wrapper)}>
         <h1>{name}</h1>
-        {logs.map((log) => <div key={log.guid}>{log.text}</div>)}
+
+        {logs}
+
         <input
           className={css(styles.input)}
           type="text"

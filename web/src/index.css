@@ -1,13 +1,9 @@
 @import url('https://fonts.googleapis.com/css?family=Spectral');
 
 #body {
-  box-sizing: border-box;
   cursor: default;
   font-family: 'Spectral', serif;
   font-size: 1rem;
-  height: 100vh;
   margin: 0 auto;
   max-width: 720px;
-  padding: 10px;
-  position: relative;
 }
