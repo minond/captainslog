@@ -8,6 +8,6 @@ export type Entry = {
   createdBy: string
   updatedOn: number
   updatedBy: string
-  deletedOn: number
-  deletedBy: string
+  deletedOn?: number
+  deletedBy?: string
 }
