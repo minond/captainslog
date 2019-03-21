@@ -1,6 +1,6 @@
-export type UnsyncedEntry = Pick<Entry, "guid" | "text" | "createdOn">
+export type UnsyncedLog = Pick<Log, "guid" | "text" | "createdOn" | "updatedOn">
 
-export type Entry = {
+export type Log = {
   guid: string
   text: string
   data: Map<string, string>
