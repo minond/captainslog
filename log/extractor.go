@@ -1,6 +1,8 @@
 package log
 
-import "regexp"
+import (
+	"regexp"
+)
 
 type Extractor struct {
 	Label  string
