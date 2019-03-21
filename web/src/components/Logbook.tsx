@@ -1,5 +1,5 @@
 import * as React from "react"
-import { Component, KeyboardEvent } from "react"
+import { Component, KeyboardEvent, RefObject } from "react"
 
 import { css, StyleSheet } from "aphrodite"
 
@@ -9,8 +9,13 @@ const KEY_ENTER = 13
 
 const styles = StyleSheet.create({
   wrapper: {
-    boxSizing: "border-box",
+    boxSizing: "content-box",
     padding: "10px",
+  },
+
+  logs: {
+    maxHeight: "80vh",
+    overflow: "auto",
   },
 
   tailLogs: {
@@ -19,12 +24,15 @@ const styles = StyleSheet.create({
 
   log: {
     fontSize: "1.1rem",
+    marginBottom: "10px",
     padding: "10px 0",
   },
 
   input: {
-    padding: "10px",
-    width: "calc(100% - 24px)",
+    fontSize: "1.1rem",
+    marginLeft: "-10px",
+    padding: "10px 8px",
+    width: "100%",
   }
 })
 
@@ -39,6 +47,8 @@ interface State {
 }
 
 export class Logbook extends Component<Props, State> {
+  logsRef: RefObject<HTMLDivElement>
+  inputRef: RefObject<HTMLInputElement>
   boundOnLogInputKeyPress: (ev: KeyboardEvent<HTMLInputElement>) => void
 
   constructor(props: Props) {
@@ -49,7 +59,21 @@ export class Logbook extends Component<Props, State> {
       unsynced: [],
     }
 
+    this.logsRef = React.createRef()
+    this.inputRef = React.createRef()
     this.boundOnLogInputKeyPress = this.onLogInputKeyPress.bind(this)
+  }
+
+  componentDidUpdate() {
+    if (this.logsRef.current) {
+      this.logsRef.current.scrollTop = Number.MAX_SAFE_INTEGER
+    }
+  }
+
+  componentDidMount() {
+    if (this.inputRef.current) {
+      this.inputRef.current.focus()
+    }
   }
 
   getLogs(): ReadonlyArray<Log | UnsyncedLog> {
@@ -83,9 +107,10 @@ export class Logbook extends Component<Props, State> {
       <div className={css(styles.wrapper)}>
         <h1>{name}</h1>
 
-        {logs}
+        <div ref={this.logsRef} className={css(styles.logs)}>{logs}</div>
 
         <input
+          ref={this.inputRef}
           className={css(styles.input)}
           type="text"
           onKeyPress={this.boundOnLogInputKeyPress}
