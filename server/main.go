@@ -24,13 +24,13 @@ func saveLog(buff io.Reader) error {
 		return err
 	}
 
-	var log l.UnsyncedLog
-	err = json.Unmarshal(data, &log)
+	var ll l.LogCreateRequest
+	err = json.Unmarshal(data, &ll)
 	if err != nil {
 		return err
 	}
 
-	logs = append(logs, l.NewLog(log.Text))
+	logs = append(logs, l.NewLog(ll.Text))
 	return nil
 }
 

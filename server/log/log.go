@@ -6,6 +6,11 @@ import (
 	"github.com/google/uuid"
 )
 
+type UnsyncedLog struct {
+	TempID string `json:"tempID"`
+	Text   string `json:"text"`
+}
+
 func NewLog(text string) Log {
 	now := time.Now().Unix()
 	return Log{

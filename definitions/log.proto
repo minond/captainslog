@@ -13,3 +13,19 @@ message Log {
   int64 deletedOn          = 8;
   string deletedBy         = 9;
 }
+
+message LogCreateRequest {
+  string id       = 1;
+  string text     = 2;
+  int64 createdOn = 3;
+  int64 updatedOn = 4;
+}
+
+message LogCreateResponse {
+  string id = 1;
+  Log log   = 2;
+}
+
+service LogService {
+  rpc Create (LogCreateRequest) returns (LogCreateResponse);
+}
