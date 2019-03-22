@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package log;
+
+message Log {
+  string guid              = 1;
+  string text              = 2;
+  map<string, string> data = 3;
+  int64 createdOn          = 4;
+  string createdBy         = 5;
+  int64 updatedOn          = 6;
+  string updatedBy         = 7;
+  int64 deletedOn          = 8;
+  string deletedBy         = 9;
+}
