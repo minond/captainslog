@@ -8,10 +8,15 @@ lint: lint-client
 test: test-server
 
 compile-protoc:
-	protoc --go_out=server/log/ -I definitions definitions/*.proto
+	protoc \
+		-I definitions \
+		--go_out=server/log/ \
+		--typescript-definitions_out=client-web/src/definitions \
+		definitions/*.proto
 
 compile-protoc-deps:
 	go get github.com/golang/protobuf/protoc-gen-go
+	go get github.com/minond/protoc-gen-typescript-definitions
 
 build-client:
 	$(IN_CLIENT_WEB) make build
