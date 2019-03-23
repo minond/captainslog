@@ -22,8 +22,8 @@ message LogCreateRequest {
 }
 
 message LogCreateResponse {
-  string id = 1;
-  Log log   = 2;
+  string guid = 1;
+  Log log     = 2;
 }
 
 service LogService {

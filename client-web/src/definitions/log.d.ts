@@ -18,7 +18,7 @@ export type LogCreateRequest = {
 }
 
 export type LogCreateResponse = {
-  id?: string
+  guid?: string
   log?: {
     guid?: string
     text?: string
