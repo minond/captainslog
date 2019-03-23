@@ -2,7 +2,7 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 
 import { Logbook } from "./components/Logbook";
-import { Log } from "./definitions";
+import { Log } from "./definitions/log";
 
 const fake = (text: string): Log => ({
   guid: Math.random().toString(),

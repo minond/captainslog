@@ -3,7 +3,7 @@ import { Component, KeyboardEvent, RefObject } from "react"
 
 import { css, StyleSheet } from "aphrodite"
 
-import { Log, UnsyncedLog } from "../definitions"
+import { Log, LogCreateRequest } from "../definitions/log"
 
 const KEY_ENTER = 13
 
@@ -43,7 +43,7 @@ interface Props {
 
 interface State {
   logs: Log[]
-  unsynced: UnsyncedLog[]
+  unsynced: LogCreateRequest[]
 }
 
 export class Logbook extends Component<Props, State> {
@@ -76,10 +76,14 @@ export class Logbook extends Component<Props, State> {
     }
   }
 
-  getLogs(): ReadonlyArray<Log | UnsyncedLog> {
+  getLogs(): ReadonlyArray<Log | LogCreateRequest> {
     const { unsynced, logs } = this.state
-    return [...unsynced, ...logs].sort((a, b) =>
-      a.createdOn < b.createdOn ? -1 : 1)
+    return [...unsynced, ...logs].sort((a, b) => {
+      if (a.createdOn && b.createdOn) {
+        return a.createdOn < b.createdOn ? -1 : 1
+      }
+      return 0
+    })
   }
 
   addLog(text: string) {
