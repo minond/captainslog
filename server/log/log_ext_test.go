@@ -4,13 +4,6 @@ import (
 	"testing"
 )
 
-func must(x Extractor, err error) Extractor {
-	if err != nil {
-		panic(err)
-	}
-	return x
-}
-
 type dataTest struct {
 	text string
 	data map[string]string
@@ -18,7 +11,7 @@ type dataTest struct {
 
 func runDataTests(label string, t *testing.T, tests []dataTest, xs []Extractor) {
 	for _, test := range tests {
-		l, err := Process(NewLog(test.text), xs)
+		l, err := NewLog(test.text).Process(xs)
 		if err != nil {
 			t.Errorf("%s: unexpected error: %v", label, err)
 		}
@@ -32,7 +25,7 @@ func runDataTests(label string, t *testing.T, tests []dataTest, xs []Extractor) 
 	}
 }
 
-func TestProcess_WorkoutsSample(t *testing.T) {
+func TestLog_Process_WorkoutsSample(t *testing.T) {
 	tests := []dataTest{
 		{"Bench press, 3x10@65", map[string]string{
 			"exercise": "Bench press",
@@ -57,11 +50,11 @@ func TestProcess_WorkoutsSample(t *testing.T) {
 	}
 
 	xs := []Extractor{
-		must(NewExtractor("exercise", `^(.+),`)),
-		must(NewExtractor("sets", `,\s{0,}(\d+)\s{0,}x`)),
-		must(NewExtractor("reps", `x\s{0,}(\d+)\s{0,}@`)),
-		must(NewExtractor("weight", `@\s{0,}(\d+)$`)),
-		must(NewExtractor("time", `(\d+\s{0,}(sec|seconds|min|minutes|hour|hours))`)),
+		Extractor{Label: "exercise", Match: `^(.+),`},
+		Extractor{Label: "sets", Match: `,\s{0,}(\d+)\s{0,}x`},
+		Extractor{Label: "reps", Match: `x\s{0,}(\d+)\s{0,}@`},
+		Extractor{Label: "weight", Match: `@\s{0,}(\d+)$`},
+		Extractor{Label: "time", Match: `(\d+\s{0,}(sec|seconds|min|minutes|hour|hours))`},
 	}
 
 	runDataTests("TestProcess_WorkoutsSample", t, tests, xs)

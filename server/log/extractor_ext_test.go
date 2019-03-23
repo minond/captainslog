@@ -5,7 +5,7 @@ import (
 )
 
 func TestExtractor_Process(t *testing.T) {
-	ex, _ := NewExtractor("testing", `(aaa)`)
+	ex := Extractor{Label: "testing", Match: `(aaa)`}
 	ret, err := ex.Process("aaa")
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
