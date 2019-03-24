@@ -19,5 +19,4 @@ message Book {
   string name                  = 2;
   Grouping grouping            = 3;
   repeated Extractor extractor = 4;
-  repeated Group group         = 5;
 }

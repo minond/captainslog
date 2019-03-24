@@ -53,7 +53,7 @@ func createEntry(buff io.Reader) (*capl.EntryCreateResponse, error) {
 		return nil, errors.New("unable to find book")
 	}
 
-	group := book.CurrentGroup()
+	group := book.Group()
 	if group == nil {
 		return nil, errors.New("unable to find current group")
 	}
