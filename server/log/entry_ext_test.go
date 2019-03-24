@@ -11,21 +11,21 @@ type dataTest struct {
 
 func runDataTests(label string, t *testing.T, tests []dataTest, xs []Extractor) {
 	for _, test := range tests {
-		l, err := NewLog(test.text).Process(xs)
+		e, err := NewEntry(test.text).Process(xs)
 		if err != nil {
 			t.Errorf("%s: unexpected error: %v", label, err)
 		}
 
 		for label, expectedVal := range test.data {
-			if l.Data[label] != expectedVal {
+			if e.Data[label] != expectedVal {
 				t.Errorf("%s: expected `%s` to have `%s` equal `%s` but got `%s`",
-					label, test.text, label, expectedVal, l.Data[label])
+					label, test.text, label, expectedVal, e.Data[label])
 			}
 		}
 	}
 }
 
-func TestLog_Process_WorkoutsSample(t *testing.T) {
+func TestEntry_Process_WorkoutsSample(t *testing.T) {
 	tests := []dataTest{
 		{"Bench press, 3x10@65", map[string]string{
 			"exercise": "Bench press",

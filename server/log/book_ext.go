@@ -6,26 +6,26 @@ import (
 	"github.com/google/uuid"
 )
 
-func newGroup() *LogGroup {
+func newGroup() *Group {
 	now := time.Now().Unix()
 	guid := uuid.New().String()
-	return &LogGroup{
+	return &Group{
 		Guid:      guid,
 		CreatedOn: now,
 		UpdatedOn: now,
 	}
 }
 
-// CurrentGroup returns a Log Book's current, active Log Group. It will create
-// one if no group is found.
-func (lb *LogBook) CurrentGroup() *LogGroup {
-	if len(lb.Group) == 0 {
+// CurrentGroup returns a Book's current, active Group. It will create one if
+// no group is found.
+func (b *Book) CurrentGroup() *Group {
+	if len(b.Group) == 0 {
 		group := newGroup()
-		lb.Group = append(lb.Group, group)
+		b.Group = append(b.Group, group)
 		return group
 	}
 
-	// switch lb.Grouping {
+	// switch b.Grouping {
 	// case Grouping_NONE:
 	// case Grouping_HOUR:
 	// case Grouping_DAY:
@@ -35,7 +35,7 @@ func (lb *LogBook) CurrentGroup() *LogGroup {
 	// }
 
 	// group := newGroup()
-	// lb.Group = append(lb.Group, group)
+	// b.Group = append(b.Group, group)
 	// return group
-	return lb.Group[0]
+	return b.Group[0]
 }

@@ -6,10 +6,10 @@ import (
 	"github.com/google/uuid"
 )
 
-func NewLog(text string) *Log {
+func NewEntry(text string) *Entry {
 	now := time.Now().Unix()
 	guid := uuid.New().String()
-	return &Log{
+	return &Entry{
 		Guid:      guid,
 		Text:      text,
 		Data:      make(map[string]string),
@@ -28,15 +28,15 @@ func merge(a, b map[string]string) map[string]string {
 	return a
 }
 
-func (l Log) Process(xs []Extractor) (Log, error) {
+func (e Entry) Process(xs []Extractor) (Entry, error) {
 	for _, x := range xs {
-		data, err := x.Process(l.Text)
+		data, err := x.Process(e.Text)
 		if err != nil {
-			return l, err
+			return e, err
 		}
 
-		l.Data = merge(l.Data, data)
+		e.Data = merge(e.Data, data)
 	}
 
-	return l, nil
+	return e, nil
 }

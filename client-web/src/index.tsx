@@ -2,9 +2,9 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 
 import { Logbook } from "./components/Logbook";
-import { Log } from "./definitions/log";
+import { Entry } from "./definitions/entry";
 
-const fake = (text: string): Log => ({
+const fake = (text: string): Entry => ({
   guid: Math.random().toString(),
   text: text,
   data: new Map(),
@@ -14,7 +14,7 @@ const fake = (text: string): Log => ({
   updatedBy: Math.random().toString(),
 })
 
-const logs = [
+const entries = [
   fake("Bench press, 3x10@65"),
   fake("Squats, 2min"),
   fake("Squats, 3x10@45"),
@@ -22,5 +22,5 @@ const logs = [
 ]
 
 ReactDOM.render(
-  <Logbook name="Workouts" logs={logs} />,
+  <Logbook name="Workouts" entries={entries} />,
   document.getElementById("body"))

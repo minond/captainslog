@@ -14,7 +14,7 @@ import (
 	capl "github.com/minond/captainslog/server/log"
 )
 
-var memDB map[string]*capl.LogBook
+var memDB map[string]*capl.Book
 var memUser = capl.User{Guid: "123"}
 
 func init() {
@@ -26,8 +26,8 @@ func init() {
 		{Label: "time", Match: `(\d+\s{0,}(s|sec|second|seconds|m|min|minute|minutes|h|hour|hours))`},
 	}
 
-	memDB = make(map[string]*capl.LogBook)
-	memDB[memUser.Guid] = &capl.LogBook{
+	memDB = make(map[string]*capl.Book)
+	memDB[memUser.Guid] = &capl.Book{
 		Guid:      uuid.New().String(),
 		Name:      "Workouts",
 		Grouping:  capl.Grouping_DAY,
@@ -35,14 +35,14 @@ func init() {
 	}
 }
 
-func createLog(buff io.Reader) (*capl.LogCreateResponse, error) {
-	res := &capl.LogCreateResponse{}
+func createEntry(buff io.Reader) (*capl.EntryCreateResponse, error) {
+	res := &capl.EntryCreateResponse{}
 	data, err := ioutil.ReadAll(buff)
 	if err != nil {
 		return nil, err
 	}
 
-	var ll capl.LogCreateRequest
+	var ll capl.EntryCreateRequest
 	err = json.Unmarshal(data, &ll)
 	if err != nil {
 		return nil, err
@@ -50,7 +50,7 @@ func createLog(buff io.Reader) (*capl.LogCreateResponse, error) {
 
 	book, ok := memDB[memUser.Guid]
 	if !ok {
-		return nil, errors.New("unable to find log book")
+		return nil, errors.New("unable to find book")
 	}
 
 	group := book.CurrentGroup()
@@ -58,22 +58,22 @@ func createLog(buff io.Reader) (*capl.LogCreateResponse, error) {
 		return nil, errors.New("unable to find current group")
 	}
 
-	newLog := capl.NewLog(ll.Text)
-	group.Log = append(group.Log, newLog)
+	entry := capl.NewEntry(ll.Text)
+	group.Entry = append(group.Entry, entry)
 	res.Guid = ll.Guid
-	res.Log = newLog
+	res.Entry = entry
 	return res, nil
 }
 
 func main() {
-	http.HandleFunc("/api/log", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/api/entry", func(w http.ResponseWriter, r *http.Request) {
 		log.Print("processing request")
 
 		if r.Method == http.MethodPost {
 			defer r.Body.Close()
-			res, err := createLog(r.Body)
+			res, err := createEntry(r.Body)
 			if err != nil {
-				log.Printf("error creating log: %v", err)
+				log.Printf("error creating entry: %v", err)
 				return
 			}
 

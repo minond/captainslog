@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 import "extractor.proto";
-import "log_group.proto";
+import "group.proto";
 
 package log;
 
@@ -14,10 +14,10 @@ enum Grouping {
   YEAR  = 5;
 }
 
-message LogBook {
+message Book {
   string guid                  = 1;
   string name                  = 2;
   Grouping grouping            = 3;
   repeated Extractor extractor = 4;
-  repeated LogGroup group      = 5;
+  repeated Group group         = 5;
 }

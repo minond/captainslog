@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+import "entry.proto";
+
+package log;
+
+message Group {
+  string guid          = 1;
+  repeated Entry entry = 2;
+  int64 createdOn      = 3;
+  string createdBy     = 4;
+  int64 updatedOn      = 5;
+  string updatedBy     = 6;
+}

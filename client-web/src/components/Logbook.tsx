@@ -3,7 +3,7 @@ import { Component, KeyboardEvent, RefObject } from "react"
 
 import { css, StyleSheet } from "aphrodite"
 
-import { Log, LogCreateRequest } from "../definitions/log"
+import { Entry, EntryCreateRequest } from "../definitions/entry"
 
 const KEY_ENTER = 13
 
@@ -13,16 +13,16 @@ const styles = StyleSheet.create({
     padding: "10px",
   },
 
-  logs: {
+  entries: {
     maxHeight: "80vh",
     overflow: "auto",
   },
 
-  tailLogs: {
+  tailEntries: {
     borderTop: "1px solid #dadada",
   },
 
-  log: {
+  entry: {
     fontSize: "1.1rem",
     marginBottom: "10px",
     padding: "10px 0",
@@ -38,35 +38,35 @@ const styles = StyleSheet.create({
 
 interface Props {
   name: string
-  logs?: Log[]
+  entries?: Entry[]
 }
 
 interface State {
-  logs: Log[]
-  unsynced: LogCreateRequest[]
+  entries: Entry[]
+  unsynced: EntryCreateRequest[]
 }
 
 export class Logbook extends Component<Props, State> {
-  logsRef: RefObject<HTMLDivElement>
+  entriesRef: RefObject<HTMLDivElement>
   inputRef: RefObject<HTMLInputElement>
-  boundOnLogInputKeyPress: (ev: KeyboardEvent<HTMLInputElement>) => void
+  boundOnEntryInputKeyPress: (ev: KeyboardEvent<HTMLInputElement>) => void
 
   constructor(props: Props) {
     super(props)
 
     this.state = {
-      logs: props.logs || [],
+      entries: props.entries || [],
       unsynced: [],
     }
 
-    this.logsRef = React.createRef()
+    this.entriesRef = React.createRef()
     this.inputRef = React.createRef()
-    this.boundOnLogInputKeyPress = this.onLogInputKeyPress.bind(this)
+    this.boundOnEntryInputKeyPress = this.onEntryInputKeyPress.bind(this)
   }
 
   componentDidUpdate() {
-    if (this.logsRef.current) {
-      this.logsRef.current.scrollTop = Number.MAX_SAFE_INTEGER
+    if (this.entriesRef.current) {
+      this.entriesRef.current.scrollTop = Number.MAX_SAFE_INTEGER
     }
   }
 
@@ -76,9 +76,9 @@ export class Logbook extends Component<Props, State> {
     }
   }
 
-  getLogs(): ReadonlyArray<Log | LogCreateRequest> {
-    const { unsynced, logs } = this.state
-    return [...unsynced, ...logs].sort((a, b) => {
+  getEntries(): ReadonlyArray<Entry | EntryCreateRequest> {
+    const { unsynced, entries } = this.state
+    return [...unsynced, ...entries].sort((a, b) => {
       if (a.createdOn && b.createdOn) {
         return a.createdOn < b.createdOn ? -1 : 1
       }
@@ -86,7 +86,7 @@ export class Logbook extends Component<Props, State> {
     })
   }
 
-  addLog(text: string) {
+  addEntry(text: string) {
     const guid = Math.random().toString()
     const createdOn = Date.now()
     const updatedOn = createdOn
@@ -95,29 +95,29 @@ export class Logbook extends Component<Props, State> {
     this.setState({ unsynced: this.state.unsynced })
   }
 
-  onLogInputKeyPress(ev: KeyboardEvent<HTMLInputElement>) {
+  onEntryInputKeyPress(ev: KeyboardEvent<HTMLInputElement>) {
     if (ev.charCode === KEY_ENTER) {
-      this.addLog(ev.currentTarget.value)
+      this.addEntry(ev.currentTarget.value)
       ev.currentTarget.value = ""
     }
   }
 
   render() {
     const { name } = this.props
-    const logs = this.getLogs().map((log, i) =>
-      <div className={css(i ? styles.tailLogs : null, styles.log)} key={log.guid}>{log.text}</div>)
+    const entries = this.getEntries().map((entry, i) =>
+      <div className={css(i ? styles.tailEntries : null, styles.entry)} key={entry.guid}>{entry.text}</div>)
 
     return (
       <div className={css(styles.wrapper)}>
         <h1>{name}</h1>
 
-        <div ref={this.logsRef} className={css(styles.logs)}>{logs}</div>
+        <div ref={this.entriesRef} className={css(styles.entries)}>{entries}</div>
 
         <input
           ref={this.inputRef}
           className={css(styles.input)}
           type="text"
-          onKeyPress={this.boundOnLogInputKeyPress}
+          onKeyPress={this.boundOnEntryInputKeyPress}
         />
       </div>
     )
