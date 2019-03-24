@@ -6,10 +6,10 @@ import (
 	"github.com/google/uuid"
 )
 
-func NewLog(text string) Log {
+func NewLog(text string) *Log {
 	now := time.Now().Unix()
 	guid := uuid.New().String()
-	return Log{
+	return &Log{
 		Guid:      guid,
 		Text:      text,
 		Data:      make(map[string]string),
