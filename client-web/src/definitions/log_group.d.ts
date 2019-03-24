@@ -1,6 +1,6 @@
 export type LogGroup = {
   guid?: string
-  log?: {
+  log?: Array<{
     guid?: string
     text?: string
     data?: Map<string, string>
@@ -10,7 +10,7 @@ export type LogGroup = {
     updatedBy?: string
     deletedOn?: number
     deletedBy?: string
-  }[]
+  }>
   createdOn?: number
   createdBy?: string
   updatedOn?: number
