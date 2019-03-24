@@ -35,62 +35,56 @@ func init() {
 	}
 }
 
-type Response struct {
-	Ok  bool   `json:"ok"`
-	Msg string `json:"msg"`
-}
-
-func createLog(buff io.Reader) error {
+func createLog(buff io.Reader) (*capl.LogCreateResponse, error) {
+	res := &capl.LogCreateResponse{}
 	data, err := ioutil.ReadAll(buff)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	var ll capl.LogCreateRequest
 	err = json.Unmarshal(data, &ll)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	book, ok := memDB[memUser.Guid]
 	if !ok {
-		return errors.New("unable to find log book")
+		return nil, errors.New("unable to find log book")
 	}
 
 	group := book.CurrentGroup()
 	if group == nil {
-		return errors.New("unable to find current group")
+		return nil, errors.New("unable to find current group")
 	}
 
-	group.Log = append(group.Log, capl.NewLog(ll.Text))
-	return nil
+	newLog := capl.NewLog(ll.Text)
+	group.Log = append(group.Log, newLog)
+	res.Guid = ll.Guid
+	res.Log = newLog
+	return res, nil
 }
 
 func main() {
 	http.HandleFunc("/api/log", func(w http.ResponseWriter, r *http.Request) {
-		var res Response
 		log.Print("processing request")
 
-		switch r.Method {
-		case http.MethodPost:
+		if r.Method == http.MethodPost {
 			defer r.Body.Close()
-			err := createLog(r.Body)
+			res, err := createLog(r.Body)
 			if err != nil {
-				res.Ok = false
-				res.Msg = err.Error()
-			} else {
-				res.Ok = true
+				log.Printf("error creating log: %v", err)
+				return
 			}
 
-		default:
-			res.Ok = false
-		}
+			resdata, err := json.Marshal(res)
+			if err != nil {
+				log.Printf("error encoding response: %v", err)
+				return
+			}
 
-		resdata, err := json.Marshal(res)
-		if err != nil {
-			log.Printf("error encoding response: %v", err)
+			w.Write(resdata)
 		}
-		w.Write(resdata)
 	})
 
 	listen := os.Getenv("LISTEN")
