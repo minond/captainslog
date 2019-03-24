@@ -9,7 +9,7 @@ test: test-server
 build-proto:
 	protoc \
 		-I definitions \
-		--go_out=server/log/ \
+		--go_out=server/proto/ \
 		--typescript-definitions_out=client-web/src/definitions \
 		definitions/*.proto
 

@@ -1,6 +1,8 @@
 syntax = "proto3";
 
-package log;
+package captainslog;
+
+option go_package = "proto";
 
 message Extractor {
   string guid  = 1;

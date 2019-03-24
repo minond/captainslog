@@ -1,9 +1,10 @@
 syntax = "proto3";
 
-import "extractor.proto";
-import "group.proto";
+package captainslog;
 
-package log;
+import "extractor.proto";
+
+option go_package = "proto";
 
 enum Grouping {
   NONE  = 0;

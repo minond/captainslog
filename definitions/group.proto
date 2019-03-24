@@ -1,8 +1,10 @@
 syntax = "proto3";
 
+package captainslog;
+
 import "entry.proto";
 
-package log;
+option go_package = "proto";
 
 message Group {
   string guid          = 1;
