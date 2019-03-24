@@ -1,0 +1,4 @@
+Make sure to run `go generate` with Go modules disabled -- Kallax's generator
+does not like to be ran with moduled enabled:
+
+    GO111MODULE=off go generate ./...
