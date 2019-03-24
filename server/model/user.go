@@ -1,4 +1,4 @@
-package db
+package model
 
 import "gopkg.in/src-d/go-kallax.v1"
 

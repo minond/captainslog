@@ -2,7 +2,7 @@
 // Please, do not touch the code below, and if you do, do it under your own
 // risk. Take into account that all the code you write here will be completely
 // erased from earth the next time you generate the kallax models.
-package db
+package model
 
 import (
 	"database/sql"
@@ -18,8 +18,8 @@ var _ fmt.Formatter
 type modelSaveFunc func(*kallax.Store) error
 
 // NewBook returns a new instance of Book.
-func NewBook() (record *Book) {
-	return new(Book)
+func NewBook(name string, grouping int32, user *User) (record *Book, err error) {
+	return newBook(name, grouping, user)
 }
 
 // GetID returns the primary key of the model.
@@ -456,8 +456,8 @@ func (rs *BookResultSet) Close() error {
 }
 
 // NewBookExtractor returns a new instance of BookExtractor.
-func NewBookExtractor() (record *BookExtractor) {
-	return new(BookExtractor)
+func NewBookExtractor(book *Book, extractor *Extractor) (record *BookExtractor, err error) {
+	return newBookExtractor(book, extractor)
 }
 
 // GetID returns the primary key of the model.
@@ -884,8 +884,8 @@ func (rs *BookExtractorResultSet) Close() error {
 }
 
 // NewEntry returns a new instance of Entry.
-func NewEntry() (record *Entry) {
-	return new(Entry)
+func NewEntry(text string, data map[string]string, group *Group) (record *Entry, err error) {
+	return newEntry(text, data, group)
 }
 
 // GetID returns the primary key of the model.
@@ -1316,8 +1316,8 @@ func (rs *EntryResultSet) Close() error {
 }
 
 // NewExtractor returns a new instance of Extractor.
-func NewExtractor() (record *Extractor) {
-	return new(Extractor)
+func NewExtractor(label string, match string) (record *Extractor, err error) {
+	return newExtractor(label, match)
 }
 
 // GetID returns the primary key of the model.
@@ -2162,8 +2162,8 @@ func (rs *GroupResultSet) Close() error {
 }
 
 // NewUser returns a new instance of User.
-func NewUser() (record *User) {
-	return new(User)
+func NewUser() (record *User, err error) {
+	return newUser()
 }
 
 // GetID returns the primary key of the model.
