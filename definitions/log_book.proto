@@ -19,5 +19,5 @@ message LogBook {
   string name                  = 2;
   Grouping grouping            = 3;
   repeated Extractor extractor = 4;
-  repeated LogGroup log_group  = 5;
+  repeated LogGroup group      = 5;
 }

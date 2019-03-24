@@ -7,7 +7,7 @@ export type LogBook = {
     label?: string
     match?: string
   }[]
-  log_group?: {
+  group?: {
     guid?: string
     log?: {
       guid?: string
