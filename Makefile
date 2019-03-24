@@ -21,7 +21,7 @@ build-client:
 	$(IN_CLIENT_WEB) make build
 
 build-server:
-	$(IN_SERVER) go build
+	$(IN_SERVER) go build ./...
 
 lint-client:
 	$(IN_CLIENT_WEB) make lint
