@@ -18,13 +18,15 @@ build-proto-deps:
 	go get github.com/minond/protoc-gen-typescript-definitions
 
 build-client:
-	$(IN_CLIENT_WEB) make build
+	$(IN_CLIENT_WEB) npm run build
 
 build-server:
 	$(IN_SERVER) go build ./...
 
 lint-client:
-	$(IN_CLIENT_WEB) make lint
+	$(IN_CLIENT_WEB) npm run lint
+	$(IN_SERVER) go vet ./...
+	$(IN_SERVER) golint ./...
 
 test-server:
 	$(IN_SERVER) go test ./...
