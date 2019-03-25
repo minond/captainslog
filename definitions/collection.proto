@@ -6,7 +6,7 @@ import "entry.proto";
 
 option go_package = "proto";
 
-message Group {
+message Collection {
   string guid          = 1;
   repeated Entry entry = 2;
   int64 createdOn      = 3;
