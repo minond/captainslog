@@ -5,7 +5,7 @@ import (
 )
 
 type Extractor struct {
-	kallax.Model `pk:"guid"`
+	kallax.Model `table:"extractors" pk:"guid"`
 
 	Guid  kallax.ULID
 	Label string

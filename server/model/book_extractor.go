@@ -5,7 +5,7 @@ import (
 )
 
 type BookExtractor struct {
-	kallax.Model `pk:"guid"`
+	kallax.Model `table:"book_extractors" pk:"guid"`
 
 	Guid          kallax.ULID
 	BookGuid      kallax.ULID

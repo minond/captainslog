@@ -5,7 +5,7 @@ import (
 )
 
 type Book struct {
-	kallax.Model `pk:"guid"`
+	kallax.Model `table:"books" pk:"guid"`
 
 	Guid     kallax.ULID
 	UserGuid kallax.ULID

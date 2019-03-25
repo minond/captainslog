@@ -5,23 +5,23 @@ import (
 )
 
 type Entry struct {
-	kallax.Model `pk:"guid"`
+	kallax.Model `table:"entries" pk:"guid"`
 
-	Guid      kallax.ULID
-	GroupGuid kallax.ULID
-	Text      string
-	Data      map[string]string
+	Guid           kallax.ULID
+	CollectionGuid kallax.ULID
+	Text           string
+	Data           map[string]string
 }
 
-func newEntry(text string, data map[string]string, group *Group) (*Entry, error) {
+func newEntry(text string, data map[string]string, collection *Collection) (*Entry, error) {
 	entry := &Entry{
 		Guid: kallax.NewULID(),
 		Text: text,
 		Data: data,
 	}
 
-	if group != nil {
-		entry.GroupGuid = group.Guid
+	if collection != nil {
+		entry.CollectionGuid = collection.Guid
 	}
 
 	return entry, nil
