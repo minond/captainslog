@@ -1,0 +1,170 @@
+{
+  "Tables": [
+    {
+      "Name": "books",
+      "Columns": [
+        {
+          "Name": "guid",
+          "Type": "uuid",
+          "PrimaryKey": true,
+          "Reference": null,
+          "NotNull": true,
+          "Unique": false
+        },
+        {
+          "Name": "user_guid",
+          "Type": "uuid",
+          "PrimaryKey": false,
+          "Reference": null,
+          "NotNull": true,
+          "Unique": false
+        },
+        {
+          "Name": "name",
+          "Type": "text",
+          "PrimaryKey": false,
+          "Reference": null,
+          "NotNull": true,
+          "Unique": false
+        },
+        {
+          "Name": "grouping",
+          "Type": "integer",
+          "PrimaryKey": false,
+          "Reference": null,
+          "NotNull": true,
+          "Unique": false
+        }
+      ]
+    },
+    {
+      "Name": "book_extractors",
+      "Columns": [
+        {
+          "Name": "guid",
+          "Type": "uuid",
+          "PrimaryKey": true,
+          "Reference": null,
+          "NotNull": true,
+          "Unique": false
+        },
+        {
+          "Name": "book_guid",
+          "Type": "uuid",
+          "PrimaryKey": false,
+          "Reference": null,
+          "NotNull": true,
+          "Unique": false
+        },
+        {
+          "Name": "extractor_guid",
+          "Type": "uuid",
+          "PrimaryKey": false,
+          "Reference": null,
+          "NotNull": true,
+          "Unique": false
+        }
+      ]
+    },
+    {
+      "Name": "collections",
+      "Columns": [
+        {
+          "Name": "guid",
+          "Type": "uuid",
+          "PrimaryKey": true,
+          "Reference": null,
+          "NotNull": true,
+          "Unique": false
+        },
+        {
+          "Name": "book_guid",
+          "Type": "uuid",
+          "PrimaryKey": false,
+          "Reference": null,
+          "NotNull": true,
+          "Unique": false
+        }
+      ]
+    },
+    {
+      "Name": "entries",
+      "Columns": [
+        {
+          "Name": "guid",
+          "Type": "uuid",
+          "PrimaryKey": true,
+          "Reference": null,
+          "NotNull": true,
+          "Unique": false
+        },
+        {
+          "Name": "collection_guid",
+          "Type": "uuid",
+          "PrimaryKey": false,
+          "Reference": null,
+          "NotNull": true,
+          "Unique": false
+        },
+        {
+          "Name": "text",
+          "Type": "text",
+          "PrimaryKey": false,
+          "Reference": null,
+          "NotNull": true,
+          "Unique": false
+        },
+        {
+          "Name": "data",
+          "Type": "jsonb",
+          "PrimaryKey": false,
+          "Reference": null,
+          "NotNull": true,
+          "Unique": false
+        }
+      ]
+    },
+    {
+      "Name": "extractors",
+      "Columns": [
+        {
+          "Name": "guid",
+          "Type": "uuid",
+          "PrimaryKey": true,
+          "Reference": null,
+          "NotNull": true,
+          "Unique": false
+        },
+        {
+          "Name": "label",
+          "Type": "text",
+          "PrimaryKey": false,
+          "Reference": null,
+          "NotNull": true,
+          "Unique": false
+        },
+        {
+          "Name": "match",
+          "Type": "text",
+          "PrimaryKey": false,
+          "Reference": null,
+          "NotNull": true,
+          "Unique": false
+        }
+      ]
+    },
+    {
+      "Name": "users",
+      "Columns": [
+        {
+          "Name": "guid",
+          "Type": "uuid",
+          "PrimaryKey": true,
+          "Reference": null,
+          "NotNull": true,
+          "Unique": false
+        }
+      ]
+    }
+  ]
+}
