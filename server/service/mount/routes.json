@@ -1,0 +1,14 @@
+{
+  "routes": [
+    {
+      "endpoint": "/api/entry",
+      "service": "service.EntryService",
+      "methods": [
+        {
+          "method": "POST",
+          "request": "proto.EntryCreateRequest"
+        }
+      ]
+    }
+  ]
+}
