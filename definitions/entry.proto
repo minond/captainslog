@@ -27,7 +27,3 @@ message EntryCreateResponse {
   string guid = 1;
   Entry entry = 2;
 }
-
-service EntryService {
-  rpc Create (EntryCreateRequest) returns (EntryCreateResponse);
-}
