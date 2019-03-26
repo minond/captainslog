@@ -9,21 +9,23 @@ import (
 	"github.com/minond/captainslog/server/proto"
 )
 
-type entryServiceContract interface {
+type EntryServiceContract interface {
 	Create(context.Context, *proto.EntryCreateRequest) (*proto.Entry, error)
 }
 
-type entryService struct {
+type EntryService struct {
 	entryStore *model.EntryStore
 }
 
-func NewEntryService(db *sql.DB) entryServiceContract {
-	return &entryService{
+var _ EntryServiceContract = EntryService{}
+
+func NewEntryService(db *sql.DB) *EntryService {
+	return &EntryService{
 		entryStore: model.NewEntryStore(db),
 	}
 }
 
-func (s entryService) Create(ctx context.Context, req *proto.EntryCreateRequest) (*proto.Entry, error) {
+func (s EntryService) Create(ctx context.Context, req *proto.EntryCreateRequest) (*proto.Entry, error) {
 	// FIXME
 	user, err := model.NewUser()
 	if err != nil {
