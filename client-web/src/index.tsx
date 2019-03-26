@@ -8,10 +8,6 @@ const fake = (text: string): Entry => ({
   guid: Math.random().toString(),
   text: text,
   data: new Map(),
-  createdOn: Date.now(),
-  createdBy: Math.random().toString(),
-  updatedOn: Date.now(),
-  updatedBy: Math.random().toString(),
 })
 
 const entries = [

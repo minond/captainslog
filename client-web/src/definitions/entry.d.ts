@@ -5,19 +5,11 @@ export type Entry = {
   guid?: string
   text?: string
   data?: Map<string, string>
-  createdOn?: number
-  createdBy?: string
-  updatedOn?: number
-  updatedBy?: string
-  deletedOn?: number
-  deletedBy?: string
 }
 
 export type EntryCreateRequest = {
   guid?: string
   text?: string
-  createdOn?: number
-  updatedOn?: number
 }
 
 export type EntryCreateResponse = {
@@ -26,11 +18,5 @@ export type EntryCreateResponse = {
     guid?: string
     text?: string
     data?: Map<string, string>
-    createdOn?: number
-    createdBy?: string
-    updatedOn?: number
-    updatedBy?: string
-    deletedOn?: number
-    deletedBy?: string
   }
 }

@@ -78,20 +78,12 @@ export class Logbook extends Component<Props, State> {
 
   getEntries(): ReadonlyArray<Entry | EntryCreateRequest> {
     const { unsynced, entries } = this.state
-    return [...unsynced, ...entries].sort((a, b) => {
-      if (a.createdOn && b.createdOn) {
-        return a.createdOn < b.createdOn ? -1 : 1
-      }
-      return 0
-    })
+    return [...entries, ...unsynced]
   }
 
   addEntry(text: string) {
     const guid = Math.random().toString()
-    const createdOn = Date.now()
-    const updatedOn = createdOn
-
-    this.state.unsynced.push({ guid, text, createdOn, updatedOn })
+    this.state.unsynced.push({ guid, text, })
     this.setState({ unsynced: this.state.unsynced })
   }
 
