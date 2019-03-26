@@ -28,8 +28,8 @@ type Method struct {
 }
 
 var (
-	routesPath = flag.String("routes", "./service/mount/routes.json", "Path to routes definitions file.")
-	outputPath = flag.String("output", "./service/mount/", "Path to output directory.")
+	routesPath = flag.String("routes", "routes.json", "Path to routes definitions file.")
+	outputPath = flag.String("output", ".", "Path to output directory.")
 
 	funcs = template.FuncMap{
 		"stripPackage": stripPackage,
