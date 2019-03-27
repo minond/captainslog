@@ -1,3 +1,5 @@
+//go:generate kallax gen --input model -e entry_ext.go
+//go:generate go run generator/mount/main.go -routes service/mount/routes.json -output service/mount/autogen.go
 package main
 
 import (

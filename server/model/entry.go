@@ -2,8 +2,6 @@ package model
 
 import (
 	"gopkg.in/src-d/go-kallax.v1"
-
-	"github.com/minond/captainslog/server/proto"
 )
 
 type Entry struct {
@@ -27,12 +25,4 @@ func newEntry(text string, data map[string]string, collection *Collection) (*Ent
 	}
 
 	return entry, nil
-}
-
-func (e Entry) ToProto() *proto.Entry {
-	return &proto.Entry{
-		Guid: e.Guid.String(),
-		Text: e.Text,
-		Data: e.Data,
-	}
 }
