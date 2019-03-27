@@ -2,7 +2,6 @@
 // source: collection.proto
 
 export type Collection = {
-  guid?: string
   entry?: Array<{
     guid?: string
     text?: string

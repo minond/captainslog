@@ -11,8 +11,9 @@ message Entry {
 }
 
 message EntryCreateRequest {
-  string guid     = 1;
-  string text     = 2;
+  string guid      = 1;
+  string text      = 2;
+  string book_guid = 3;
 }
 
 message EntryCreateResponse {

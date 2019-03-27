@@ -7,6 +7,5 @@ import "entry.proto";
 option go_package = "proto";
 
 message Collection {
-  string guid          = 1;
-  repeated Entry entry = 2;
+  repeated Entry entry = 1;
 }

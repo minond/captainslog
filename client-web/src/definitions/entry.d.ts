@@ -10,6 +10,7 @@ export type Entry = {
 export type EntryCreateRequest = {
   guid?: string
   text?: string
+  book_guid?: string
 }
 
 export type EntryCreateResponse = {
