@@ -5,6 +5,7 @@ export type Collection = {
   entry?: Array<{
     guid?: string
     text?: string
+    timestamp?: number
     data?: Map<string, string>
   }>
 }

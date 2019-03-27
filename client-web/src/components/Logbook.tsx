@@ -78,7 +78,15 @@ export class Logbook extends Component<Props, State> {
 
   getEntries(): ReadonlyArray<Entry | EntryCreateRequest> {
     const { unsynced, entries } = this.state
-    return [...entries, ...unsynced]
+    return [...entries, ...unsynced].sort((a, b) => {
+      if (!a.timestamp || !b.timestamp || a.timestamp === b.timestamp) {
+        return 0
+      } else if (a.timestamp > b.timestamp) {
+        return 1
+      } else {
+        return -1
+      }
+    })
   }
 
   addEntry(text: string) {

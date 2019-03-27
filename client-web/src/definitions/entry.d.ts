@@ -4,12 +4,14 @@
 export type Entry = {
   guid?: string
   text?: string
+  timestamp?: number
   data?: Map<string, string>
 }
 
 export type EntryCreateRequest = {
   guid?: string
   text?: string
+  timestamp?: string
   book_guid?: string
 }
 
@@ -18,6 +20,7 @@ export type EntryCreateResponse = {
   entry?: {
     guid?: string
     text?: string
+    timestamp?: number
     data?: Map<string, string>
   }
 }

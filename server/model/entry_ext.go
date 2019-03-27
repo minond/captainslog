@@ -6,8 +6,9 @@ import (
 
 func (e Entry) ToProto() *proto.Entry {
 	return &proto.Entry{
-		Guid: e.Guid.String(),
-		Text: e.Text,
-		Data: e.Data,
+		Guid:      e.Guid.String(),
+		Text:      e.Text,
+		Timestamp: e.CreatedAt.Unix(),
+		Data:      e.Data,
 	}
 }
