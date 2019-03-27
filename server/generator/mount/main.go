@@ -44,14 +44,26 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
+
+	"github.com/gorilla/sessions"
 
 	"github.com/minond/captainslog/server/proto"
 	"github.com/minond/captainslog/server/service"
 )
 
+var store = sessions.NewCookieStore([]byte(os.Getenv("SESSION_KEY")))
+
 {{range .Routes}}
 func Mount{{.Service | stripPackage}}(mux *http.ServeMux, service *{{.Service}}) {
 	mux.HandleFunc("{{.Endpoint}}", func(w http.ResponseWriter, r *http.Request) {
+		session, err := store.Get(r, "session-name")
+		if err != nil {
+			http.Error(w, "unable to read request data", http.StatusInternalServerError)
+			log.Printf("error getting session: %v", err)
+			return
+		}
+
 		switch r.Method {
 		{{range .Methods}}
 		case "{{.Method}}":
@@ -70,7 +82,12 @@ func Mount{{.Service | stripPackage}}(mux *http.ServeMux, service *{{.Service}})
 				return
 			}
 
-			res, err := service.Create(context.Background(), req)
+			ctx := context.Background()
+			for key, val := range session.Values {
+				ctx = context.WithValue(ctx, key, val)
+			}
+
+			res, err := service.Create(ctx, req)
 			if err != nil {
 				http.Error(w, "unable to handle request", http.StatusInternalServerError)
 				log.Printf("error handling request: %v", err)

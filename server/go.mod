@@ -4,6 +4,7 @@ require (
 	github.com/Masterminds/squirrel v1.1.0 // indirect
 	github.com/go-sql-driver/mysql v1.4.1 // indirect
 	github.com/golang/protobuf v1.3.1
+	github.com/gorilla/sessions v1.1.3
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/lib/pq v1.0.0 // indirect
 	github.com/mattn/go-sqlite3 v1.10.0 // indirect
