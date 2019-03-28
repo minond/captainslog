@@ -4,6 +4,8 @@ import (
 	"context"
 	"database/sql"
 
+	"gopkg.in/src-d/go-kallax.v1"
+
 	"github.com/minond/captainslog/server/model"
 	"github.com/minond/captainslog/server/processing"
 	"github.com/minond/captainslog/server/proto"
@@ -14,26 +16,30 @@ type EntryServiceContract interface {
 }
 
 type EntryService struct {
-	entryStore *model.EntryStore
+	bookStore       *model.BookStore
+	collectionStore *model.CollectionStore
+	entryStore      *model.EntryStore
 }
 
 var _ EntryServiceContract = EntryService{}
 
 func NewEntryService(db *sql.DB) *EntryService {
 	return &EntryService{
-		entryStore: model.NewEntryStore(db),
+		bookStore:       model.NewBookStore(db),
+		collectionStore: model.NewCollectionStore(db),
+		entryStore:      model.NewEntryStore(db),
 	}
 }
 
 func (s EntryService) Create(ctx context.Context, req *proto.EntryCreateRequest) (*proto.Entry, error) {
-	// FIXME
-	user, err := model.NewUser()
+	userGuid, err := getUserGuid(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	// FIXME
-	book, err := model.NewBook("Workouts", int32(proto.Grouping_DAY), user)
+	book, err := s.bookStore.FindOne(model.NewBookQuery().
+		Where(kallax.Eq(model.Schema.Book.Guid, req.BookGuid)).
+		Where(kallax.Eq(model.Schema.Book.UserGuid, userGuid)))
 	if err != nil {
 		return nil, err
 	}
