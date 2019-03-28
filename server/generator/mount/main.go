@@ -57,7 +57,7 @@ var store = sessions.NewCookieStore([]byte(os.Getenv("SESSION_KEY")))
 {{range .Routes}}
 func Mount{{.Service | stripPackage}}(mux *http.ServeMux, service *{{.Service}}) {
 	mux.HandleFunc("{{.Endpoint}}", func(w http.ResponseWriter, r *http.Request) {
-		session, err := store.Get(r, "session-name")
+		session, err := store.Get(r, "main")
 		if err != nil {
 			http.Error(w, "unable to read request data", http.StatusInternalServerError)
 			log.Printf("error getting session: %v", err)

@@ -7,6 +7,7 @@ package model
 import (
 	"database/sql"
 	"fmt"
+	"time"
 
 	"gopkg.in/src-d/go-kallax.v1"
 	"gopkg.in/src-d/go-kallax.v1/types"
@@ -1322,6 +1323,10 @@ func (r *Entry) ColumnAddress(col string) (interface{}, error) {
 		return &r.Text, nil
 	case "data":
 		return types.JSON(&r.Data), nil
+	case "created_at":
+		return &r.CreatedAt, nil
+	case "updated_at":
+		return &r.UpdatedAt, nil
 
 	default:
 		return nil, fmt.Errorf("kallax: invalid column in Entry: %s", col)
@@ -1339,6 +1344,10 @@ func (r *Entry) Value(col string) (interface{}, error) {
 		return r.Text, nil
 	case "data":
 		return types.JSON(r.Data), nil
+	case "created_at":
+		return r.CreatedAt, nil
+	case "updated_at":
+		return r.UpdatedAt, nil
 
 	default:
 		return nil, fmt.Errorf("kallax: invalid column in Entry: %s", col)
@@ -1401,6 +1410,9 @@ func (s *EntryStore) Insert(record *Entry) error {
 	record.SetSaving(true)
 	defer record.SetSaving(false)
 
+	record.CreatedAt = record.CreatedAt.Truncate(time.Microsecond)
+	record.UpdatedAt = record.UpdatedAt.Truncate(time.Microsecond)
+
 	return s.Store.Insert(Schema.Entry.BaseSchema, record)
 }
 
@@ -1411,6 +1423,9 @@ func (s *EntryStore) Insert(record *Entry) error {
 // Only writable records can be updated. Writable objects are those that have
 // been just inserted or retrieved using a query with no custom select fields.
 func (s *EntryStore) Update(record *Entry, cols ...kallax.SchemaField) (updated int64, err error) {
+	record.CreatedAt = record.CreatedAt.Truncate(time.Microsecond)
+	record.UpdatedAt = record.UpdatedAt.Truncate(time.Microsecond)
+
 	record.SetSaving(true)
 	defer record.SetSaving(false)
 
@@ -1623,6 +1638,18 @@ func (q *EntryQuery) FindByCollectionGuid(v kallax.ULID) *EntryQuery {
 // the Text property is equal to the passed value.
 func (q *EntryQuery) FindByText(v string) *EntryQuery {
 	return q.Where(kallax.Eq(Schema.Entry.Text, v))
+}
+
+// FindByCreatedAt adds a new filter to the query that will require that
+// the CreatedAt property is equal to the passed value.
+func (q *EntryQuery) FindByCreatedAt(cond kallax.ScalarCond, v time.Time) *EntryQuery {
+	return q.Where(cond(Schema.Entry.CreatedAt, v))
+}
+
+// FindByUpdatedAt adds a new filter to the query that will require that
+// the UpdatedAt property is equal to the passed value.
+func (q *EntryQuery) FindByUpdatedAt(cond kallax.ScalarCond, v time.Time) *EntryQuery {
+	return q.Where(cond(Schema.Entry.UpdatedAt, v))
 }
 
 // EntryResultSet is the set of results returned by a query to the
@@ -2605,6 +2632,8 @@ type schemaEntry struct {
 	CollectionGuid kallax.SchemaField
 	Text           kallax.SchemaField
 	Data           kallax.SchemaField
+	CreatedAt      kallax.SchemaField
+	UpdatedAt      kallax.SchemaField
 }
 
 type schemaExtractor struct {
@@ -2688,11 +2717,15 @@ var Schema = &schema{
 			kallax.NewSchemaField("collection_guid"),
 			kallax.NewSchemaField("text"),
 			kallax.NewSchemaField("data"),
+			kallax.NewSchemaField("created_at"),
+			kallax.NewSchemaField("updated_at"),
 		),
 		Guid:           kallax.NewSchemaField("guid"),
 		CollectionGuid: kallax.NewSchemaField("collection_guid"),
 		Text:           kallax.NewSchemaField("text"),
 		Data:           kallax.NewSchemaField("data"),
+		CreatedAt:      kallax.NewSchemaField("created_at"),
+		UpdatedAt:      kallax.NewSchemaField("updated_at"),
 	},
 	Extractor: &schemaExtractor{
 		BaseSchema: kallax.NewBaseSchema(

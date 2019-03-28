@@ -19,7 +19,7 @@ var store = sessions.NewCookieStore([]byte(os.Getenv("SESSION_KEY")))
 
 func MountEntryService(mux *http.ServeMux, service *service.EntryService) {
 	mux.HandleFunc("/api/entry", func(w http.ResponseWriter, r *http.Request) {
-		session, err := store.Get(r, "session-name")
+		session, err := store.Get(r, "main")
 		if err != nil {
 			http.Error(w, "unable to read request data", http.StatusInternalServerError)
 			log.Printf("error getting session: %v", err)
