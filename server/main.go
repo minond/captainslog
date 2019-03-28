@@ -8,6 +8,8 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/gorilla/mux"
+
 	"github.com/minond/captainslog/server/service"
 	"github.com/minond/captainslog/server/service/mount"
 )
@@ -19,9 +21,11 @@ func main() {
 	}
 	defer db.Close()
 
+	router := mux.NewRouter()
 	entryService := service.NewEntryService(db)
 
-	mount.MountEntryService(http.DefaultServeMux, entryService)
+	mount.MountEntryService(router, entryService)
 
+	http.Handle("/", router)
 	log.Fatal(http.ListenAndServe(os.Getenv("LISTEN"), nil))
 }

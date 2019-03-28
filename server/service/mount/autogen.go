@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 
 	"github.com/minond/captainslog/server/proto"
@@ -17,8 +18,8 @@ import (
 
 var store = sessions.NewCookieStore([]byte(os.Getenv("SESSION_KEY")))
 
-func MountEntryService(mux *http.ServeMux, service *service.EntryService) {
-	mux.HandleFunc("/api/entry", func(w http.ResponseWriter, r *http.Request) {
+func MountEntryService(router *mux.Router, service *service.EntryService) {
+	router.HandleFunc("/api/entry", func(w http.ResponseWriter, r *http.Request) {
 		session, err := store.Get(r, "main")
 		if err != nil {
 			http.Error(w, "unable to read request data", http.StatusInternalServerError)
