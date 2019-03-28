@@ -121,6 +121,22 @@
           "Reference": null,
           "NotNull": true,
           "Unique": false
+        },
+        {
+          "Name": "created_at",
+          "Type": "timestamptz",
+          "PrimaryKey": false,
+          "Reference": null,
+          "NotNull": true,
+          "Unique": false
+        },
+        {
+          "Name": "updated_at",
+          "Type": "timestamptz",
+          "PrimaryKey": false,
+          "Reference": null,
+          "NotNull": true,
+          "Unique": false
         }
       ]
     },
