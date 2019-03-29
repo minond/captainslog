@@ -7,6 +7,7 @@ import (
 	"gopkg.in/src-d/go-kallax.v1"
 
 	"github.com/minond/captainslog/server/model"
+	"github.com/minond/captainslog/server/modelext"
 	"github.com/minond/captainslog/server/processing"
 	"github.com/minond/captainslog/server/proto"
 )
@@ -45,7 +46,7 @@ func (s EntryService) Create(ctx context.Context, req *proto.EntryCreateRequest)
 	}
 
 	// FIXME
-	collection, err := model.NewCollection(book)
+	collection, err := modelext.NewCollection(book)
 	if err != nil {
 		return nil, err
 	}
@@ -64,11 +65,11 @@ func (s EntryService) Create(ctx context.Context, req *proto.EntryCreateRequest)
 		return nil, err
 	}
 
-	entry, err := model.NewEntry(req.Text, data, collection)
+	entry, err := modelext.NewEntry(req.Text, data, collection)
 	if err != nil {
 		return nil, err
 	}
 
 	err = s.entryStore.Insert(entry)
-	return entry.ToProto(), err
+	return modelext.Entry.ToProto(entry), err
 }
