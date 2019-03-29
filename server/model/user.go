@@ -7,7 +7,3 @@ type User struct {
 
 	Guid kallax.ULID
 }
-
-func newUser() (*User, error) {
-	return &User{Guid: kallax.NewULID()}, nil
-}

@@ -19,8 +19,8 @@ var _ fmt.Formatter
 type modelSaveFunc func(*kallax.Store) error
 
 // NewBook returns a new instance of Book.
-func NewBook(name string, grouping int32, user *User) (record *Book, err error) {
-	return newBook(name, grouping, user)
+func NewBook() (record *Book) {
+	return new(Book)
 }
 
 // GetID returns the primary key of the model.
@@ -457,8 +457,8 @@ func (rs *BookResultSet) Close() error {
 }
 
 // NewBookExtractor returns a new instance of BookExtractor.
-func NewBookExtractor(book *Book, extractor *Extractor) (record *BookExtractor, err error) {
-	return newBookExtractor(book, extractor)
+func NewBookExtractor() (record *BookExtractor) {
+	return new(BookExtractor)
 }
 
 // GetID returns the primary key of the model.
@@ -885,8 +885,8 @@ func (rs *BookExtractorResultSet) Close() error {
 }
 
 // NewCollection returns a new instance of Collection.
-func NewCollection(book *Book) (record *Collection, err error) {
-	return newCollection(book)
+func NewCollection() (record *Collection) {
+	return new(Collection)
 }
 
 // GetID returns the primary key of the model.
@@ -901,6 +901,8 @@ func (r *Collection) ColumnAddress(col string) (interface{}, error) {
 		return (*kallax.ULID)(&r.Guid), nil
 	case "book_guid":
 		return &r.BookGuid, nil
+	case "created_at":
+		return &r.CreatedAt, nil
 
 	default:
 		return nil, fmt.Errorf("kallax: invalid column in Collection: %s", col)
@@ -914,6 +916,8 @@ func (r *Collection) Value(col string) (interface{}, error) {
 		return r.Guid, nil
 	case "book_guid":
 		return r.BookGuid, nil
+	case "created_at":
+		return r.CreatedAt, nil
 
 	default:
 		return nil, fmt.Errorf("kallax: invalid column in Collection: %s", col)
@@ -976,6 +980,8 @@ func (s *CollectionStore) Insert(record *Collection) error {
 	record.SetSaving(true)
 	defer record.SetSaving(false)
 
+	record.CreatedAt = record.CreatedAt.Truncate(time.Microsecond)
+
 	return s.Store.Insert(Schema.Collection.BaseSchema, record)
 }
 
@@ -986,6 +992,8 @@ func (s *CollectionStore) Insert(record *Collection) error {
 // Only writable records can be updated. Writable objects are those that have
 // been just inserted or retrieved using a query with no custom select fields.
 func (s *CollectionStore) Update(record *Collection, cols ...kallax.SchemaField) (updated int64, err error) {
+	record.CreatedAt = record.CreatedAt.Truncate(time.Microsecond)
+
 	record.SetSaving(true)
 	defer record.SetSaving(false)
 
@@ -1194,6 +1202,12 @@ func (q *CollectionQuery) FindByBookGuid(v kallax.ULID) *CollectionQuery {
 	return q.Where(kallax.Eq(Schema.Collection.BookGuid, v))
 }
 
+// FindByCreatedAt adds a new filter to the query that will require that
+// the CreatedAt property is equal to the passed value.
+func (q *CollectionQuery) FindByCreatedAt(cond kallax.ScalarCond, v time.Time) *CollectionQuery {
+	return q.Where(cond(Schema.Collection.CreatedAt, v))
+}
+
 // CollectionResultSet is the set of results returned by a query to the
 // database.
 type CollectionResultSet struct {
@@ -1303,8 +1317,8 @@ func (rs *CollectionResultSet) Close() error {
 }
 
 // NewEntry returns a new instance of Entry.
-func NewEntry(text string, data map[string]string, collection *Collection) (record *Entry, err error) {
-	return newEntry(text, data, collection)
+func NewEntry() (record *Entry) {
+	return new(Entry)
 }
 
 // GetID returns the primary key of the model.
@@ -1761,8 +1775,8 @@ func (rs *EntryResultSet) Close() error {
 }
 
 // NewExtractor returns a new instance of Extractor.
-func NewExtractor(label string, match string) (record *Extractor, err error) {
-	return newExtractor(label, match)
+func NewExtractor() (record *Extractor) {
+	return new(Extractor)
 }
 
 // GetID returns the primary key of the model.
@@ -2189,8 +2203,8 @@ func (rs *ExtractorResultSet) Close() error {
 }
 
 // NewUser returns a new instance of User.
-func NewUser() (record *User, err error) {
-	return newUser()
+func NewUser() (record *User) {
+	return new(User)
 }
 
 // GetID returns the primary key of the model.
@@ -2622,8 +2636,9 @@ type schemaBookExtractor struct {
 
 type schemaCollection struct {
 	*kallax.BaseSchema
-	Guid     kallax.SchemaField
-	BookGuid kallax.SchemaField
+	Guid      kallax.SchemaField
+	BookGuid  kallax.SchemaField
+	CreatedAt kallax.SchemaField
 }
 
 type schemaEntry struct {
@@ -2699,9 +2714,11 @@ var Schema = &schema{
 			false,
 			kallax.NewSchemaField("guid"),
 			kallax.NewSchemaField("book_guid"),
+			kallax.NewSchemaField("created_at"),
 		),
-		Guid:     kallax.NewSchemaField("guid"),
-		BookGuid: kallax.NewSchemaField("book_guid"),
+		Guid:      kallax.NewSchemaField("guid"),
+		BookGuid:  kallax.NewSchemaField("book_guid"),
+		CreatedAt: kallax.NewSchemaField("created_at"),
 	},
 	Entry: &schemaEntry{
 		BaseSchema: kallax.NewBaseSchema(

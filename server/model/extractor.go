@@ -11,11 +11,3 @@ type Extractor struct {
 	Label string
 	Match string
 }
-
-func newExtractor(label, match string) (*Extractor, error) {
-	return &Extractor{
-		Guid:  kallax.NewULID(),
-		Label: label,
-		Match: match,
-	}, nil
-}

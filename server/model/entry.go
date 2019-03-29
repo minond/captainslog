@@ -16,20 +16,3 @@ type Entry struct {
 	CreatedAt      time.Time
 	UpdatedAt      time.Time
 }
-
-func newEntry(text string, data map[string]string, collection *Collection) (*Entry, error) {
-	now := time.Now()
-	entry := &Entry{
-		Guid:      kallax.NewULID(),
-		Text:      text,
-		Data:      data,
-		CreatedAt: now,
-		UpdatedAt: now,
-	}
-
-	if collection != nil {
-		entry.CollectionGuid = collection.Guid
-	}
-
-	return entry, nil
-}

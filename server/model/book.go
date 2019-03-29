@@ -12,17 +12,3 @@ type Book struct {
 	Name     string
 	Grouping int32
 }
-
-func newBook(name string, grouping int32, user *User) (*Book, error) {
-	book := &Book{
-		Guid:     kallax.NewULID(),
-		Name:     name,
-		Grouping: grouping,
-	}
-
-	if user != nil {
-		book.UserGuid = user.Guid
-	}
-
-	return book, nil
-}
