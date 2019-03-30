@@ -29,6 +29,7 @@ func newEntry(text string, data map[string]string, collection *Collection) (*Ent
 	}
 
 	if collection != nil {
+		entry.BookGUID = collection.BookGUID
 		entry.CollectionGUID = collection.GUID
 	}
 
