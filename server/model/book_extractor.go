@@ -7,7 +7,15 @@ import (
 type BookExtractor struct {
 	kallax.Model `table:"book_extractors" pk:"guid"`
 
-	Guid          kallax.ULID
-	BookGuid      kallax.ULID
-	ExtractorGuid kallax.ULID
+	GUID          kallax.ULID
+	BookGUID      kallax.ULID
+	ExtractorGUID kallax.ULID
+}
+
+func newBookExtractor(book *Book, extractor *Extractor) (*BookExtractor, error) {
+	return &BookExtractor{
+		GUID:          kallax.NewULID(),
+		BookGUID:      book.GUID,
+		ExtractorGUID: extractor.GUID,
+	}, nil
 }

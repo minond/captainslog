@@ -1,9 +1,0 @@
-syntax = "proto3";
-
-package captainslog;
-
-option go_package = "proto";
-
-message User {
-  string guid = 1;
-}

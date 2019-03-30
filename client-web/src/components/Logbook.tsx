@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
 })
 
 interface Props {
+  guid: string
   name: string
   entries?: Entry[]
 }
@@ -79,7 +80,7 @@ export class Logbook extends Component<Props, State> {
   getEntries(): ReadonlyArray<Entry | EntryCreateRequest> {
     const { unsynced, entries } = this.state
     return [...entries, ...unsynced].sort((a, b) => {
-      if (!a.timestamp || !b.timestamp || a.timestamp === b.timestamp) {
+      if (a.timestamp === b.timestamp) {
         return 0
       } else if (a.timestamp > b.timestamp) {
         return 1
@@ -91,7 +92,9 @@ export class Logbook extends Component<Props, State> {
 
   addEntry(text: string) {
     const guid = Math.random().toString()
-    this.state.unsynced.push({ guid, text, })
+    const timestamp = Date.now()
+    const book_guid = this.props.guid
+    this.state.unsynced.push({ guid, text, timestamp, book_guid })
     this.setState({ unsynced: this.state.unsynced })
   }
 

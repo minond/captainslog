@@ -3,17 +3,23 @@ package service
 import (
 	"context"
 	"database/sql"
+	"time"
 
 	"gopkg.in/src-d/go-kallax.v1"
 
 	"github.com/minond/captainslog/server/model"
-	"github.com/minond/captainslog/server/modelext"
 	"github.com/minond/captainslog/server/processing"
-	"github.com/minond/captainslog/server/proto"
 )
 
+type EntryCreateRequest struct {
+	GUID      string    `json:"guid"`
+	Text      string    `json:"text"`
+	Timestamp time.Time `json:"timestamp"`
+	BookGUID  string    `json:"book_guid"`
+}
+
 type EntryServiceContract interface {
-	Create(context.Context, *proto.EntryCreateRequest) (*proto.Entry, error)
+	Create(context.Context, *EntryCreateRequest) (*model.Entry, error)
 }
 
 type EntryService struct {
@@ -32,21 +38,21 @@ func NewEntryService(db *sql.DB) *EntryService {
 	}
 }
 
-func (s EntryService) Create(ctx context.Context, req *proto.EntryCreateRequest) (*proto.Entry, error) {
-	userGuid, err := getUserGuid(ctx)
+func (s EntryService) Create(ctx context.Context, req *EntryCreateRequest) (*model.Entry, error) {
+	userGUID, err := getUserGUID(ctx)
 	if err != nil {
 		return nil, err
 	}
 
 	book, err := s.bookStore.FindOne(model.NewBookQuery().
-		Where(kallax.Eq(model.Schema.Book.Guid, req.BookGuid)).
-		Where(kallax.Eq(model.Schema.Book.UserGuid, userGuid)))
+		Where(kallax.Eq(model.Schema.Book.GUID, req.BookGUID)).
+		Where(kallax.Eq(model.Schema.Book.UserGUID, userGUID)))
 	if err != nil {
 		return nil, err
 	}
 
 	// FIXME
-	collection, err := modelext.NewCollection(book)
+	collection, err := model.NewCollection(book)
 	if err != nil {
 		return nil, err
 	}
@@ -65,11 +71,11 @@ func (s EntryService) Create(ctx context.Context, req *proto.EntryCreateRequest)
 		return nil, err
 	}
 
-	entry, err := modelext.NewEntry(req.Text, data, collection)
+	entry, err := model.NewEntry(req.Text, data, collection)
 	if err != nil {
 		return nil, err
 	}
 
 	err = s.entryStore.Insert(entry)
-	return modelext.Entry.ToProto(entry), err
+	return entry, err
 }

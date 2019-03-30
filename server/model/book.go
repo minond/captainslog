@@ -7,8 +7,22 @@ import (
 type Book struct {
 	kallax.Model `table:"books" pk:"guid"`
 
-	Guid     kallax.ULID
-	UserGuid kallax.ULID
+	GUID     kallax.ULID
+	UserGUID kallax.ULID
 	Name     string
 	Grouping int32
+}
+
+func newBook(name string, grouping int32, user *User) (*Book, error) {
+	book := &Book{
+		GUID:     kallax.NewULID(),
+		Name:     name,
+		Grouping: grouping,
+	}
+
+	if user != nil {
+		book.UserGUID = user.GUID
+	}
+
+	return book, nil
 }

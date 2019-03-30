@@ -19,22 +19,22 @@ var _ fmt.Formatter
 type modelSaveFunc func(*kallax.Store) error
 
 // NewBook returns a new instance of Book.
-func NewBook() (record *Book) {
-	return new(Book)
+func NewBook(name string, grouping int32, user *User) (record *Book, err error) {
+	return newBook(name, grouping, user)
 }
 
 // GetID returns the primary key of the model.
 func (r *Book) GetID() kallax.Identifier {
-	return (*kallax.ULID)(&r.Guid)
+	return (*kallax.ULID)(&r.GUID)
 }
 
 // ColumnAddress returns the pointer to the value of the given column.
 func (r *Book) ColumnAddress(col string) (interface{}, error) {
 	switch col {
 	case "guid":
-		return (*kallax.ULID)(&r.Guid), nil
+		return (*kallax.ULID)(&r.GUID), nil
 	case "user_guid":
-		return &r.UserGuid, nil
+		return &r.UserGUID, nil
 	case "name":
 		return &r.Name, nil
 	case "grouping":
@@ -49,9 +49,9 @@ func (r *Book) ColumnAddress(col string) (interface{}, error) {
 func (r *Book) Value(col string) (interface{}, error) {
 	switch col {
 	case "guid":
-		return r.Guid, nil
+		return r.GUID, nil
 	case "user_guid":
-		return r.UserGuid, nil
+		return r.UserGUID, nil
 	case "name":
 		return r.Name, nil
 	case "grouping":
@@ -316,10 +316,10 @@ func (q *BookQuery) Where(cond kallax.Condition) *BookQuery {
 	return q
 }
 
-// FindByGuid adds a new filter to the query that will require that
-// the Guid property is equal to one of the passed values; if no passed values,
+// FindByGUID adds a new filter to the query that will require that
+// the GUID property is equal to one of the passed values; if no passed values,
 // it will do nothing.
-func (q *BookQuery) FindByGuid(v ...kallax.ULID) *BookQuery {
+func (q *BookQuery) FindByGUID(v ...kallax.ULID) *BookQuery {
 	if len(v) == 0 {
 		return q
 	}
@@ -327,13 +327,13 @@ func (q *BookQuery) FindByGuid(v ...kallax.ULID) *BookQuery {
 	for i, val := range v {
 		values[i] = val
 	}
-	return q.Where(kallax.In(Schema.Book.Guid, values...))
+	return q.Where(kallax.In(Schema.Book.GUID, values...))
 }
 
-// FindByUserGuid adds a new filter to the query that will require that
-// the UserGuid property is equal to the passed value.
-func (q *BookQuery) FindByUserGuid(v kallax.ULID) *BookQuery {
-	return q.Where(kallax.Eq(Schema.Book.UserGuid, v))
+// FindByUserGUID adds a new filter to the query that will require that
+// the UserGUID property is equal to the passed value.
+func (q *BookQuery) FindByUserGUID(v kallax.ULID) *BookQuery {
+	return q.Where(kallax.Eq(Schema.Book.UserGUID, v))
 }
 
 // FindByName adds a new filter to the query that will require that
@@ -457,24 +457,24 @@ func (rs *BookResultSet) Close() error {
 }
 
 // NewBookExtractor returns a new instance of BookExtractor.
-func NewBookExtractor() (record *BookExtractor) {
-	return new(BookExtractor)
+func NewBookExtractor(book *Book, extractor *Extractor) (record *BookExtractor, err error) {
+	return newBookExtractor(book, extractor)
 }
 
 // GetID returns the primary key of the model.
 func (r *BookExtractor) GetID() kallax.Identifier {
-	return (*kallax.ULID)(&r.Guid)
+	return (*kallax.ULID)(&r.GUID)
 }
 
 // ColumnAddress returns the pointer to the value of the given column.
 func (r *BookExtractor) ColumnAddress(col string) (interface{}, error) {
 	switch col {
 	case "guid":
-		return (*kallax.ULID)(&r.Guid), nil
+		return (*kallax.ULID)(&r.GUID), nil
 	case "book_guid":
-		return &r.BookGuid, nil
+		return &r.BookGUID, nil
 	case "extractor_guid":
-		return &r.ExtractorGuid, nil
+		return &r.ExtractorGUID, nil
 
 	default:
 		return nil, fmt.Errorf("kallax: invalid column in BookExtractor: %s", col)
@@ -485,11 +485,11 @@ func (r *BookExtractor) ColumnAddress(col string) (interface{}, error) {
 func (r *BookExtractor) Value(col string) (interface{}, error) {
 	switch col {
 	case "guid":
-		return r.Guid, nil
+		return r.GUID, nil
 	case "book_guid":
-		return r.BookGuid, nil
+		return r.BookGUID, nil
 	case "extractor_guid":
-		return r.ExtractorGuid, nil
+		return r.ExtractorGUID, nil
 
 	default:
 		return nil, fmt.Errorf("kallax: invalid column in BookExtractor: %s", col)
@@ -750,10 +750,10 @@ func (q *BookExtractorQuery) Where(cond kallax.Condition) *BookExtractorQuery {
 	return q
 }
 
-// FindByGuid adds a new filter to the query that will require that
-// the Guid property is equal to one of the passed values; if no passed values,
+// FindByGUID adds a new filter to the query that will require that
+// the GUID property is equal to one of the passed values; if no passed values,
 // it will do nothing.
-func (q *BookExtractorQuery) FindByGuid(v ...kallax.ULID) *BookExtractorQuery {
+func (q *BookExtractorQuery) FindByGUID(v ...kallax.ULID) *BookExtractorQuery {
 	if len(v) == 0 {
 		return q
 	}
@@ -761,19 +761,19 @@ func (q *BookExtractorQuery) FindByGuid(v ...kallax.ULID) *BookExtractorQuery {
 	for i, val := range v {
 		values[i] = val
 	}
-	return q.Where(kallax.In(Schema.BookExtractor.Guid, values...))
+	return q.Where(kallax.In(Schema.BookExtractor.GUID, values...))
 }
 
-// FindByBookGuid adds a new filter to the query that will require that
-// the BookGuid property is equal to the passed value.
-func (q *BookExtractorQuery) FindByBookGuid(v kallax.ULID) *BookExtractorQuery {
-	return q.Where(kallax.Eq(Schema.BookExtractor.BookGuid, v))
+// FindByBookGUID adds a new filter to the query that will require that
+// the BookGUID property is equal to the passed value.
+func (q *BookExtractorQuery) FindByBookGUID(v kallax.ULID) *BookExtractorQuery {
+	return q.Where(kallax.Eq(Schema.BookExtractor.BookGUID, v))
 }
 
-// FindByExtractorGuid adds a new filter to the query that will require that
-// the ExtractorGuid property is equal to the passed value.
-func (q *BookExtractorQuery) FindByExtractorGuid(v kallax.ULID) *BookExtractorQuery {
-	return q.Where(kallax.Eq(Schema.BookExtractor.ExtractorGuid, v))
+// FindByExtractorGUID adds a new filter to the query that will require that
+// the ExtractorGUID property is equal to the passed value.
+func (q *BookExtractorQuery) FindByExtractorGUID(v kallax.ULID) *BookExtractorQuery {
+	return q.Where(kallax.Eq(Schema.BookExtractor.ExtractorGUID, v))
 }
 
 // BookExtractorResultSet is the set of results returned by a query to the
@@ -885,22 +885,22 @@ func (rs *BookExtractorResultSet) Close() error {
 }
 
 // NewCollection returns a new instance of Collection.
-func NewCollection() (record *Collection) {
-	return new(Collection)
+func NewCollection(book *Book) (record *Collection, err error) {
+	return newCollection(book)
 }
 
 // GetID returns the primary key of the model.
 func (r *Collection) GetID() kallax.Identifier {
-	return (*kallax.ULID)(&r.Guid)
+	return (*kallax.ULID)(&r.GUID)
 }
 
 // ColumnAddress returns the pointer to the value of the given column.
 func (r *Collection) ColumnAddress(col string) (interface{}, error) {
 	switch col {
 	case "guid":
-		return (*kallax.ULID)(&r.Guid), nil
+		return (*kallax.ULID)(&r.GUID), nil
 	case "book_guid":
-		return &r.BookGuid, nil
+		return &r.BookGUID, nil
 	case "created_at":
 		return &r.CreatedAt, nil
 
@@ -913,9 +913,9 @@ func (r *Collection) ColumnAddress(col string) (interface{}, error) {
 func (r *Collection) Value(col string) (interface{}, error) {
 	switch col {
 	case "guid":
-		return r.Guid, nil
+		return r.GUID, nil
 	case "book_guid":
-		return r.BookGuid, nil
+		return r.BookGUID, nil
 	case "created_at":
 		return r.CreatedAt, nil
 
@@ -1182,10 +1182,10 @@ func (q *CollectionQuery) Where(cond kallax.Condition) *CollectionQuery {
 	return q
 }
 
-// FindByGuid adds a new filter to the query that will require that
-// the Guid property is equal to one of the passed values; if no passed values,
+// FindByGUID adds a new filter to the query that will require that
+// the GUID property is equal to one of the passed values; if no passed values,
 // it will do nothing.
-func (q *CollectionQuery) FindByGuid(v ...kallax.ULID) *CollectionQuery {
+func (q *CollectionQuery) FindByGUID(v ...kallax.ULID) *CollectionQuery {
 	if len(v) == 0 {
 		return q
 	}
@@ -1193,13 +1193,13 @@ func (q *CollectionQuery) FindByGuid(v ...kallax.ULID) *CollectionQuery {
 	for i, val := range v {
 		values[i] = val
 	}
-	return q.Where(kallax.In(Schema.Collection.Guid, values...))
+	return q.Where(kallax.In(Schema.Collection.GUID, values...))
 }
 
-// FindByBookGuid adds a new filter to the query that will require that
-// the BookGuid property is equal to the passed value.
-func (q *CollectionQuery) FindByBookGuid(v kallax.ULID) *CollectionQuery {
-	return q.Where(kallax.Eq(Schema.Collection.BookGuid, v))
+// FindByBookGUID adds a new filter to the query that will require that
+// the BookGUID property is equal to the passed value.
+func (q *CollectionQuery) FindByBookGUID(v kallax.ULID) *CollectionQuery {
+	return q.Where(kallax.Eq(Schema.Collection.BookGUID, v))
 }
 
 // FindByCreatedAt adds a new filter to the query that will require that
@@ -1317,22 +1317,22 @@ func (rs *CollectionResultSet) Close() error {
 }
 
 // NewEntry returns a new instance of Entry.
-func NewEntry() (record *Entry) {
-	return new(Entry)
+func NewEntry(text string, data map[string]string, collection *Collection) (record *Entry, err error) {
+	return newEntry(text, data, collection)
 }
 
 // GetID returns the primary key of the model.
 func (r *Entry) GetID() kallax.Identifier {
-	return (*kallax.ULID)(&r.Guid)
+	return (*kallax.ULID)(&r.GUID)
 }
 
 // ColumnAddress returns the pointer to the value of the given column.
 func (r *Entry) ColumnAddress(col string) (interface{}, error) {
 	switch col {
 	case "guid":
-		return (*kallax.ULID)(&r.Guid), nil
+		return (*kallax.ULID)(&r.GUID), nil
 	case "collection_guid":
-		return &r.CollectionGuid, nil
+		return &r.CollectionGUID, nil
 	case "text":
 		return &r.Text, nil
 	case "data":
@@ -1351,9 +1351,9 @@ func (r *Entry) ColumnAddress(col string) (interface{}, error) {
 func (r *Entry) Value(col string) (interface{}, error) {
 	switch col {
 	case "guid":
-		return r.Guid, nil
+		return r.GUID, nil
 	case "collection_guid":
-		return r.CollectionGuid, nil
+		return r.CollectionGUID, nil
 	case "text":
 		return r.Text, nil
 	case "data":
@@ -1628,10 +1628,10 @@ func (q *EntryQuery) Where(cond kallax.Condition) *EntryQuery {
 	return q
 }
 
-// FindByGuid adds a new filter to the query that will require that
-// the Guid property is equal to one of the passed values; if no passed values,
+// FindByGUID adds a new filter to the query that will require that
+// the GUID property is equal to one of the passed values; if no passed values,
 // it will do nothing.
-func (q *EntryQuery) FindByGuid(v ...kallax.ULID) *EntryQuery {
+func (q *EntryQuery) FindByGUID(v ...kallax.ULID) *EntryQuery {
 	if len(v) == 0 {
 		return q
 	}
@@ -1639,13 +1639,13 @@ func (q *EntryQuery) FindByGuid(v ...kallax.ULID) *EntryQuery {
 	for i, val := range v {
 		values[i] = val
 	}
-	return q.Where(kallax.In(Schema.Entry.Guid, values...))
+	return q.Where(kallax.In(Schema.Entry.GUID, values...))
 }
 
-// FindByCollectionGuid adds a new filter to the query that will require that
-// the CollectionGuid property is equal to the passed value.
-func (q *EntryQuery) FindByCollectionGuid(v kallax.ULID) *EntryQuery {
-	return q.Where(kallax.Eq(Schema.Entry.CollectionGuid, v))
+// FindByCollectionGUID adds a new filter to the query that will require that
+// the CollectionGUID property is equal to the passed value.
+func (q *EntryQuery) FindByCollectionGUID(v kallax.ULID) *EntryQuery {
+	return q.Where(kallax.Eq(Schema.Entry.CollectionGUID, v))
 }
 
 // FindByText adds a new filter to the query that will require that
@@ -1775,20 +1775,20 @@ func (rs *EntryResultSet) Close() error {
 }
 
 // NewExtractor returns a new instance of Extractor.
-func NewExtractor() (record *Extractor) {
-	return new(Extractor)
+func NewExtractor(label string, match string) (record *Extractor, err error) {
+	return newExtractor(label, match)
 }
 
 // GetID returns the primary key of the model.
 func (r *Extractor) GetID() kallax.Identifier {
-	return (*kallax.ULID)(&r.Guid)
+	return (*kallax.ULID)(&r.GUID)
 }
 
 // ColumnAddress returns the pointer to the value of the given column.
 func (r *Extractor) ColumnAddress(col string) (interface{}, error) {
 	switch col {
 	case "guid":
-		return (*kallax.ULID)(&r.Guid), nil
+		return (*kallax.ULID)(&r.GUID), nil
 	case "label":
 		return &r.Label, nil
 	case "match":
@@ -1803,7 +1803,7 @@ func (r *Extractor) ColumnAddress(col string) (interface{}, error) {
 func (r *Extractor) Value(col string) (interface{}, error) {
 	switch col {
 	case "guid":
-		return r.Guid, nil
+		return r.GUID, nil
 	case "label":
 		return r.Label, nil
 	case "match":
@@ -2068,10 +2068,10 @@ func (q *ExtractorQuery) Where(cond kallax.Condition) *ExtractorQuery {
 	return q
 }
 
-// FindByGuid adds a new filter to the query that will require that
-// the Guid property is equal to one of the passed values; if no passed values,
+// FindByGUID adds a new filter to the query that will require that
+// the GUID property is equal to one of the passed values; if no passed values,
 // it will do nothing.
-func (q *ExtractorQuery) FindByGuid(v ...kallax.ULID) *ExtractorQuery {
+func (q *ExtractorQuery) FindByGUID(v ...kallax.ULID) *ExtractorQuery {
 	if len(v) == 0 {
 		return q
 	}
@@ -2079,7 +2079,7 @@ func (q *ExtractorQuery) FindByGuid(v ...kallax.ULID) *ExtractorQuery {
 	for i, val := range v {
 		values[i] = val
 	}
-	return q.Where(kallax.In(Schema.Extractor.Guid, values...))
+	return q.Where(kallax.In(Schema.Extractor.GUID, values...))
 }
 
 // FindByLabel adds a new filter to the query that will require that
@@ -2203,20 +2203,20 @@ func (rs *ExtractorResultSet) Close() error {
 }
 
 // NewUser returns a new instance of User.
-func NewUser() (record *User) {
-	return new(User)
+func NewUser() (record *User, err error) {
+	return newUser()
 }
 
 // GetID returns the primary key of the model.
 func (r *User) GetID() kallax.Identifier {
-	return (*kallax.ULID)(&r.Guid)
+	return (*kallax.ULID)(&r.GUID)
 }
 
 // ColumnAddress returns the pointer to the value of the given column.
 func (r *User) ColumnAddress(col string) (interface{}, error) {
 	switch col {
 	case "guid":
-		return (*kallax.ULID)(&r.Guid), nil
+		return (*kallax.ULID)(&r.GUID), nil
 
 	default:
 		return nil, fmt.Errorf("kallax: invalid column in User: %s", col)
@@ -2227,7 +2227,7 @@ func (r *User) ColumnAddress(col string) (interface{}, error) {
 func (r *User) Value(col string) (interface{}, error) {
 	switch col {
 	case "guid":
-		return r.Guid, nil
+		return r.GUID, nil
 
 	default:
 		return nil, fmt.Errorf("kallax: invalid column in User: %s", col)
@@ -2488,10 +2488,10 @@ func (q *UserQuery) Where(cond kallax.Condition) *UserQuery {
 	return q
 }
 
-// FindByGuid adds a new filter to the query that will require that
-// the Guid property is equal to one of the passed values; if no passed values,
+// FindByGUID adds a new filter to the query that will require that
+// the GUID property is equal to one of the passed values; if no passed values,
 // it will do nothing.
-func (q *UserQuery) FindByGuid(v ...kallax.ULID) *UserQuery {
+func (q *UserQuery) FindByGUID(v ...kallax.ULID) *UserQuery {
 	if len(v) == 0 {
 		return q
 	}
@@ -2499,7 +2499,7 @@ func (q *UserQuery) FindByGuid(v ...kallax.ULID) *UserQuery {
 	for i, val := range v {
 		values[i] = val
 	}
-	return q.Where(kallax.In(Schema.User.Guid, values...))
+	return q.Where(kallax.In(Schema.User.GUID, values...))
 }
 
 // UserResultSet is the set of results returned by a query to the
@@ -2621,30 +2621,30 @@ type schema struct {
 
 type schemaBook struct {
 	*kallax.BaseSchema
-	Guid     kallax.SchemaField
-	UserGuid kallax.SchemaField
+	GUID     kallax.SchemaField
+	UserGUID kallax.SchemaField
 	Name     kallax.SchemaField
 	Grouping kallax.SchemaField
 }
 
 type schemaBookExtractor struct {
 	*kallax.BaseSchema
-	Guid          kallax.SchemaField
-	BookGuid      kallax.SchemaField
-	ExtractorGuid kallax.SchemaField
+	GUID          kallax.SchemaField
+	BookGUID      kallax.SchemaField
+	ExtractorGUID kallax.SchemaField
 }
 
 type schemaCollection struct {
 	*kallax.BaseSchema
-	Guid      kallax.SchemaField
-	BookGuid  kallax.SchemaField
+	GUID      kallax.SchemaField
+	BookGUID  kallax.SchemaField
 	CreatedAt kallax.SchemaField
 }
 
 type schemaEntry struct {
 	*kallax.BaseSchema
-	Guid           kallax.SchemaField
-	CollectionGuid kallax.SchemaField
+	GUID           kallax.SchemaField
+	CollectionGUID kallax.SchemaField
 	Text           kallax.SchemaField
 	Data           kallax.SchemaField
 	CreatedAt      kallax.SchemaField
@@ -2653,14 +2653,14 @@ type schemaEntry struct {
 
 type schemaExtractor struct {
 	*kallax.BaseSchema
-	Guid  kallax.SchemaField
+	GUID  kallax.SchemaField
 	Label kallax.SchemaField
 	Match kallax.SchemaField
 }
 
 type schemaUser struct {
 	*kallax.BaseSchema
-	Guid kallax.SchemaField
+	GUID kallax.SchemaField
 }
 
 var Schema = &schema{
@@ -2679,8 +2679,8 @@ var Schema = &schema{
 			kallax.NewSchemaField("name"),
 			kallax.NewSchemaField("grouping"),
 		),
-		Guid:     kallax.NewSchemaField("guid"),
-		UserGuid: kallax.NewSchemaField("user_guid"),
+		GUID:     kallax.NewSchemaField("guid"),
+		UserGUID: kallax.NewSchemaField("user_guid"),
 		Name:     kallax.NewSchemaField("name"),
 		Grouping: kallax.NewSchemaField("grouping"),
 	},
@@ -2698,9 +2698,9 @@ var Schema = &schema{
 			kallax.NewSchemaField("book_guid"),
 			kallax.NewSchemaField("extractor_guid"),
 		),
-		Guid:          kallax.NewSchemaField("guid"),
-		BookGuid:      kallax.NewSchemaField("book_guid"),
-		ExtractorGuid: kallax.NewSchemaField("extractor_guid"),
+		GUID:          kallax.NewSchemaField("guid"),
+		BookGUID:      kallax.NewSchemaField("book_guid"),
+		ExtractorGUID: kallax.NewSchemaField("extractor_guid"),
 	},
 	Collection: &schemaCollection{
 		BaseSchema: kallax.NewBaseSchema(
@@ -2716,8 +2716,8 @@ var Schema = &schema{
 			kallax.NewSchemaField("book_guid"),
 			kallax.NewSchemaField("created_at"),
 		),
-		Guid:      kallax.NewSchemaField("guid"),
-		BookGuid:  kallax.NewSchemaField("book_guid"),
+		GUID:      kallax.NewSchemaField("guid"),
+		BookGUID:  kallax.NewSchemaField("book_guid"),
 		CreatedAt: kallax.NewSchemaField("created_at"),
 	},
 	Entry: &schemaEntry{
@@ -2737,8 +2737,8 @@ var Schema = &schema{
 			kallax.NewSchemaField("created_at"),
 			kallax.NewSchemaField("updated_at"),
 		),
-		Guid:           kallax.NewSchemaField("guid"),
-		CollectionGuid: kallax.NewSchemaField("collection_guid"),
+		GUID:           kallax.NewSchemaField("guid"),
+		CollectionGUID: kallax.NewSchemaField("collection_guid"),
 		Text:           kallax.NewSchemaField("text"),
 		Data:           kallax.NewSchemaField("data"),
 		CreatedAt:      kallax.NewSchemaField("created_at"),
@@ -2758,7 +2758,7 @@ var Schema = &schema{
 			kallax.NewSchemaField("label"),
 			kallax.NewSchemaField("match"),
 		),
-		Guid:  kallax.NewSchemaField("guid"),
+		GUID:  kallax.NewSchemaField("guid"),
 		Label: kallax.NewSchemaField("label"),
 		Match: kallax.NewSchemaField("match"),
 	},
@@ -2774,6 +2774,6 @@ var Schema = &schema{
 			false,
 			kallax.NewSchemaField("guid"),
 		),
-		Guid: kallax.NewSchemaField("guid"),
+		GUID: kallax.NewSchemaField("guid"),
 	},
 }

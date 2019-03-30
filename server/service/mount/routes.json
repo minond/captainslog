@@ -6,7 +6,7 @@
       "methods": [
         {
           "method": "POST",
-          "request": "proto.EntryCreateRequest"
+          "request": "service.EntryCreateRequest"
         }
       ]
     }

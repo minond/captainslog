@@ -8,6 +8,7 @@ const fake = (text: string): Entry => ({
   guid: Math.random().toString(),
   text: text,
   data: new Map(),
+  timestamp: Date.now(),
 })
 
 const entries = [
@@ -18,5 +19,5 @@ const entries = [
 ]
 
 ReactDOM.render(
-  <Logbook name="Workouts" entries={entries} />,
+  <Logbook guid="2be8e6ec-2668-4a7c-bdca-3d213f724c82" name="Workouts" entries={entries} />,
   document.getElementById("body"))

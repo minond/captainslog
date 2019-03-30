@@ -49,14 +49,13 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 
-	"github.com/minond/captainslog/server/proto"
 	"github.com/minond/captainslog/server/service"
 )
 
 var store = sessions.NewCookieStore([]byte(os.Getenv("SESSION_KEY")))
 
 {{range .Routes}}
-func Mount{{.Service | stripPackage}}(router *mux.Router, service *{{.Service}}) {
+func Mount{{.Service | stripPackage}}(router *mux.Router, serv *{{.Service}}) {
 	router.HandleFunc("{{.Endpoint}}", func(w http.ResponseWriter, r *http.Request) {
 		session, err := store.Get(r, "main")
 		if err != nil {
@@ -88,7 +87,7 @@ func Mount{{.Service | stripPackage}}(router *mux.Router, service *{{.Service}})
 				ctx = context.WithValue(ctx, key, val)
 			}
 
-			res, err := service.Create(ctx, req)
+			res, err := serv.Create(ctx, req)
 			if err != nil {
 				http.Error(w, "unable to handle request", http.StatusInternalServerError)
 				log.Printf("error handling request: %v", err)

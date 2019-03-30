@@ -9,7 +9,7 @@ import (
 	"github.com/minond/captainslog/server/model"
 )
 
-func getUserGuid(ctx context.Context) (string, error) {
+func getUserGUID(ctx context.Context) (string, error) {
 	val := ctx.Value("userguid")
 	if val == nil {
 		return "", errors.New("noguid")
@@ -24,15 +24,15 @@ func getUserGuid(ctx context.Context) (string, error) {
 }
 
 func getUser(ctx context.Context, store *model.UserStore) (*model.User, error) {
-	userGuidRaw, err := getUserGuid(ctx)
+	userGUIDRaw, err := getUserGUID(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	userGuid, err := kallax.NewULIDFromText(userGuidRaw)
+	userGUID, err := kallax.NewULIDFromText(userGUIDRaw)
 	if err != nil {
 		return nil, err
 	}
 
-	return store.FindOne(model.NewUserQuery().FindByGuid(userGuid))
+	return store.FindOne(model.NewUserQuery().FindByGUID(userGUID))
 }

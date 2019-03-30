@@ -3,7 +3,6 @@ module github.com/minond/captainslog/server
 require (
 	github.com/Masterminds/squirrel v1.1.0 // indirect
 	github.com/go-sql-driver/mysql v1.4.1 // indirect
-	github.com/golang/protobuf v1.3.1
 	github.com/gorilla/mux v1.7.0
 	github.com/gorilla/sessions v1.1.3
 	github.com/kr/pretty v0.1.0 // indirect

@@ -12,13 +12,12 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 
-	"github.com/minond/captainslog/server/proto"
 	"github.com/minond/captainslog/server/service"
 )
 
 var store = sessions.NewCookieStore([]byte(os.Getenv("SESSION_KEY")))
 
-func MountEntryService(router *mux.Router, service *service.EntryService) {
+func MountEntryService(router *mux.Router, serv *service.EntryService) {
 	router.HandleFunc("/api/entry", func(w http.ResponseWriter, r *http.Request) {
 		session, err := store.Get(r, "main")
 		if err != nil {
@@ -38,7 +37,7 @@ func MountEntryService(router *mux.Router, service *service.EntryService) {
 				return
 			}
 
-			req := &proto.EntryCreateRequest{}
+			req := &service.EntryCreateRequest{}
 			if err = json.Unmarshal(data, req); err != nil {
 				http.Error(w, "unable to decode request", http.StatusBadRequest)
 				log.Printf("error unmarshaling request: %v", err)
@@ -50,7 +49,7 @@ func MountEntryService(router *mux.Router, service *service.EntryService) {
 				ctx = context.WithValue(ctx, key, val)
 			}
 
-			res, err := service.Create(ctx, req)
+			res, err := serv.Create(ctx, req)
 			if err != nil {
 				http.Error(w, "unable to handle request", http.StatusInternalServerError)
 				log.Printf("error handling request: %v", err)
