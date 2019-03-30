@@ -84,6 +84,22 @@
           "Reference": null,
           "NotNull": true,
           "Unique": false
+        },
+        {
+          "Name": "open",
+          "Type": "boolean",
+          "PrimaryKey": false,
+          "Reference": null,
+          "NotNull": true,
+          "Unique": false
+        },
+        {
+          "Name": "created_at",
+          "Type": "timestamptz",
+          "PrimaryKey": false,
+          "Reference": null,
+          "NotNull": true,
+          "Unique": false
         }
       ]
     },
@@ -94,6 +110,14 @@
           "Name": "guid",
           "Type": "uuid",
           "PrimaryKey": true,
+          "Reference": null,
+          "NotNull": true,
+          "Unique": false
+        },
+        {
+          "Name": "book_guid",
+          "Type": "uuid",
+          "PrimaryKey": false,
           "Reference": null,
           "NotNull": true,
           "Unique": false

@@ -10,6 +10,7 @@ type Entry struct {
 	kallax.Model `table:"entries" pk:"guid"`
 
 	GUID           kallax.ULID
+	BookGUID       kallax.ULID
 	CollectionGUID kallax.ULID
 	Text           string
 	Data           map[string]string

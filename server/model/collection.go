@@ -11,12 +11,14 @@ type Collection struct {
 
 	GUID      kallax.ULID
 	BookGUID  kallax.ULID
+	Open      bool
 	CreatedAt time.Time
 }
 
 func newCollection(book *Book) (*Collection, error) {
 	collection := &Collection{
 		GUID:      kallax.NewULID(),
+		Open:      true,
 		CreatedAt: time.Now(),
 	}
 
