@@ -7,11 +7,6 @@ import (
 	"github.com/minond/captainslog/server/model"
 )
 
-type BookCreateRequest struct {
-	Name     string `json:"name"`
-	Grouping int32  `json:"grouping"`
-}
-
 type BookServiceContract interface {
 	Create(context.Context, *BookCreateRequest) (*model.Book, error)
 }
@@ -28,6 +23,11 @@ func NewBookService(db *sql.DB) *BookService {
 		bookStore: model.NewBookStore(db),
 		userStore: model.NewUserStore(db),
 	}
+}
+
+type BookCreateRequest struct {
+	Name     string `json:"name"`
+	Grouping int32  `json:"grouping"`
 }
 
 func (s BookService) Create(ctx context.Context, req *BookCreateRequest) (*model.Book, error) {
