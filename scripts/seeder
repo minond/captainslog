@@ -27,7 +27,7 @@ new_entry() {
   echo "$resp" | jq '.guid' -r
 }
 
-cleaner="truncate books; truncate collections; truncate entries;"
+cleaner="truncate books; truncate collections; truncate entries; truncate extractors;"
 psql captainslog --dbname captainslog -c "$cleaner" &> /dev/null
 log "db" "reset"
 
