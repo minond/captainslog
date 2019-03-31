@@ -13,7 +13,7 @@ func TestBook_timeRange(t *testing.T) {
 	expectedStart := time.Date(year, month, day, 0, 0, 0, 0, time.UTC)
 	expectedEnd := time.Date(year, month, day+1, 0, 0, 0, -1, time.UTC)
 
-	start, end, err := timeRange(Grouping_DAY)
+	start, end, err := timeRange(GroupingDay)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
@@ -35,7 +35,7 @@ func TestBook_timeRange_BadGrouping(t *testing.T) {
 		t.Error("expected Grouping_NONE to return an error")
 	}
 
-	_, _, err = timeRange(Grouping(Grouping_DAY + 1))
+	_, _, err = timeRange(Grouping(GroupingDay + 1))
 	if err == nil {
 		t.Error("expected max[Grouping] + 1 to return an error")
 	}
@@ -43,7 +43,7 @@ func TestBook_timeRange_BadGrouping(t *testing.T) {
 
 func TestBook_activeCollectionQuery(t *testing.T) {
 	user, _ := NewUser()
-	book, _ := NewBook("testing", int32(Grouping_DAY), user)
+	book, _ := NewBook("testing", int32(GroupingDay), user)
 
 	query, err := activeCollectionQuery(book)
 	if err != nil {
@@ -80,7 +80,7 @@ func TestBook_activeCollectionQuery(t *testing.T) {
 
 func TestBook_activeCollectionQuery_BadGrouping(t *testing.T) {
 	user, _ := NewUser()
-	book, _ := NewBook("testing", int32(Grouping_DAY), user)
+	book, _ := NewBook("testing", int32(GroupingDay), user)
 	book.Grouping = 77
 
 	_, err := activeCollectionQuery(book)

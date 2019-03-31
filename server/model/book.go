@@ -11,8 +11,8 @@ import (
 type Grouping int32
 
 const (
-	Grouping_NONE Grouping = iota
-	Grouping_DAY
+	GroupingNone Grouping = iota
+	GroupingDay
 )
 
 type Book struct {
@@ -68,7 +68,7 @@ func activeCollectionQuery(b *Book) (*CollectionQuery, error) {
 		Where(kallax.Eq(Schema.Collection.BookGUID, b.GUID)).
 		Where(kallax.Eq(Schema.Collection.Open, true))
 
-	if grouping := Grouping(b.Grouping); grouping != Grouping_NONE {
+	if grouping := Grouping(b.Grouping); grouping != GroupingNone {
 		start, end, err := timeRange(grouping)
 		if err != nil {
 			return nil, err
@@ -84,10 +84,10 @@ func activeCollectionQuery(b *Book) (*CollectionQuery, error) {
 // group starts and ends.
 func timeRange(grouping Grouping) (start time.Time, end time.Time, err error) {
 	switch Grouping(grouping) {
-	case Grouping_NONE:
+	case GroupingNone:
 		return start, end, errors.New("no possible timerange for nil grouping")
 
-	case Grouping_DAY:
+	case GroupingDay:
 		now := time.Now().In(time.UTC)
 		year, month, day := now.Date()
 
