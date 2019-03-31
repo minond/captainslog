@@ -1795,8 +1795,8 @@ func (rs *EntryResultSet) Close() error {
 }
 
 // NewExtractor returns a new instance of Extractor.
-func NewExtractor(label string, match string) (record *Extractor, err error) {
-	return newExtractor(label, match)
+func NewExtractor(label string, match string, book *Book) (record *Extractor, err error) {
+	return newExtractor(label, match, book)
 }
 
 // GetID returns the primary key of the model.
@@ -1809,6 +1809,8 @@ func (r *Extractor) ColumnAddress(col string) (interface{}, error) {
 	switch col {
 	case "guid":
 		return (*kallax.ULID)(&r.GUID), nil
+	case "book_guid":
+		return &r.BookGUID, nil
 	case "label":
 		return &r.Label, nil
 	case "match":
@@ -1824,6 +1826,8 @@ func (r *Extractor) Value(col string) (interface{}, error) {
 	switch col {
 	case "guid":
 		return r.GUID, nil
+	case "book_guid":
+		return r.BookGUID, nil
 	case "label":
 		return r.Label, nil
 	case "match":
@@ -2100,6 +2104,12 @@ func (q *ExtractorQuery) FindByGUID(v ...kallax.ULID) *ExtractorQuery {
 		values[i] = val
 	}
 	return q.Where(kallax.In(Schema.Extractor.GUID, values...))
+}
+
+// FindByBookGUID adds a new filter to the query that will require that
+// the BookGUID property is equal to the passed value.
+func (q *ExtractorQuery) FindByBookGUID(v kallax.ULID) *ExtractorQuery {
+	return q.Where(kallax.Eq(Schema.Extractor.BookGUID, v))
 }
 
 // FindByLabel adds a new filter to the query that will require that
@@ -2675,9 +2685,10 @@ type schemaEntry struct {
 
 type schemaExtractor struct {
 	*kallax.BaseSchema
-	GUID  kallax.SchemaField
-	Label kallax.SchemaField
-	Match kallax.SchemaField
+	GUID     kallax.SchemaField
+	BookGUID kallax.SchemaField
+	Label    kallax.SchemaField
+	Match    kallax.SchemaField
 }
 
 type schemaUser struct {
@@ -2781,12 +2792,14 @@ var Schema = &schema{
 			},
 			false,
 			kallax.NewSchemaField("guid"),
+			kallax.NewSchemaField("book_guid"),
 			kallax.NewSchemaField("label"),
 			kallax.NewSchemaField("match"),
 		),
-		GUID:  kallax.NewSchemaField("guid"),
-		Label: kallax.NewSchemaField("label"),
-		Match: kallax.NewSchemaField("match"),
+		GUID:     kallax.NewSchemaField("guid"),
+		BookGUID: kallax.NewSchemaField("book_guid"),
+		Label:    kallax.NewSchemaField("label"),
+		Match:    kallax.NewSchemaField("match"),
 	},
 	User: &schemaUser{
 		BaseSchema: kallax.NewBaseSchema(
