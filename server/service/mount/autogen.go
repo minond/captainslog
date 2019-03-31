@@ -119,6 +119,43 @@ func MountEntryService(router *mux.Router, serv *service.EntryService) {
 
 			w.Write(out)
 
+		case "GET":
+			defer r.Body.Close()
+			data, err := ioutil.ReadAll(r.Body)
+			if err != nil {
+				http.Error(w, "unable to read request body", http.StatusBadRequest)
+				log.Printf("error reading request body: %v", err)
+				return
+			}
+
+			req := &service.EntryRetrieveRequest{}
+			if err = json.Unmarshal(data, req); err != nil {
+				http.Error(w, "unable to decode request", http.StatusBadRequest)
+				log.Printf("error unmarshaling request: %v", err)
+				return
+			}
+
+			ctx := context.Background()
+			for key, val := range session.Values {
+				ctx = context.WithValue(ctx, key, val)
+			}
+
+			res, err := serv.Retrieve(ctx, req)
+			if err != nil {
+				http.Error(w, "unable to handle request", http.StatusInternalServerError)
+				log.Printf("error handling request: %v", err)
+				return
+			}
+
+			out, err := json.Marshal(res)
+			if err != nil {
+				http.Error(w, "unable to encode response", http.StatusInternalServerError)
+				log.Printf("error marshaling response: %v", err)
+				return
+			}
+
+			w.Write(out)
+
 		default:
 			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		}

@@ -32,6 +32,7 @@ func (r Route) String() string {
 
 type Method struct {
 	Method  string `json:"method"`
+	Handler string `json:"handler"`
 	Request string `json:"request"`
 }
 
@@ -96,7 +97,7 @@ func Mount{{.Service | stripPackage}}(router *mux.Router, serv *{{.Service}}) {
 				ctx = context.WithValue(ctx, key, val)
 			}
 
-			res, err := serv.Create(ctx, req)
+			res, err := serv.{{.Handler}}(ctx, req)
 			if err != nil {
 				http.Error(w, "unable to handle request", http.StatusInternalServerError)
 				log.Printf("error handling request: %v", err)
