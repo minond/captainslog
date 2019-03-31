@@ -3,12 +3,16 @@ package service
 import (
 	"context"
 	"database/sql"
+	"net/url"
+
+	"gopkg.in/src-d/go-kallax.v1"
 
 	"github.com/minond/captainslog/server/model"
 )
 
 type BookServiceContract interface {
 	Create(context.Context, *BookCreateRequest) (*model.Book, error)
+	Retrieve(context.Context, url.Values) (*BookRetrieveResponse, error)
 }
 
 type BookService struct {
@@ -39,4 +43,23 @@ func (s BookService) Create(ctx context.Context, req *BookCreateRequest) (*model
 	book, err := model.NewBook(req.Name, req.Grouping, user)
 	err = s.bookStore.Insert(book)
 	return book, err
+}
+
+type BookRetrieveResponse struct {
+	Books []*model.Book `json:"books"`
+}
+
+func (s BookService) Retrieve(ctx context.Context, req url.Values) (*BookRetrieveResponse, error) {
+	userGUID, err := getUserGUID(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	books, err := s.bookStore.FindAll(model.NewBookQuery().
+		Where(kallax.Eq(model.Schema.Book.UserGUID, userGUID)))
+	if err != nil {
+		return nil, err
+	}
+
+	return &BookRetrieveResponse{Books: books}, nil
 }

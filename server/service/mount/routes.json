@@ -8,6 +8,10 @@
           "method": "POST",
           "handler": "Create",
           "request": "service.BookCreateRequest"
+        },
+        {
+          "method": "GET",
+          "handler": "Retrieve"
         }
       ]
     },
