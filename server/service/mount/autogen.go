@@ -120,7 +120,7 @@ func MountEntryService(router *mux.Router, serv *service.EntryService) {
 			w.Write(out)
 
 		case "GET":
-			req := r.Form
+			req := r.URL.Query()
 
 			ctx := context.Background()
 			for key, val := range session.Values {

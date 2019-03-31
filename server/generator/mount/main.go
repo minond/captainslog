@@ -78,7 +78,7 @@ func Mount{{.Service | stripPackage}}(router *mux.Router, serv *{{.Service}}) {
 		{{range .Methods}}
 		case "{{.Method}}":
 			{{- if not .Request}}
-			req := r.Form
+			req := r.URL.Query()
 			{{else}}
 			defer r.Body.Close()
 			data, err := ioutil.ReadAll(r.Body)
