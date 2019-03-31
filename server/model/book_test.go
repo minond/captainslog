@@ -30,9 +30,9 @@ func TestBook_timeRange(t *testing.T) {
 func TestBook_timeRange_BadGrouping(t *testing.T) {
 	var err error
 
-	_, _, err = timeRange(Grouping_NONE)
+	_, _, err = timeRange(GroupingNone)
 	if err == nil {
-		t.Error("expected Grouping_NONE to return an error")
+		t.Error("expected GroupingNone to return an error")
 	}
 
 	_, _, err = timeRange(Grouping(GroupingDay + 1))
