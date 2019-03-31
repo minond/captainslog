@@ -17,6 +17,17 @@ new_book() {
   echo "$resp" | jq '.guid' -r
 }
 
+new_extractor() {
+  local label="$1"
+  local match="$2"
+  local book_guid="$3"
+
+  data="{\"book_guid\": \"$book_guid\", \"label\": \"$label\", \"match\": \"$match\"}"
+  resp=$(curl -s -X POST http://localhost/api/extractor -d "$data")
+
+  echo "$resp" | jq '.guid' -r
+}
+
 new_entry() {
   local text="$1"
   local book_guid="$2"
@@ -33,6 +44,13 @@ log "db" "reset"
 
 book_guid=$(new_book "Workouts")
 log "new book" "$book_guid"
+
+log "new extractor" $(new_extractor "exercise" '^(.+),' "$book_guid")
+log "new extractor" $(new_extractor "sets" ',\\s{0,}(\\d+)\\s{0,}x' "$book_guid")
+log "new extractor" $(new_extractor "reps" 'x\\s{0,}(\\d+)\\s{0,}@' "$book_guid")
+log "new extractor" $(new_extractor "weight" '@\\s{0,}(\\d+)$' "$book_guid")
+log "new extractor" $(new_extractor "time" '(\\d+\\s{0,}(sec|seconds|min|minutes|hour|hours))' "$book_guid")
+
 log "new entry" $(new_entry "Bench press, 3x10@65" "$book_guid")
 log "new entry" $(new_entry "Squats, 2min" "$book_guid")
 log "new entry" $(new_entry "Squats, 3x10@45" "$book_guid")

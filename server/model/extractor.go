@@ -7,7 +7,7 @@ import (
 type Extractor struct {
 	kallax.Model `table:"extractors" pk:"guid"`
 
-	GUID     kallax.ULID
+	GUID     kallax.ULID `json:"guid"`
 	BookGUID kallax.ULID
 	Label    string
 	Match    string

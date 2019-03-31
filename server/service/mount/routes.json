@@ -12,6 +12,17 @@
       ]
     },
     {
+      "endpoint": "/api/extractor",
+      "service": "service.ExtractorService",
+      "methods": [
+        {
+          "method": "POST",
+          "handler": "Create",
+          "request": "service.ExtractorCreateRequest"
+        }
+      ]
+    },
+    {
       "endpoint": "/api/entry",
       "service": "service.EntryService",
       "methods": [

@@ -24,8 +24,10 @@ func main() {
 	defer db.Close()
 
 	router := mux.NewRouter()
+
 	bookService := service.NewBookService(db)
 	entryService := service.NewEntryService(db)
+	extractorService := service.NewExtractorService(db)
 
 	// TODO add real sessions with real auth
 	store := sessions.NewCookieStore([]byte(os.Getenv("SESSION_KEY")))
@@ -40,6 +42,7 @@ func main() {
 
 	mount.MountBookService(router, bookService)
 	mount.MountEntryService(router, entryService)
+	mount.MountExtractorService(router, extractorService)
 
 	http.Handle("/", router)
 

@@ -18,6 +18,7 @@ import (
 var store = sessions.NewCookieStore([]byte(os.Getenv("SESSION_KEY")))
 
 func MountBookService(router *mux.Router, serv *service.BookService) {
+	log.Print("[INFO] mounting service.BookService on /api/book endpoint")
 	router.HandleFunc("/api/book", func(w http.ResponseWriter, r *http.Request) {
 		log.Printf("[INFO] handling %s %s request", r.Method, r.URL.String())
 
@@ -73,7 +74,65 @@ func MountBookService(router *mux.Router, serv *service.BookService) {
 	})
 }
 
+func MountExtractorService(router *mux.Router, serv *service.ExtractorService) {
+	log.Print("[INFO] mounting service.ExtractorService on /api/extractor endpoint")
+	router.HandleFunc("/api/extractor", func(w http.ResponseWriter, r *http.Request) {
+		log.Printf("[INFO] handling %s %s request", r.Method, r.URL.String())
+
+		session, err := store.Get(r, "main")
+		if err != nil {
+			http.Error(w, "unable to read request data", http.StatusInternalServerError)
+			log.Printf("[ERROR] error getting session: %v", err)
+			return
+		}
+
+		switch r.Method {
+
+		case "POST":
+			defer r.Body.Close()
+			data, err := ioutil.ReadAll(r.Body)
+			if err != nil {
+				http.Error(w, "unable to read request body", http.StatusBadRequest)
+				log.Printf("[ERROR] error reading request body: %v", err)
+				return
+			}
+
+			req := &service.ExtractorCreateRequest{}
+			if err = json.Unmarshal(data, req); err != nil {
+				http.Error(w, "unable to decode request", http.StatusBadRequest)
+				log.Printf("[ERROR] error unmarshaling request: %v", err)
+				return
+			}
+
+			ctx := context.Background()
+			for key, val := range session.Values {
+				ctx = context.WithValue(ctx, key, val)
+			}
+
+			res, err := serv.Create(ctx, req)
+			if err != nil {
+				http.Error(w, "unable to handle request", http.StatusInternalServerError)
+				log.Printf("[ERROR] error handling request: %v", err)
+				return
+			}
+
+			out, err := json.Marshal(res)
+			if err != nil {
+				http.Error(w, "unable to encode response", http.StatusInternalServerError)
+				log.Printf("[ERROR] error marshaling response: %v", err)
+				return
+			}
+
+			w.Write(out)
+
+		default:
+			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+		}
+	})
+}
+
 func MountEntryService(router *mux.Router, serv *service.EntryService) {
+	log.Print("[INFO] mounting service.EntryService on /api/entry endpoint")
 	router.HandleFunc("/api/entry", func(w http.ResponseWriter, r *http.Request) {
 		log.Printf("[INFO] handling %s %s request", r.Method, r.URL.String())
 

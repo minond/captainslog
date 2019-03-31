@@ -66,6 +66,7 @@ var store = sessions.NewCookieStore([]byte(os.Getenv("SESSION_KEY")))
 
 {{range .Routes}}
 func Mount{{.Service | stripPackage}}(router *mux.Router, serv *{{.Service}}) {
+	log.Print("[INFO] mounting {{.Service}} on {{.Endpoint}} endpoint")
 	router.HandleFunc("{{.Endpoint}}", func(w http.ResponseWriter, r *http.Request) {
 		log.Printf("[INFO] handling %s %s request", r.Method, r.URL.String())
 
