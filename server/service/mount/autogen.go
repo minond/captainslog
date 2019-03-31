@@ -19,10 +19,12 @@ var store = sessions.NewCookieStore([]byte(os.Getenv("SESSION_KEY")))
 
 func MountBookService(router *mux.Router, serv *service.BookService) {
 	router.HandleFunc("/api/book", func(w http.ResponseWriter, r *http.Request) {
+		log.Printf("[INFO] %s %s", r.Method, r.URL.String())
+
 		session, err := store.Get(r, "main")
 		if err != nil {
 			http.Error(w, "unable to read request data", http.StatusInternalServerError)
-			log.Printf("error getting session: %v", err)
+			log.Printf("[ERROR] error getting session: %v", err)
 			return
 		}
 
@@ -33,14 +35,14 @@ func MountBookService(router *mux.Router, serv *service.BookService) {
 			data, err := ioutil.ReadAll(r.Body)
 			if err != nil {
 				http.Error(w, "unable to read request body", http.StatusBadRequest)
-				log.Printf("error reading request body: %v", err)
+				log.Printf("[ERROR] error reading request body: %v", err)
 				return
 			}
 
 			req := &service.BookCreateRequest{}
 			if err = json.Unmarshal(data, req); err != nil {
 				http.Error(w, "unable to decode request", http.StatusBadRequest)
-				log.Printf("error unmarshaling request: %v", err)
+				log.Printf("[ERROR] error unmarshaling request: %v", err)
 				return
 			}
 
@@ -52,14 +54,14 @@ func MountBookService(router *mux.Router, serv *service.BookService) {
 			res, err := serv.Create(ctx, req)
 			if err != nil {
 				http.Error(w, "unable to handle request", http.StatusInternalServerError)
-				log.Printf("error handling request: %v", err)
+				log.Printf("[ERROR] error handling request: %v", err)
 				return
 			}
 
 			out, err := json.Marshal(res)
 			if err != nil {
 				http.Error(w, "unable to encode response", http.StatusInternalServerError)
-				log.Printf("error marshaling response: %v", err)
+				log.Printf("[ERROR] error marshaling response: %v", err)
 				return
 			}
 
@@ -73,10 +75,12 @@ func MountBookService(router *mux.Router, serv *service.BookService) {
 
 func MountEntryService(router *mux.Router, serv *service.EntryService) {
 	router.HandleFunc("/api/entry", func(w http.ResponseWriter, r *http.Request) {
+		log.Printf("[INFO] %s %s", r.Method, r.URL.String())
+
 		session, err := store.Get(r, "main")
 		if err != nil {
 			http.Error(w, "unable to read request data", http.StatusInternalServerError)
-			log.Printf("error getting session: %v", err)
+			log.Printf("[ERROR] error getting session: %v", err)
 			return
 		}
 
@@ -87,14 +91,14 @@ func MountEntryService(router *mux.Router, serv *service.EntryService) {
 			data, err := ioutil.ReadAll(r.Body)
 			if err != nil {
 				http.Error(w, "unable to read request body", http.StatusBadRequest)
-				log.Printf("error reading request body: %v", err)
+				log.Printf("[ERROR] error reading request body: %v", err)
 				return
 			}
 
 			req := &service.EntryCreateRequest{}
 			if err = json.Unmarshal(data, req); err != nil {
 				http.Error(w, "unable to decode request", http.StatusBadRequest)
-				log.Printf("error unmarshaling request: %v", err)
+				log.Printf("[ERROR] error unmarshaling request: %v", err)
 				return
 			}
 
@@ -106,14 +110,14 @@ func MountEntryService(router *mux.Router, serv *service.EntryService) {
 			res, err := serv.Create(ctx, req)
 			if err != nil {
 				http.Error(w, "unable to handle request", http.StatusInternalServerError)
-				log.Printf("error handling request: %v", err)
+				log.Printf("[ERROR] error handling request: %v", err)
 				return
 			}
 
 			out, err := json.Marshal(res)
 			if err != nil {
 				http.Error(w, "unable to encode response", http.StatusInternalServerError)
-				log.Printf("error marshaling response: %v", err)
+				log.Printf("[ERROR] error marshaling response: %v", err)
 				return
 			}
 
@@ -130,14 +134,14 @@ func MountEntryService(router *mux.Router, serv *service.EntryService) {
 			res, err := serv.Retrieve(ctx, req)
 			if err != nil {
 				http.Error(w, "unable to handle request", http.StatusInternalServerError)
-				log.Printf("error handling request: %v", err)
+				log.Printf("[ERROR] error handling request: %v", err)
 				return
 			}
 
 			out, err := json.Marshal(res)
 			if err != nil {
 				http.Error(w, "unable to encode response", http.StatusInternalServerError)
-				log.Printf("error marshaling response: %v", err)
+				log.Printf("[ERROR] error marshaling response: %v", err)
 				return
 			}
 
