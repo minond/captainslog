@@ -47,7 +47,7 @@ func TestBetweenTimes(t *testing.T) {
 
 	if len(args) < 2 {
 		t.Errorf("unexpected args for between: %v", args)
-	} else if args[0] != start || args[1] != end {
+	} else if args[0] != expectedStart || args[1] != expectedEnd {
 		t.Errorf("unexpected args for between: %v", args)
 	}
 }
