@@ -77,6 +77,9 @@ func Mount{{.Service | stripPackage}}(router *mux.Router, serv *{{.Service}}) {
 		switch r.Method {
 		{{range .Methods}}
 		case "{{.Method}}":
+			{{- if not .Request}}
+			req := r.Form
+			{{else}}
 			defer r.Body.Close()
 			data, err := ioutil.ReadAll(r.Body)
 			if err != nil {
@@ -91,6 +94,7 @@ func Mount{{.Service | stripPackage}}(router *mux.Router, serv *{{.Service}}) {
 				log.Printf("error unmarshaling request: %v", err)
 				return
 			}
+			{{end}}
 
 			ctx := context.Background()
 			for key, val := range session.Values {

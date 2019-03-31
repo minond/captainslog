@@ -6,6 +6,7 @@
       "methods": [
         {
           "method": "POST",
+          "handler": "Create",
           "request": "service.BookCreateRequest"
         }
       ]
@@ -16,7 +17,12 @@
       "methods": [
         {
           "method": "POST",
+          "handler": "Create",
           "request": "service.EntryCreateRequest"
+        },
+        {
+          "method": "GET",
+          "handler": "Retrieve"
         }
       ]
     }
