@@ -9,13 +9,13 @@ import (
 type Entry struct {
 	kallax.Model `table:"entries" pk:"guid"`
 
-	GUID           kallax.ULID
-	BookGUID       kallax.ULID
-	CollectionGUID kallax.ULID
-	Text           string
-	Data           map[string]string
-	CreatedAt      time.Time
-	UpdatedAt      time.Time
+	GUID           kallax.ULID       `json:"guid"`
+	BookGUID       kallax.ULID       `json:"-"`
+	CollectionGUID kallax.ULID       `json:"-"`
+	Text           string            `json:"text"`
+	Data           map[string]string `json:"data"`
+	CreatedAt      time.Time         `json:"created_at"`
+	UpdatedAt      time.Time         `json:"updated_at"`
 }
 
 func newEntry(text string, data map[string]string, collection *Collection) (*Entry, error) {

@@ -23,10 +23,10 @@ const (
 type Book struct {
 	kallax.Model `table:"books" pk:"guid"`
 
-	GUID     kallax.ULID
-	UserGUID kallax.ULID
-	Name     string
-	Grouping int32
+	GUID     kallax.ULID `json:"guid"`
+	UserGUID kallax.ULID `json:"-"`
+	Name     string      `json:"name"`
+	Grouping int32       `json:"grouping"`
 }
 
 func newBook(name string, grouping int32, user *User) (*Book, error) {
