@@ -51,7 +51,6 @@ func (s EntryService) Create(ctx context.Context, req *EntryCreateRequest) (*mod
 		return nil, err
 	}
 
-	// FIXME
 	collection, err := book.ActiveCollection(s.collectionStore)
 	if err != nil {
 		return nil, err
