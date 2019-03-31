@@ -16,9 +16,10 @@ import (
 )
 
 func main() {
+	log.Print("[INFO] initializing server")
 	db, err := sql.Open(os.Getenv("DATABASE_DRIVER"), os.Getenv("DATABASE_CONN"))
 	if err != nil {
-		log.Fatalf("error opening database connection: %v", err)
+		log.Fatalf("[ERROR] error opening database connection: %v", err)
 	}
 	defer db.Close()
 
@@ -41,5 +42,8 @@ func main() {
 	mount.MountEntryService(router, entryService)
 
 	http.Handle("/", router)
-	log.Fatal(http.ListenAndServe(os.Getenv("LISTEN"), nil))
+
+	listen := os.Getenv("LISTEN")
+	log.Printf("[INFO] listening on `%s`", listen)
+	log.Fatal(http.ListenAndServe(listen, nil))
 }
