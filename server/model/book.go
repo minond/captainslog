@@ -8,10 +8,15 @@ import (
 	"gopkg.in/src-d/go-kallax.v1"
 )
 
+// Grouping represents a Book's grouping method
 type Grouping int32
 
 const (
+	// GroupingNone says that a book has a single main collection that never
+	// ends and holds every entry.
 	GroupingNone Grouping = iota
+
+	// GroupingDay says that a book has a collection for every day it is used.
 	GroupingDay
 )
 
