@@ -3,6 +3,8 @@ package service
 import (
 	"context"
 	"database/sql"
+	"errors"
+	"net/url"
 	"time"
 
 	"gopkg.in/src-d/go-kallax.v1"
@@ -11,21 +13,15 @@ import (
 	"github.com/minond/captainslog/server/processing"
 )
 
-type EntryCreateRequest struct {
-	GUID      string    `json:"guid"`
-	Text      string    `json:"text"`
-	Timestamp time.Time `json:"timestamp"`
-	BookGUID  string    `json:"book_guid"`
-}
-
-type EntryServiceContract interface {
-	Create(context.Context, *EntryCreateRequest) (*model.Entry, error)
-}
-
 type EntryService struct {
 	bookStore       *model.BookStore
 	collectionStore *model.CollectionStore
 	entryStore      *model.EntryStore
+}
+
+type EntryServiceContract interface {
+	Create(context.Context, *EntryCreateRequest) (*model.Entry, error)
+	Retrieve(context.Context, url.Values) (*EntryRetrieveResponse, error)
 }
 
 var _ EntryServiceContract = EntryService{}
@@ -36,6 +32,13 @@ func NewEntryService(db *sql.DB) *EntryService {
 		collectionStore: model.NewCollectionStore(db),
 		entryStore:      model.NewEntryStore(db),
 	}
+}
+
+type EntryCreateRequest struct {
+	GUID      string    `json:"guid"`
+	Text      string    `json:"text"`
+	Timestamp time.Time `json:"timestamp"`
+	BookGUID  string    `json:"book_guid"`
 }
 
 func (s EntryService) Create(ctx context.Context, req *EntryCreateRequest) (*model.Entry, error) {
@@ -77,4 +80,46 @@ func (s EntryService) Create(ctx context.Context, req *EntryCreateRequest) (*mod
 
 	err = s.entryStore.Insert(entry)
 	return entry, err
+}
+
+type EntryRetrieveResponse struct {
+	Entries []*model.Entry `json:"entries"`
+}
+
+func (s EntryService) Retrieve(ctx context.Context, req url.Values) (*EntryRetrieveResponse, error) {
+	var bookGUID string
+
+	if bookGUIDs, ok := req["book_guid"]; ok && len(bookGUIDs) == 1 {
+		bookGUID = bookGUIDs[0]
+	} else {
+		return nil, errors.New("missing required book_guid parameter")
+	}
+
+	userGUID, err := getUserGUID(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	book, err := s.bookStore.FindOne(model.NewBookQuery().
+		Where(kallax.Eq(model.Schema.Book.GUID, bookGUID)).
+		Where(kallax.Eq(model.Schema.Book.UserGUID, userGUID)))
+	if err != nil {
+		return nil, err
+	}
+
+	collection, err := book.ActiveCollection(s.collectionStore, true)
+	if err != nil {
+		return nil, err
+	}
+
+	if collection == nil {
+		return &EntryRetrieveResponse{}, nil
+	}
+
+	entries, err := collection.Entries(s.entryStore)
+	if err != nil {
+		return nil, err
+	}
+
+	return &EntryRetrieveResponse{Entries: entries}, nil
 }
