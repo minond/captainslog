@@ -1,0 +1,39 @@
+#!/bin/bash
+
+set -euo pipefail
+
+log() {
+  local label="$1"
+  local message="$2"
+  echo "$label: $message"
+}
+
+new_book() {
+  local name="$1"
+
+  data="{\"name\": \"$name\", \"grouping\": 1}"
+  resp=$(curl -s -X POST http://localhost/api/book -d "$data")
+
+  echo "$resp" | jq '.guid' -r
+}
+
+new_entry() {
+  local text="$1"
+  local book_guid="$2"
+
+  data="{\"guid\": \"$RANDOM\", \"book_guid\": \"$book_guid\", \"text\": \"$text\"}"
+  resp=$(curl -s -X POST http://localhost/api/entry -d "$data")
+
+  echo "$resp" | jq '.guid' -r
+}
+
+cleaner="truncate books; truncate collections; truncate entries;"
+psql captainslog --dbname captainslog -c "$cleaner" &> /dev/null
+log "db" "reset"
+
+book_guid=$(new_book "Workouts")
+log "new book" "$book_guid"
+log "new entry" $(new_entry "Bench press, 3x10@65" "$book_guid")
+log "new entry" $(new_entry "Squats, 2min" "$book_guid")
+log "new entry" $(new_entry "Squats, 3x10@45" "$book_guid")
+log "new entry" $(new_entry "Running, 30min" "$book_guid")
