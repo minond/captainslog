@@ -11,7 +11,6 @@ const KEY_ENTER = 13
 const styles = StyleSheet.create({
   wrapper: {
     boxSizing: "content-box",
-    padding: "10px",
   },
 
   entries: {
@@ -39,7 +38,6 @@ const styles = StyleSheet.create({
 
 interface Props {
   guid: string
-  name: string
 }
 
 interface State {
@@ -113,19 +111,16 @@ export class Entries extends Component<Props, State> {
   }
 
   render() {
-    const { name } = this.props
     const { loaded } = this.state
     const entries = this.getEntries().map((entry, i) =>
       <div className={css(i ? styles.tailEntries : null, styles.entry)} key={entry.guid}>{entry.text}</div>)
 
     if (!loaded) {
-      return (<h1>Loading...</h1>)
+      return <h1>Loading...</h1>
     }
 
     return (
       <div className={css(styles.wrapper)}>
-        <h1>{name}</h1>
-
         <div ref={this.entriesRef} className={css(styles.entries)}>{entries}</div>
 
         <input
