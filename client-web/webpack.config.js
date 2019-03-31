@@ -11,6 +11,9 @@ module.exports = {
   devServer: {
     historyApiFallback: {
       index: "src/index.html"
+    },
+    proxy: {
+      "/api": "http://localhost"
     }
   },
 

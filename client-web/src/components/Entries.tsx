@@ -4,6 +4,7 @@ import { Component, KeyboardEvent, RefObject } from "react"
 import { css, StyleSheet } from "aphrodite"
 
 import { Entry, EntryCreateRequest } from "../definitions/entry"
+import { getEntriesForBook } from "../service/entry"
 
 const KEY_ENTER = 13
 
@@ -39,15 +40,15 @@ const styles = StyleSheet.create({
 interface Props {
   guid: string
   name: string
-  entries?: Entry[]
 }
 
 interface State {
+  loaded: boolean
   entries: Entry[]
   unsynced: EntryCreateRequest[]
 }
 
-export class Logbook extends Component<Props, State> {
+export class Entries extends Component<Props, State> {
   entriesRef: RefObject<HTMLDivElement>
   inputRef: RefObject<HTMLInputElement>
   boundOnEntryInputKeyPress: (ev: KeyboardEvent<HTMLInputElement>) => void
@@ -56,13 +57,19 @@ export class Logbook extends Component<Props, State> {
     super(props)
 
     this.state = {
-      entries: props.entries || [],
+      loaded: false,
+      entries: [],
       unsynced: [],
     }
 
     this.entriesRef = React.createRef()
     this.inputRef = React.createRef()
     this.boundOnEntryInputKeyPress = this.onEntryInputKeyPress.bind(this)
+  }
+
+  componentWillMount() {
+    getEntriesForBook(this.props.guid).then((entries) =>
+      this.setState({ loaded: true, entries }))
   }
 
   componentDidUpdate() {
@@ -107,8 +114,13 @@ export class Logbook extends Component<Props, State> {
 
   render() {
     const { name } = this.props
+    const { loaded } = this.state
     const entries = this.getEntries().map((entry, i) =>
       <div className={css(i ? styles.tailEntries : null, styles.entry)} key={entry.guid}>{entry.text}</div>)
+
+    if (!loaded) {
+      return (<h1>Loading...</h1>)
+    }
 
     return (
       <div className={css(styles.wrapper)}>
