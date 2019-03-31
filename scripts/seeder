@@ -55,3 +55,5 @@ log "new entry" $(new_entry "Bench press, 3x10@65" "$book_guid")
 log "new entry" $(new_entry "Squats, 2min" "$book_guid")
 log "new entry" $(new_entry "Squats, 3x10@45" "$book_guid")
 log "new entry" $(new_entry "Running, 30min" "$book_guid")
+
+curl "http://localhost/api/entry?book_guid=$book_guid" | jq ''

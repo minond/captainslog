@@ -17,6 +17,7 @@ type EntryService struct {
 	bookStore       *model.BookStore
 	collectionStore *model.CollectionStore
 	entryStore      *model.EntryStore
+	extractorStore  *model.ExtractorStore
 }
 
 type EntryServiceContract interface {
@@ -31,6 +32,7 @@ func NewEntryService(db *sql.DB) *EntryService {
 		bookStore:       model.NewBookStore(db),
 		collectionStore: model.NewCollectionStore(db),
 		entryStore:      model.NewEntryStore(db),
+		extractorStore:  model.NewExtractorStore(db),
 	}
 }
 
@@ -59,13 +61,9 @@ func (s EntryService) Create(ctx context.Context, req *EntryCreateRequest) (*mod
 		return nil, err
 	}
 
-	// FIXME
-	extractors := []*model.Extractor{
-		&model.Extractor{Label: "exercise", Match: `^(.+),`},
-		&model.Extractor{Label: "sets", Match: `,\s{0,}(\d+)\s{0,}x`},
-		&model.Extractor{Label: "reps", Match: `x\s{0,}(\d+)\s{0,}@`},
-		&model.Extractor{Label: "weight", Match: `@\s{0,}(\d+)$`},
-		&model.Extractor{Label: "time", Match: `(\d+\s{0,}(sec|seconds|min|minutes|hour|hours))`},
+	extractors, err := book.Extractors(s.extractorStore)
+	if err != nil {
+		return nil, err
 	}
 
 	data, err := processing.Extract(req.Text, extractors)

@@ -43,6 +43,14 @@ func newBook(name string, grouping int32, user *User) (*Book, error) {
 	return book, nil
 }
 
+// Extractors retrieves all of this Book's extractors.
+func (b *Book) Extractors(extractorStore *ExtractorStore) ([]*Extractor, error) {
+	query := NewExtractorQuery().
+		Where(kallax.Eq(Schema.Extractor.BookGUID, b.GUID))
+
+	return extractorStore.FindAll(query)
+}
+
 // ActiveCollection retrieves a Book's active collection by analyzing its
 // grouping. If no collection is found, a collection may be created.
 func (b *Book) ActiveCollection(collectionStore *CollectionStore, create bool) (*Collection, error) {
