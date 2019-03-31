@@ -43,10 +43,9 @@ func newBook(name string, grouping int32, user *User) (*Book, error) {
 	return book, nil
 }
 
-// ActiveCollection returns this Book's active collection by either retrieving
-// an available collection that falls within the Book's grouping range or
-// creating a new collection.
-func (b *Book) ActiveCollection(collectionStore *CollectionStore) (*Collection, error) {
+// ActiveCollection retrieves a Book's active collection by analyzing its
+// grouping. If no collection is found, a collection may be created.
+func (b *Book) ActiveCollection(collectionStore *CollectionStore, create bool) (*Collection, error) {
 	query, err := activeCollectionQuery(b)
 	if err != nil {
 		return nil, err
@@ -57,13 +56,17 @@ func (b *Book) ActiveCollection(collectionStore *CollectionStore) (*Collection, 
 		return nil, err
 	}
 
-	if len(colls) == 0 {
+	if len(colls) != 0 {
+		return colls[0], nil
+	}
+
+	if create {
 		coll, _ := NewCollection(b)
 		err := collectionStore.Insert(coll)
 		return coll, err
 	}
 
-	return colls[0], nil
+	return nil, nil
 }
 
 // activeCollectionQuery returns a query that will search for a book's current,

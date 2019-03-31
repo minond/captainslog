@@ -51,7 +51,7 @@ func (s EntryService) Create(ctx context.Context, req *EntryCreateRequest) (*mod
 		return nil, err
 	}
 
-	collection, err := book.ActiveCollection(s.collectionStore)
+	collection, err := book.ActiveCollection(s.collectionStore, true)
 	if err != nil {
 		return nil, err
 	}
