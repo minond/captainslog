@@ -1,14 +1,15 @@
 export type Entry = {
   guid: string
   text: string
-  timestamp: number
+  created_at: string
+  updated_at: string
   data?: Map<string, string>
 }
 
 export type EntryCreateRequest = {
   guid: string
   text: string
-  timestamp: number
+  created_at: string
   book_guid: string
 }
 
