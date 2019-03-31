@@ -28,3 +28,8 @@ func newCollection(book *Book) (*Collection, error) {
 
 	return collection, nil
 }
+
+func (c *Collection) Entries(entryStore *EntryStore) ([]*Entry, error) {
+	return entryStore.FindAll(NewEntryQuery().
+		Where(kallax.Eq(Schema.Entry.CollectionGUID, c.GUID)))
+}
