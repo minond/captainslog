@@ -901,6 +901,8 @@ func (r *Collection) ColumnAddress(col string) (interface{}, error) {
 		return (*kallax.ULID)(&r.GUID), nil
 	case "book_guid":
 		return &r.BookGUID, nil
+	case "open":
+		return &r.Open, nil
 	case "created_at":
 		return &r.CreatedAt, nil
 
@@ -916,6 +918,8 @@ func (r *Collection) Value(col string) (interface{}, error) {
 		return r.GUID, nil
 	case "book_guid":
 		return r.BookGUID, nil
+	case "open":
+		return r.Open, nil
 	case "created_at":
 		return r.CreatedAt, nil
 
@@ -1202,6 +1206,12 @@ func (q *CollectionQuery) FindByBookGUID(v kallax.ULID) *CollectionQuery {
 	return q.Where(kallax.Eq(Schema.Collection.BookGUID, v))
 }
 
+// FindByOpen adds a new filter to the query that will require that
+// the Open property is equal to the passed value.
+func (q *CollectionQuery) FindByOpen(v bool) *CollectionQuery {
+	return q.Where(kallax.Eq(Schema.Collection.Open, v))
+}
+
 // FindByCreatedAt adds a new filter to the query that will require that
 // the CreatedAt property is equal to the passed value.
 func (q *CollectionQuery) FindByCreatedAt(cond kallax.ScalarCond, v time.Time) *CollectionQuery {
@@ -1331,6 +1341,8 @@ func (r *Entry) ColumnAddress(col string) (interface{}, error) {
 	switch col {
 	case "guid":
 		return (*kallax.ULID)(&r.GUID), nil
+	case "book_guid":
+		return &r.BookGUID, nil
 	case "collection_guid":
 		return &r.CollectionGUID, nil
 	case "text":
@@ -1352,6 +1364,8 @@ func (r *Entry) Value(col string) (interface{}, error) {
 	switch col {
 	case "guid":
 		return r.GUID, nil
+	case "book_guid":
+		return r.BookGUID, nil
 	case "collection_guid":
 		return r.CollectionGUID, nil
 	case "text":
@@ -1640,6 +1654,12 @@ func (q *EntryQuery) FindByGUID(v ...kallax.ULID) *EntryQuery {
 		values[i] = val
 	}
 	return q.Where(kallax.In(Schema.Entry.GUID, values...))
+}
+
+// FindByBookGUID adds a new filter to the query that will require that
+// the BookGUID property is equal to the passed value.
+func (q *EntryQuery) FindByBookGUID(v kallax.ULID) *EntryQuery {
+	return q.Where(kallax.Eq(Schema.Entry.BookGUID, v))
 }
 
 // FindByCollectionGUID adds a new filter to the query that will require that
@@ -2638,12 +2658,14 @@ type schemaCollection struct {
 	*kallax.BaseSchema
 	GUID      kallax.SchemaField
 	BookGUID  kallax.SchemaField
+	Open      kallax.SchemaField
 	CreatedAt kallax.SchemaField
 }
 
 type schemaEntry struct {
 	*kallax.BaseSchema
 	GUID           kallax.SchemaField
+	BookGUID       kallax.SchemaField
 	CollectionGUID kallax.SchemaField
 	Text           kallax.SchemaField
 	Data           kallax.SchemaField
@@ -2714,10 +2736,12 @@ var Schema = &schema{
 			false,
 			kallax.NewSchemaField("guid"),
 			kallax.NewSchemaField("book_guid"),
+			kallax.NewSchemaField("open"),
 			kallax.NewSchemaField("created_at"),
 		),
 		GUID:      kallax.NewSchemaField("guid"),
 		BookGUID:  kallax.NewSchemaField("book_guid"),
+		Open:      kallax.NewSchemaField("open"),
 		CreatedAt: kallax.NewSchemaField("created_at"),
 	},
 	Entry: &schemaEntry{
@@ -2731,6 +2755,7 @@ var Schema = &schema{
 			},
 			false,
 			kallax.NewSchemaField("guid"),
+			kallax.NewSchemaField("book_guid"),
 			kallax.NewSchemaField("collection_guid"),
 			kallax.NewSchemaField("text"),
 			kallax.NewSchemaField("data"),
@@ -2738,6 +2763,7 @@ var Schema = &schema{
 			kallax.NewSchemaField("updated_at"),
 		),
 		GUID:           kallax.NewSchemaField("guid"),
+		BookGUID:       kallax.NewSchemaField("book_guid"),
 		CollectionGUID: kallax.NewSchemaField("collection_guid"),
 		Text:           kallax.NewSchemaField("text"),
 		Data:           kallax.NewSchemaField("data"),
