@@ -1,6 +1,16 @@
 {
   "routes": [
     {
+      "endpoint": "/api/book",
+      "service": "service.BookService",
+      "methods": [
+        {
+          "method": "POST",
+          "request": "service.BookCreateRequest"
+        }
+      ]
+    },
+    {
       "endpoint": "/api/entry",
       "service": "service.EntryService",
       "methods": [

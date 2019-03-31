@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"flag"
+	"fmt"
 	"go/format"
 	"io/ioutil"
 	"log"
@@ -19,6 +20,14 @@ type Route struct {
 	Endpoint string   `json:"endpoint"`
 	Service  string   `json:"service"`
 	Methods  []Method `json:"methods"`
+}
+
+func (r Route) String() string {
+	methods := []string{}
+	for _, method := range r.Methods {
+		methods = append(methods, method.Method)
+	}
+	return fmt.Sprintf("%s (%s)", r.Endpoint, strings.Join(methods, ", "))
 }
 
 type Method struct {
@@ -115,6 +124,7 @@ func Mount{{.Service | stripPackage}}(router *mux.Router, serv *{{.Service}}) {
 
 func init() {
 	flag.Parse()
+	log.SetFlags(0)
 }
 
 func main() {
@@ -129,6 +139,10 @@ func main() {
 	buff := &bytes.Buffer{}
 	if err = handlerTmpl.Execute(buff, routes); err != nil {
 		log.Fatalf("error generating template: %v", err)
+	}
+
+	for _, route := range routes.Routes {
+		log.Printf("generating %s", route.String())
 	}
 
 	unformatted := buff.Bytes()
