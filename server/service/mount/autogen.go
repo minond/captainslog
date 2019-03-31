@@ -120,20 +120,7 @@ func MountEntryService(router *mux.Router, serv *service.EntryService) {
 			w.Write(out)
 
 		case "GET":
-			defer r.Body.Close()
-			data, err := ioutil.ReadAll(r.Body)
-			if err != nil {
-				http.Error(w, "unable to read request body", http.StatusBadRequest)
-				log.Printf("error reading request body: %v", err)
-				return
-			}
-
-			req := &service.EntryRetrieveRequest{}
-			if err = json.Unmarshal(data, req); err != nil {
-				http.Error(w, "unable to decode request", http.StatusBadRequest)
-				log.Printf("error unmarshaling request: %v", err)
-				return
-			}
+			req := r.Form
 
 			ctx := context.Background()
 			for key, val := range session.Values {
