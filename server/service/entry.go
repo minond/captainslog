@@ -110,13 +110,13 @@ func (s EntryService) Retrieve(ctx context.Context, req url.Values) (*EntryRetri
 		return nil, err
 	}
 
-	collection, err := book.ActiveCollection(s.collectionStore, true)
+	collection, err := book.ActiveCollection(s.collectionStore, false)
 	if err != nil {
 		return nil, err
 	}
 
 	if collection == nil {
-		return &EntryRetrieveResponse{}, nil
+		return &EntryRetrieveResponse{Entries: []*model.Entry{}}, nil
 	}
 
 	entries, err := collection.Entries(s.entryStore)

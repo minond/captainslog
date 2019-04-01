@@ -54,8 +54,8 @@ export class Entries extends Component<Props, State> {
     super(props)
 
     this.state = {
-      entries: [],
       loaded: false,
+      entries: [],
       unsynced: [],
     }
 
@@ -65,8 +65,8 @@ export class Entries extends Component<Props, State> {
   }
 
   componentWillMount() {
-    retrieveEntriesForBook(this.props.guid).then((entries) =>
-      this.setState({ loaded: true, entries }))
+    retrieveEntriesForBook(this.props.guid).then((entries) =>{
+      this.setState({ loaded: true, entries })})
   }
 
   componentDidUpdate() {
