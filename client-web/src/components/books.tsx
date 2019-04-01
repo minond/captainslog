@@ -45,7 +45,7 @@ export class Books extends Component<{}, State> {
     const { loaded, books, viewing } = this.state
 
     if (!loaded) {
-      return <h1>Loading...</h1>
+      return null
     }
 
     const booksElem = books.map((book) => {
