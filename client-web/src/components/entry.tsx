@@ -5,9 +5,9 @@ import { css, StyleSheet } from "aphrodite"
 
 const styles = StyleSheet.create({
   item: {
+    border: "1px solid #0D28F2",
     fontSize: ".85rem",
     marginLeft: "6px",
-    border: "1px solid #0D28F2",
     padding: "2px 6px"
   },
 

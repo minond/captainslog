@@ -103,10 +103,11 @@ export class Entries extends Component<Props, State> {
     this.state.unsynced.push(entry)
     this.setState({ unsynced: this.state.unsynced }, () =>
       createEntry(entry).then((res) => {
-        let { unsynced, entries } = this.state
+        const { entries } = this.state
+        let { unsynced } = this.state
 
         entries.push(res.entry)
-        unsynced = unsynced.filter((entry) => entry.guid !== res.guid)
+        unsynced = unsynced.filter((item) => item.guid !== res.guid)
 
         this.setState({ unsynced, entries })
       }))
