@@ -4,7 +4,7 @@ import { Component, KeyboardEvent, RefObject } from "react"
 import { css, StyleSheet } from "aphrodite"
 
 import { Entry, EntryCreateRequest } from "../definitions/entry"
-import { getEntriesForBook } from "../service/entry"
+import { createEntry, retrieveEntriesForBook } from "../service/entry"
 
 import { Entry as EntryLine } from "./entry"
 
@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
   },
 
   entries: {
-    maxHeight: "80vh",
+    maxHeight: "calc(100vh - 120px)",
     overflow: "auto",
   },
 
@@ -65,7 +65,7 @@ export class Entries extends Component<Props, State> {
   }
 
   componentWillMount() {
-    getEntriesForBook(this.props.guid).then((entries) =>
+    retrieveEntriesForBook(this.props.guid).then((entries) =>
       this.setState({ loaded: true, entries }))
   }
 
@@ -98,8 +98,18 @@ export class Entries extends Component<Props, State> {
     const guid = Math.random().toString()
     const createdAt = new Date().toISOString()
     const bookGuid = this.props.guid
-    this.state.unsynced.push({ guid, text, createdAt, bookGuid })
-    this.setState({ unsynced: this.state.unsynced })
+    const entry = { guid, text, createdAt, bookGuid }
+
+    this.state.unsynced.push(entry)
+    this.setState({ unsynced: this.state.unsynced }, () =>
+      createEntry(entry).then((res) => {
+        let { unsynced, entries } = this.state
+
+        entries.push(res.entry)
+        unsynced = unsynced.filter((entry) => entry.guid !== res.guid)
+
+        this.setState({ unsynced, entries })
+      }))
   }
 
   onEntryInputKeyPress(ev: KeyboardEvent<HTMLInputElement>) {

@@ -11,6 +11,7 @@ import { Entries } from "./entries"
 const styles = StyleSheet.create({
   book: {
     marginBottom: "10px",
+    color: "#0D28F2"
   }
 })
 

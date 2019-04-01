@@ -35,7 +35,7 @@ new_entry() {
   data="{\"guid\": \"$RANDOM\", \"bookGuid\": \"$book_guid\", \"text\": \"$text\"}"
   resp=$(curl -s -X POST http://localhost/api/entry -d "$data")
 
-  echo "$resp" | jq '.guid' -r
+  echo "$resp" | jq '.entry.guid' -r
 }
 
 cleaner="truncate books; truncate collections; truncate entries; truncate extractors;"

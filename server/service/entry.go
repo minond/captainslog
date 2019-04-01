@@ -21,7 +21,7 @@ type EntryService struct {
 }
 
 type EntryServiceContract interface {
-	Create(context.Context, *EntryCreateRequest) (*model.Entry, error)
+	Create(context.Context, *EntryCreateRequest) (*EntryCreateResponse, error)
 	Retrieve(context.Context, url.Values) (*EntryRetrieveResponse, error)
 }
 
@@ -43,7 +43,12 @@ type EntryCreateRequest struct {
 	BookGUID  string    `json:"bookGuid"`
 }
 
-func (s EntryService) Create(ctx context.Context, req *EntryCreateRequest) (*model.Entry, error) {
+type EntryCreateResponse struct {
+	GUID  string       `json:"guid"`
+	Entry *model.Entry `json:"entry"`
+}
+
+func (s EntryService) Create(ctx context.Context, req *EntryCreateRequest) (*EntryCreateResponse, error) {
 	userGUID, err := getUserGUID(ctx)
 	if err != nil {
 		return nil, err
@@ -77,7 +82,7 @@ func (s EntryService) Create(ctx context.Context, req *EntryCreateRequest) (*mod
 	}
 
 	err = s.entryStore.Insert(entry)
-	return entry, err
+	return &EntryCreateResponse{GUID: req.GUID, Entry: entry}, err
 }
 
 type EntryRetrieveResponse struct {

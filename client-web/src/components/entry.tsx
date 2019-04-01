@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
   item: {
     fontSize: ".85rem",
     marginLeft: "6px",
-    border: "1px solid #6b74e2",
+    border: "1px solid #0D28F2",
     padding: "2px 6px"
   },
 
