@@ -3,7 +3,7 @@ export type Entry = {
   text: string
   createdAt: string
   updatedAt: string
-  data?: Map<string, string>
+  data?: { [index: string]: string }
 }
 
 export type EntryCreateRequest = {

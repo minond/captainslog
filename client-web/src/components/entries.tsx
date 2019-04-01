@@ -6,7 +6,9 @@ import { css, StyleSheet } from "aphrodite"
 import { Entry, EntryCreateRequest } from "../definitions/entry"
 import { getEntriesForBook } from "../service/entry"
 
-type MaybeData = { data?: Map<string, string> }
+import { Entry as EntryLine } from "./entry"
+
+type MaybeData = { data?: { [index: string]: string } }
 type InMemoryEntry = Entry | (EntryCreateRequest & MaybeData)
 
 const KEY_ENTER = 13
@@ -23,11 +25,6 @@ const styles = StyleSheet.create({
 
   tailEntry: {
     borderTop: "1px solid #dadada",
-  },
-
-  entry: {
-    fontSize: "1.1rem",
-    padding: "16px 0",
   },
 
   input: {
@@ -114,8 +111,13 @@ export class Entries extends Component<Props, State> {
 
   render() {
     const { loaded } = this.state
-    const entries = this.getEntries().map((entry, i) =>
-      <div className={css(i ? styles.tailEntry : null, styles.entry)} key={entry.guid}>{entry.text}</div>)
+    const entries = this.getEntries().map((entry, i) => (
+      <EntryLine
+        key={entry.guid}
+        className={css(i ? styles.tailEntry : null)}
+        text={entry.text}
+        data={entry.data}
+      />))
 
     if (!loaded) {
       return <h1>Loading...</h1>
