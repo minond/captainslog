@@ -121,7 +121,6 @@ export class Entries extends Component<Props, State> {
   }
 
   render() {
-    const { loaded } = this.state
     const entries = this.getEntries().map((entry, i) => (
       <EntryLine
         key={entry.guid}
@@ -129,10 +128,6 @@ export class Entries extends Component<Props, State> {
         text={entry.text}
         data={entry.data}
       />))
-
-    if (!loaded) {
-      return null
-    }
 
     return (
       <div className={css(styles.wrapper)}>

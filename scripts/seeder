@@ -48,9 +48,10 @@ log "new book" "$workouts"
 
 log "new extractor" $(new_extractor "exercise" '^(.+),' "$workouts")
 log "new extractor" $(new_extractor "sets" ',\\s{0,}(\\d+)\\s{0,}x' "$workouts")
-log "new extractor" $(new_extractor "reps" 'x\\s{0,}(\\d+)\\s{0,}@' "$workouts")
+log "new extractor" $(new_extractor "reps" '\\dx\\s{0,}(\\d+)' "$workouts")
 log "new extractor" $(new_extractor "weight" '@\\s{0,}(\\d+)$' "$workouts")
-log "new extractor" $(new_extractor "time" '(\\d+\\s{0,}(sec|seconds|min|minutes|hour|hours))' "$workouts")
+log "new extractor" $(new_extractor "time" '(\\d+)\\s{0,}(sec|seconds|min|minutes|hour|hours)' "$workouts")
+log "new extractor" $(new_extractor "unit" '\\d+\\s{0,}(sec|seconds|min|minutes|hour|hours)' "$workouts")
 
 log "new entry" $(new_entry "Bench press, 3x10@65" "$workouts")
 log "new entry" $(new_entry "Squats, 2min" "$workouts")
