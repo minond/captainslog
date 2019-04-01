@@ -28,7 +28,7 @@ func NewExtractorService(db *sql.DB) *ExtractorService {
 }
 
 type ExtractorCreateRequest struct {
-	BookGUID string `json:"book_guid"`
+	BookGUID string `json:"bookGuid"`
 	Label    string `json:"label"`
 	Match    string `json:"match"`
 }

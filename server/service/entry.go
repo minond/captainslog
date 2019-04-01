@@ -40,7 +40,7 @@ type EntryCreateRequest struct {
 	GUID      string    `json:"guid"`
 	Text      string    `json:"text"`
 	Timestamp time.Time `json:"timestamp"`
-	BookGUID  string    `json:"book_guid"`
+	BookGUID  string    `json:"bookGuid"`
 }
 
 func (s EntryService) Create(ctx context.Context, req *EntryCreateRequest) (*model.Entry, error) {
@@ -87,7 +87,7 @@ type EntryRetrieveResponse struct {
 func (s EntryService) Retrieve(ctx context.Context, req url.Values) (*EntryRetrieveResponse, error) {
 	var bookGUID string
 
-	if bookGUIDs, ok := req["book_guid"]; ok && len(bookGUIDs) == 1 {
+	if bookGUIDs, ok := req["book"]; ok && len(bookGUIDs) == 1 {
 		bookGUID = bookGUIDs[0]
 	} else {
 		return nil, errors.New("missing required book_guid parameter")

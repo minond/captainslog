@@ -3,9 +3,9 @@ import { Component } from "react"
 
 import { css, StyleSheet } from "aphrodite"
 
-import { Entries } from "./Entries"
 import { Book } from "../definitions/book"
 import { getBooks } from "../service/book"
+import { Entries } from "./Entries"
 
 const styles = StyleSheet.create({
   book: {
@@ -13,21 +13,19 @@ const styles = StyleSheet.create({
   }
 })
 
-interface Props {}
-
 interface State {
   loaded: boolean
   books: Book[]
   viewing?: string
 }
 
-export class Books extends Component<Props, State> {
-  constructor(props: Props) {
+export class Books extends Component<{}, State> {
+  constructor(props: {}) {
     super(props)
 
     this.state = {
-      loaded: false,
       books: [],
+      loaded: false,
     }
   }
 
@@ -47,28 +45,25 @@ export class Books extends Component<Props, State> {
       return <h1>Loading...</h1>
     }
 
-    return (
-      <div>
-        {books.map((book) => {
-          let header = (
-            <h1
-              className={css(styles.book)}
-              onClick={(ev) => this.viewBook(book.guid)}
-            >{book.name}</h1>
-          )
+    const booksElem = books.map((book) => {
+      const header = (
+        <h1 className={css(styles.book)} onClick={(ev) => this.viewBook(book.guid)}>
+          {book.name}
+        </h1>
+      )
 
-          if (viewing !== book.guid) {
-            return <div key={book.guid}>{header}</div>
-          }
+      if (viewing !== book.guid) {
+        return <div key={book.guid}>{header}</div>
+      }
 
-          return (
-            <div key={book.guid}>
-              {header}
-              <Entries guid={book.guid} />
-            </div>
-          )
-        })}
-      </div>
-    )
+      return (
+        <div key={book.guid}>
+          {header}
+          <Entries guid={book.guid} />
+        </div>
+      )
+    })
+
+    return <div>{booksElem}</div>
   }
 }

@@ -14,8 +14,8 @@ type Entry struct {
 	CollectionGUID kallax.ULID       `json:"-"`
 	Text           string            `json:"text"`
 	Data           map[string]string `json:"data"`
-	CreatedAt      time.Time         `json:"created_at"`
-	UpdatedAt      time.Time         `json:"updated_at"`
+	CreatedAt      time.Time         `json:"createdAt"`
+	UpdatedAt      time.Time         `json:"updatedAt"`
 }
 
 func newEntry(text string, data map[string]string, collection *Collection) (*Entry, error) {

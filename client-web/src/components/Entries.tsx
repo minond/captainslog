@@ -55,8 +55,8 @@ export class Entries extends Component<Props, State> {
     super(props)
 
     this.state = {
-      loaded: false,
       entries: [],
+      loaded: false,
       unsynced: [],
     }
 
@@ -85,9 +85,9 @@ export class Entries extends Component<Props, State> {
   getEntries(): ReadonlyArray<Entry | EntryCreateRequest> {
     const { unsynced, entries } = this.state
     return [...entries, ...unsynced].sort((a, b) => {
-      if (a.created_at === b.created_at) {
+      if (a.createdAt === b.createdAt) {
         return 0
-      } else if (a.created_at > b.created_at) {
+      } else if (a.createdAt > b.createdAt) {
         return 1
       } else {
         return -1
@@ -97,9 +97,9 @@ export class Entries extends Component<Props, State> {
 
   addEntry(text: string) {
     const guid = Math.random().toString()
-    const created_at = new Date().toISOString()
-    const book_guid = this.props.guid
-    this.state.unsynced.push({ guid, text, created_at, book_guid })
+    const createdAt = new Date().toISOString()
+    const bookGuid = this.props.guid
+    this.state.unsynced.push({ guid, text, createdAt, bookGuid })
     this.setState({ unsynced: this.state.unsynced })
   }
 

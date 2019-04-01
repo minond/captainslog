@@ -22,7 +22,7 @@ new_extractor() {
   local match="$2"
   local book_guid="$3"
 
-  data="{\"book_guid\": \"$book_guid\", \"label\": \"$label\", \"match\": \"$match\"}"
+  data="{\"bookGuid\": \"$book_guid\", \"label\": \"$label\", \"match\": \"$match\"}"
   resp=$(curl -s -X POST http://localhost/api/extractor -d "$data")
 
   echo "$resp" | jq '.guid' -r
@@ -32,7 +32,7 @@ new_entry() {
   local text="$1"
   local book_guid="$2"
 
-  data="{\"guid\": \"$RANDOM\", \"book_guid\": \"$book_guid\", \"text\": \"$text\"}"
+  data="{\"guid\": \"$RANDOM\", \"bookGuid\": \"$book_guid\", \"text\": \"$text\"}"
   resp=$(curl -s -X POST http://localhost/api/entry -d "$data")
 
   echo "$resp" | jq '.guid' -r
@@ -56,4 +56,4 @@ log "new entry" $(new_entry "Squats, 2min" "$book_guid")
 log "new entry" $(new_entry "Squats, 3x10@45" "$book_guid")
 log "new entry" $(new_entry "Running, 30min" "$book_guid")
 
-curl "http://localhost/api/entry?book_guid=$book_guid" | jq ''
+curl "http://localhost/api/entry?book=$book_guid" | jq ''
