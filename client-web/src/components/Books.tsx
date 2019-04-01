@@ -31,7 +31,8 @@ export class Books extends Component<{}, State> {
 
   componentWillMount() {
     getBooks().then((books) =>
-      this.setState({ loaded: true, books }))
+      // XXX remove viewing hardcoded test
+      this.setState({ viewing: books[0].guid, loaded: true, books }))
   }
 
   viewBook(viewing: string) {

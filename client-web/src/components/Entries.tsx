@@ -6,6 +6,9 @@ import { css, StyleSheet } from "aphrodite"
 import { Entry, EntryCreateRequest } from "../definitions/entry"
 import { getEntriesForBook } from "../service/entry"
 
+type MaybeData = { data?: Map<string, string> }
+type InMemoryEntry = Entry | (EntryCreateRequest & MaybeData)
+
 const KEY_ENTER = 13
 
 const styles = StyleSheet.create({
@@ -18,14 +21,13 @@ const styles = StyleSheet.create({
     overflow: "auto",
   },
 
-  tailEntries: {
+  tailEntry: {
     borderTop: "1px solid #dadada",
   },
 
   entry: {
     fontSize: "1.1rem",
-    marginBottom: "10px",
-    padding: "10px 0",
+    padding: "16px 0",
   },
 
   input: {
@@ -82,7 +84,7 @@ export class Entries extends Component<Props, State> {
     }
   }
 
-  getEntries(): ReadonlyArray<Entry | EntryCreateRequest> {
+  getEntries(): ReadonlyArray<InMemoryEntry> {
     const { unsynced, entries } = this.state
     return [...entries, ...unsynced].sort((a, b) => {
       if (a.createdAt === b.createdAt) {
@@ -113,7 +115,7 @@ export class Entries extends Component<Props, State> {
   render() {
     const { loaded } = this.state
     const entries = this.getEntries().map((entry, i) =>
-      <div className={css(i ? styles.tailEntries : null, styles.entry)} key={entry.guid}>{entry.text}</div>)
+      <div className={css(i ? styles.tailEntry : null, styles.entry)} key={entry.guid}>{entry.text}</div>)
 
     if (!loaded) {
       return <h1>Loading...</h1>
