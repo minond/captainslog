@@ -10,8 +10,9 @@ log() {
 
 new_book() {
   local name="$1"
+  local grouping="$2"
 
-  data="{\"name\": \"$name\", \"grouping\": 1}"
+  data="{\"name\": \"$name\", \"grouping\": $grouping}"
   resp=$(curl -s -X POST http://localhost/api/book -d "$data")
 
   echo "$resp" | jq '.guid' -r
@@ -42,7 +43,7 @@ cleaner="truncate books; truncate collections; truncate entries; truncate extrac
 psql captainslog --dbname captainslog -c "$cleaner" &> /dev/null
 log "db" "reset"
 
-workouts=$(new_book "Workouts")
+workouts=$(new_book "Workouts" 1)
 log "new book" "$workouts"
 
 log "new extractor" $(new_extractor "exercise" '^(.+),' "$workouts")
@@ -58,7 +59,7 @@ log "new entry" $(new_entry "Running, 30min" "$workouts")
 
 # curl "http://localhost/api/entry?book=$workouts" | jq ''
 
-blood_pressure=$(new_book "Blood Pressure")
+blood_pressure=$(new_book "Blood Pressure" 0)
 log "new book" "$blood_pressure"
 
 log "new extractor" $(new_extractor "a" '^(\\d+)\\s{0,}/' "$blood_pressure")
