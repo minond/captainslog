@@ -29,6 +29,7 @@ const styles = StyleSheet.create({
 
   input: {
     fontSize: "1.1rem",
+    height: "20px",
     marginLeft: "-10px",
     padding: "10px 8px",
     width: "100%",
@@ -47,15 +48,15 @@ interface State {
 
 export class Entries extends Component<Props, State> {
   entriesRef: RefObject<HTMLDivElement>
-  inputRef: RefObject<HTMLInputElement>
-  boundOnEntryInputKeyPress: (ev: KeyboardEvent<HTMLInputElement>) => void
+  inputRef: RefObject<HTMLTextAreaElement>
+  boundOnEntryInputKeyPress: (ev: KeyboardEvent<HTMLTextAreaElement>) => void
 
   constructor(props: Props) {
     super(props)
 
     this.state = {
-      loaded: false,
       entries: [],
+      loaded: false,
       unsynced: [],
     }
 
@@ -65,8 +66,8 @@ export class Entries extends Component<Props, State> {
   }
 
   componentWillMount() {
-    retrieveEntriesForBook(this.props.guid).then((entries) =>{
-      this.setState({ loaded: true, entries })})
+    retrieveEntriesForBook(this.props.guid).then((entries) =>
+      this.setState({ loaded: true, entries }))
   }
 
   componentDidUpdate() {
@@ -113,10 +114,15 @@ export class Entries extends Component<Props, State> {
       }))
   }
 
-  onEntryInputKeyPress(ev: KeyboardEvent<HTMLInputElement>) {
+  onEntryInputKeyPress(ev: KeyboardEvent<HTMLTextAreaElement>) {
     if (ev.charCode === KEY_ENTER) {
-      this.addEntry(ev.currentTarget.value)
+      ev.currentTarget.value.split("\n")
+        .map((item) => item.trim())
+        .filter((item) => !!item)
+        .map((part) => this.addEntry(part))
+
       ev.currentTarget.value = ""
+      ev.preventDefault()
     }
   }
 
@@ -133,10 +139,9 @@ export class Entries extends Component<Props, State> {
       <div className={css(styles.wrapper)}>
         <div ref={this.entriesRef} className={css(styles.entries)}>{entries}</div>
 
-        <input
+        <textarea
           ref={this.inputRef}
           className={css(styles.input)}
-          type="text"
           onKeyPress={this.boundOnEntryInputKeyPress}
         />
       </div>
