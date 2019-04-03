@@ -10,8 +10,11 @@ import { Entries } from "./entries"
 
 const styles = StyleSheet.create({
   book: {
-    color: "#0D28F2",
     marginBottom: "10px"
+  },
+
+  wrapper: {
+    padding: "30px"
   }
 })
 
@@ -67,6 +70,6 @@ export class Books extends Component<{}, State> {
       )
     })
 
-    return <div>{booksElem}</div>
+    return <div className={css(styles.wrapper)}>{booksElem}</div>
   }
 }

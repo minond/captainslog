@@ -28,8 +28,7 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    fontSize: "1.1rem",
-    height: "20px",
+    fontSize: "1.1em",
     marginLeft: "-10px",
     padding: "10px 8px",
     width: "100%",
@@ -140,6 +139,7 @@ export class Entries extends Component<Props, State> {
         <div ref={this.entriesRef} className={css(styles.entries)}>{entries}</div>
 
         <textarea
+          rows={1}
           ref={this.inputRef}
           className={css(styles.input)}
           onKeyPress={this.boundOnEntryInputKeyPress}

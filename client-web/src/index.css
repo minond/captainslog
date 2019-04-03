@@ -5,5 +5,23 @@
   font-family: 'Spectral', serif;
   font-size: 1rem;
   margin: 0 auto;
-  max-width: 720px;
+}
+
+/* small */
+@media screen and (min-width: 45em) {
+}
+
+/* not small?? */
+@media screen and (min-width: 45em) {
+}
+
+/* medium */
+@media screen and (min-width: 45em) and (max-width: 60em) {
+}
+
+/* large */
+@media screen and (min-width: 60em) {
+  #body {
+    max-width: 720px;
+  }
 }
