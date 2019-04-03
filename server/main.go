@@ -1,5 +1,5 @@
 //go:generate kallax gen --input model
-//go:generate go run generator/mount/main.go -routes service/mount/routes.json -output service/mount/autogen.go
+//go:generate go run generator/service/main.go -routes service/routes.json -output service/routes.go -package service
 package main
 
 import (
@@ -12,7 +12,6 @@ import (
 	"github.com/gorilla/sessions"
 
 	"github.com/minond/captainslog/server/service"
-	"github.com/minond/captainslog/server/service/mount"
 )
 
 func main() {
@@ -40,9 +39,9 @@ func main() {
 		})
 	})
 
-	mount.MountBookService(router, bookService)
-	mount.MountEntryService(router, entryService)
-	mount.MountExtractorService(router, extractorService)
+	service.MountBookService(router, bookService)
+	service.MountEntryService(router, entryService)
+	service.MountExtractorService(router, extractorService)
 
 	http.Handle("/", router)
 

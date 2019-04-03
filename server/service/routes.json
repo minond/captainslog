@@ -2,47 +2,47 @@
   "routes": [
     {
       "endpoint": "/api/book",
-      "service": "service.BookService",
+      "service": "BookService",
       "methods": [
         {
           "method": "POST",
           "handler": "Create",
-          "request": "service.BookCreateRequest",
+          "request": "BookCreateRequest",
           "response": "model.Book"
         },
         {
           "method": "GET",
           "handler": "Retrieve",
-          "response": "service.BookRetrieveResponse"
+          "response": "BookRetrieveResponse"
         }
       ]
     },
     {
       "endpoint": "/api/extractor",
-      "service": "service.ExtractorService",
+      "service": "ExtractorService",
       "methods": [
         {
           "method": "POST",
           "handler": "Create",
-          "request": "service.ExtractorCreateRequest",
+          "request": "ExtractorCreateRequest",
           "response": "model.Extractor"
         }
       ]
     },
     {
       "endpoint": "/api/entry",
-      "service": "service.EntryService",
+      "service": "EntryService",
       "methods": [
         {
           "method": "POST",
           "handler": "Create",
-          "request": "service.EntryCreateRequest",
-          "response": "service.EntryCreateResponse"
+          "request": "EntryCreateRequest",
+          "response": "EntryCreateResponse"
         },
         {
           "method": "GET",
           "handler": "Retrieve",
-          "response": "service.EntryRetrieveResponse"
+          "response": "EntryRetrieveResponse"
         }
       ]
     }
