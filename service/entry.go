@@ -9,8 +9,8 @@ import (
 
 	"gopkg.in/src-d/go-kallax.v1"
 
-	"github.com/minond/captainslog/server/model"
-	"github.com/minond/captainslog/server/processing"
+	"github.com/minond/captainslog/model"
+	"github.com/minond/captainslog/processing"
 )
 
 type EntryService struct {

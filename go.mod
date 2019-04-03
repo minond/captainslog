@@ -1,4 +1,4 @@
-module github.com/minond/captainslog/server
+module github.com/minond/captainslog
 
 require (
 	github.com/Masterminds/squirrel v1.1.0 // indirect

@@ -11,7 +11,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 
-	"github.com/minond/captainslog/server/service"
+	"github.com/minond/captainslog/service"
 )
 
 func main() {

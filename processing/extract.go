@@ -3,7 +3,7 @@ package processing
 import (
 	"regexp"
 
-	"github.com/minond/captainslog/server/model"
+	"github.com/minond/captainslog/model"
 )
 
 func Extract(text string, extractors []*model.Extractor) (map[string]string, error) {

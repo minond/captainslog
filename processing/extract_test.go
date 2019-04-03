@@ -3,7 +3,7 @@ package processing
 import (
 	"testing"
 
-	"github.com/minond/captainslog/server/model"
+	"github.com/minond/captainslog/model"
 )
 
 type extractTest struct {

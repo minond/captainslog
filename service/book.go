@@ -7,7 +7,7 @@ import (
 
 	"gopkg.in/src-d/go-kallax.v1"
 
-	"github.com/minond/captainslog/server/model"
+	"github.com/minond/captainslog/model"
 )
 
 type BookService struct {
