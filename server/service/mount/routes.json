@@ -7,11 +7,13 @@
         {
           "method": "POST",
           "handler": "Create",
-          "request": "service.BookCreateRequest"
+          "request": "service.BookCreateRequest",
+          "response": "model.Book"
         },
         {
           "method": "GET",
-          "handler": "Retrieve"
+          "handler": "Retrieve",
+          "response": "service.BookRetrieveResponse"
         }
       ]
     },
@@ -22,7 +24,8 @@
         {
           "method": "POST",
           "handler": "Create",
-          "request": "service.ExtractorCreateRequest"
+          "request": "service.ExtractorCreateRequest",
+          "response": "model.Extractor"
         }
       ]
     },
@@ -33,11 +36,13 @@
         {
           "method": "POST",
           "handler": "Create",
-          "request": "service.EntryCreateRequest"
+          "request": "service.EntryCreateRequest",
+          "response": "service.EntryCreateResponse"
         },
         {
           "method": "GET",
-          "handler": "Retrieve"
+          "handler": "Retrieve",
+          "response": "service.EntryRetrieveResponse"
         }
       ]
     }

@@ -12,10 +12,14 @@ import (
 	"text/template"
 )
 
+// Routes represents the schema for a routes.json file. It has many routes.
 type Routes struct {
 	Routes []Route `json:"routes"`
 }
 
+// Route is a single instance of a route in a routes.json file. It has
+// informatino about the endpoint and the service that handles each type of
+// request.
 type Route struct {
 	Endpoint string   `json:"endpoint"`
 	Service  string   `json:"service"`
@@ -30,10 +34,43 @@ func (r Route) String() string {
 	return fmt.Sprintf("%s (%s)", r.Endpoint, strings.Join(methods, ", "))
 }
 
+// MountFunctionName generates the name of the "mount" function used to add the
+// handler to a mux routes.
+func (r Route) MountFunctionName() string {
+	parts := strings.Split(r.Service, ".")
+	name := parts[len(parts)-1]
+	return fmt.Sprintf("Mount%s", name)
+}
+
+// ServiceContractName generates the name of the interface that defines all of
+// the methods that a service is required to have in order to meet the
+// requirements defined in the routes.json file.
+func (r Route) ServiceContractName() string {
+	parts := strings.Split(r.Service, ".")
+	name := parts[len(parts)-1]
+	return fmt.Sprintf("%sContract", name)
+}
+
+// Method is a badly named data structure that hold information that is unique
+// to an http method for a given route. This includes the method itself (GET,
+// POST, etc.), the name of the handlers, and types for the input and the
+// output of the handler.
 type Method struct {
-	Method  string `json:"method"`
-	Handler string `json:"handler"`
-	Request string `json:"request"`
+	Method   string `json:"method"`
+	Handler  string `json:"handler"`
+	Request  string `json:"request"`
+	Response string `json:"response"`
+}
+
+// Signature generates a string that is the method defintion of this Method.
+func (m Method) Signature() string {
+	request := "url.Values"
+	if m.Request != "" {
+		request = "*" + m.Request
+	}
+
+	return fmt.Sprintf("%s(ctx context.Context, req %s) (*%s, error)",
+		m.Handler, request, m.Response)
 }
 
 var (
@@ -54,18 +91,37 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 
+	"github.com/minond/captainslog/server/model"
 	"github.com/minond/captainslog/server/service"
 )
 
 var store = sessions.NewCookieStore([]byte(os.Getenv("SESSION_KEY")))
 
 {{range .Routes}}
-func Mount{{.Service | stripPackage}}(router *mux.Router, serv *{{.Service}}) {
+{{with $route := .}}
+// {{.ServiceContractName}} defines what an implementation of {{.Service}}
+// should look like. This interface is derived from the routes.json file
+// provided as input to this generator, and it is a combination of the handler,
+// the request, and the response.
+type {{.ServiceContractName}} interface {
+{{- range .Methods}}
+	// {{.Handler}} runs when a {{.Method}} {{$route.Endpoint}} request comes in.
+	{{.Signature}}
+{{end}}
+}
+{{end}}
+{{end}}
+
+{{range .Routes}}
+// {{.MountFunctionName}} add a handler to a Gorilla Mux Router that will route
+// an incoming request through the {{.Service | stripPackage}} service.
+func {{.MountFunctionName}}(router *mux.Router, serv {{.ServiceContractName}}) {
 	log.Print("[INFO] mounting {{.Service}} on {{.Endpoint}} endpoint")
 	router.HandleFunc("{{.Endpoint}}", func(w http.ResponseWriter, r *http.Request) {
 		log.Printf("[INFO] handling %s %s request", r.Method, r.URL.String())

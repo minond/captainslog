@@ -10,17 +10,10 @@ import (
 	"github.com/minond/captainslog/server/model"
 )
 
-type BookServiceContract interface {
-	Create(context.Context, *BookCreateRequest) (*model.Book, error)
-	Retrieve(context.Context, url.Values) (*BookRetrieveResponse, error)
-}
-
 type BookService struct {
 	bookStore *model.BookStore
 	userStore *model.UserStore
 }
-
-var _ BookServiceContract = BookService{}
 
 func NewBookService(db *sql.DB) *BookService {
 	return &BookService{

@@ -9,16 +9,10 @@ import (
 	"github.com/minond/captainslog/server/model"
 )
 
-type ExtractorServiceContract interface {
-	Create(context.Context, *ExtractorCreateRequest) (*model.Extractor, error)
-}
-
 type ExtractorService struct {
 	bookStore      *model.BookStore
 	extractorStore *model.ExtractorStore
 }
-
-var _ ExtractorServiceContract = ExtractorService{}
 
 func NewExtractorService(db *sql.DB) *ExtractorService {
 	return &ExtractorService{

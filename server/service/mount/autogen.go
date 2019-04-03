@@ -7,17 +7,54 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 
+	"github.com/minond/captainslog/server/model"
 	"github.com/minond/captainslog/server/service"
 )
 
 var store = sessions.NewCookieStore([]byte(os.Getenv("SESSION_KEY")))
 
-func MountBookService(router *mux.Router, serv *service.BookService) {
+// BookServiceContract defines what an implementation of service.BookService
+// should look like. This interface is derived from the routes.json file
+// provided as input to this generator, and it is a combination of the handler,
+// the request, and the response.
+type BookServiceContract interface {
+	// Create runs when a POST /api/book request comes in.
+	Create(ctx context.Context, req *service.BookCreateRequest) (*model.Book, error)
+
+	// Retrieve runs when a GET /api/book request comes in.
+	Retrieve(ctx context.Context, req url.Values) (*service.BookRetrieveResponse, error)
+}
+
+// ExtractorServiceContract defines what an implementation of service.ExtractorService
+// should look like. This interface is derived from the routes.json file
+// provided as input to this generator, and it is a combination of the handler,
+// the request, and the response.
+type ExtractorServiceContract interface {
+	// Create runs when a POST /api/extractor request comes in.
+	Create(ctx context.Context, req *service.ExtractorCreateRequest) (*model.Extractor, error)
+}
+
+// EntryServiceContract defines what an implementation of service.EntryService
+// should look like. This interface is derived from the routes.json file
+// provided as input to this generator, and it is a combination of the handler,
+// the request, and the response.
+type EntryServiceContract interface {
+	// Create runs when a POST /api/entry request comes in.
+	Create(ctx context.Context, req *service.EntryCreateRequest) (*service.EntryCreateResponse, error)
+
+	// Retrieve runs when a GET /api/entry request comes in.
+	Retrieve(ctx context.Context, req url.Values) (*service.EntryRetrieveResponse, error)
+}
+
+// MountBookService add a handler to a Gorilla Mux Router that will route
+// an incoming request through the BookService service.
+func MountBookService(router *mux.Router, serv BookServiceContract) {
 	log.Print("[INFO] mounting service.BookService on /api/book endpoint")
 	router.HandleFunc("/api/book", func(w http.ResponseWriter, r *http.Request) {
 		log.Printf("[INFO] handling %s %s request", r.Method, r.URL.String())
@@ -98,7 +135,9 @@ func MountBookService(router *mux.Router, serv *service.BookService) {
 	})
 }
 
-func MountExtractorService(router *mux.Router, serv *service.ExtractorService) {
+// MountExtractorService add a handler to a Gorilla Mux Router that will route
+// an incoming request through the ExtractorService service.
+func MountExtractorService(router *mux.Router, serv ExtractorServiceContract) {
 	log.Print("[INFO] mounting service.ExtractorService on /api/extractor endpoint")
 	router.HandleFunc("/api/extractor", func(w http.ResponseWriter, r *http.Request) {
 		log.Printf("[INFO] handling %s %s request", r.Method, r.URL.String())
@@ -155,7 +194,9 @@ func MountExtractorService(router *mux.Router, serv *service.ExtractorService) {
 	})
 }
 
-func MountEntryService(router *mux.Router, serv *service.EntryService) {
+// MountEntryService add a handler to a Gorilla Mux Router that will route
+// an incoming request through the EntryService service.
+func MountEntryService(router *mux.Router, serv EntryServiceContract) {
 	log.Print("[INFO] mounting service.EntryService on /api/entry endpoint")
 	router.HandleFunc("/api/entry", func(w http.ResponseWriter, r *http.Request) {
 		log.Printf("[INFO] handling %s %s request", r.Method, r.URL.String())

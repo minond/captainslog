@@ -20,13 +20,6 @@ type EntryService struct {
 	extractorStore  *model.ExtractorStore
 }
 
-type EntryServiceContract interface {
-	Create(context.Context, *EntryCreateRequest) (*EntryCreateResponse, error)
-	Retrieve(context.Context, url.Values) (*EntryRetrieveResponse, error)
-}
-
-var _ EntryServiceContract = EntryService{}
-
 func NewEntryService(db *sql.DB) *EntryService {
 	return &EntryService{
 		bookStore:       model.NewBookStore(db),
