@@ -173,6 +173,51 @@
       ]
     },
     {
+      "Name": "shorthands",
+      "Columns": [
+        {
+          "Name": "guid",
+          "Type": "uuid",
+          "PrimaryKey": true,
+          "Reference": null,
+          "NotNull": true,
+          "Unique": false
+        },
+        {
+          "Name": "book_guid",
+          "Type": "uuid",
+          "PrimaryKey": false,
+          "Reference": null,
+          "NotNull": true,
+          "Unique": false
+        },
+        {
+          "Name": "expansion",
+          "Type": "text",
+          "PrimaryKey": false,
+          "Reference": null,
+          "NotNull": true,
+          "Unique": false
+        },
+        {
+          "Name": "match",
+          "Type": "text",
+          "PrimaryKey": false,
+          "Reference": null,
+          "NotNull": false,
+          "Unique": false
+        },
+        {
+          "Name": "text",
+          "Type": "text",
+          "PrimaryKey": false,
+          "Reference": null,
+          "NotNull": false,
+          "Unique": false
+        }
+      ]
+    },
+    {
       "Name": "users",
       "Columns": [
         {

@@ -59,5 +59,5 @@ func TestExtract_WorkoutsSample(t *testing.T) {
 		&model.Extractor{Label: "time", Match: `(\d+\s{0,}(sec|seconds|min|minutes|hour|hours))`},
 	}
 
-	runExtractTests("TestProcess_WorkoutsSample", t, tests, extractors)
+	runExtractTests("TestExtract_WorkoutsSample", t, tests, extractors)
 }

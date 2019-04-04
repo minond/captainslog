@@ -29,6 +29,18 @@ new_extractor() {
   echo "$resp" | jq '.guid' -r
 }
 
+new_shorthand() {
+  local expansion="$1"
+  local match="$2"
+  local text="$3"
+  local book_guid="$4"
+
+  data="{\"bookGuid\": \"$book_guid\", \"expansion\": \"$expansion\", \"match\": \"$match\", \"text\": \"$text\"}"
+  resp=$(curl -s -X POST http://localhost/api/shorthand -d "$data")
+
+  echo "$resp" | jq '.guid' -r
+}
+
 new_entry() {
   local text="$1"
   local book_guid="$2"
@@ -39,7 +51,7 @@ new_entry() {
   echo "$resp" | jq '.entry.guid' -r
 }
 
-cleaner="truncate books; truncate collections; truncate entries; truncate extractors;"
+cleaner="truncate books; truncate collections; truncate entries; truncate extractors; truncate shorthands;"
 psql captainslog --dbname captainslog -c "$cleaner" &> /dev/null
 log "db" "reset"
 
@@ -52,6 +64,8 @@ log "new extractor" $(new_extractor "reps" '\\dx\\s{0,}(\\d+)' "$workouts")
 log "new extractor" $(new_extractor "weight" '@\\s{0,}(\\d+)$' "$workouts")
 log "new extractor" $(new_extractor "time" '(\\d+)\\s{0,}(sec|seconds|min|minutes|hour|hours)' "$workouts")
 log "new extractor" $(new_extractor "unit" '\\d+\\s{0,}(sec|seconds|min|minutes|hour|hours)' "$workouts")
+
+log "new shorthand" $(new_shorthand "3x10" "" "xxx" "$workouts")
 
 log "new entry" $(new_entry "Bench press, 3x10@65" "$workouts")
 log "new entry" $(new_entry "Squats, 2min" "$workouts")

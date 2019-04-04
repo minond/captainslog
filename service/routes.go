@@ -51,6 +51,15 @@ type EntryServiceContract interface {
 	Retrieve(ctx context.Context, req url.Values) (*EntryRetrieveResponse, error)
 }
 
+// ShorthandServiceContract defines what an implementation of ShorthandService
+// should look like. This interface is derived from the routes.json file
+// provided as input to this generator, and it is a combination of the handler,
+// the request, and the response.
+type ShorthandServiceContract interface {
+	// Create runs when a POST /api/shorthand request comes in.
+	Create(ctx context.Context, req *ShorthandCreateRequest) (*model.Shorthand, error)
+}
+
 // MountBookService add a handler to a Gorilla Mux Router that will route
 // an incoming request through the BookService service.
 func MountBookService(router *mux.Router, serv BookServiceContract) {
@@ -255,6 +264,65 @@ func MountEntryService(router *mux.Router, serv EntryServiceContract) {
 			}
 
 			res, err := serv.Retrieve(ctx, req)
+			if err != nil {
+				http.Error(w, "unable to handle request", http.StatusInternalServerError)
+				log.Printf("[ERROR] error handling request: %v", err)
+				return
+			}
+
+			out, err := json.Marshal(res)
+			if err != nil {
+				http.Error(w, "unable to encode response", http.StatusInternalServerError)
+				log.Printf("[ERROR] error marshaling response: %v", err)
+				return
+			}
+
+			w.Write(out)
+
+		default:
+			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+		}
+	})
+}
+
+// MountShorthandService add a handler to a Gorilla Mux Router that will route
+// an incoming request through the ShorthandService service.
+func MountShorthandService(router *mux.Router, serv ShorthandServiceContract) {
+	log.Print("[INFO] mounting ShorthandService on /api/shorthand endpoint")
+	router.HandleFunc("/api/shorthand", func(w http.ResponseWriter, r *http.Request) {
+		log.Printf("[INFO] handling %s %s request", r.Method, r.URL.String())
+
+		session, err := store.Get(r, "main")
+		if err != nil {
+			http.Error(w, "unable to read request data", http.StatusInternalServerError)
+			log.Printf("[ERROR] error getting session: %v", err)
+			return
+		}
+
+		switch r.Method {
+
+		case "POST":
+			defer r.Body.Close()
+			data, err := ioutil.ReadAll(r.Body)
+			if err != nil {
+				http.Error(w, "unable to read request body", http.StatusBadRequest)
+				log.Printf("[ERROR] error reading request body: %v", err)
+				return
+			}
+
+			req := &ShorthandCreateRequest{}
+			if err = json.Unmarshal(data, req); err != nil {
+				http.Error(w, "unable to decode request", http.StatusBadRequest)
+				log.Printf("[ERROR] error unmarshaling request: %v", err)
+				return
+			}
+
+			ctx := context.Background()
+			for key, val := range session.Values {
+				ctx = context.WithValue(ctx, key, val)
+			}
+
+			res, err := serv.Create(ctx, req)
 			if err != nil {
 				http.Error(w, "unable to handle request", http.StatusInternalServerError)
 				log.Printf("[ERROR] error handling request: %v", err)

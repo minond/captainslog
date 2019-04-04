@@ -45,6 +45,18 @@
           "response": "EntryRetrieveResponse"
         }
       ]
+    },
+    {
+      "endpoint": "/api/shorthand",
+      "service": "ShorthandService",
+      "methods": [
+        {
+          "method": "POST",
+          "handler": "Create",
+          "request": "ShorthandCreateRequest",
+          "response": "model.Shorthand"
+        }
+      ]
     }
   ]
 }

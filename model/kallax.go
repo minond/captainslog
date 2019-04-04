@@ -1804,6 +1804,448 @@ func (rs *ExtractorResultSet) Close() error {
 	return rs.ResultSet.Close()
 }
 
+// NewShorthand returns a new instance of Shorthand.
+func NewShorthand(expansion string, match *string, text *string, book *Book) (record *Shorthand, err error) {
+	return newShorthand(expansion, match, text, book)
+}
+
+// GetID returns the primary key of the model.
+func (r *Shorthand) GetID() kallax.Identifier {
+	return (*kallax.ULID)(&r.GUID)
+}
+
+// ColumnAddress returns the pointer to the value of the given column.
+func (r *Shorthand) ColumnAddress(col string) (interface{}, error) {
+	switch col {
+	case "guid":
+		return (*kallax.ULID)(&r.GUID), nil
+	case "book_guid":
+		return &r.BookGUID, nil
+	case "expansion":
+		return &r.Expansion, nil
+	case "match":
+		return types.Nullable(&r.Match), nil
+	case "text":
+		return types.Nullable(&r.Text), nil
+
+	default:
+		return nil, fmt.Errorf("kallax: invalid column in Shorthand: %s", col)
+	}
+}
+
+// Value returns the value of the given column.
+func (r *Shorthand) Value(col string) (interface{}, error) {
+	switch col {
+	case "guid":
+		return r.GUID, nil
+	case "book_guid":
+		return r.BookGUID, nil
+	case "expansion":
+		return r.Expansion, nil
+	case "match":
+		if r.Match == (*string)(nil) {
+			return nil, nil
+		}
+		return r.Match, nil
+	case "text":
+		if r.Text == (*string)(nil) {
+			return nil, nil
+		}
+		return r.Text, nil
+
+	default:
+		return nil, fmt.Errorf("kallax: invalid column in Shorthand: %s", col)
+	}
+}
+
+// NewRelationshipRecord returns a new record for the relatiobship in the given
+// field.
+func (r *Shorthand) NewRelationshipRecord(field string) (kallax.Record, error) {
+	return nil, fmt.Errorf("kallax: model Shorthand has no relationships")
+}
+
+// SetRelationship sets the given relationship in the given field.
+func (r *Shorthand) SetRelationship(field string, rel interface{}) error {
+	return fmt.Errorf("kallax: model Shorthand has no relationships")
+}
+
+// ShorthandStore is the entity to access the records of the type Shorthand
+// in the database.
+type ShorthandStore struct {
+	*kallax.Store
+}
+
+// NewShorthandStore creates a new instance of ShorthandStore
+// using a SQL database.
+func NewShorthandStore(db *sql.DB) *ShorthandStore {
+	return &ShorthandStore{kallax.NewStore(db)}
+}
+
+// GenericStore returns the generic store of this store.
+func (s *ShorthandStore) GenericStore() *kallax.Store {
+	return s.Store
+}
+
+// SetGenericStore changes the generic store of this store.
+func (s *ShorthandStore) SetGenericStore(store *kallax.Store) {
+	s.Store = store
+}
+
+// Debug returns a new store that will print all SQL statements to stdout using
+// the log.Printf function.
+func (s *ShorthandStore) Debug() *ShorthandStore {
+	return &ShorthandStore{s.Store.Debug()}
+}
+
+// DebugWith returns a new store that will print all SQL statements using the
+// given logger function.
+func (s *ShorthandStore) DebugWith(logger kallax.LoggerFunc) *ShorthandStore {
+	return &ShorthandStore{s.Store.DebugWith(logger)}
+}
+
+// DisableCacher turns off prepared statements, which can be useful in some scenarios.
+func (s *ShorthandStore) DisableCacher() *ShorthandStore {
+	return &ShorthandStore{s.Store.DisableCacher()}
+}
+
+// Insert inserts a Shorthand in the database. A non-persisted object is
+// required for this operation.
+func (s *ShorthandStore) Insert(record *Shorthand) error {
+	record.SetSaving(true)
+	defer record.SetSaving(false)
+
+	return s.Store.Insert(Schema.Shorthand.BaseSchema, record)
+}
+
+// Update updates the given record on the database. If the columns are given,
+// only these columns will be updated. Otherwise all of them will be.
+// Be very careful with this, as you will have a potentially different object
+// in memory but not on the database.
+// Only writable records can be updated. Writable objects are those that have
+// been just inserted or retrieved using a query with no custom select fields.
+func (s *ShorthandStore) Update(record *Shorthand, cols ...kallax.SchemaField) (updated int64, err error) {
+	record.SetSaving(true)
+	defer record.SetSaving(false)
+
+	return s.Store.Update(Schema.Shorthand.BaseSchema, record, cols...)
+}
+
+// Save inserts the object if the record is not persisted, otherwise it updates
+// it. Same rules of Update and Insert apply depending on the case.
+func (s *ShorthandStore) Save(record *Shorthand) (updated bool, err error) {
+	if !record.IsPersisted() {
+		return false, s.Insert(record)
+	}
+
+	rowsUpdated, err := s.Update(record)
+	if err != nil {
+		return false, err
+	}
+
+	return rowsUpdated > 0, nil
+}
+
+// Delete removes the given record from the database.
+func (s *ShorthandStore) Delete(record *Shorthand) error {
+	return s.Store.Delete(Schema.Shorthand.BaseSchema, record)
+}
+
+// Find returns the set of results for the given query.
+func (s *ShorthandStore) Find(q *ShorthandQuery) (*ShorthandResultSet, error) {
+	rs, err := s.Store.Find(q)
+	if err != nil {
+		return nil, err
+	}
+
+	return NewShorthandResultSet(rs), nil
+}
+
+// MustFind returns the set of results for the given query, but panics if there
+// is any error.
+func (s *ShorthandStore) MustFind(q *ShorthandQuery) *ShorthandResultSet {
+	return NewShorthandResultSet(s.Store.MustFind(q))
+}
+
+// Count returns the number of rows that would be retrieved with the given
+// query.
+func (s *ShorthandStore) Count(q *ShorthandQuery) (int64, error) {
+	return s.Store.Count(q)
+}
+
+// MustCount returns the number of rows that would be retrieved with the given
+// query, but panics if there is an error.
+func (s *ShorthandStore) MustCount(q *ShorthandQuery) int64 {
+	return s.Store.MustCount(q)
+}
+
+// FindOne returns the first row returned by the given query.
+// `ErrNotFound` is returned if there are no results.
+func (s *ShorthandStore) FindOne(q *ShorthandQuery) (*Shorthand, error) {
+	q.Limit(1)
+	q.Offset(0)
+	rs, err := s.Find(q)
+	if err != nil {
+		return nil, err
+	}
+
+	if !rs.Next() {
+		return nil, kallax.ErrNotFound
+	}
+
+	record, err := rs.Get()
+	if err != nil {
+		return nil, err
+	}
+
+	if err := rs.Close(); err != nil {
+		return nil, err
+	}
+
+	return record, nil
+}
+
+// FindAll returns a list of all the rows returned by the given query.
+func (s *ShorthandStore) FindAll(q *ShorthandQuery) ([]*Shorthand, error) {
+	rs, err := s.Find(q)
+	if err != nil {
+		return nil, err
+	}
+
+	return rs.All()
+}
+
+// MustFindOne returns the first row retrieved by the given query. It panics
+// if there is an error or if there are no rows.
+func (s *ShorthandStore) MustFindOne(q *ShorthandQuery) *Shorthand {
+	record, err := s.FindOne(q)
+	if err != nil {
+		panic(err)
+	}
+	return record
+}
+
+// Reload refreshes the Shorthand with the data in the database and
+// makes it writable.
+func (s *ShorthandStore) Reload(record *Shorthand) error {
+	return s.Store.Reload(Schema.Shorthand.BaseSchema, record)
+}
+
+// Transaction executes the given callback in a transaction and rollbacks if
+// an error is returned.
+// The transaction is only open in the store passed as a parameter to the
+// callback.
+func (s *ShorthandStore) Transaction(callback func(*ShorthandStore) error) error {
+	if callback == nil {
+		return kallax.ErrInvalidTxCallback
+	}
+
+	return s.Store.Transaction(func(store *kallax.Store) error {
+		return callback(&ShorthandStore{store})
+	})
+}
+
+// ShorthandQuery is the object used to create queries for the Shorthand
+// entity.
+type ShorthandQuery struct {
+	*kallax.BaseQuery
+}
+
+// NewShorthandQuery returns a new instance of ShorthandQuery.
+func NewShorthandQuery() *ShorthandQuery {
+	return &ShorthandQuery{
+		BaseQuery: kallax.NewBaseQuery(Schema.Shorthand.BaseSchema),
+	}
+}
+
+// Select adds columns to select in the query.
+func (q *ShorthandQuery) Select(columns ...kallax.SchemaField) *ShorthandQuery {
+	if len(columns) == 0 {
+		return q
+	}
+	q.BaseQuery.Select(columns...)
+	return q
+}
+
+// SelectNot excludes columns from being selected in the query.
+func (q *ShorthandQuery) SelectNot(columns ...kallax.SchemaField) *ShorthandQuery {
+	q.BaseQuery.SelectNot(columns...)
+	return q
+}
+
+// Copy returns a new identical copy of the query. Remember queries are mutable
+// so make a copy any time you need to reuse them.
+func (q *ShorthandQuery) Copy() *ShorthandQuery {
+	return &ShorthandQuery{
+		BaseQuery: q.BaseQuery.Copy(),
+	}
+}
+
+// Order adds order clauses to the query for the given columns.
+func (q *ShorthandQuery) Order(cols ...kallax.ColumnOrder) *ShorthandQuery {
+	q.BaseQuery.Order(cols...)
+	return q
+}
+
+// BatchSize sets the number of items to fetch per batch when there are 1:N
+// relationships selected in the query.
+func (q *ShorthandQuery) BatchSize(size uint64) *ShorthandQuery {
+	q.BaseQuery.BatchSize(size)
+	return q
+}
+
+// Limit sets the max number of items to retrieve.
+func (q *ShorthandQuery) Limit(n uint64) *ShorthandQuery {
+	q.BaseQuery.Limit(n)
+	return q
+}
+
+// Offset sets the number of items to skip from the result set of items.
+func (q *ShorthandQuery) Offset(n uint64) *ShorthandQuery {
+	q.BaseQuery.Offset(n)
+	return q
+}
+
+// Where adds a condition to the query. All conditions added are concatenated
+// using a logical AND.
+func (q *ShorthandQuery) Where(cond kallax.Condition) *ShorthandQuery {
+	q.BaseQuery.Where(cond)
+	return q
+}
+
+// FindByGUID adds a new filter to the query that will require that
+// the GUID property is equal to one of the passed values; if no passed values,
+// it will do nothing.
+func (q *ShorthandQuery) FindByGUID(v ...kallax.ULID) *ShorthandQuery {
+	if len(v) == 0 {
+		return q
+	}
+	values := make([]interface{}, len(v))
+	for i, val := range v {
+		values[i] = val
+	}
+	return q.Where(kallax.In(Schema.Shorthand.GUID, values...))
+}
+
+// FindByBookGUID adds a new filter to the query that will require that
+// the BookGUID property is equal to the passed value.
+func (q *ShorthandQuery) FindByBookGUID(v kallax.ULID) *ShorthandQuery {
+	return q.Where(kallax.Eq(Schema.Shorthand.BookGUID, v))
+}
+
+// FindByExpansion adds a new filter to the query that will require that
+// the Expansion property is equal to the passed value.
+func (q *ShorthandQuery) FindByExpansion(v string) *ShorthandQuery {
+	return q.Where(kallax.Eq(Schema.Shorthand.Expansion, v))
+}
+
+// ShorthandResultSet is the set of results returned by a query to the
+// database.
+type ShorthandResultSet struct {
+	ResultSet kallax.ResultSet
+	last      *Shorthand
+	lastErr   error
+}
+
+// NewShorthandResultSet creates a new result set for rows of the type
+// Shorthand.
+func NewShorthandResultSet(rs kallax.ResultSet) *ShorthandResultSet {
+	return &ShorthandResultSet{ResultSet: rs}
+}
+
+// Next fetches the next item in the result set and returns true if there is
+// a next item.
+// The result set is closed automatically when there are no more items.
+func (rs *ShorthandResultSet) Next() bool {
+	if !rs.ResultSet.Next() {
+		rs.lastErr = rs.ResultSet.Close()
+		rs.last = nil
+		return false
+	}
+
+	var record kallax.Record
+	record, rs.lastErr = rs.ResultSet.Get(Schema.Shorthand.BaseSchema)
+	if rs.lastErr != nil {
+		rs.last = nil
+	} else {
+		var ok bool
+		rs.last, ok = record.(*Shorthand)
+		if !ok {
+			rs.lastErr = fmt.Errorf("kallax: unable to convert record to *Shorthand")
+			rs.last = nil
+		}
+	}
+
+	return true
+}
+
+// Get retrieves the last fetched item from the result set and the last error.
+func (rs *ShorthandResultSet) Get() (*Shorthand, error) {
+	return rs.last, rs.lastErr
+}
+
+// ForEach iterates over the complete result set passing every record found to
+// the given callback. It is possible to stop the iteration by returning
+// `kallax.ErrStop` in the callback.
+// Result set is always closed at the end.
+func (rs *ShorthandResultSet) ForEach(fn func(*Shorthand) error) error {
+	for rs.Next() {
+		record, err := rs.Get()
+		if err != nil {
+			return err
+		}
+
+		if err := fn(record); err != nil {
+			if err == kallax.ErrStop {
+				return rs.Close()
+			}
+
+			return err
+		}
+	}
+	return nil
+}
+
+// All returns all records on the result set and closes the result set.
+func (rs *ShorthandResultSet) All() ([]*Shorthand, error) {
+	var result []*Shorthand
+	for rs.Next() {
+		record, err := rs.Get()
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, record)
+	}
+	return result, nil
+}
+
+// One returns the first record on the result set and closes the result set.
+func (rs *ShorthandResultSet) One() (*Shorthand, error) {
+	if !rs.Next() {
+		return nil, kallax.ErrNotFound
+	}
+
+	record, err := rs.Get()
+	if err != nil {
+		return nil, err
+	}
+
+	if err := rs.Close(); err != nil {
+		return nil, err
+	}
+
+	return record, nil
+}
+
+// Err returns the last error occurred.
+func (rs *ShorthandResultSet) Err() error {
+	return rs.lastErr
+}
+
+// Close closes the result set.
+func (rs *ShorthandResultSet) Close() error {
+	return rs.ResultSet.Close()
+}
+
 // NewUser returns a new instance of User.
 func NewUser() (record *User, err error) {
 	return newUser()
@@ -2217,6 +2659,7 @@ type schema struct {
 	Collection *schemaCollection
 	Entry      *schemaEntry
 	Extractor  *schemaExtractor
+	Shorthand  *schemaShorthand
 	User       *schemaUser
 }
 
@@ -2253,6 +2696,15 @@ type schemaExtractor struct {
 	BookGUID kallax.SchemaField
 	Label    kallax.SchemaField
 	Match    kallax.SchemaField
+}
+
+type schemaShorthand struct {
+	*kallax.BaseSchema
+	GUID      kallax.SchemaField
+	BookGUID  kallax.SchemaField
+	Expansion kallax.SchemaField
+	Match     kallax.SchemaField
+	Text      kallax.SchemaField
 }
 
 type schemaUser struct {
@@ -2346,6 +2798,28 @@ var Schema = &schema{
 		BookGUID: kallax.NewSchemaField("book_guid"),
 		Label:    kallax.NewSchemaField("label"),
 		Match:    kallax.NewSchemaField("match"),
+	},
+	Shorthand: &schemaShorthand{
+		BaseSchema: kallax.NewBaseSchema(
+			"shorthands",
+			"__shorthand",
+			kallax.NewSchemaField("guid"),
+			kallax.ForeignKeys{},
+			func() kallax.Record {
+				return new(Shorthand)
+			},
+			false,
+			kallax.NewSchemaField("guid"),
+			kallax.NewSchemaField("book_guid"),
+			kallax.NewSchemaField("expansion"),
+			kallax.NewSchemaField("match"),
+			kallax.NewSchemaField("text"),
+		),
+		GUID:      kallax.NewSchemaField("guid"),
+		BookGUID:  kallax.NewSchemaField("book_guid"),
+		Expansion: kallax.NewSchemaField("expansion"),
+		Match:     kallax.NewSchemaField("match"),
+		Text:      kallax.NewSchemaField("text"),
 	},
 	User: &schemaUser{
 		BaseSchema: kallax.NewBaseSchema(

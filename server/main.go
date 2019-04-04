@@ -25,6 +25,7 @@ func main() {
 	bookService := service.NewBookService(db)
 	entryService := service.NewEntryService(db)
 	extractorService := service.NewExtractorService(db)
+	shorthandService := service.NewShorthandService(db)
 
 	// TODO add real sessions with real auth
 	store := sessions.NewCookieStore([]byte(os.Getenv("SESSION_KEY")))
@@ -40,6 +41,7 @@ func main() {
 	service.MountBookService(router, bookService)
 	service.MountEntryService(router, entryService)
 	service.MountExtractorService(router, extractorService)
+	service.MountShorthandService(router, shorthandService)
 
 	router.PathPrefix("/").Handler(http.FileServer(http.Dir("../client-web/dist/")))
 
