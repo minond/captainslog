@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "lint": "tslint src/*/* *.js",
-    "build-development": "webpack --mode=development; cp src/index.html dist/",
-    "build-production": "webpack --mode=production; cp src/index.html dist/",
+    "build-development": "webpack --mode=development",
+    "build-production": "webpack --mode=production; ./copy-client-files",
     "start": "webpack-dev-server --open"
   },
   "author": "",
