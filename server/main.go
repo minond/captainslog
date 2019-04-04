@@ -41,9 +41,9 @@ func main() {
 	service.MountEntryService(router, entryService)
 	service.MountExtractorService(router, extractorService)
 
-	http.Handle("/", router)
+	router.PathPrefix("/").Handler(http.FileServer(http.Dir("../client-web/dist/")))
 
 	listen := os.Getenv("LISTEN")
 	log.Printf("[INFO] listening on `%s`", listen)
-	log.Fatal(http.ListenAndServe(listen, nil))
+	log.Fatal(http.ListenAndServe(listen, router))
 }
