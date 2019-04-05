@@ -67,9 +67,9 @@ log "new extractor" $(new_extractor "unit" '\\d+\\s{0,}(sec|seconds|min|minutes|
 
 log "new shorthand" $(new_shorthand "3x10" "" "xxx" "$workouts")
 
-log "new entry" $(new_entry "Bench press, 3x10@65" "$workouts")
+log "new entry" $(new_entry "Bench press, xxx@65" "$workouts")
 log "new entry" $(new_entry "Squats, 2min" "$workouts")
-log "new entry" $(new_entry "Squats, 3x10@45" "$workouts")
+log "new entry" $(new_entry "Squats, xxx@45" "$workouts")
 log "new entry" $(new_entry "Running, 30min" "$workouts")
 
 # curl "http://localhost/api/entry?book=$workouts" | jq ''

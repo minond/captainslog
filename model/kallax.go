@@ -1805,7 +1805,7 @@ func (rs *ExtractorResultSet) Close() error {
 }
 
 // NewShorthand returns a new instance of Shorthand.
-func NewShorthand(expansion string, match *string, text *string, book *Book) (record *Shorthand, err error) {
+func NewShorthand(expansion string, match string, text string, book *Book) (record *Shorthand, err error) {
 	return newShorthand(expansion, match, text, book)
 }
 
@@ -1824,9 +1824,9 @@ func (r *Shorthand) ColumnAddress(col string) (interface{}, error) {
 	case "expansion":
 		return &r.Expansion, nil
 	case "match":
-		return types.Nullable(&r.Match), nil
+		return &r.Match, nil
 	case "text":
-		return types.Nullable(&r.Text), nil
+		return &r.Text, nil
 
 	default:
 		return nil, fmt.Errorf("kallax: invalid column in Shorthand: %s", col)
@@ -1843,14 +1843,8 @@ func (r *Shorthand) Value(col string) (interface{}, error) {
 	case "expansion":
 		return r.Expansion, nil
 	case "match":
-		if r.Match == (*string)(nil) {
-			return nil, nil
-		}
 		return r.Match, nil
 	case "text":
-		if r.Text == (*string)(nil) {
-			return nil, nil
-		}
 		return r.Text, nil
 
 	default:

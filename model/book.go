@@ -51,6 +51,14 @@ func (b *Book) Extractors(extractorStore *ExtractorStore) ([]*Extractor, error) 
 	return extractorStore.FindAll(query)
 }
 
+// Shorthands retrieves all of this Book's shorthands.
+func (b *Book) Shorthands(shorthandStore *ShorthandStore) ([]*Shorthand, error) {
+	query := NewShorthandQuery().
+		Where(kallax.Eq(Schema.Shorthand.BookGUID, b.GUID))
+
+	return shorthandStore.FindAll(query)
+}
+
 // ActiveCollection retrieves a Book's active collection by analyzing its
 // grouping. If no collection is found, a collection may be created.
 func (b *Book) ActiveCollection(collectionStore *CollectionStore, create bool) (*Collection, error) {

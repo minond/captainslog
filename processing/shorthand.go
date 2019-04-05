@@ -12,32 +12,35 @@ import (
 // are taken from what is defined in the documentation for the Shorthand model.
 func Expand(text string, shorthands []*model.Shorthand) (string, error) {
 	for _, shorthand := range shorthands {
-		switch {
-		// This handles rule #1
-		case shorthand.Text != nil && shorthand.Match == nil:
-			text = strings.Replace(text, *shorthand.Text, shorthand.Expansion, -1)
+		validText := shorthand.Text != nil && shorthand.Text.Valid
+		validMatch := shorthand.Match != nil && shorthand.Match.Valid
 
-		// This handles rule #2
-		case shorthand.Text != nil && shorthand.Match != nil:
-			reg, err := regexp.Compile(*shorthand.Match)
+		switch {
+		// Handles rule #1 as defined in the documentation for model.Shorthand.
+		case validText && !validMatch:
+			text = strings.Replace(text, shorthand.Text.String, shorthand.Expansion, -1)
+
+		// Handles rule #2 as defined in the documentation for model.Shorthand.
+		case validText && validMatch:
+			reg, err := regexp.Compile(shorthand.Match.String)
 			if err != nil {
 				return text, err
 			} else if reg.MatchString(text) {
-				text = strings.Replace(text, *shorthand.Text, shorthand.Expansion, -1)
+				text = strings.Replace(text, shorthand.Text.String, shorthand.Expansion, -1)
 			}
 
 			text = reg.ReplaceAllString(text, shorthand.Expansion)
 
-		// This handles rule #3
-		case shorthand.Text == nil && shorthand.Match != nil:
-			reg, err := regexp.Compile(*shorthand.Match)
+		// Handles rule #3 as defined in the documentation for model.Shorthand.
+		case !validText && validMatch:
+			reg, err := regexp.Compile(shorthand.Match.String)
 			if err != nil {
 				return text, err
 			}
 
 			text = reg.ReplaceAllString(text, shorthand.Expansion)
 
-		// This handles rule #4
+		// Handles rule #4 as defined in the documentation for model.Shorthand.
 		default:
 			return text, fmt.Errorf("shorthand with guid `%s` is missing text and match", shorthand.GUID)
 		}

@@ -18,6 +18,7 @@ type EntryService struct {
 	collectionStore *model.CollectionStore
 	entryStore      *model.EntryStore
 	extractorStore  *model.ExtractorStore
+	shorthandStore  *model.ShorthandStore
 }
 
 func NewEntryService(db *sql.DB) *EntryService {
@@ -26,6 +27,7 @@ func NewEntryService(db *sql.DB) *EntryService {
 		collectionStore: model.NewCollectionStore(db),
 		entryStore:      model.NewEntryStore(db),
 		extractorStore:  model.NewExtractorStore(db),
+		shorthandStore:  model.NewShorthandStore(db),
 	}
 }
 
@@ -59,17 +61,27 @@ func (s EntryService) Create(ctx context.Context, req *EntryCreateRequest) (*Ent
 		return nil, err
 	}
 
+	shorthands, err := book.Shorthands(s.shorthandStore)
+	if err != nil {
+		return nil, err
+	}
+
+	text, err := processing.Expand(req.Text, shorthands)
+	if err != nil {
+		return nil, err
+	}
+
 	extractors, err := book.Extractors(s.extractorStore)
 	if err != nil {
 		return nil, err
 	}
 
-	data, err := processing.Extract(req.Text, extractors)
+	data, err := processing.Extract(text, extractors)
 	if err != nil {
 		return nil, err
 	}
 
-	entry, err := model.NewEntry(req.Text, data, collection)
+	entry, err := model.NewEntry(text, data, collection)
 	if err != nil {
 		return nil, err
 	}

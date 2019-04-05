@@ -1,6 +1,7 @@
 package model
 
 import (
+	"database/sql"
 	"errors"
 
 	"gopkg.in/src-d/go-kallax.v1"
@@ -28,20 +29,22 @@ type Shorthand struct {
 	GUID      kallax.ULID `json:"guid"`
 	BookGUID  kallax.ULID
 	Expansion string
-	Match     *string
-	Text      *string
+	Match     *sql.NullString `sqltype:"text"`
+	Text      *sql.NullString `sqltype:"text"`
 }
 
-func newShorthand(expansion string, match, text *string, book *Book) (*Shorthand, error) {
-	if match == nil && text == nil {
+func newShorthand(expansion, match, text string, book *Book) (*Shorthand, error) {
+	validMatch := match != ""
+	validText := text != ""
+	if !validMatch && !validText {
 		return nil, errors.New("a text value of match value is required for a shorthand to be valid")
 	}
 
 	shorthand := &Shorthand{
 		GUID:      kallax.NewULID(),
 		Expansion: expansion,
-		Match:     match,
-		Text:      text,
+		Match:     &sql.NullString{String: match, Valid: validMatch},
+		Text:      &sql.NullString{String: text, Valid: validText},
 	}
 
 	if shorthand != nil {

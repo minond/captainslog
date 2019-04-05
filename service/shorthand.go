@@ -22,10 +22,10 @@ func NewShorthandService(db *sql.DB) *ShorthandService {
 }
 
 type ShorthandCreateRequest struct {
-	BookGUID  string  `json:"bookGuid"`
-	Expansion string  `json:"expansion"`
-	Match     *string `json:"match"`
-	Text      *string `json:"text"`
+	BookGUID  string `json:"bookGuid"`
+	Expansion string `json:"expansion"`
+	Match     string `json:"match"`
+	Text      string `json:"text"`
 }
 
 func (s ShorthandService) Create(ctx context.Context, req *ShorthandCreateRequest) (*model.Shorthand, error) {
