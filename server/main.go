@@ -9,6 +9,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 
+	"github.com/minond/captainslog/httpmount"
 	"github.com/minond/captainslog/service"
 )
 
@@ -38,10 +39,10 @@ func main() {
 		})
 	})
 
-	service.MountBookService(router, bookService)
-	service.MountEntryService(router, entryService)
-	service.MountExtractorService(router, extractorService)
-	service.MountShorthandService(router, shorthandService)
+	httpmount.MountBookService(router, bookService)
+	httpmount.MountEntryService(router, entryService)
+	httpmount.MountExtractorService(router, extractorService)
+	httpmount.MountShorthandService(router, shorthandService)
 
 	router.PathPrefix("/").Handler(http.FileServer(http.Dir("../client-web/dist/")))
 

@@ -2,58 +2,58 @@
   "routes": [
     {
       "endpoint": "/api/book",
-      "service": "BookService",
+      "service": "service.BookService",
       "methods": [
         {
           "method": "POST",
           "handler": "Create",
-          "request": "BookCreateRequest",
+          "request": "service.BookCreateRequest",
           "response": "model.Book"
         },
         {
           "method": "GET",
           "handler": "Retrieve",
-          "response": "BookRetrieveResponse"
+          "response": "service.BookRetrieveResponse"
         }
       ]
     },
     {
       "endpoint": "/api/extractor",
-      "service": "ExtractorService",
+      "service": "service.ExtractorService",
       "methods": [
         {
           "method": "POST",
           "handler": "Create",
-          "request": "ExtractorCreateRequest",
+          "request": "service.ExtractorCreateRequest",
           "response": "model.Extractor"
         }
       ]
     },
     {
       "endpoint": "/api/entry",
-      "service": "EntryService",
+      "service": "service.EntryService",
       "methods": [
         {
           "method": "POST",
           "handler": "Create",
-          "request": "EntryCreateRequest",
-          "response": "EntryCreateResponse"
+          "request": "service.EntryCreateRequest",
+          "response": "service.EntryCreateResponse"
         },
         {
           "method": "GET",
           "handler": "Retrieve",
-          "response": "EntryRetrieveResponse"
+          "response": "service.EntryRetrieveResponse"
         }
       ]
     },
     {
       "endpoint": "/api/shorthand",
-      "service": "ShorthandService",
+      "service": "service.ShorthandService",
       "methods": [
         {
           "method": "POST",
           "handler": "Create",
-          "request": "ShorthandCreateRequest",
+          "request": "service.ShorthandCreateRequest",
           "response": "model.Shorthand"
         }
       ]
