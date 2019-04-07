@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
   },
 
   entries: {
-    maxHeight: "calc(100vh - 120px)",
+    maxHeight: "calc(100vh - 200px)",
     overflow: "auto",
   },
 

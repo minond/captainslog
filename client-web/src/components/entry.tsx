@@ -6,17 +6,20 @@ import { css, StyleSheet } from "aphrodite"
 const styles = StyleSheet.create({
   item: {
     border: "1px solid #0D28F2",
+    display: "inline-block",
     fontSize: ".85em",
-    marginLeft: "6px",
-    padding: "2px 6px"
+    margin: "2px 4px 2px 0px",
+    padding: "2px 6px",
+    whiteSpace: "nowrap",
   },
 
   data: {
-    float: "right"
+    display: "block",
+    marginTop: "2px"
   },
 
   entry: {
-    fontSize: "1.1em",
+    fontSize: "1em",
     padding: "16px 0"
   }
 })
