@@ -3,7 +3,7 @@
 #body {
   cursor: default;
   font-family: 'Spectral', serif;
-  font-size: 1rem;
+  font-size: 1.5rem;
   margin: 0 auto;
 }
 
@@ -21,7 +21,7 @@
 
 /* large */
 @media screen and (min-width: 60em) {
-  #body {
-    max-width: 720px;
-  }
+  /* #body { */
+  /*   max-width: 720px; */
+  /* } */
 }
