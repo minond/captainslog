@@ -1,9 +1,0 @@
-#!/bin/bash
-
-set -x
-
-cp src/index.production.html dist/index.html
-cp src/index.css dist/
-cp node_modules/normalize.css/normalize.css dist/
-cp node_modules/react/umd/react.production.min.js dist/react.min.js
-cp node_modules/react-dom/umd/react-dom.production.min.js dist/react-dom.min.js

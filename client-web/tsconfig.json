@@ -6,8 +6,9 @@
     "module": "commonjs",
     "target": "ES6",
     "jsx": "react",
-    "lib": "es2015",
+    "lib": ["es2015", "dom"],
     "pretty": true,
+    "incremental": true,
 
     "alwaysStrict": true,
     "noImplicitAny": true,

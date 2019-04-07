@@ -3,28 +3,27 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {
-    "lint": "tslint src/*/* *.js",
-    "build-development": "webpack --mode=development",
-    "build-production": "webpack --mode=production; ./copy-client-files",
-    "start": "webpack-dev-server --open"
+  "browserify": {
+    "transform": [ "browserify-shim" ]
+  },
+  "browserify-shim": {
+    "react": "global:React",
+    "react-dom": "global:ReactDOM"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@types/aphrodite": "^0.5.13",
-    "awesome-typescript-loader": "^5.2.1",
-    "source-map-loader": "^0.2.4",
-    "tslint": "^5.14.0",
-    "tslint-react": "^3.6.0",
-    "typescript": "^3.3.3333",
-    "webpack": "^4.29.6",
-    "webpack-cli": "^3.3.0",
-    "webpack-dev-server": "^3.2.1"
-  },
-  "dependencies": {
+    "@types/axios": "^0.14.0",
     "@types/react": "^16.8.8",
     "@types/react-dom": "^16.8.2",
+    "browserify": "^16.2.3",
+    "browserify-shim": "^3.8.14",
+    "tslint": "^5.14.0",
+    "tslint-react": "^3.6.0",
+    "typescript": "^3.4.2"
+  },
+  "dependencies": {
     "aphrodite": "^2.3.1",
     "axios": "^0.18.0",
     "normalize.css": "^8.0.1",
