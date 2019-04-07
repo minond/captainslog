@@ -899,8 +899,8 @@ func (rs *CollectionResultSet) Close() error {
 }
 
 // NewEntry returns a new instance of Entry.
-func NewEntry(text string, data map[string]string, collection *Collection) (record *Entry, err error) {
-	return newEntry(text, data, collection)
+func NewEntry(original, text string, data map[string]string, collection *Collection) (record *Entry, err error) {
+	return newEntry(original, text, data, collection)
 }
 
 // GetID returns the primary key of the model.
@@ -917,6 +917,8 @@ func (r *Entry) ColumnAddress(col string) (interface{}, error) {
 		return &r.BookGUID, nil
 	case "collection_guid":
 		return &r.CollectionGUID, nil
+	case "original":
+		return &r.Original, nil
 	case "text":
 		return &r.Text, nil
 	case "data":
@@ -940,6 +942,8 @@ func (r *Entry) Value(col string) (interface{}, error) {
 		return r.BookGUID, nil
 	case "collection_guid":
 		return r.CollectionGUID, nil
+	case "original":
+		return r.Original, nil
 	case "text":
 		return r.Text, nil
 	case "data":
@@ -1238,6 +1242,12 @@ func (q *EntryQuery) FindByBookGUID(v kallax.ULID) *EntryQuery {
 // the CollectionGUID property is equal to the passed value.
 func (q *EntryQuery) FindByCollectionGUID(v kallax.ULID) *EntryQuery {
 	return q.Where(kallax.Eq(Schema.Entry.CollectionGUID, v))
+}
+
+// FindByOriginal adds a new filter to the query that will require that
+// the Original property is equal to the passed value.
+func (q *EntryQuery) FindByOriginal(v string) *EntryQuery {
+	return q.Where(kallax.Eq(Schema.Entry.Original, v))
 }
 
 // FindByText adds a new filter to the query that will require that
@@ -1824,9 +1834,15 @@ func (r *Shorthand) ColumnAddress(col string) (interface{}, error) {
 	case "expansion":
 		return &r.Expansion, nil
 	case "match":
-		return &r.Match, nil
+		if r.Match == nil {
+			r.Match = new(sql.NullString)
+		}
+		return types.Nullable(r.Match), nil
 	case "text":
-		return &r.Text, nil
+		if r.Text == nil {
+			r.Text = new(sql.NullString)
+		}
+		return types.Nullable(r.Text), nil
 
 	default:
 		return nil, fmt.Errorf("kallax: invalid column in Shorthand: %s", col)
@@ -1843,8 +1859,14 @@ func (r *Shorthand) Value(col string) (interface{}, error) {
 	case "expansion":
 		return r.Expansion, nil
 	case "match":
+		if r.Match == (*sql.NullString)(nil) {
+			return nil, nil
+		}
 		return r.Match, nil
 	case "text":
+		if r.Text == (*sql.NullString)(nil) {
+			return nil, nil
+		}
 		return r.Text, nil
 
 	default:
@@ -2130,6 +2152,18 @@ func (q *ShorthandQuery) FindByBookGUID(v kallax.ULID) *ShorthandQuery {
 // the Expansion property is equal to the passed value.
 func (q *ShorthandQuery) FindByExpansion(v string) *ShorthandQuery {
 	return q.Where(kallax.Eq(Schema.Shorthand.Expansion, v))
+}
+
+// FindByMatch adds a new filter to the query that will require that
+// the Match property is equal to the passed value.
+func (q *ShorthandQuery) FindByMatch(v sql.NullString) *ShorthandQuery {
+	return q.Where(kallax.Eq(Schema.Shorthand.Match, v))
+}
+
+// FindByText adds a new filter to the query that will require that
+// the Text property is equal to the passed value.
+func (q *ShorthandQuery) FindByText(v sql.NullString) *ShorthandQuery {
+	return q.Where(kallax.Eq(Schema.Shorthand.Text, v))
 }
 
 // ShorthandResultSet is the set of results returned by a query to the
@@ -2678,6 +2712,7 @@ type schemaEntry struct {
 	GUID           kallax.SchemaField
 	BookGUID       kallax.SchemaField
 	CollectionGUID kallax.SchemaField
+	Original       kallax.SchemaField
 	Text           kallax.SchemaField
 	Data           kallax.SchemaField
 	CreatedAt      kallax.SchemaField
@@ -2760,6 +2795,7 @@ var Schema = &schema{
 			kallax.NewSchemaField("guid"),
 			kallax.NewSchemaField("book_guid"),
 			kallax.NewSchemaField("collection_guid"),
+			kallax.NewSchemaField("original"),
 			kallax.NewSchemaField("text"),
 			kallax.NewSchemaField("data"),
 			kallax.NewSchemaField("created_at"),
@@ -2768,6 +2804,7 @@ var Schema = &schema{
 		GUID:           kallax.NewSchemaField("guid"),
 		BookGUID:       kallax.NewSchemaField("book_guid"),
 		CollectionGUID: kallax.NewSchemaField("collection_guid"),
+		Original:       kallax.NewSchemaField("original"),
 		Text:           kallax.NewSchemaField("text"),
 		Data:           kallax.NewSchemaField("data"),
 		CreatedAt:      kallax.NewSchemaField("created_at"),

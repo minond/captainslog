@@ -81,7 +81,7 @@ func (s EntryService) Create(ctx context.Context, req *EntryCreateRequest) (*Ent
 		return nil, err
 	}
 
-	entry, err := model.NewEntry(text, data, collection)
+	entry, err := model.NewEntry(req.Text, text, data, collection)
 	if err != nil {
 		return nil, err
 	}
