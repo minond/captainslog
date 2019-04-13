@@ -34,7 +34,7 @@ func NewEntryService(db *sql.DB) *EntryService {
 type EntryCreateRequest struct {
 	GUID      string    `json:"guid"`
 	Text      string    `json:"text"`
-	Timestamp time.Time `json:"timestamp"`
+	CreatedAt time.Time `json:"createdAt"`
 	BookGUID  string    `json:"bookGuid"`
 }
 
@@ -56,7 +56,7 @@ func (s EntryService) Create(ctx context.Context, req *EntryCreateRequest) (*Ent
 		return nil, err
 	}
 
-	at := req.Timestamp
+	at := req.CreatedAt
 	if at.IsZero() {
 		at = time.Now().In(time.UTC)
 	}
@@ -90,6 +90,9 @@ func (s EntryService) Create(ctx context.Context, req *EntryCreateRequest) (*Ent
 	if err != nil {
 		return nil, err
 	}
+
+	entry.CreatedAt = at
+	entry.UpdatedAt = at
 
 	err = s.entryStore.Insert(entry)
 	return &EntryCreateResponse{GUID: req.GUID, Entry: entry}, err
