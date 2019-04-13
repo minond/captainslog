@@ -56,8 +56,12 @@ func (s EntryService) Create(ctx context.Context, req *EntryCreateRequest) (*Ent
 		return nil, err
 	}
 
-	now := time.Now().In(time.UTC)
-	collection, err := book.Collection(s.collectionStore, now, true)
+	at := req.Timestamp
+	if at.IsZero() {
+		at = time.Now().In(time.UTC)
+	}
+
+	collection, err := book.Collection(s.collectionStore, at, true)
 	if err != nil {
 		return nil, err
 	}
