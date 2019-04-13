@@ -71,7 +71,7 @@ export class Entries extends Component<Props, State> {
 
   componentDidUpdate() {
     if (this.entriesRef.current) {
-      this.entriesRef.current.scrollTop = Number.MAX_SAFE_INTEGER
+      this.entriesRef.current.scrollTop = 0
     }
   }
 
