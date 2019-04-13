@@ -78,6 +78,7 @@ func (b *Book) Collection(collectionStore *CollectionStore, at time.Time, create
 
 	if create {
 		coll, _ := NewCollection(b)
+		coll.CreatedAt = at
 		err := collectionStore.Insert(coll)
 		return coll, err
 	}
