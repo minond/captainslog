@@ -56,7 +56,8 @@ func (s EntryService) Create(ctx context.Context, req *EntryCreateRequest) (*Ent
 		return nil, err
 	}
 
-	collection, err := book.ActiveCollection(s.collectionStore, true)
+	now := time.Now().In(time.UTC)
+	collection, err := book.Collection(s.collectionStore, now, true)
 	if err != nil {
 		return nil, err
 	}
@@ -115,7 +116,8 @@ func (s EntryService) Retrieve(ctx context.Context, req url.Values) (*EntryRetri
 		return nil, err
 	}
 
-	collection, err := book.ActiveCollection(s.collectionStore, false)
+	now := time.Now().In(time.UTC)
+	collection, err := book.Collection(s.collectionStore, now, false)
 	if err != nil {
 		return nil, err
 	}

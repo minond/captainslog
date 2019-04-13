@@ -59,10 +59,10 @@ func (b *Book) Shorthands(shorthandStore *ShorthandStore) ([]*Shorthand, error) 
 	return shorthandStore.FindAll(query)
 }
 
-// ActiveCollection retrieves a Book's active collection by analyzing its
+// Collection retrieves a Book's collection for a given time by analyzing its
 // grouping. If no collection is found, a collection may be created.
-func (b *Book) ActiveCollection(collectionStore *CollectionStore, create bool) (*Collection, error) {
-	query, err := activeCollectionQuery(b)
+func (b *Book) Collection(collectionStore *CollectionStore, at time.Time, create bool) (*Collection, error) {
+	query, err := collectionQuery(b, at)
 	if err != nil {
 		return nil, err
 	}
@@ -85,15 +85,15 @@ func (b *Book) ActiveCollection(collectionStore *CollectionStore, create bool) (
 	return nil, nil
 }
 
-// activeCollectionQuery returns a query that will search for a book's current,
-// active collection.
-func activeCollectionQuery(b *Book) (*CollectionQuery, error) {
+// collectionQuery returns a query that will search for a book's active
+// collection at a given time.
+func collectionQuery(b *Book, at time.Time) (*CollectionQuery, error) {
 	query := NewCollectionQuery().
 		Where(kallax.Eq(Schema.Collection.BookGUID, b.GUID)).
 		Where(kallax.Eq(Schema.Collection.Open, true))
 
 	if grouping := Grouping(b.Grouping); grouping != GroupingNone {
-		start, end, err := timeRange(grouping)
+		start, end, err := timeRange(grouping, at)
 		if err != nil {
 			return nil, err
 		}
@@ -106,15 +106,13 @@ func activeCollectionQuery(b *Book) (*CollectionQuery, error) {
 
 // timeRange returns a start and end time that corresponds to the time range a
 // group starts and ends.
-func timeRange(grouping Grouping) (start time.Time, end time.Time, err error) {
+func timeRange(grouping Grouping, at time.Time) (start time.Time, end time.Time, err error) {
 	switch Grouping(grouping) {
 	case GroupingNone:
 		return start, end, errors.New("no possible timerange for nil grouping")
 
 	case GroupingDay:
-		now := time.Now().In(time.UTC)
-		year, month, day := now.Date()
-
+		year, month, day := at.Date()
 		start = time.Date(year, month, day, 0, 0, 0, 0, time.UTC)
 		end = time.Date(year, month, day+1, 0, 0, 0, -1, time.UTC)
 
