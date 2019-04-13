@@ -87,9 +87,9 @@ export class Entries extends Component<Props, State> {
       if (a.createdAt === b.createdAt) {
         return 0
       } else if (a.createdAt > b.createdAt) {
-        return 1
-      } else {
         return -1
+      } else {
+        return 1
       }
     })
   }
