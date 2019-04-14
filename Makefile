@@ -1,4 +1,4 @@
-IN_CLIENT_WEB = cd client-web &&
+IN_CLIENT_WEB = cd client/web &&
 IN_SERVER = cd server &&
 
 ifndef MODE
