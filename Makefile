@@ -1,30 +1,56 @@
-IN_CLIENT_WEB = cd client/web &&
+IN_MOBILE_CLIENT = cd client/mobile &&
 IN_SERVER = cd server &&
+IN_WEB_CLIENT = cd client/web &&
 
 ifndef MODE
 	MODE = development
 endif
 
 default: build
-build: build-client build-server
-lint: lint-client lint-server
-test: test-server
 
-build-client:
-	$(IN_CLIENT_WEB) make build
+### Builds #####################################################################
+
+build: build-web-client build-server
+
+build-web-client:
+	$(IN_WEB_CLIENT) make build
 
 build-server:
 	$(IN_SERVER) go build
 
-lint-client:
-	$(IN_CLIENT_WEB) make lint
+
+### Linters ####################################################################
+
+lint: lint-mobile-client lint-web-client lint-server
+
+lint-mobile-client:
+	$(IN_MOBILE_CLIENT) dartanalyzer ./lib
+
+lint-web-client:
+	$(IN_WEB_CLIENT) make lint
 
 lint-server:
 	go vet ./...
-	golint ./...
+	golint ./... | grep -v "ToSql"
+
+
+### Auto formatters ############################################################
+
+fmt: fmt-mobile-client
+
+fmt-mobile-client:
+	$(IN_MOBILE_CLIENT) dartfmt -w ./lib
+
+
+### Tests ######################################################################
+
+test: test-server
 
 test-server:
 	go test ./...
+
+
+### Migrations #################################################################
 
 migrate-up:
 	GO111MODULE=off kallax migrate up --all --dir migrations --dsn "$(DATABASE_URL)"
