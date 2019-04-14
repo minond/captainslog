@@ -9,7 +9,8 @@ import { createEntry, retrieveEntriesForBook } from "../service/entry"
 import { Entry as EntryLine } from "./entry"
 
 type MaybeData = { data?: { [index: string]: string } }
-type InMemoryEntry = Entry | (EntryCreateRequest & MaybeData)
+type EntryView = Entry | (EntryCreateRequest & MaybeData)
+type UnsavedEntry = { at: Date, item: string }
 
 const KEY_ENTER = 13
 
@@ -81,7 +82,7 @@ export class Entries extends Component<Props, State> {
     }
   }
 
-  getEntries(): ReadonlyArray<InMemoryEntry> {
+  getEntries(): ReadonlyArray<EntryView> {
     const { unsynced, entries } = this.state
     return [...entries, ...unsynced].sort((a, b) => {
       if (a.createdAt === b.createdAt) {
@@ -94,9 +95,9 @@ export class Entries extends Component<Props, State> {
     })
   }
 
-  addEntry(text: string) {
+  addEntry(text: string, at: Date) {
     const guid = Math.random().toString()
-    const createdAt = new Date().toISOString()
+    const createdAt = at.toISOString()
     const bookGuid = this.props.guid
     const entry = { guid, text, createdAt, bookGuid }
 
@@ -113,12 +114,52 @@ export class Entries extends Component<Props, State> {
       }))
   }
 
+  addEntries(entries: UnsavedEntry[]) {
+    const prev = new Promise((ok, _) => ok())
+
+    while (entries.length) {
+      ((entry?: UnsavedEntry) => {
+        if (entry) {
+          prev.then(() => {
+            this.addEntry(entry.item, entry.at)
+          })
+        }
+      })(entries.pop())
+    }
+  }
+
+  parseDate(line: string): Date | null {
+    if (line[0] === "#") {
+      const match = line.match(/\d{4}-\d{2}-\d{2}/)
+
+      if (match && match[0]) {
+        const date = new Date(match[0] + " 00:00:00")
+
+        if (!isNaN(date.getTime())) {
+          return date
+        }
+      }
+    }
+
+    return null
+  }
+
   onEntryInputKeyPress(ev: KeyboardEvent<HTMLTextAreaElement>) {
     if (ev.charCode === KEY_ENTER) {
-      ev.currentTarget.value.split("\n")
-        .map((item) => item.trim())
-        .filter((item) => !!item)
-        .map((part) => this.addEntry(part))
+      const lines = ev.currentTarget.value.split("\n")
+        .map((line) => line.trim())
+        .filter((line) => !!line)
+
+      const processed = lines.reduce(({at, items}: { at: Date; items: UnsavedEntry[]; }, item) => {
+        const dateMaybe = this.parseDate(item)
+        if (dateMaybe !== null) {
+          return {at: dateMaybe, items}
+        } else {
+          return {at, items: [{at, item}, ...items]}
+        }
+      }, {at: new Date(), items: []})
+
+      this.addEntries(processed.items)
 
       ev.currentTarget.value = ""
       ev.preventDefault()
