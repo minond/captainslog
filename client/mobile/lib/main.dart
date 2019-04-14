@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart' show Icons;
 
 import 'book_model.dart';
 
@@ -7,9 +8,8 @@ void main() => runApp(CaptainsLog());
 class CaptainsLog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return CupertinoApp(
       title: 'Captain\'s Log',
-      theme: ThemeData(primarySwatch: Colors.grey),
       home: Books(),
       debugShowCheckedModeBanner: false,
     );
@@ -24,30 +24,55 @@ class Books extends StatefulWidget {
 }
 
 class BooksState extends State<Books> {
-  List<Book> books = new List<Book>();
+  List<Book> books;
+  bool loading;
 
   void refresh() async {
+    this.setState(() {
+      loading = true;
+    });
+
     var _books = await Book.find();
     this.setState(() {
       books = _books;
+      loading = false;
     });
   }
 
   @override
-  Widget build(BuildContext context) {
-    var booksList = new List<Widget>();
-    books.forEach((book) {
-      booksList.add(Text(book.name));
-    });
+  void initState() {
+    refresh();
+    super.initState();
+  }
 
-    return Scaffold(
-      appBar: AppBar(title: Text('Books')),
-      body: ListView(children: booksList),
-      floatingActionButton: FloatingActionButton(
-        onPressed: refresh,
-        tooltip: 'Refresh',
-        child: Icon(Icons.refresh),
-      ),
-    );
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoPageScaffold(
+        navigationBar: CupertinoNavigationBar(
+          middle: Text("Books"),
+          trailing: CupertinoButton(
+            child: Icon(Icons.refresh),
+            onPressed: refresh,
+          ),
+        ),
+        child: loading == true
+            ? Center(
+                child: CupertinoActivityIndicator(),
+              )
+            : ListView.builder(
+                itemCount: books != null ? books.length : 0,
+                itemBuilder: (context, i) {
+                  final book = this.books[i];
+                  return Container(
+                    child: Text(
+                      book.name,
+                      style: TextStyle(
+                        fontSize: 22.0,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  );
+                },
+              ));
   }
 }
