@@ -2,9 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-enum Resource {
-  BOOKS
-}
+enum Resource { BOOKS }
 
 const uris = {
   Resource.BOOKS: "http://localhost/api/book",

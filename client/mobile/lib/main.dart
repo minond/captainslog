@@ -36,7 +36,9 @@ class BooksState extends State<Books> {
   @override
   Widget build(BuildContext context) {
     var booksList = new List<Widget>();
-    books.forEach((book) { booksList.add(Text(book.name)); });
+    books.forEach((book) {
+      booksList.add(Text(book.name));
+    });
 
     return Scaffold(
       appBar: AppBar(title: Text('Books')),
