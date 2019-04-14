@@ -4,8 +4,10 @@ import 'package:http/http.dart' as http;
 
 enum Resource { BOOKS }
 
+const base = "http://localhost/";
+
 const uris = {
-  Resource.BOOKS: "http://localhost/api/book",
+  Resource.BOOKS: base + "/api/book",
 };
 
 Future apiGet(Resource resource) async {
