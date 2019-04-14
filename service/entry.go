@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"net/url"
+	"strconv"
 	"time"
 
 	"gopkg.in/src-d/go-kallax.v1"
@@ -104,6 +105,7 @@ type EntryRetrieveResponse struct {
 
 func (s EntryService) Retrieve(ctx context.Context, req url.Values) (*EntryRetrieveResponse, error) {
 	var bookGUID string
+	var at time.Time
 
 	if bookGUIDs, ok := req["book"]; ok && len(bookGUIDs) == 1 {
 		bookGUID = bookGUIDs[0]
@@ -116,6 +118,20 @@ func (s EntryService) Retrieve(ctx context.Context, req url.Values) (*EntryRetri
 		return nil, err
 	}
 
+	if atDate, ok := req["at"]; ok {
+		if len(atDate) == 1 {
+			i, err := strconv.ParseInt(atDate[0], 10, 64)
+			if err != nil {
+				return nil, errors.New("invalid date format, expecting a unix timestamp")
+			}
+			at = time.Unix(i, 0)
+		} else {
+			return nil, errors.New("multiple dates passed but only a single is allowed")
+		}
+	} else {
+		at = time.Now().In(time.UTC)
+	}
+
 	book, err := s.bookStore.FindOne(model.NewBookQuery().
 		Where(kallax.Eq(model.Schema.Book.GUID, bookGUID)).
 		Where(kallax.Eq(model.Schema.Book.UserGUID, userGUID)))
@@ -123,8 +139,7 @@ func (s EntryService) Retrieve(ctx context.Context, req url.Values) (*EntryRetri
 		return nil, err
 	}
 
-	now := time.Now().In(time.UTC)
-	collection, err := book.Collection(s.collectionStore, now, false)
+	collection, err := book.Collection(s.collectionStore, at, false)
 	if err != nil {
 		return nil, err
 	}

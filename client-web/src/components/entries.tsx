@@ -66,7 +66,8 @@ export class Entries extends Component<Props, State> {
   }
 
   componentWillMount() {
-    retrieveEntriesForBook(this.props.guid).then((entries) =>
+    const now = Math.floor(Date.now() / 1000)
+    retrieveEntriesForBook(this.props.guid, now).then((entries) =>
       this.setState({ loaded: true, entries }))
   }
 
