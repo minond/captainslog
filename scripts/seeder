@@ -44,8 +44,9 @@ new_shorthand() {
 new_entry() {
   local text="$1"
   local book_guid="$2"
+  local created_at=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
-  data="{\"guid\": \"$RANDOM\", \"bookGuid\": \"$book_guid\", \"text\": \"$text\"}"
+  data="{\"guid\": \"$RANDOM\", \"bookGuid\": \"$book_guid\", \"text\": \"$text\", \"createdAt\": \"$created_at\"}"
   resp=$(curl -s -X POST http://localhost/api/entry -d "$data")
 
   echo "$resp" | jq '.entry.guid' -r
@@ -72,10 +73,10 @@ log "new shorthand" $(new_shorthand "x @ " 'x\\s' "" "$workouts")
 log "new shorthand" $(new_shorthand "3x10" "" "xxx" "$workouts")
 log "new shorthand" $(new_shorthand "2x10" "" "xx" "$workouts")
 
-# log "new entry" $(new_entry "Bench press, xxx@65" "$workouts")
-# log "new entry" $(new_entry "Squats, 2min" "$workouts")
-# log "new entry" $(new_entry "Squats, xxx@45" "$workouts")
-# log "new entry" $(new_entry "Running, 30min" "$workouts")
+log "new entry" $(new_entry "Bench press, xxx@65" "$workouts")
+log "new entry" $(new_entry "Squats, 2min" "$workouts")
+log "new entry" $(new_entry "Squats, xxx@45" "$workouts")
+log "new entry" $(new_entry "Running, 30min" "$workouts")
 
 # curl "http://localhost/api/entry?book=$workouts" | jq ''
 

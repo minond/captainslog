@@ -61,6 +61,7 @@ func (s EntryService) Create(ctx context.Context, req *EntryCreateRequest) (*Ent
 	if at.IsZero() {
 		at = time.Now().In(time.UTC)
 	}
+	at = at.In(time.UTC)
 
 	collection, err := book.Collection(s.collectionStore, at, true)
 	if err != nil {
@@ -129,8 +130,9 @@ func (s EntryService) Retrieve(ctx context.Context, req url.Values) (*EntryRetri
 			return nil, errors.New("multiple dates passed but only a single is allowed")
 		}
 	} else {
-		at = time.Now().In(time.UTC)
+		at = time.Now()
 	}
+	at = at.In(time.UTC)
 
 	book, err := s.bookStore.FindOne(model.NewBookQuery().
 		Where(kallax.Eq(model.Schema.Book.GUID, bookGUID)).
