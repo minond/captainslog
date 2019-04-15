@@ -1,10 +1,10 @@
 import 'remote.dart';
 
 class Book {
-  final String name;
   final String guid;
+  final String name;
 
-  Book({this.name, this.guid});
+  Book({this.guid, this.name});
 
   @override
   String toString() {
@@ -15,7 +15,7 @@ class Book {
     var books = new List<Book>();
 
     try {
-      var response = await apiGet(Resource.BOOKS);
+      var response = await apiGet(resource: Resource.BOOKS);
       if (response == null) {
         print("did not get any books back");
         return books;

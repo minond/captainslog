@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' show Icons;
 
 import 'book_model.dart';
+import 'entry_model.dart';
 
 class BooksWidget extends StatefulWidget {
   BooksWidget({Key key}) : super(key: key);
@@ -12,9 +13,11 @@ class BooksWidget extends StatefulWidget {
 
 class BooksWidgetState extends State<BooksWidget> {
   List<Book> books;
+  List<Entry> entries;
+  String activeBookGuid;
   bool loading;
 
-  void refresh() async {
+  void refreshBooks() async {
     this.setState(() {
       loading = true;
     });
@@ -26,9 +29,20 @@ class BooksWidgetState extends State<BooksWidget> {
     });
   }
 
+  void activateBook(Book book) async {
+    this.setState(() {
+      activeBookGuid = book.guid;
+    });
+
+    var _entries = await Entry.findFor(book);
+    this.setState(() {
+      entries = _entries;
+    });
+  }
+
   @override
   void initState() {
-    refresh();
+    refreshBooks();
     super.initState();
   }
 
@@ -39,7 +53,7 @@ class BooksWidgetState extends State<BooksWidget> {
           middle: Text("Books"),
           trailing: CupertinoButton(
             child: Icon(Icons.refresh),
-            onPressed: refresh,
+            onPressed: refreshBooks,
           ),
         ),
         child: loading == true
@@ -49,25 +63,33 @@ class BooksWidgetState extends State<BooksWidget> {
             : ListView.builder(
                 itemCount: books != null ? books.length : 0,
                 itemBuilder: (context, i) {
-                  return BookWidget(this.books[i]);
+                  return BookWidget(this.books[i], (book) {
+                    activateBook(book);
+                  });
                 }));
   }
 }
 
 class BookWidget extends StatelessWidget {
   final Book book;
+  final void Function(Book) onTap;
 
-  BookWidget(this.book);
+  BookWidget(this.book, this.onTap);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(10.0),
-      child: Text(
-        book.name,
-        style: TextStyle(
-          fontSize: 22.0,
-          fontWeight: FontWeight.w500,
+    return GestureDetector(
+      onTap: () {
+        onTap(book);
+      },
+      child: Container(
+        padding: EdgeInsets.all(10.0),
+        child: Text(
+          book.name,
+          style: TextStyle(
+            fontSize: 22.0,
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ),
     );
