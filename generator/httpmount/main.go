@@ -128,8 +128,6 @@ type {{.ServiceContractName}} interface {
 func {{.MountFunctionName}}(router *mux.Router, serv {{.ServiceContractName}}) {
 	log.Print("[INFO] mounting {{.Service}} on {{.Endpoint}} endpoint")
 	router.HandleFunc("{{.Endpoint}}", func(w http.ResponseWriter, r *http.Request) {
-		log.Printf("[INFO] handling %s %s request", r.Method, r.URL.String())
-
 		session, err := store.Get(r, "main")
 		if err != nil {
 			http.Error(w, "unable to read request data", http.StatusInternalServerError)

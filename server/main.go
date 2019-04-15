@@ -32,6 +32,7 @@ func main() {
 	store := sessions.NewCookieStore([]byte(os.Getenv("SESSION_KEY")))
 	router.Use(func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			log.Printf("[INFO] %s %s", r.Method, r.URL.String())
 			session, _ := store.Get(r, "main")
 			session.Values["userguid"] = "e26e269c-0587-4094-bf01-108c61b0fa8a"
 			session.Save(r, w)
@@ -44,7 +45,7 @@ func main() {
 	httpmount.MountExtractorService(router, extractorService)
 	httpmount.MountShorthandService(router, shorthandService)
 
-	router.PathPrefix("/").Handler(http.FileServer(http.Dir("../client/web/dist/")))
+	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./client/web/dist/")))
 
 	listen := os.Getenv("LISTEN")
 	log.Printf("[INFO] listening on `%s`", listen)

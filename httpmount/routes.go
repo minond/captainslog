@@ -66,8 +66,6 @@ type ShorthandServiceContract interface {
 func MountBookService(router *mux.Router, serv BookServiceContract) {
 	log.Print("[INFO] mounting service.BookService on /api/book endpoint")
 	router.HandleFunc("/api/book", func(w http.ResponseWriter, r *http.Request) {
-		log.Printf("[INFO] handling %s %s request", r.Method, r.URL.String())
-
 		session, err := store.Get(r, "main")
 		if err != nil {
 			http.Error(w, "unable to read request data", http.StatusInternalServerError)
@@ -149,8 +147,6 @@ func MountBookService(router *mux.Router, serv BookServiceContract) {
 func MountExtractorService(router *mux.Router, serv ExtractorServiceContract) {
 	log.Print("[INFO] mounting service.ExtractorService on /api/extractor endpoint")
 	router.HandleFunc("/api/extractor", func(w http.ResponseWriter, r *http.Request) {
-		log.Printf("[INFO] handling %s %s request", r.Method, r.URL.String())
-
 		session, err := store.Get(r, "main")
 		if err != nil {
 			http.Error(w, "unable to read request data", http.StatusInternalServerError)
@@ -208,8 +204,6 @@ func MountExtractorService(router *mux.Router, serv ExtractorServiceContract) {
 func MountEntryService(router *mux.Router, serv EntryServiceContract) {
 	log.Print("[INFO] mounting service.EntryService on /api/entry endpoint")
 	router.HandleFunc("/api/entry", func(w http.ResponseWriter, r *http.Request) {
-		log.Printf("[INFO] handling %s %s request", r.Method, r.URL.String())
-
 		session, err := store.Get(r, "main")
 		if err != nil {
 			http.Error(w, "unable to read request data", http.StatusInternalServerError)
@@ -291,8 +285,6 @@ func MountEntryService(router *mux.Router, serv EntryServiceContract) {
 func MountShorthandService(router *mux.Router, serv ShorthandServiceContract) {
 	log.Print("[INFO] mounting service.ShorthandService on /api/shorthand endpoint")
 	router.HandleFunc("/api/shorthand", func(w http.ResponseWriter, r *http.Request) {
-		log.Printf("[INFO] handling %s %s request", r.Method, r.URL.String())
-
 		session, err := store.Get(r, "main")
 		if err != nil {
 			http.Error(w, "unable to read request data", http.StatusInternalServerError)

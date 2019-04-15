@@ -899,7 +899,7 @@ func (rs *CollectionResultSet) Close() error {
 }
 
 // NewEntry returns a new instance of Entry.
-func NewEntry(original, text string, data map[string]string, collection *Collection) (record *Entry, err error) {
+func NewEntry(original string, text string, data map[string]string, collection *Collection) (record *Entry, err error) {
 	return newEntry(original, text, data, collection)
 }
 
