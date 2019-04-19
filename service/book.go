@@ -34,6 +34,9 @@ func (s BookService) Create(ctx context.Context, req *BookCreateRequest) (*model
 	}
 
 	book, err := model.NewBook(req.Name, req.Grouping, user)
+	if err != nil {
+		return nil, err
+	}
 	err = s.bookStore.Insert(book)
 	return book, err
 }

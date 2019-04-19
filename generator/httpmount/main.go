@@ -200,7 +200,10 @@ func main() {
 	}
 
 	routes := Routes{}
-	json.Unmarshal(out, &routes)
+	err = json.Unmarshal(out, &routes)
+	if err != nil {
+		log.Fatalf("error parsing routes file: %v", err)
+	}
 
 	buff := &bytes.Buffer{}
 	data := &Data{

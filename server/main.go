@@ -35,7 +35,7 @@ func main() {
 			log.Printf("[INFO] %s %s", r.Method, r.URL.String())
 			session, _ := store.Get(r, "main")
 			session.Values["userguid"] = "e26e269c-0587-4094-bf01-108c61b0fa8a"
-			session.Save(r, w)
+			_ = session.Save(r, w)
 			next.ServeHTTP(w, r)
 		})
 	})

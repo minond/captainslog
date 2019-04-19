@@ -47,7 +47,7 @@ func newShorthand(expansion, match, text string, book *Book) (*Shorthand, error)
 		Text:      &sql.NullString{String: text, Valid: validText},
 	}
 
-	if shorthand != nil {
+	if book != nil {
 		shorthand.BookGUID = book.GUID
 	}
 

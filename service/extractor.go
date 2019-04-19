@@ -35,6 +35,9 @@ func (s ExtractorService) Create(ctx context.Context, req *ExtractorCreateReques
 	}
 
 	extractor, err := model.NewExtractor(req.Label, req.Match, book)
+	if err != nil {
+		return nil, err
+	}
 	err = s.extractorStore.Insert(extractor)
 	return extractor, err
 }
