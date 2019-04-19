@@ -3,6 +3,7 @@ import 'package:flutter/material.dart' show Icons;
 
 import 'book_model.dart';
 import 'entry_model.dart';
+import 'entry_widget.dart';
 
 class BooksWidget extends StatefulWidget {
   BooksWidget({Key key}) : super(key: key);
@@ -63,7 +64,7 @@ class BooksWidgetState extends State<BooksWidget> {
             : ListView.builder(
                 itemCount: books != null ? books.length : 0,
                 itemBuilder: (context, i) {
-                  return BookWidget(this.books[i], (book) {
+                  return BookWidget(this.books[i], this.entries, (book) {
                     activateBook(book);
                   });
                 }));
@@ -72,9 +73,10 @@ class BooksWidgetState extends State<BooksWidget> {
 
 class BookWidget extends StatelessWidget {
   final Book book;
+  final List<Entry> entries;
   final void Function(Book) onTap;
 
-  BookWidget(this.book, this.onTap);
+  BookWidget(this.book, this.entries, this.onTap);
 
   @override
   Widget build(BuildContext context) {

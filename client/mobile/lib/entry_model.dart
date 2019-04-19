@@ -14,11 +14,9 @@ class Entry {
   }
 
   static Future<List<Entry>> findFor(Book book) async {
+    var sec = new DateTime.now().millisecondsSinceEpoch ~/ 1000;
+    var params = {"book": book.guid, "at": sec.toString()};
     var entries = new List<Entry>();
-    var params = {
-      "book": book.guid,
-      "at": new DateTime.now().millisecondsSinceEpoch.toString(),
-    };
 
     try {
       var response = await apiGet(resource: Resource.ENTRIES, params: params);
