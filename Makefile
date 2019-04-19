@@ -31,7 +31,7 @@ lint-web-client:
 
 lint-server:
 	go vet ./...
-	golint ./... | grep -v "ToSql"
+	golangci-lint run
 
 
 ### Auto formatters ############################################################

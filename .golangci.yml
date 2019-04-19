@@ -1,0 +1,7 @@
+run:
+  skip-dirs:
+    - query
+
+linters:
+  disable:
+    - unused
