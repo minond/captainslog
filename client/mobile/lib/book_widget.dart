@@ -64,7 +64,11 @@ class BooksWidgetState extends State<BooksWidget> {
             : ListView.builder(
                 itemCount: books != null ? books.length : 0,
                 itemBuilder: (context, i) {
-                  return BookWidget(this.books[i], this.entries, (book) {
+                  return BookWidget(
+                      this.books[i],
+                      this.books[i].guid == this.activeBookGuid
+                          ? this.entries
+                          : null, (book) {
                     activateBook(book);
                   });
                 }));
@@ -80,12 +84,12 @@ class BookWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        onTap(book);
-      },
-      child: Container(
-        padding: EdgeInsets.all(10.0),
+    var header = Container(
+      padding: EdgeInsets.all(10.0),
+      child: GestureDetector(
+        onTap: () {
+          onTap(book);
+        },
         child: Text(
           book.name,
           style: TextStyle(
@@ -94,6 +98,29 @@ class BookWidget extends StatelessWidget {
           ),
         ),
       ),
+    );
+
+    var rows = <Widget>[header];
+
+    if (entries != null) {
+      for (var i = 0; i < entries.length; i++) {
+        rows.add(
+          Container(
+            padding: EdgeInsets.all(10.0),
+            child: Text(
+              entries[i].text,
+              style: TextStyle(
+                fontSize: 14.0,
+              ),
+            ),
+          ),
+        );
+      }
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: rows,
     );
   }
 }
