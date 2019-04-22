@@ -32,7 +32,7 @@ interface Props {
 const mmap = <V, R>(xs: { [index: string]: V }, fn: (k: string, v: V, i: number) => R) =>
   Object.keys(xs).map((k, i) => fn(k, xs[k], i))
 
-export const Entry = (props: Props & HTMLAttributes<HTMLDivElement>) => {
+export default function EntryLine(props: Props & HTMLAttributes<HTMLDivElement>) {
   const className = css(styles.entry) + " " + props.className
 
   const datalist = !props.data ? null : mmap(props.data, (key, val, i) =>

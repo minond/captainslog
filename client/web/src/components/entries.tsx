@@ -6,7 +6,7 @@ import { css, StyleSheet } from "aphrodite"
 import { Entry, EntryCreateRequest } from "../definitions/entry"
 import { createEntry, retrieveEntriesForBook } from "../service/entry"
 
-import { Entry as EntryLine } from "./entry"
+import EntryLine from "./entry_line"
 
 type MaybeData = { data?: { [index: string]: string } }
 type EntryView = Entry | (EntryCreateRequest & MaybeData)
@@ -46,7 +46,7 @@ interface State {
   unsynced: EntryCreateRequest[]
 }
 
-export class Entries extends Component<Props, State> {
+export default class Entries extends Component<Props, State> {
   entriesRef: RefObject<HTMLDivElement>
   inputRef: RefObject<HTMLTextAreaElement>
   boundOnEntryInputKeyPress: (ev: KeyboardEvent<HTMLTextAreaElement>) => void
