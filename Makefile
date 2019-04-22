@@ -2,10 +2,6 @@ IN_MOBILE_CLIENT = cd client/mobile &&
 IN_SERVER = cd server &&
 IN_WEB_CLIENT = cd client/web &&
 
-ifndef MODE
-	MODE = development
-endif
-
 default: build
 
 ### Builds #####################################################################

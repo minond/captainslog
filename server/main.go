@@ -45,7 +45,10 @@ func main() {
 	httpmount.MountExtractorService(router, extractorService)
 	httpmount.MountShorthandService(router, shorthandService)
 
-	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./client/web/dist/")))
+	router.PathPrefix("/static").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./client/web/dist/"))))
+	router.PathPrefix("/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "./client/web/dist/index.html")
+	})
 
 	listen := os.Getenv("LISTEN")
 	log.Printf("[INFO] listening on `%s`", listen)
