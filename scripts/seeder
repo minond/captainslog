@@ -69,7 +69,7 @@ create_workouts() {
   (log "new extractor" $(new_extractor "weight" '@\\s{0,}(\\d+(\\.\\d{1,2})?)$' 1 "$workouts")) &
   (log "new extractor" $(new_extractor "time"      '(\\d+)\\s{0,}(sec|seconds|min|minutes|hour|hours)' 1 "$workouts")) &
   (log "new extractor" $(new_extractor "time_unit" '\\d+\\s{0,}(sec|seconds|min|minutes|hour|hours)' 0 "$workouts")) &
-  (log "new extractor" $(new_extractor "distance"      '(\\d+)\\s{0,}(miles|k|kilometers)' 1 "$workouts")) &
+  (log "new extractor" $(new_extractor "distance"      '(\\d+(\\.\\d+)?)\\s{0,}(miles|k|kilometers)' 1 "$workouts")) &
   (log "new extractor" $(new_extractor "distance_unit" '\\d+\\s{0,}(miles|k|kilometers)' 0 "$workouts")) &
 
   (log "new shorthand" $(new_shorthand "xx @ " "" "xx " "$workouts")) &
