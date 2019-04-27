@@ -71,7 +71,6 @@ create_workouts() {
   (log "new extractor" $(new_extractor "distance"      '(\\d+)\\s{0,}(miles|k|kilometers)' "$workouts")) &
   (log "new extractor" $(new_extractor "distance_unit" '\\d+\\s{0,}(miles|k|kilometers)' "$workouts")) &
 
-  (log "new shorthand" $(new_shorthand "," "" "." "$workouts")) &
   (log "new shorthand" $(new_shorthand "xx @ " "" "xx " "$workouts")) &
   (log "new shorthand" $(new_shorthand "3x10" "" "xxx" "$workouts")) &
   (log "new shorthand" $(new_shorthand "2x10" "" "xx" "$workouts")) &

@@ -11,10 +11,11 @@ import { largeText, link, mainTextColor } from "../styles"
 const styles = StyleSheet.create({
   book: {
     ...largeText,
+    borderBottom: "1px solid transparent",
     display: "inline-block",
     margin: "0 10px 10px 0",
-    borderBottom: "1px solid transparent",
     transition: "border-color .2s",
+
     ":hover": {
       borderBottom: "1px solid black",
     }

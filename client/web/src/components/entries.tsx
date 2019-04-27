@@ -42,15 +42,15 @@ const styles = StyleSheet.create({
 })
 
 interface Props {
-  guid: string
   date: Date
+  guid: string
 }
 
 interface State {
-  loaded: boolean
-  entries: Entry[]
-  unsynced: EntryCreateRequest[]
   date: Date
+  entries: Entry[]
+  loaded: boolean
+  unsynced: EntryCreateRequest[]
 }
 
 export default class Entries extends Component<Props, State> {
@@ -68,15 +68,15 @@ export default class Entries extends Component<Props, State> {
 
   getInitialState(): State {
     return {
+      date: new Date(),
       entries: [],
       loaded: false,
       unsynced: [],
-      date: new Date(),
     }
   }
 
   componentWillReceiveProps(next: Props) {
-    if (next.guid != this.props.guid) {
+    if (next.guid !== this.props.guid) {
       this.setState(this.getInitialState(), () =>
         this.loadEntries())
     }
@@ -213,7 +213,7 @@ export default class Entries extends Component<Props, State> {
 
     return (
       <div className={css(styles.wrapper)}>
-        <DatePicker selected={date} onChange={date => this.setViewDate(date)} />
+        <DatePicker selected={date} onChange={(maybeDate) => this.setViewDate(maybeDate)} />
 
         <div ref={this.entriesRef} className={css(styles.entries)}>{entries}</div>
 

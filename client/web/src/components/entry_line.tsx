@@ -22,15 +22,15 @@ const styles = StyleSheet.create({
   },
 
   text: {
-    lineHeight: "normal",
     display: "inline-block",
+    lineHeight: "normal",
     width: "35%",
   },
 
   entry: {
     ...mediumText,
-    padding: "10px 0",
     display: "flex",
+    padding: "10px 0",
   }
 })
 
