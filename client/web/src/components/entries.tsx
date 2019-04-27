@@ -11,7 +11,7 @@ import { createEntry, retrieveEntriesForBook } from "../service/entry"
 
 import EntryLine from "./entry_line"
 
-import { mediumText } from "../styles"
+import { inputField, textAreaField } from "../styles"
 
 type MaybeData = { data?: { [index: string]: string } }
 type EntryView = Entry | (EntryCreateRequest & MaybeData)
@@ -33,12 +33,26 @@ const styles = StyleSheet.create({
     borderTop: "1px solid #dadada",
   },
 
-  input: {
-    ...mediumText,
-    marginLeft: "-10px",
-    padding: "10px",
+  dateCell: {
+    paddingLeft: "5px",
+    width: "25%",
+  },
+
+  entryCell: {
+    paddingRight: "5px",
+    width: "75%",
+  },
+
+  dateInput: {
+    ...inputField,
+    textAlign: "center",
     width: "100%",
-  }
+  },
+
+  entryInput: {
+    ...textAreaField,
+    width: "100%",
+  },
 })
 
 interface Props {
@@ -213,16 +227,29 @@ export default class Entries extends Component<Props, State> {
 
     return (
       <div className={css(styles.wrapper)}>
-        <DatePicker selected={date} onChange={(maybeDate) => this.setViewDate(maybeDate)} />
+        <table>
+          <tbody>
+            <tr>
+              <td className={css(styles.entryCell)}>
+                <textarea
+                  rows={1}
+                  ref={this.inputRef}
+                  className={css(styles.entryInput)}
+                  onKeyPress={this.boundOnEntryInputKeyPress}
+                />
+              </td>
+              <td className={css(styles.entryCell)}>
+                <DatePicker
+                  selected={date}
+                  className={css(styles.dateInput)}
+                  onChange={(maybeDate) => this.setViewDate(maybeDate)}
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
 
         <div ref={this.entriesRef} className={css(styles.entries)}>{entries}</div>
-
-        <textarea
-          rows={1}
-          ref={this.inputRef}
-          className={css(styles.input)}
-          onKeyPress={this.boundOnEntryInputKeyPress}
-        />
       </div>
     )
   }

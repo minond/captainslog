@@ -1,3 +1,5 @@
+import { CSSProperties } from "aphrodite"
+
 export const mainColor = '#0031FE'
 export const contrastColor = 'white'
 
@@ -27,4 +29,20 @@ export const mainBackgroundColor = {
 
 export const mainTextColor = {
   color: mainColor,
+}
+
+export const inputField: CSSProperties = {
+  ...mediumText,
+  border: "1px solid #c3c3c3",
+  boxSizing: "border-box",
+  margin: 0,
+  padding: "0 4px",
+}
+
+export const textAreaField: CSSProperties = {
+  ...mediumText,
+  border: "1px solid #c3c3c3",
+  boxSizing: "border-box",
+  margin: 0,
+  padding: "4px",
 }

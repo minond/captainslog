@@ -4,8 +4,14 @@
   cursor: default;
   font-family: 'Spectral', serif;
   font-size: 1rem;
-  padding: 30px;
   max-width: 720px;
+  padding: 30px;
+}
+
+table, td {
+  border-collapse: collapse;
+  padding: 0;
+  vertical-align: top;
 }
 
 /* small */
