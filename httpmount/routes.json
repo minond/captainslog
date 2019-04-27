@@ -1,7 +1,7 @@
 {
   "routes": [
     {
-      "endpoint": "/api/book",
+      "endpoint": "/api/books",
       "service": "service.BookService",
       "methods": [
         {
@@ -18,7 +18,7 @@
       ]
     },
     {
-      "endpoint": "/api/extractor",
+      "endpoint": "/api/extractors",
       "service": "service.ExtractorService",
       "methods": [
         {
@@ -30,7 +30,7 @@
       ]
     },
     {
-      "endpoint": "/api/entry",
+      "endpoint": "/api/entries",
       "service": "service.EntryService",
       "methods": [
         {
@@ -47,7 +47,7 @@
       ]
     },
     {
-      "endpoint": "/api/shorthand",
+      "endpoint": "/api/shorthands",
       "service": "service.ShorthandService",
       "methods": [
         {

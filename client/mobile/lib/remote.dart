@@ -7,8 +7,8 @@ enum Resource { BOOKS, ENTRIES }
 const _base = "http://localhost/";
 
 const _uris = {
-  Resource.BOOKS: _base + "api/book",
-  Resource.ENTRIES: _base + "api/entry"
+  Resource.BOOKS: _base + "api/books",
+  Resource.ENTRIES: _base + "api/entries"
 };
 
 String _params(Map<String, String> params) {

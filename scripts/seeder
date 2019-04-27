@@ -13,7 +13,7 @@ new_book() {
   local grouping="$2"
 
   data="{\"name\": \"$name\", \"grouping\": $grouping}"
-  resp=$(curl -s -X POST http://localhost/api/book -d "$data")
+  resp=$(curl -s -X POST http://localhost/api/books -d "$data")
 
   echo "$resp" | jq '.guid' -r
 }
@@ -24,7 +24,7 @@ new_extractor() {
   local book_guid="$3"
 
   data="{\"bookGuid\": \"$book_guid\", \"label\": \"$label\", \"match\": \"$match\"}"
-  resp=$(curl -s -X POST http://localhost/api/extractor -d "$data")
+  resp=$(curl -s -X POST http://localhost/api/extractors -d "$data")
 
   echo "$resp" | jq '.guid' -r
 }
@@ -36,7 +36,7 @@ new_shorthand() {
   local book_guid="$4"
 
   data="{\"bookGuid\": \"$book_guid\", \"expansion\": \"$expansion\", \"match\": \"$match\", \"text\": \"$text\"}"
-  resp=$(curl -s -X POST http://localhost/api/shorthand -d "$data")
+  resp=$(curl -s -X POST http://localhost/api/shorthands -d "$data")
 
   echo "$resp" | jq '.guid' -r
 }
@@ -47,7 +47,7 @@ new_entry() {
   local created_at=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
   data="{\"guid\": \"$RANDOM\", \"bookGuid\": \"$book_guid\", \"text\": \"$text\", \"createdAt\": \"$created_at\"}"
-  resp=$(curl -s -X POST http://localhost/api/entry -d "$data")
+  resp=$(curl -s -X POST http://localhost/api/entries -d "$data")
 
   echo "$resp" | jq '.entry.guid' -r
 }

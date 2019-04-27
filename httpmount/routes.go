@@ -24,10 +24,10 @@ var store = sessions.NewCookieStore([]byte(os.Getenv("SESSION_KEY")))
 // provided as input to this generator, and it is a combination of the handler,
 // the request, and the response.
 type BookServiceContract interface {
-	// Create runs when a POST /api/book request comes in.
+	// Create runs when a POST /api/books request comes in.
 	Create(ctx context.Context, req *service.BookCreateRequest) (*model.Book, error)
 
-	// Retrieve runs when a GET /api/book request comes in.
+	// Retrieve runs when a GET /api/books request comes in.
 	Retrieve(ctx context.Context, req url.Values) (*service.BookRetrieveResponse, error)
 }
 
@@ -36,7 +36,7 @@ type BookServiceContract interface {
 // provided as input to this generator, and it is a combination of the handler,
 // the request, and the response.
 type ExtractorServiceContract interface {
-	// Create runs when a POST /api/extractor request comes in.
+	// Create runs when a POST /api/extractors request comes in.
 	Create(ctx context.Context, req *service.ExtractorCreateRequest) (*model.Extractor, error)
 }
 
@@ -45,10 +45,10 @@ type ExtractorServiceContract interface {
 // provided as input to this generator, and it is a combination of the handler,
 // the request, and the response.
 type EntryServiceContract interface {
-	// Create runs when a POST /api/entry request comes in.
+	// Create runs when a POST /api/entries request comes in.
 	Create(ctx context.Context, req *service.EntryCreateRequest) (*service.EntryCreateResponse, error)
 
-	// Retrieve runs when a GET /api/entry request comes in.
+	// Retrieve runs when a GET /api/entries request comes in.
 	Retrieve(ctx context.Context, req url.Values) (*service.EntryRetrieveResponse, error)
 }
 
@@ -57,15 +57,15 @@ type EntryServiceContract interface {
 // provided as input to this generator, and it is a combination of the handler,
 // the request, and the response.
 type ShorthandServiceContract interface {
-	// Create runs when a POST /api/shorthand request comes in.
+	// Create runs when a POST /api/shorthands request comes in.
 	Create(ctx context.Context, req *service.ShorthandCreateRequest) (*model.Shorthand, error)
 }
 
 // MountBookService add a handler to a Gorilla Mux Router that will route
 // an incoming request through the service.BookService service.
 func MountBookService(router *mux.Router, serv BookServiceContract) {
-	log.Print("[INFO] mounting service.BookService on /api/book endpoint")
-	router.HandleFunc("/api/book", func(w http.ResponseWriter, r *http.Request) {
+	log.Print("[INFO] mounting service.BookService on /api/books endpoint")
+	router.HandleFunc("/api/books", func(w http.ResponseWriter, r *http.Request) {
 		session, err := store.Get(r, "main")
 		if err != nil {
 			http.Error(w, "unable to read request data", http.StatusInternalServerError)
@@ -145,8 +145,8 @@ func MountBookService(router *mux.Router, serv BookServiceContract) {
 // MountExtractorService add a handler to a Gorilla Mux Router that will route
 // an incoming request through the service.ExtractorService service.
 func MountExtractorService(router *mux.Router, serv ExtractorServiceContract) {
-	log.Print("[INFO] mounting service.ExtractorService on /api/extractor endpoint")
-	router.HandleFunc("/api/extractor", func(w http.ResponseWriter, r *http.Request) {
+	log.Print("[INFO] mounting service.ExtractorService on /api/extractors endpoint")
+	router.HandleFunc("/api/extractors", func(w http.ResponseWriter, r *http.Request) {
 		session, err := store.Get(r, "main")
 		if err != nil {
 			http.Error(w, "unable to read request data", http.StatusInternalServerError)
@@ -202,8 +202,8 @@ func MountExtractorService(router *mux.Router, serv ExtractorServiceContract) {
 // MountEntryService add a handler to a Gorilla Mux Router that will route
 // an incoming request through the service.EntryService service.
 func MountEntryService(router *mux.Router, serv EntryServiceContract) {
-	log.Print("[INFO] mounting service.EntryService on /api/entry endpoint")
-	router.HandleFunc("/api/entry", func(w http.ResponseWriter, r *http.Request) {
+	log.Print("[INFO] mounting service.EntryService on /api/entries endpoint")
+	router.HandleFunc("/api/entries", func(w http.ResponseWriter, r *http.Request) {
 		session, err := store.Get(r, "main")
 		if err != nil {
 			http.Error(w, "unable to read request data", http.StatusInternalServerError)
@@ -283,8 +283,8 @@ func MountEntryService(router *mux.Router, serv EntryServiceContract) {
 // MountShorthandService add a handler to a Gorilla Mux Router that will route
 // an incoming request through the service.ShorthandService service.
 func MountShorthandService(router *mux.Router, serv ShorthandServiceContract) {
-	log.Print("[INFO] mounting service.ShorthandService on /api/shorthand endpoint")
-	router.HandleFunc("/api/shorthand", func(w http.ResponseWriter, r *http.Request) {
+	log.Print("[INFO] mounting service.ShorthandService on /api/shorthands endpoint")
+	router.HandleFunc("/api/shorthands", func(w http.ResponseWriter, r *http.Request) {
 		session, err := store.Get(r, "main")
 		if err != nil {
 			http.Error(w, "unable to read request data", http.StatusInternalServerError)
