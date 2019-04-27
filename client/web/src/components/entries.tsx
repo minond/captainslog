@@ -1,7 +1,10 @@
 import * as React from "react"
 import { Component, KeyboardEvent, RefObject } from "react"
+import DatePicker from "react-datepicker"
 
 import { css, StyleSheet } from "aphrodite"
+
+import history from "../history"
 
 import { Entry, EntryCreateRequest } from "../definitions/entry"
 import { createEntry, retrieveEntriesForBook } from "../service/entry"
@@ -40,12 +43,14 @@ const styles = StyleSheet.create({
 
 interface Props {
   guid: string
+  date: Date
 }
 
 interface State {
   loaded: boolean
   entries: Entry[]
   unsynced: EntryCreateRequest[]
+  date: Date
 }
 
 export default class Entries extends Component<Props, State> {
@@ -55,7 +60,7 @@ export default class Entries extends Component<Props, State> {
 
   constructor(props: Props) {
     super(props)
-    this.state = this.getInitialState()
+    this.state = { ...this.getInitialState(), date: this.props.date }
     this.entriesRef = React.createRef()
     this.inputRef = React.createRef()
     this.boundOnEntryInputKeyPress = this.onEntryInputKeyPress.bind(this)
@@ -66,20 +71,19 @@ export default class Entries extends Component<Props, State> {
       entries: [],
       loaded: false,
       unsynced: [],
+      date: new Date(),
     }
   }
 
   componentWillReceiveProps(next: Props) {
     if (next.guid != this.props.guid) {
       this.setState(this.getInitialState(), () =>
-        this.componentWillMount())
+        this.loadEntries())
     }
   }
 
   componentWillMount() {
-    const now = Math.floor(Date.now() / 1000)
-    retrieveEntriesForBook(this.props.guid, now).then((entries) =>
-      this.setState({ loaded: true, entries }))
+    this.loadEntries()
   }
 
   componentDidUpdate() {
@@ -91,6 +95,22 @@ export default class Entries extends Component<Props, State> {
   componentDidMount() {
     if (this.inputRef.current) {
       this.inputRef.current.focus()
+    }
+  }
+
+  loadEntries() {
+    const { date } = this.state
+    const { guid } = this.props
+    const now = Math.floor(+date / 1000)
+    retrieveEntriesForBook(guid, now).then((entries) =>
+      this.setState({ loaded: true, entries }))
+  }
+
+  setViewDate(date: Date | null) {
+    if (date) {
+      const { guid } = this.props
+      this.setState({ date }, () => this.loadEntries())
+      history.replace(`/book/${guid}/${+date}`)
     }
   }
 
@@ -158,6 +178,8 @@ export default class Entries extends Component<Props, State> {
 
   onEntryInputKeyPress(ev: KeyboardEvent<HTMLTextAreaElement>) {
     if (ev.charCode === KEY_ENTER) {
+      const { date } = this.state
+
       const lines = ev.currentTarget.value.split("\n")
         .map((line) => line.trim())
         .filter((line) => !!line)
@@ -169,7 +191,7 @@ export default class Entries extends Component<Props, State> {
         } else {
           return {at, items: [{at, item}, ...items]}
         }
-      }, {at: new Date(), items: []})
+      }, {at: date, items: []})
 
       this.addEntries(processed.items)
 
@@ -179,6 +201,8 @@ export default class Entries extends Component<Props, State> {
   }
 
   render() {
+    const { date } = this.state
+
     const entries = this.getEntries().map((entry, i) => (
       <EntryLine
         key={entry.guid}
@@ -189,6 +213,8 @@ export default class Entries extends Component<Props, State> {
 
     return (
       <div className={css(styles.wrapper)}>
+        <DatePicker selected={date} onChange={date => this.setViewDate(date)} />
+
         <div ref={this.entriesRef} className={css(styles.entries)}>{entries}</div>
 
         <textarea
