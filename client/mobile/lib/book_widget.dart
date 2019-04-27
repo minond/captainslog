@@ -3,7 +3,6 @@ import 'package:flutter/material.dart' show Icons;
 
 import 'book_model.dart';
 import 'entry_model.dart';
-import 'entry_widget.dart';
 
 class BooksWidget extends StatefulWidget {
   BooksWidget({Key key}) : super(key: key);
