@@ -4,7 +4,8 @@
   cursor: default;
   font-family: 'Spectral', serif;
   font-size: 1rem;
-  margin: 0 auto;
+  padding: 30px;
+  max-width: 720px;
 }
 
 /* small */
@@ -21,7 +22,4 @@
 
 /* large */
 @media screen and (min-width: 60em) {
-  #body {
-    max-width: 720px;
-  }
 }

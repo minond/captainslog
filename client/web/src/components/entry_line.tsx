@@ -3,24 +3,34 @@ import { HTMLAttributes } from "react"
 
 import { css, StyleSheet } from "aphrodite"
 
+import { mainColor, mediumText, smallText } from "../styles/styles"
+
 const styles = StyleSheet.create({
   item: {
-    border: "1px solid #0D28F2",
+    ...smallText,
+    border: `1px solid ${mainColor}`,
     display: "inline-block",
-    fontSize: ".85em",
     margin: "2px 4px 2px 0px",
-    padding: "2px 6px",
+    padding: "3px 6px",
     whiteSpace: "nowrap",
   },
 
   data: {
-    display: "block",
-    marginTop: "2px"
+    display: "inline-block",
+    textAlign: "right",
+    width: "65%",
+  },
+
+  text: {
+    lineHeight: "normal",
+    display: "inline-block",
+    width: "35%",
   },
 
   entry: {
-    fontSize: "1em",
-    padding: "16px 0"
+    ...mediumText,
+    padding: "10px 0",
+    display: "flex",
   }
 })
 
@@ -40,8 +50,8 @@ export default function EntryLine(props: Props & HTMLAttributes<HTMLDivElement>)
 
   return (
     <div className={className}>
-      <span>{props.text}</span>
-      <span className={css(styles.data)}>{datalist}</span>
+      <div className={css(styles.text)}>{props.text}</div>
+      <div className={css(styles.data)}>{datalist}</div>
     </div>
   )
 }

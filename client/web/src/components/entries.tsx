@@ -8,6 +8,8 @@ import { createEntry, retrieveEntriesForBook } from "../service/entry"
 
 import EntryLine from "./entry_line"
 
+import { mediumText } from "../styles/styles"
+
 type MaybeData = { data?: { [index: string]: string } }
 type EntryView = Entry | (EntryCreateRequest & MaybeData)
 type UnsavedEntry = { at: Date, item: string }
@@ -20,7 +22,7 @@ const styles = StyleSheet.create({
   },
 
   entries: {
-    maxHeight: "calc(100vh - 200px)",
+    maxHeight: "calc(100vh - 120px)",
     overflow: "auto",
   },
 
@@ -29,9 +31,9 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    fontSize: "1.1em",
+    ...mediumText,
     marginLeft: "-10px",
-    padding: "10px 8px",
+    padding: "10px",
     width: "100%",
   }
 })
@@ -53,16 +55,25 @@ export default class Entries extends Component<Props, State> {
 
   constructor(props: Props) {
     super(props)
+    this.state = this.getInitialState()
+    this.entriesRef = React.createRef()
+    this.inputRef = React.createRef()
+    this.boundOnEntryInputKeyPress = this.onEntryInputKeyPress.bind(this)
+  }
 
-    this.state = {
+  getInitialState(): State {
+    return {
       entries: [],
       loaded: false,
       unsynced: [],
     }
+  }
 
-    this.entriesRef = React.createRef()
-    this.inputRef = React.createRef()
-    this.boundOnEntryInputKeyPress = this.onEntryInputKeyPress.bind(this)
+  componentWillReceiveProps(next: Props) {
+    if (next.guid != this.props.guid) {
+      this.setState(this.getInitialState(), () =>
+        this.componentWillMount())
+    }
   }
 
   componentWillMount() {

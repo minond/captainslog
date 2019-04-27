@@ -2,18 +2,10 @@ import * as React from "react"
 import { Component } from "react"
 import { Link } from "react-router-dom"
 
-import { css, StyleSheet } from "aphrodite"
-
 import BookTitle from "./book_title"
 
 import { Book } from "../definitions/book"
 import { getBooks } from "../service/book"
-
-const styles = StyleSheet.create({
-  wrapper: {
-    padding: "30px"
-  }
-})
 
 interface State {
   loaded: boolean
@@ -37,6 +29,6 @@ export default class Books extends Component<{}, State> {
 
   render() {
     const { books } = this.state
-    return <div className={css(styles.wrapper)}>{books.map(BookTitle)}</div>
+    return <div>{books.map(BookTitle)}</div>
   }
 }

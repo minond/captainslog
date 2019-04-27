@@ -6,9 +6,18 @@ import { css, StyleSheet } from "aphrodite"
 
 import { Book } from "../definitions/book"
 
+import { largeText, link, mainTextColor } from "../styles/styles"
+
 const styles = StyleSheet.create({
   book: {
-    marginBottom: "10px"
+    ...largeText,
+    display: "inline-block",
+    margin: "0 10px 10px 0",
+    borderBottom: "1px solid transparent",
+    transition: "border-color .2s",
+    ":hover": {
+      borderBottom: "1px solid black",
+    }
   }
 })
 
@@ -16,10 +25,10 @@ type Props = Pick<Book, "guid" | "name">
 
 export default function BookTitle(props: Props) {
   return (
-    <h1 className={css(styles.book)} key={props.guid}>
-      <Link to={`/book/${props.guid}`}>
+    <Link key={props.guid} to={`/book/${props.guid}`} style={link}>
+      <div className={css(styles.book)}>
         {props.name}
-      </Link>
-    </h1>
+      </div>
+    </Link>
   )
 }
