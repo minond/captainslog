@@ -9,17 +9,17 @@ import (
 type Entry struct {
 	kallax.Model `table:"entries" pk:"guid"`
 
-	GUID           kallax.ULID `json:"guid"`
-	BookGUID       kallax.ULID `json:"-"`
-	CollectionGUID kallax.ULID `json:"-"`
-	Original       string
-	Text           string            `json:"text"`
-	Data           map[string]string `json:"data"`
-	CreatedAt      time.Time         `json:"createdAt"`
-	UpdatedAt      time.Time         `json:"updatedAt"`
+	GUID           kallax.ULID            `json:"guid"`
+	BookGUID       kallax.ULID            `json:"-"`
+	CollectionGUID kallax.ULID            `json:"-"`
+	Original       string                 `json:"-"`
+	Text           string                 `json:"text"`
+	Data           map[string]interface{} `json:"data"`
+	CreatedAt      time.Time              `json:"createdAt"`
+	UpdatedAt      time.Time              `json:"updatedAt"`
 }
 
-func newEntry(original, text string, data map[string]string, collection *Collection) (*Entry, error) {
+func newEntry(original, text string, data map[string]interface{}, collection *Collection) (*Entry, error) {
 	now := time.Now()
 	entry := &Entry{
 		GUID:      kallax.NewULID(),

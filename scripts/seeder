@@ -21,9 +21,10 @@ new_book() {
 new_extractor() {
   local label="$1"
   local match="$2"
-  local book_guid="$3"
+  local typ="$3"
+  local book_guid="$4"
 
-  data="{\"bookGuid\": \"$book_guid\", \"label\": \"$label\", \"match\": \"$match\"}"
+  data="{\"bookGuid\": \"$book_guid\", \"label\": \"$label\", \"match\": \"$match\", \"type\": $typ}"
   resp=$(curl -s -X POST http://localhost/api/extractors -d "$data")
 
   echo "$resp" | jq '.guid' -r
@@ -62,14 +63,14 @@ create_workouts() {
   workouts=$(new_book "Workouts" 1)
   log "new book" "$workouts"
 
-  (log "new extractor" $(new_extractor "exercise" '^(.+),' "$workouts")) &
-  (log "new extractor" $(new_extractor "sets" ',\\s{0,}(\\d+)\\s{0,}x' "$workouts")) &
-  (log "new extractor" $(new_extractor "reps" '\\dx\\s{0,}(\\d+)' "$workouts")) &
-  (log "new extractor" $(new_extractor "weight" '@\\s{0,}(\\d+(\\.\\d{1,2})?)$' "$workouts")) &
-  (log "new extractor" $(new_extractor "time"      '(\\d+)\\s{0,}(sec|seconds|min|minutes|hour|hours)' "$workouts")) &
-  (log "new extractor" $(new_extractor "time_unit" '\\d+\\s{0,}(sec|seconds|min|minutes|hour|hours)' "$workouts")) &
-  (log "new extractor" $(new_extractor "distance"      '(\\d+)\\s{0,}(miles|k|kilometers)' "$workouts")) &
-  (log "new extractor" $(new_extractor "distance_unit" '\\d+\\s{0,}(miles|k|kilometers)' "$workouts")) &
+  (log "new extractor" $(new_extractor "exercise" '^(.+),' 0 "$workouts")) &
+  (log "new extractor" $(new_extractor "sets" ',\\s{0,}(\\d+)\\s{0,}x' 1 "$workouts")) &
+  (log "new extractor" $(new_extractor "reps" '\\dx\\s{0,}(\\d+)' 1 "$workouts")) &
+  (log "new extractor" $(new_extractor "weight" '@\\s{0,}(\\d+(\\.\\d{1,2})?)$' 1 "$workouts")) &
+  (log "new extractor" $(new_extractor "time"      '(\\d+)\\s{0,}(sec|seconds|min|minutes|hour|hours)' 1 "$workouts")) &
+  (log "new extractor" $(new_extractor "time_unit" '\\d+\\s{0,}(sec|seconds|min|minutes|hour|hours)' 0 "$workouts")) &
+  (log "new extractor" $(new_extractor "distance"      '(\\d+)\\s{0,}(miles|k|kilometers)' 1 "$workouts")) &
+  (log "new extractor" $(new_extractor "distance_unit" '\\d+\\s{0,}(miles|k|kilometers)' 0 "$workouts")) &
 
   (log "new shorthand" $(new_shorthand "xx @ " "" "xx " "$workouts")) &
   (log "new shorthand" $(new_shorthand "3x10" "" "xxx" "$workouts")) &
@@ -89,9 +90,9 @@ create_blood_pressure() {
   blood_pressure=$(new_book "Blood Pressure" 0)
   log "new book" "$blood_pressure"
 
-  (log "new extractor" $(new_extractor "a" '^(\\d+)\\s{0,}/' "$blood_pressure")) &
-  (log "new extractor" $(new_extractor "b" '/\\s{0,}(\\d+)\\s' "$blood_pressure")) &
-  (log "new extractor" $(new_extractor "pulse" '\\(pulse (\\d+)\\)' "$blood_pressure")) &
+  (log "new extractor" $(new_extractor "a" '^(\\d+)\\s{0,}/' 1 "$blood_pressure")) &
+  (log "new extractor" $(new_extractor "b" '/\\s{0,}(\\d+)\\s' 1 "$blood_pressure")) &
+  (log "new extractor" $(new_extractor "pulse" '\\(pulse (\\d+)\\)' 1 "$blood_pressure")) &
 
   wait
 

@@ -25,6 +25,7 @@ type ExtractorCreateRequest struct {
 	BookGUID string `json:"bookGuid"`
 	Label    string `json:"label"`
 	Match    string `json:"match"`
+	Type     int32  `json:"type"`
 }
 
 func (s ExtractorService) Create(ctx context.Context, req *ExtractorCreateRequest) (*model.Extractor, error) {
@@ -34,7 +35,11 @@ func (s ExtractorService) Create(ctx context.Context, req *ExtractorCreateReques
 		return nil, err
 	}
 
-	extractor, err := model.NewExtractor(req.Label, req.Match, book)
+	extractor, err := model.NewExtractor(
+		req.Label,
+		req.Match,
+		model.DataType(req.Type),
+		book)
 	if err != nil {
 		return nil, err
 	}

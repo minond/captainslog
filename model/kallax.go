@@ -899,7 +899,7 @@ func (rs *CollectionResultSet) Close() error {
 }
 
 // NewEntry returns a new instance of Entry.
-func NewEntry(original string, text string, data map[string]string, collection *Collection) (record *Entry, err error) {
+func NewEntry(original string, text string, data map[string]interface{}, collection *Collection) (record *Entry, err error) {
 	return newEntry(original, text, data, collection)
 }
 
@@ -1377,8 +1377,8 @@ func (rs *EntryResultSet) Close() error {
 }
 
 // NewExtractor returns a new instance of Extractor.
-func NewExtractor(label string, match string, book *Book) (record *Extractor, err error) {
-	return newExtractor(label, match, book)
+func NewExtractor(label string, match string, typ DataType, book *Book) (record *Extractor, err error) {
+	return newExtractor(label, match, typ, book)
 }
 
 // GetID returns the primary key of the model.
@@ -1397,6 +1397,8 @@ func (r *Extractor) ColumnAddress(col string) (interface{}, error) {
 		return &r.Label, nil
 	case "match":
 		return &r.Match, nil
+	case "type":
+		return (*int32)(&r.Type), nil
 
 	default:
 		return nil, fmt.Errorf("kallax: invalid column in Extractor: %s", col)
@@ -1414,6 +1416,8 @@ func (r *Extractor) Value(col string) (interface{}, error) {
 		return r.Label, nil
 	case "match":
 		return r.Match, nil
+	case "type":
+		return (int32)(r.Type), nil
 
 	default:
 		return nil, fmt.Errorf("kallax: invalid column in Extractor: %s", col)
@@ -1704,6 +1708,12 @@ func (q *ExtractorQuery) FindByLabel(v string) *ExtractorQuery {
 // the Match property is equal to the passed value.
 func (q *ExtractorQuery) FindByMatch(v string) *ExtractorQuery {
 	return q.Where(kallax.Eq(Schema.Extractor.Match, v))
+}
+
+// FindByType adds a new filter to the query that will require that
+// the Type property is equal to the passed value.
+func (q *ExtractorQuery) FindByType(cond kallax.ScalarCond, v DataType) *ExtractorQuery {
+	return q.Where(cond(Schema.Extractor.Type, v))
 }
 
 // ExtractorResultSet is the set of results returned by a query to the
@@ -2725,6 +2735,7 @@ type schemaExtractor struct {
 	BookGUID kallax.SchemaField
 	Label    kallax.SchemaField
 	Match    kallax.SchemaField
+	Type     kallax.SchemaField
 }
 
 type schemaShorthand struct {
@@ -2824,11 +2835,13 @@ var Schema = &schema{
 			kallax.NewSchemaField("book_guid"),
 			kallax.NewSchemaField("label"),
 			kallax.NewSchemaField("match"),
+			kallax.NewSchemaField("type"),
 		),
 		GUID:     kallax.NewSchemaField("guid"),
 		BookGUID: kallax.NewSchemaField("book_guid"),
 		Label:    kallax.NewSchemaField("label"),
 		Match:    kallax.NewSchemaField("match"),
+		Type:     kallax.NewSchemaField("type"),
 	},
 	Shorthand: &schemaShorthand{
 		BaseSchema: kallax.NewBaseSchema(

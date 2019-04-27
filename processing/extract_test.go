@@ -8,7 +8,7 @@ import (
 
 type extractTest struct {
 	text string
-	data map[string]string
+	data map[string]interface{}
 }
 
 func runExtractTests(label string, t *testing.T, tests []extractTest, extractors []*model.Extractor) {
@@ -29,34 +29,34 @@ func runExtractTests(label string, t *testing.T, tests []extractTest, extractors
 
 func TestExtract_WorkoutsSample(t *testing.T) {
 	tests := []extractTest{
-		{"Bench press, 3x10@65", map[string]string{
+		{"Bench press, 3x10@65", map[string]interface{}{
 			"exercise": "Bench press",
-			"sets":     "3",
-			"reps":     "10",
-			"weight":   "65",
+			"sets":     float32(3),
+			"reps":     float32(10),
+			"weight":   float32(65),
 		}},
-		{"Squats, 2min", map[string]string{
+		{"Squats, 2min", map[string]interface{}{
 			"exercise": "Squats",
 			"time":     "2min",
 		}},
-		{"Squats, 3x10@45", map[string]string{
+		{"Squats, 3x10@45", map[string]interface{}{
 			"exercise": "Squats",
-			"sets":     "3",
-			"reps":     "10",
-			"weight":   "45",
+			"sets":     float32(3),
+			"reps":     float32(10),
+			"weight":   float32(45),
 		}},
-		{"Running, 30min", map[string]string{
+		{"Running, 30min", map[string]interface{}{
 			"exercise": "Running",
 			"time":     "30min",
 		}},
 	}
 
 	extractors := []*model.Extractor{
-		&model.Extractor{Label: "exercise", Match: `^(.+),`},
-		&model.Extractor{Label: "sets", Match: `,\s{0,}(\d+)\s{0,}x`},
-		&model.Extractor{Label: "reps", Match: `x\s{0,}(\d+)\s{0,}@`},
-		&model.Extractor{Label: "weight", Match: `@\s{0,}(\d+)$`},
-		&model.Extractor{Label: "time", Match: `(\d+\s{0,}(sec|seconds|min|minutes|hour|hours))`},
+		&model.Extractor{Label: "exercise", Match: `^(.+),`, Type: model.StringData},
+		&model.Extractor{Label: "sets", Match: `,\s{0,}(\d+)\s{0,}x`, Type: model.NumberData},
+		&model.Extractor{Label: "reps", Match: `x\s{0,}(\d+)\s{0,}@`, Type: model.NumberData},
+		&model.Extractor{Label: "weight", Match: `@\s{0,}(\d+)$`, Type: model.NumberData},
+		&model.Extractor{Label: "time", Match: `(\d+\s{0,}(sec|seconds|min|minutes|hour|hours))`, Type: model.StringData},
 	}
 
 	runExtractTests("TestExtract_WorkoutsSample", t, tests, extractors)
