@@ -57,12 +57,7 @@ func (s EntryService) Create(ctx context.Context, req *EntryCreateRequest) (*Ent
 		return nil, err
 	}
 
-	at := req.CreatedAt
-	if at.IsZero() {
-		at = time.Now().In(time.UTC)
-	}
-	at = at.In(time.UTC)
-
+	at := clientTime(req.CreatedAt)
 	collection, err := book.Collection(s.collectionStore, at, true)
 	if err != nil {
 		return nil, err
@@ -96,8 +91,11 @@ func (s EntryService) Create(ctx context.Context, req *EntryCreateRequest) (*Ent
 	entry.CreatedAt = at
 	entry.UpdatedAt = at
 
-	err = s.entryStore.Insert(entry)
-	return &EntryCreateResponse{GUID: req.GUID, Entry: entry}, err
+	if err = s.entryStore.Insert(entry); err != nil {
+		return nil, err
+	}
+
+	return &EntryCreateResponse{GUID: req.GUID, Entry: entry}, nil
 }
 
 type EntryRetrieveResponse struct {

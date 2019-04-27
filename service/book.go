@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"net/url"
+	"time"
 
 	"gopkg.in/src-d/go-kallax.v1"
 
@@ -11,20 +12,23 @@ import (
 )
 
 type BookService struct {
-	bookStore *model.BookStore
-	userStore *model.UserStore
+	bookStore       *model.BookStore
+	collectionStore *model.CollectionStore
+	userStore       *model.UserStore
 }
 
 func NewBookService(db *sql.DB) *BookService {
 	return &BookService{
-		bookStore: model.NewBookStore(db),
-		userStore: model.NewUserStore(db),
+		bookStore:       model.NewBookStore(db),
+		collectionStore: model.NewCollectionStore(db),
+		userStore:       model.NewUserStore(db),
 	}
 }
 
 type BookCreateRequest struct {
-	Name     string `json:"name"`
-	Grouping int32  `json:"grouping"`
+	Name               string    `json:"name"`
+	Grouping           int32     `json:"grouping"`
+	CreateCollectionAt time.Time `json:"createCollectionAt"`
 }
 
 func (s BookService) Create(ctx context.Context, req *BookCreateRequest) (*model.Book, error) {
@@ -37,8 +41,17 @@ func (s BookService) Create(ctx context.Context, req *BookCreateRequest) (*model
 	if err != nil {
 		return nil, err
 	}
-	err = s.bookStore.Insert(book)
-	return book, err
+
+	if err = s.bookStore.Insert(book); err != nil {
+		return nil, err
+	}
+
+	at := clientTime(req.CreateCollectionAt)
+	if _, err = book.Collection(s.collectionStore, at, true); err != nil {
+		return book, err
+	}
+
+	return book, nil
 }
 
 type BookRetrieveResponse struct {

@@ -52,49 +52,67 @@ new_entry() {
   echo "$resp" | jq '.entry.guid' -r
 }
 
-cleaner="truncate books; truncate collections; truncate entries; truncate extractors; truncate shorthands;"
-psql captainslog --dbname captainslog -c "$cleaner" &> /dev/null
-log "db" "reset"
+reset_db() {
+  cleaner="truncate books; truncate collections; truncate entries; truncate extractors; truncate shorthands;"
+  psql captainslog --dbname captainslog -c "$cleaner" &> /dev/null
+  log "db" "reset"
+}
 
-workouts=$(new_book "Workouts" 1)
-log "new book" "$workouts"
+create_workouts() {
+  workouts=$(new_book "Workouts" 1)
+  log "new book" "$workouts"
 
-log "new extractor" $(new_extractor "exercise" '^(.+),' "$workouts")
-log "new extractor" $(new_extractor "sets" ',\\s{0,}(\\d+)\\s{0,}x' "$workouts")
-log "new extractor" $(new_extractor "reps" '\\dx\\s{0,}(\\d+)' "$workouts")
-log "new extractor" $(new_extractor "weight" '@\\s{0,}(\\d+(\\.\\d{1,2})?)$' "$workouts")
-log "new extractor" $(new_extractor "time"      '(\\d+)\\s{0,}(sec|seconds|min|minutes|hour|hours)' "$workouts")
-log "new extractor" $(new_extractor "time_unit" '\\d+\\s{0,}(sec|seconds|min|minutes|hour|hours)' "$workouts")
-log "new extractor" $(new_extractor "distance"      '(\\d+)\\s{0,}(m|miles|k|kilometers)' "$workouts")
-log "new extractor" $(new_extractor "distance_unit" '\\d+\\s{0,}(m|miles|k|kilometers)' "$workouts")
+  (log "new extractor" $(new_extractor "exercise" '^(.+),' "$workouts")) &
+  (log "new extractor" $(new_extractor "sets" ',\\s{0,}(\\d+)\\s{0,}x' "$workouts")) &
+  (log "new extractor" $(new_extractor "reps" '\\dx\\s{0,}(\\d+)' "$workouts")) &
+  (log "new extractor" $(new_extractor "weight" '@\\s{0,}(\\d+(\\.\\d{1,2})?)$' "$workouts")) &
+  (log "new extractor" $(new_extractor "time"      '(\\d+)\\s{0,}(sec|seconds|min|minutes|hour|hours)' "$workouts")) &
+  (log "new extractor" $(new_extractor "time_unit" '\\d+\\s{0,}(sec|seconds|min|minutes|hour|hours)' "$workouts")) &
+  (log "new extractor" $(new_extractor "distance"      '(\\d+)\\s{0,}(miles|k|kilometers)' "$workouts")) &
+  (log "new extractor" $(new_extractor "distance_unit" '\\d+\\s{0,}(miles|k|kilometers)' "$workouts")) &
 
-log "new shorthand" $(new_shorthand ", x" "" ". x" "$workouts")
-log "new shorthand" $(new_shorthand "x @ " 'x\\s' "" "$workouts")
-log "new shorthand" $(new_shorthand "3x10" "" "xxx" "$workouts")
-log "new shorthand" $(new_shorthand "2x10" "" "xx" "$workouts")
+  (log "new shorthand" $(new_shorthand "," "" "." "$workouts")) &
+  (log "new shorthand" $(new_shorthand ", xx " '\\[^,\\] xx' "" "$workouts")) &
+  (log "new shorthand" $(new_shorthand "xx @ " "" "xx" "$workouts")) &
+  (log "new shorthand" $(new_shorthand "3x10" "" "xxx" "$workouts")) &
+  (log "new shorthand" $(new_shorthand "2x10" "" "xx" "$workouts")) &
 
-log "new entry" $(new_entry "Bench press, xxx@65" "$workouts")
-log "new entry" $(new_entry "Squats, 2min" "$workouts")
-log "new entry" $(new_entry "Squats, xxx@45" "$workouts")
-log "new entry" $(new_entry "Running, 30min" "$workouts")
+  wait
 
-# curl "http://localhost/api/entry?book=$workouts" | jq ''
+  (log "new entry" $(new_entry "Bench press xxx@65" "$workouts")) &
+  (log "new entry" $(new_entry "Squats, 2min" "$workouts")) &
+  (log "new entry" $(new_entry "Squats xxx@45" "$workouts")) &
+  (log "new entry" $(new_entry "Running, 30min" "$workouts")) &
 
-blood_pressure=$(new_book "Blood Pressure" 0)
-log "new book" "$blood_pressure"
+  wait
+}
 
-log "new extractor" $(new_extractor "a" '^(\\d+)\\s{0,}/' "$blood_pressure")
-log "new extractor" $(new_extractor "b" '/\\s{0,}(\\d+)\\s' "$blood_pressure")
-log "new extractor" $(new_extractor "pulse" '\\(pulse (\\d+)\\)' "$blood_pressure")
+create_blood_pressure() {
+  blood_pressure=$(new_book "Blood Pressure" 0)
+  log "new book" "$blood_pressure"
 
-log "new entry" $(new_entry "121 / 73 (pulse 67)" "$blood_pressure")
-log "new entry" $(new_entry "122 / 88 (pulse 80)" "$blood_pressure")
-log "new entry" $(new_entry "126 / 84 (pulse 101)" "$blood_pressure")
-log "new entry" $(new_entry "127 / 81 (pulse 85)" "$blood_pressure")
-log "new entry" $(new_entry "129 / 81 (pulse 89)" "$blood_pressure")
-log "new entry" $(new_entry "132 / 87 (pulse 74)" "$blood_pressure")
-log "new entry" $(new_entry "133 / 84 (pulse 80)" "$blood_pressure")
-log "new entry" $(new_entry "133 / 90 (pulse 83)" "$blood_pressure")
-log "new entry" $(new_entry "136 / 84 (pulse 76)" "$blood_pressure")
+  (log "new extractor" $(new_extractor "a" '^(\\d+)\\s{0,}/' "$blood_pressure")) &
+  (log "new extractor" $(new_extractor "b" '/\\s{0,}(\\d+)\\s' "$blood_pressure")) &
+  (log "new extractor" $(new_extractor "pulse" '\\(pulse (\\d+)\\)' "$blood_pressure")) &
 
-# curl "http://localhost/api/entry?book=$blood_pressure" | jq ''
+  wait
+
+  (log "new entry" $(new_entry "121 / 73 (pulse 67)" "$blood_pressure")) &
+  (log "new entry" $(new_entry "122 / 88 (pulse 80)" "$blood_pressure")) &
+  (log "new entry" $(new_entry "126 / 84 (pulse 101)" "$blood_pressure")) &
+  (log "new entry" $(new_entry "127 / 81 (pulse 85)" "$blood_pressure")) &
+  (log "new entry" $(new_entry "129 / 81 (pulse 89)" "$blood_pressure")) &
+  (log "new entry" $(new_entry "132 / 87 (pulse 74)" "$blood_pressure")) &
+  (log "new entry" $(new_entry "133 / 84 (pulse 80)" "$blood_pressure")) &
+  (log "new entry" $(new_entry "133 / 90 (pulse 83)" "$blood_pressure")) &
+  (log "new entry" $(new_entry "136 / 84 (pulse 76)" "$blood_pressure")) &
+
+  wait
+}
+
+reset_db
+create_workouts &
+create_blood_pressure &
+
+wait
+echo done

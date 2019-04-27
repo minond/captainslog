@@ -3,11 +3,21 @@ package service
 import (
 	"context"
 	"errors"
+	"time"
 
 	"gopkg.in/src-d/go-kallax.v1"
 
 	"github.com/minond/captainslog/model"
 )
+
+// clientTime should be used when accepting time values from a user and when a
+// standard, never-zero time value is required.
+func clientTime(t time.Time) time.Time {
+	if t.IsZero() {
+		t = time.Now()
+	}
+	return t.In(time.UTC)
+}
 
 func getUserGUID(ctx context.Context) (string, error) {
 	val := ctx.Value("userguid")
