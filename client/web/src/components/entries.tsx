@@ -8,7 +8,7 @@ import { createEntry, retrieveEntriesForBook } from "../service/entry"
 
 import EntryLine from "./entry_line"
 
-import { mediumText } from "../styles/styles"
+import { mediumText } from "../styles"
 
 type MaybeData = { data?: { [index: string]: string } }
 type EntryView = Entry | (EntryCreateRequest & MaybeData)

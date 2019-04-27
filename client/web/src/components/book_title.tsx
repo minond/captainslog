@@ -6,7 +6,7 @@ import { css, StyleSheet } from "aphrodite"
 
 import { Book } from "../definitions/book"
 
-import { largeText, link, mainTextColor } from "../styles/styles"
+import { largeText, link, mainTextColor } from "../styles"
 
 const styles = StyleSheet.create({
   book: {
