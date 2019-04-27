@@ -1,6 +1,5 @@
 import * as React from "react"
 import { Component, KeyboardEvent, RefObject } from "react"
-import DatePicker from "react-datepicker"
 
 import { css, StyleSheet } from "aphrodite"
 
@@ -9,6 +8,7 @@ import history from "../history"
 import { Entry, EntryCreateRequest } from "../definitions/entry"
 import { createEntry, retrieveEntriesForBook } from "../service/entry"
 
+import DateGroupPicker from "./date_group_picker"
 import EntryLine from "./entry_line"
 
 import { inputField, textAreaField } from "../styles"
@@ -41,12 +41,6 @@ const styles = StyleSheet.create({
   entryCell: {
     paddingRight: "5px",
     width: "75%",
-  },
-
-  dateInput: {
-    ...inputField,
-    textAlign: "center",
-    width: "100%",
   },
 
   entryInput: {
@@ -120,12 +114,10 @@ export default class Entries extends Component<Props, State> {
       this.setState({ loaded: true, entries }))
   }
 
-  setViewDate(date: Date | null) {
-    if (date) {
-      const { guid } = this.props
-      this.setState({ date }, () => this.loadEntries())
-      history.replace(`/book/${guid}/${+date}`)
-    }
+  setViewDate(date: Date) {
+    const { guid } = this.props
+    this.setState({ date }, () => this.loadEntries())
+    history.replace(`/book/${guid}/${+date}`)
   }
 
   getEntries(): ReadonlyArray<EntryView> {
@@ -239,11 +231,7 @@ export default class Entries extends Component<Props, State> {
                 />
               </td>
               <td className={css(styles.entryCell)}>
-                <DatePicker
-                  selected={date}
-                  className={css(styles.dateInput)}
-                  onChange={(maybeDate) => this.setViewDate(maybeDate)}
-                />
+                <DateGroupPicker date={date} onChange={(date) => this.setViewDate(date)} />
               </td>
             </tr>
           </tbody>
