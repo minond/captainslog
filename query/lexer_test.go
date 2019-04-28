@@ -9,7 +9,7 @@ func tokseq(expecting, got []Token) bool {
 	if len(got) != len(expecting) {
 		return false
 	}
-	for i, _ := range got {
+	for i := range got {
 		if !got[i].Eq(expecting[i]) {
 			return false
 		}
