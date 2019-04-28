@@ -6,6 +6,10 @@ export type Entry = {
   data?: { [index: string]: string }
 }
 
+export type EntriesRetrieveResponse = {
+  entries: Entry[]
+}
+
 export type EntryCreateRequest = {
   guid: string
   text: string

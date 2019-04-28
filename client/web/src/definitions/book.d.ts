@@ -3,3 +3,7 @@ export type Book = {
   name: string
   grouping: number
 }
+
+export type BooksRetrieveResponse = {
+  books: Book[]
+}

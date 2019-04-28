@@ -7,7 +7,7 @@ import history from "../history"
 
 import { Book } from "../definitions/book"
 import { Entry, EntryCreateRequest } from "../definitions/entry"
-import { createEntry, getEntriesForBook, getBook } from "../remote"
+import { createEntry, getBook, getEntriesForBook } from "../remote"
 
 import BookTitle from "./book_title"
 import DateGroupPicker, { Grouping } from "./date_group_picker"
@@ -42,7 +42,7 @@ interface Props {
 
 interface State {
   date: Date
-  book?: Book
+  book: Book | null
   entries: Entry[]
   loaded: boolean
   unsynced: EntryCreateRequest[]
@@ -61,6 +61,7 @@ export default class Entries extends Component<Props, State> {
 
   getInitialState(): State {
     return {
+      book: null,
       date: new Date(),
       entries: [],
       loaded: false,
@@ -70,13 +71,10 @@ export default class Entries extends Component<Props, State> {
 
   componentWillReceiveProps(next: Props) {
     const sameBook = next.bookGuid === this.props.bookGuid
-    const sameDate = +next.date === +this.props.date
 
     if (!sameBook) {
       this.setState(this.getInitialState(), () =>
         this.loadData(true))
-    } else if (!sameDate) {
-      this.setViewDate(next.date)
     }
   }
 

@@ -32,7 +32,7 @@ enum Unit {
   DAY = 1000 * 60 * 60 * 24,
 }
 
-const GroupUnit: { [index: number]:  Unit } = {
+const GroupUnit: { [index: number]: Unit } = {
   [Grouping.DAY]: Unit.DAY,
 }
 
