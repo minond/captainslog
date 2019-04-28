@@ -7,12 +7,14 @@ import BookTitle from "./book_title"
 import { Book } from "../definitions/book"
 import { getBooks } from "../remote"
 
+import { link } from "../styles"
+
 interface State {
   loaded: boolean
   books: Book[]
 }
 
-export default class Books extends Component<{}, State> {
+export default class BooksNavigation extends Component<{}, State> {
   constructor(props: {}) {
     super(props)
 
@@ -29,6 +31,10 @@ export default class Books extends Component<{}, State> {
 
   render() {
     const { books } = this.state
-    return <div>{books.map(BookTitle)}</div>
+    return <div>{books.map((book) =>
+      <Link key={book.guid} to={`/book/${book.guid}`} style={link}>
+        <BookTitle name={book.name} />
+      </Link>
+    )}</div>
   }
 }

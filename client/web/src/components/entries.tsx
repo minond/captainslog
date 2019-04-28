@@ -206,7 +206,7 @@ export default class Entries extends Component<Props, State> {
 
     return (
       <div className={css(styles.wrapper)}>
-        {book && <BookTitle guid={book.guid} name={book.name} />}
+        {book && <BookTitle name={book.name} />}
         <FieldLabel text="New entry">{textarea}</FieldLabel>
         <FieldLabel text="Date selection" />
         {datePicker}

@@ -6,7 +6,7 @@ import { css, StyleSheet } from "aphrodite"
 
 import { Book } from "../definitions/book"
 
-import { largerText, link, mainTextColor } from "../styles"
+import { largerText, mainTextColor } from "../styles"
 
 const styles = StyleSheet.create({
   book: {
@@ -23,14 +23,12 @@ const styles = StyleSheet.create({
   }
 })
 
-type Props = Pick<Book, "guid" | "name">
+type Props = Pick<Book, "name">
 
 export default function BookTitle(props: Props) {
   return (
-    <Link key={props.guid} to={`/book/${props.guid}`} style={link}>
-      <div className={css(styles.book)}>
-        {props.name}
-      </div>
-    </Link>
+    <div className={css(styles.book)}>
+      {props.name}
+    </div>
   )
 }
