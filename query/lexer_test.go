@@ -99,3 +99,69 @@ func TestLexer_QuotedValues(t *testing.T) {
 			expecting, got))
 	}
 }
+
+func TestLexer_SampleQuery(t *testing.T) {
+	got := Lex(`
+
+select max(w.weight) as max_weight,
+	max(min(w.weight)) as min_max_weight,
+	distinct w.exercise,
+	w.weight
+from workouts as w
+where w.exercise like 'bench press' or w.exercise like 'bicep curl'
+
+`)
+
+	expecting := []Token{
+		Token{Tok: tokIdentifier, Lexeme: "select"},
+		Token{Tok: tokIdentifier, Lexeme: "max"},
+		TokenOpenParenthesis,
+		Token{Tok: tokIdentifier, Lexeme: "w"},
+		TokenPeriod,
+		Token{Tok: tokIdentifier, Lexeme: "weight"},
+		TokenCloseParenthesis,
+		Token{Tok: tokIdentifier, Lexeme: "as"},
+		Token{Tok: tokIdentifier, Lexeme: "max_weight"},
+		TokenComma,
+		Token{Tok: tokIdentifier, Lexeme: "max"},
+		TokenOpenParenthesis,
+		Token{Tok: tokIdentifier, Lexeme: "min"},
+		TokenOpenParenthesis,
+		Token{Tok: tokIdentifier, Lexeme: "w"},
+		TokenPeriod,
+		Token{Tok: tokIdentifier, Lexeme: "weight"},
+		TokenCloseParenthesis,
+		TokenCloseParenthesis,
+		Token{Tok: tokIdentifier, Lexeme: "as"},
+		Token{Tok: tokIdentifier, Lexeme: "min_max_weight"},
+		TokenComma,
+		Token{Tok: tokIdentifier, Lexeme: "distinct"},
+		Token{Tok: tokIdentifier, Lexeme: "w"},
+		TokenPeriod,
+		Token{Tok: tokIdentifier, Lexeme: "exercise"},
+		TokenComma,
+		Token{Tok: tokIdentifier, Lexeme: "w"},
+		TokenPeriod,
+		Token{Tok: tokIdentifier, Lexeme: "weight"},
+		Token{Tok: tokIdentifier, Lexeme: "from"},
+		Token{Tok: tokIdentifier, Lexeme: "workouts"},
+		Token{Tok: tokIdentifier, Lexeme: "as"},
+		Token{Tok: tokIdentifier, Lexeme: "w"},
+		Token{Tok: tokIdentifier, Lexeme: "where"},
+		Token{Tok: tokIdentifier, Lexeme: "w"},
+		TokenPeriod,
+		Token{Tok: tokIdentifier, Lexeme: "exercise"},
+		Token{Tok: tokIdentifier, Lexeme: "like"},
+		Token{Tok: tokSingleQuoteString, Lexeme: "bench press"},
+		Token{Tok: tokIdentifier, Lexeme: "or"},
+		Token{Tok: tokIdentifier, Lexeme: "w"},
+		TokenPeriod,
+		Token{Tok: tokIdentifier, Lexeme: "exercise"},
+		Token{Tok: tokIdentifier, Lexeme: "like"},
+		Token{Tok: tokSingleQuoteString, Lexeme: "bicep curl"},
+	}
+	if !tokseq(expecting, got) {
+		t.Errorf(compmsg("lexing sample query did not return expected tokens.",
+			expecting, got))
+	}
+}
