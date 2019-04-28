@@ -7,8 +7,7 @@ import history from "../history"
 
 import { Book } from "../definitions/book"
 import { Entry, EntryCreateRequest } from "../definitions/entry"
-import { createEntry, retrieveEntriesForBook } from "../service/entry"
-import { getBook } from "../service/book"
+import { createEntry, getEntriesForBook, getBook } from "../remote"
 
 import BookTitle from "./book_title"
 import DateGroupPicker, { Grouping } from "./date_group_picker"
@@ -92,13 +91,13 @@ export default class Entries extends Component<Props, State> {
 
     if (withMetadata) {
       getBook(bookGuid).then((book) =>
-        retrieveEntriesForBook(bookGuid, now).then((entries) =>
+        getEntriesForBook(bookGuid, now).then((entries) =>
           this.setState({ loaded: true, entries, book })))
 
       return
     }
 
-    retrieveEntriesForBook(bookGuid, now).then((entries) =>
+    getEntriesForBook(bookGuid, now).then((entries) =>
       this.setState({ loaded: true, entries }))
   }
 

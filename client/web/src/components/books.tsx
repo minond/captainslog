@@ -5,7 +5,7 @@ import { Link } from "react-router-dom"
 import BookTitle from "./book_title"
 
 import { Book } from "../definitions/book"
-import { getBooks } from "../service/book"
+import { getBooks } from "../remote"
 
 interface State {
   loaded: boolean
