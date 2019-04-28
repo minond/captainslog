@@ -3,12 +3,12 @@ import { HTMLAttributes } from "react"
 
 import { css, StyleSheet } from "aphrodite"
 
-import { mainColor, mediumText } from "../styles"
+import { accentColor, mediumText } from "../styles"
 
 const styles = StyleSheet.create({
   item: {
     ...mediumText,
-    border: `1px solid ${mainColor}`,
+    border: `1px solid ${accentColor}`,
     display: "inline-block",
     margin: "2px 0px 2px 4px",
     padding: "3px 6px",

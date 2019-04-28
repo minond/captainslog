@@ -31,10 +31,11 @@ export default class BooksNavigation extends Component<{}, State> {
 
   render() {
     const { books } = this.state
-    return <div>{books.map((book) =>
+    const links = books.map((book) =>
       <Link key={book.guid} to={`/book/${book.guid}`} style={link}>
         <BookTitle name={book.name} />
-      </Link>
-    )}</div>
+      </Link>)
+
+    return <div>{links}</div>
   }
 }

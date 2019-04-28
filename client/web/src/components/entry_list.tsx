@@ -12,11 +12,14 @@ type EntryView = Entry | (EntryCreateRequest & MaybeData)
 
 const styles = StyleSheet.create({
   entries: {
-    maxHeight: "calc(100vh - 95px)",
+    borderBottom: "1px solid #dadada",
+    borderTop: "1px solid #dadada",
+    marginTop: "20px",
+    maxHeight: "calc(100vh - 220px)",
     overflow: "auto",
   },
 
-  tailEntry: {
+  separator: {
     borderTop: "1px solid #dadada",
   },
 })
@@ -39,7 +42,7 @@ export default function EntryList({ items }: Props) {
   const entries = sorted.map((entry, i) => (
     <EntryLine
       key={entry.guid}
-      className={css(i ? styles.tailEntry : null)}
+      className={css(i ? styles.separator : null)}
       text={entry.text}
       data={entry.data}
     />))
