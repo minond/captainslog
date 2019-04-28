@@ -10,6 +10,7 @@ import { createEntry, retrieveEntriesForBook } from "../service/entry"
 
 import DateGroupPicker from "./date_group_picker"
 import EntryLine from "./entry_line"
+import EntryList from "./entry_list"
 
 import { inputField, textAreaField } from "../styles"
 
@@ -22,15 +23,6 @@ const KEY_ENTER = 13
 const styles = StyleSheet.create({
   wrapper: {
     boxSizing: "content-box",
-  },
-
-  entries: {
-    maxHeight: "calc(100vh - 150px)",
-    overflow: "auto",
-  },
-
-  tailEntry: {
-    borderTop: "1px solid #dadada",
   },
 
   dateCell: {
@@ -62,14 +54,12 @@ interface State {
 }
 
 export default class Entries extends Component<Props, State> {
-  entriesRef: RefObject<HTMLDivElement>
   inputRef: RefObject<HTMLTextAreaElement>
   boundOnEntryInputKeyPress: (ev: KeyboardEvent<HTMLTextAreaElement>) => void
 
   constructor(props: Props) {
     super(props)
     this.state = { ...this.getInitialState(), date: this.props.date }
-    this.entriesRef = React.createRef()
     this.inputRef = React.createRef()
     this.boundOnEntryInputKeyPress = this.onEntryInputKeyPress.bind(this)
   }
@@ -94,12 +84,6 @@ export default class Entries extends Component<Props, State> {
     this.loadEntries()
   }
 
-  componentDidUpdate() {
-    if (this.entriesRef.current) {
-      this.entriesRef.current.scrollTop = 0
-    }
-  }
-
   componentDidMount() {
     if (this.inputRef.current) {
       this.inputRef.current.focus()
@@ -120,7 +104,7 @@ export default class Entries extends Component<Props, State> {
     history.replace(`/book/${guid}/${+date}`)
   }
 
-  getEntries(): ReadonlyArray<EntryView> {
+  getEntries(): Array<EntryView> {
     const { unsynced, entries } = this.state
     return [...entries, ...unsynced].sort((a, b) => {
       if (a.createdAt === b.createdAt) {
@@ -209,14 +193,6 @@ export default class Entries extends Component<Props, State> {
   render() {
     const { date } = this.state
 
-    const entries = this.getEntries().map((entry, i) => (
-      <EntryLine
-        key={entry.guid}
-        className={css(i ? styles.tailEntry : null)}
-        text={entry.text}
-        data={entry.data}
-      />))
-
     return (
       <div className={css(styles.wrapper)}>
         <table>
@@ -237,7 +213,7 @@ export default class Entries extends Component<Props, State> {
           </tbody>
         </table>
 
-        <div ref={this.entriesRef} className={css(styles.entries)}>{entries}</div>
+        <EntryList items={this.getEntries()} />
       </div>
     )
   }
