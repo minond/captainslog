@@ -1,7 +1,9 @@
 import { CSSProperties } from "aphrodite"
 
-export const mainColor = '#0031FE'
-export const contrastColor = 'white'
+export const mainColor = "#0031FE"
+export const accentColor = "#c3c3c3"
+export const labelColor = "rgb(125, 125, 125)"
+export const contrastColor = "white"
 
 export const link = {
   color: "inherit",
@@ -14,6 +16,11 @@ export const smallText = {
 
 export const mediumText = {
   fontSize: "0.85em",
+  lineHeight: 1,
+}
+
+export const normalText = {
+  fontSize: "1em",
   lineHeight: 1,
 }
 
@@ -36,17 +43,18 @@ export const mainTextColor = {
   color: mainColor,
 }
 
+export const labelTextColor = {
+  color: labelColor,
+}
+
 export const inputField: CSSProperties = {
   ...mediumText,
   border: "1px solid #c3c3c3",
-  boxSizing: "border-box",
-  margin: 0,
-  padding: "1px 4px 2px 4px",
 }
 
 export const textAreaField: CSSProperties = {
   ...mediumText,
-  border: "1px solid #c3c3c3",
+  border: `1px solid ${accentColor}`,
   boxSizing: "border-box",
   margin: 0,
   padding: "4px",

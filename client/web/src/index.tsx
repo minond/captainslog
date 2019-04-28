@@ -7,7 +7,6 @@ import Entries from "./components/entries"
 
 import history from "./history"
 
-require("./normalize.css")
 require("./index.css")
 require("./react-datepicker.css")
 

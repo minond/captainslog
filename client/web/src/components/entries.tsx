@@ -8,9 +8,10 @@ import history from "../history"
 import { Entry, EntryCreateRequest } from "../definitions/entry"
 import { createEntry, retrieveEntriesForBook } from "../service/entry"
 
-import DateGroupPicker from "./date_group_picker"
+import DateGroupPicker, { Grouping } from "./date_group_picker"
 import EntryLine from "./entry_line"
 import EntryList from "./entry_list"
+import FieldLabel from "./field_label"
 
 import { inputField, textAreaField } from "../styles"
 
@@ -25,18 +26,9 @@ const styles = StyleSheet.create({
     boxSizing: "content-box",
   },
 
-  dateCell: {
-    paddingLeft: "5px",
-    width: "25%",
-  },
-
-  entryCell: {
-    paddingRight: "5px",
-    width: "75%",
-  },
-
   entryInput: {
     ...textAreaField,
+    marginBottom: "10px",
     width: "100%",
   },
 })
@@ -54,14 +46,14 @@ interface State {
 }
 
 export default class Entries extends Component<Props, State> {
-  inputRef: RefObject<HTMLTextAreaElement>
   boundOnEntryInputKeyPress: (ev: KeyboardEvent<HTMLTextAreaElement>) => void
+  boundSetViewDate: (date: Date) => void
 
   constructor(props: Props) {
     super(props)
     this.state = { ...this.getInitialState(), date: this.props.date }
-    this.inputRef = React.createRef()
     this.boundOnEntryInputKeyPress = this.onEntryInputKeyPress.bind(this)
+    this.boundSetViewDate = this.setViewDate.bind(this)
   }
 
   getInitialState(): State {
@@ -84,12 +76,6 @@ export default class Entries extends Component<Props, State> {
     this.loadEntries()
   }
 
-  componentDidMount() {
-    if (this.inputRef.current) {
-      this.inputRef.current.focus()
-    }
-  }
-
   loadEntries() {
     const { date } = this.state
     const { guid } = this.props
@@ -104,7 +90,7 @@ export default class Entries extends Component<Props, State> {
     history.replace(`/book/${guid}/${+date}`)
   }
 
-  getEntries(): Array<EntryView> {
+  getEntries(): EntryView[] {
     const { unsynced, entries } = this.state
     return [...entries, ...unsynced].sort((a, b) => {
       if (a.createdAt === b.createdAt) {
@@ -192,27 +178,19 @@ export default class Entries extends Component<Props, State> {
 
   render() {
     const { date } = this.state
+    const grouping = Grouping.DAY // TODO
+
+    const textarea = <textarea
+      rows={1}
+      className={css(styles.entryInput)}
+      onKeyPress={this.boundOnEntryInputKeyPress}
+    />
 
     return (
       <div className={css(styles.wrapper)}>
-        <table>
-          <tbody>
-            <tr>
-              <td className={css(styles.entryCell)}>
-                <textarea
-                  rows={1}
-                  ref={this.inputRef}
-                  className={css(styles.entryInput)}
-                  onKeyPress={this.boundOnEntryInputKeyPress}
-                />
-              </td>
-              <td className={css(styles.dateCell)}>
-                <DateGroupPicker date={date} onChange={(date) => this.setViewDate(date)} />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-
+        <FieldLabel text="New entry">{textarea}</FieldLabel>
+        <FieldLabel text="Date selection" />
+        <DateGroupPicker grouping={grouping} date={date} onChange={this.boundSetViewDate} />
         <EntryList items={this.getEntries()} />
       </div>
     )
