@@ -3,14 +3,14 @@ import { HTMLAttributes } from "react"
 
 import { css, StyleSheet } from "aphrodite"
 
-import { mainColor, mediumText, smallText } from "../styles"
+import { mainColor, mediumText } from "../styles"
 
 const styles = StyleSheet.create({
   item: {
-    ...smallText,
+    ...mediumText,
     border: `1px solid ${mainColor}`,
     display: "inline-block",
-    margin: "2px 4px 2px 0px",
+    margin: "2px 0px 2px 4px",
     padding: "3px 6px",
     whiteSpace: "nowrap",
   },
@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
 
   text: {
     display: "inline-block",
-    lineHeight: "normal",
+    lineHeight: 2,
     width: "35%",
   },
 

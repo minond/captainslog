@@ -206,7 +206,7 @@ export default class Entries extends Component<Props, State> {
                   onKeyPress={this.boundOnEntryInputKeyPress}
                 />
               </td>
-              <td className={css(styles.entryCell)}>
+              <td className={css(styles.dateCell)}>
                 <DateGroupPicker date={date} onChange={(date) => this.setViewDate(date)} />
               </td>
             </tr>

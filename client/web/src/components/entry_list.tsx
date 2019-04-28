@@ -12,7 +12,7 @@ type EntryView = Entry | (EntryCreateRequest & MaybeData)
 
 const styles = StyleSheet.create({
   entries: {
-    maxHeight: "calc(100vh - 150px)",
+    maxHeight: "calc(100vh - 95px)",
     overflow: "auto",
   },
 

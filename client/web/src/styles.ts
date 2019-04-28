@@ -8,12 +8,12 @@ export const link = {
 }
 
 export const smallText = {
-  fontSize: ".85em",
+  fontSize: "0.5em",
   lineHeight: 1,
 }
 
 export const mediumText = {
-  fontSize: "1em",
+  fontSize: "0.85em",
   lineHeight: 1,
 }
 
@@ -36,7 +36,7 @@ export const inputField: CSSProperties = {
   border: "1px solid #c3c3c3",
   boxSizing: "border-box",
   margin: 0,
-  padding: "0 4px",
+  padding: "1px 4px 2px 4px",
 }
 
 export const textAreaField: CSSProperties = {
