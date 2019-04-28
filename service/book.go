@@ -64,8 +64,15 @@ func (s BookService) Retrieve(ctx context.Context, req url.Values) (*BookRetriev
 		return nil, err
 	}
 
-	books, err := s.bookStore.FindAll(model.NewBookQuery().
-		Where(kallax.Eq(model.Schema.Book.UserGUID, userGUID)))
+	query := model.NewBookQuery().
+		Where(kallax.Eq(model.Schema.Book.UserGUID, userGUID))
+
+	// Retrieve a single book
+	if guid, ok := req["guid"]; ok {
+		query.Where(kallax.Eq(model.Schema.Book.GUID, guid))
+	}
+
+	books, err := s.bookStore.FindAll(query)
 	if err != nil {
 		return nil, err
 	}

@@ -5,9 +5,12 @@ import { css, StyleSheet } from "aphrodite"
 
 import history from "../history"
 
+import { Book } from "../definitions/book"
 import { Entry, EntryCreateRequest } from "../definitions/entry"
 import { createEntry, retrieveEntriesForBook } from "../service/entry"
+import { getBook } from "../service/book"
 
+import BookTitle from "./book_title"
 import DateGroupPicker, { Grouping } from "./date_group_picker"
 import EntryLine from "./entry_line"
 import EntryList from "./entry_list"
@@ -35,11 +38,12 @@ const styles = StyleSheet.create({
 
 interface Props {
   date: Date
-  guid: string
+  bookGuid: string
 }
 
 interface State {
   date: Date
+  book?: Book
   entries: Entry[]
   loaded: boolean
   unsynced: EntryCreateRequest[]
@@ -66,28 +70,42 @@ export default class Entries extends Component<Props, State> {
   }
 
   componentWillReceiveProps(next: Props) {
-    if (next.guid !== this.props.guid) {
+    const sameBook = next.bookGuid === this.props.bookGuid
+    const sameDate = +next.date === +this.props.date
+
+    if (!sameBook) {
       this.setState(this.getInitialState(), () =>
-        this.loadEntries())
+        this.loadData(true))
+    } else if (!sameDate) {
+      this.setViewDate(next.date)
     }
   }
 
   componentWillMount() {
-    this.loadEntries()
+    this.loadData(true)
   }
 
-  loadEntries() {
+  loadData(withMetadata: boolean) {
     const { date } = this.state
-    const { guid } = this.props
+    const { bookGuid } = this.props
     const now = Math.floor(+date / 1000)
-    retrieveEntriesForBook(guid, now).then((entries) =>
+
+    if (withMetadata) {
+      getBook(bookGuid).then((book) =>
+        retrieveEntriesForBook(bookGuid, now).then((entries) =>
+          this.setState({ loaded: true, entries, book })))
+
+      return
+    }
+
+    retrieveEntriesForBook(bookGuid, now).then((entries) =>
       this.setState({ loaded: true, entries }))
   }
 
   setViewDate(date: Date) {
-    const { guid } = this.props
-    this.setState({ date }, () => this.loadEntries())
-    history.replace(`/book/${guid}/${+date}`)
+    const { bookGuid } = this.props
+    this.setState({ date }, () => this.loadData(false))
+    history.replace(`/book/${bookGuid}/${+date}`)
   }
 
   getEntries(): EntryView[] {
@@ -106,7 +124,7 @@ export default class Entries extends Component<Props, State> {
   addEntry(text: string, at: Date) {
     const guid = Math.random().toString()
     const createdAt = at.toISOString()
-    const bookGuid = this.props.guid
+    const bookGuid = this.props.bookGuid
     const entry = { guid, text, createdAt, bookGuid }
 
     this.state.unsynced.push(entry)
@@ -177,8 +195,8 @@ export default class Entries extends Component<Props, State> {
   }
 
   render() {
-    const { date } = this.state
-    const grouping = Grouping.DAY // TODO
+    const { date, book } = this.state
+    const grouping = book ? book.grouping : Grouping.DAY
 
     const textarea = <textarea
       rows={1}
@@ -186,11 +204,15 @@ export default class Entries extends Component<Props, State> {
       onKeyPress={this.boundOnEntryInputKeyPress}
     />
 
+    const datePicker = grouping === Grouping.NONE ? null :
+      <DateGroupPicker grouping={grouping} date={date} onChange={this.boundSetViewDate} />
+
     return (
       <div className={css(styles.wrapper)}>
+        {book && <BookTitle guid={book.guid} name={book.name} />}
         <FieldLabel text="New entry">{textarea}</FieldLabel>
         <FieldLabel text="Date selection" />
-        <DateGroupPicker grouping={grouping} date={date} onChange={this.boundSetViewDate} />
+        {datePicker}
         <EntryList items={this.getEntries()} />
       </div>
     )
