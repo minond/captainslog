@@ -18,18 +18,6 @@ table, .react-datepicker-wrapper, .react-datepicker__input-container {
   width: 100%;
 }
 
-.react-datepicker__day--selected,
-.react-datepicker__day--in-selecting-range,
-.react-datepicker__day--in-range,
-.react-datepicker__month-text--selected,
-.react-datepicker__month-text--in-selecting-range,
-.react-datepicker__month-text--in-range {
-  border-radius: 0.3rem !important;
-  background-color: #0031FE !important;
-  color: #fff !important;
-  font-weight: bold !important;
-}
-
 /* small */
 @media screen and (min-width: 45em) {
 }

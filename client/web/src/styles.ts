@@ -22,6 +22,11 @@ export const largeText = {
   lineHeight: 1,
 }
 
+export const largerText = {
+  fontSize: "1.75em",
+  lineHeight: 1,
+}
+
 export const mainBackgroundColor = {
   backgroundColor: mainColor,
   color: contrastColor,

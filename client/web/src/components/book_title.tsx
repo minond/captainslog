@@ -6,13 +6,14 @@ import { css, StyleSheet } from "aphrodite"
 
 import { Book } from "../definitions/book"
 
-import { largeText, link, mainTextColor } from "../styles"
+import { largerText, link, mainTextColor } from "../styles"
 
 const styles = StyleSheet.create({
   book: {
-    ...largeText,
+    ...largerText,
     borderBottom: "1px solid transparent",
     display: "inline-block",
+    fontFamily: "baskerville,serif",
     margin: "0 10px 10px 0",
     transition: "border-color .2s",
 
