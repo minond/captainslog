@@ -30,7 +30,7 @@ const (
 	tokInvalid tok = iota
 
 	// Tokens with known lexeme values should go here. If this changes make
-	// sure to update the Token.Eq method.
+	// sure to update the token.eq method.
 	tokCloseParenthesis
 	tokComma
 	tokDiv
@@ -52,62 +52,62 @@ const (
 	tokSingleQuoteString
 )
 
-type Token struct {
-	Tok    tok
-	Lexeme string
+type token struct {
+	tok    tok
+	lexeme string
 }
 
-func (t Token) String() string {
-	if t.Lexeme == "" {
-		return fmt.Sprintf("(%s)", t.Tok)
+func (t token) String() string {
+	if t.lexeme == "" {
+		return fmt.Sprintf("(%s)", t.tok)
 	}
-	return fmt.Sprintf("(%s `%s`)", t.Tok, t.Lexeme)
+	return fmt.Sprintf("(%s `%s`)", t.tok, t.lexeme)
 }
 
-func (t Token) Eq(other Token) bool {
+func (t token) eq(other token) bool {
 	// Compare to late item in the tokens wiht known lexeme values group.
-	if t.Tok <= tokPlus {
-		return t.Tok == other.Tok
+	if t.tok <= tokPlus {
+		return t.tok == other.tok
 	}
-	return t.Tok == other.Tok && t.Lexeme == other.Lexeme
+	return t.tok == other.tok && t.lexeme == other.lexeme
 }
 
 var (
-	TokenCloseParenthesis = Token{Tok: tokCloseParenthesis}
-	TokenComma            = Token{Tok: tokComma}
-	TokenDiv              = Token{Tok: tokDiv}
-	TokenEq               = Token{Tok: tokEq}
-	TokenGe               = Token{Tok: tokGe}
-	TokenGt               = Token{Tok: tokGt}
-	TokenInvalid          = Token{Tok: tokInvalid}
-	TokenLe               = Token{Tok: tokLe}
-	TokenLt               = Token{Tok: tokLt}
-	TokenMinus            = Token{Tok: tokMinus}
-	TokenMul              = Token{Tok: tokMul}
-	TokenOpenParenthesis  = Token{Tok: tokOpenParenthesis}
-	TokenPeriod           = Token{Tok: tokPeriod}
-	TokenPlus             = Token{Tok: tokPlus}
+	tokenCloseParenthesis = token{tok: tokCloseParenthesis}
+	tokenComma            = token{tok: tokComma}
+	tokenDiv              = token{tok: tokDiv}
+	tokenEq               = token{tok: tokEq}
+	tokenGe               = token{tok: tokGe}
+	tokenGt               = token{tok: tokGt}
+	tokenInvalid          = token{tok: tokInvalid}
+	tokenLe               = token{tok: tokLe}
+	tokenLt               = token{tok: tokLt}
+	tokenMinus            = token{tok: tokMinus}
+	tokenMul              = token{tok: tokMul}
+	tokenOpenParenthesis  = token{tok: tokOpenParenthesis}
+	tokenPeriod           = token{tok: tokPeriod}
+	tokenPlus             = token{tok: tokPlus}
 )
 
 var (
-	mappedToken = map[rune]Token{
-		closeParen: TokenCloseParenthesis,
-		comma:      TokenComma,
-		div:        TokenDiv,
-		eq:         TokenEq,
-		minus:      TokenMinus,
-		mul:        TokenMul,
-		openParen:  TokenOpenParenthesis,
-		period:     TokenPeriod,
-		plus:       TokenPlus,
+	mappedToken = map[rune]token{
+		closeParen: tokenCloseParenthesis,
+		comma:      tokenComma,
+		div:        tokenDiv,
+		eq:         tokenEq,
+		minus:      tokenMinus,
+		mul:        tokenMul,
+		openParen:  tokenOpenParenthesis,
+		period:     tokenPeriod,
+		plus:       tokenPlus,
 	}
 )
 
-func Lex(raw string) []Token {
+func lex(raw string) []token {
 	rs := []rune(raw)
 	total := len(rs)
 
-	var toks []Token
+	var toks []token
 
 	for curr := 0; curr < total; {
 		r := rs[curr]
@@ -125,54 +125,54 @@ func Lex(raw string) []Token {
 
 		case r == gt:
 			if peek(rs, curr, total) == eq {
-				toks = append(toks, TokenGe)
+				toks = append(toks, tokenGe)
 				curr++
 			} else {
-				toks = append(toks, TokenGt)
+				toks = append(toks, tokenGt)
 			}
 			curr++
 
 		case r == lt:
 			if peek(rs, curr, total) == eq {
-				toks = append(toks, TokenLe)
+				toks = append(toks, tokenLe)
 				curr++
 			} else {
-				toks = append(toks, TokenLt)
+				toks = append(toks, tokenLt)
 			}
 			curr++
 
 		case r == singleQuote:
 			lexeme, curr = eatWhile(not(is(singleQuote)), rs, curr+1, total)
-			toks = append(toks, Token{
-				Tok:    tokSingleQuoteString,
-				Lexeme: lexeme,
+			toks = append(toks, token{
+				tok:    tokSingleQuoteString,
+				lexeme: lexeme,
 			})
 			curr++
 
 		case r == doubleQuote:
 			lexeme, curr = eatWhile(not(is(doubleQuote)), rs, curr+1, total)
-			toks = append(toks, Token{
-				Tok:    tokDoubleQuoteString,
-				Lexeme: lexeme,
+			toks = append(toks, token{
+				tok:    tokDoubleQuoteString,
+				lexeme: lexeme,
 			})
 			curr++
 
 		case unicode.IsNumber(r):
 			lexeme, curr = eatWhile(unicode.IsNumber, rs, curr+1, total)
-			toks = append(toks, Token{
-				Tok:    tokNumber,
-				Lexeme: string(r) + lexeme,
+			toks = append(toks, token{
+				tok:    tokNumber,
+				lexeme: string(r) + lexeme,
 			})
 
 		case isIdentifier(r):
 			lexeme, curr = eatWhile(isIdentifier, rs, curr+1, total)
-			toks = append(toks, Token{
-				Tok:    tokIdentifier,
-				Lexeme: string(r) + lexeme,
+			toks = append(toks, token{
+				tok:    tokIdentifier,
+				lexeme: string(r) + lexeme,
 			})
 
 		default:
-			toks = append(toks, TokenInvalid)
+			toks = append(toks, tokenInvalid)
 			curr++
 		}
 	}
