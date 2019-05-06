@@ -3,6 +3,7 @@ package query
 
 import (
 	"fmt"
+	"strings"
 	"unicode"
 )
 
@@ -28,6 +29,7 @@ type tok int8
 
 const (
 	tokInvalid tok = iota
+	tokEof
 
 	// Tokens with known lexeme values should go here. If this changes make
 	// sure to update the token.eq method.
@@ -72,7 +74,18 @@ func (t token) eq(other token) bool {
 	return t.tok == other.tok && t.lexeme == other.lexeme
 }
 
+func (t token) ieq(other token) bool {
+	return token{
+		tok:    t.tok,
+		lexeme: strings.ToLower(t.lexeme),
+	}.eq(token{
+		tok:    other.tok,
+		lexeme: strings.ToLower(other.lexeme),
+	})
+}
+
 var (
+	tokenEof              = token{tok: tokEof}
 	tokenCloseParenthesis = token{tok: tokCloseParenthesis}
 	tokenComma            = token{tok: tokComma}
 	tokenDiv              = token{tok: tokDiv}

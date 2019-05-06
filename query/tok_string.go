@@ -9,28 +9,29 @@ func _() {
 	// Re-run the stringer command to generate them again.
 	var x [1]struct{}
 	_ = x[tokInvalid-0]
-	_ = x[tokCloseParenthesis-1]
-	_ = x[tokComma-2]
-	_ = x[tokDiv-3]
-	_ = x[tokEq-4]
-	_ = x[tokGe-5]
-	_ = x[tokGt-6]
-	_ = x[tokLe-7]
-	_ = x[tokLt-8]
-	_ = x[tokMinus-9]
-	_ = x[tokMul-10]
-	_ = x[tokOpenParenthesis-11]
-	_ = x[tokPeriod-12]
-	_ = x[tokPlus-13]
-	_ = x[tokDoubleQuoteString-14]
-	_ = x[tokIdentifier-15]
-	_ = x[tokNumber-16]
-	_ = x[tokSingleQuoteString-17]
+	_ = x[tokEof-1]
+	_ = x[tokCloseParenthesis-2]
+	_ = x[tokComma-3]
+	_ = x[tokDiv-4]
+	_ = x[tokEq-5]
+	_ = x[tokGe-6]
+	_ = x[tokGt-7]
+	_ = x[tokLe-8]
+	_ = x[tokLt-9]
+	_ = x[tokMinus-10]
+	_ = x[tokMul-11]
+	_ = x[tokOpenParenthesis-12]
+	_ = x[tokPeriod-13]
+	_ = x[tokPlus-14]
+	_ = x[tokDoubleQuoteString-15]
+	_ = x[tokIdentifier-16]
+	_ = x[tokNumber-17]
+	_ = x[tokSingleQuoteString-18]
 }
 
-const _tok_name = "tokInvalidtokCloseParenthesistokCommatokDivtokEqtokGetokGttokLetokLttokMinustokMultokOpenParenthesistokPeriodtokPlustokDoubleQuoteStringtokIdentifiertokNumbertokSingleQuoteString"
+const _tok_name = "tokInvalidtokEoftokCloseParenthesistokCommatokDivtokEqtokGetokGttokLetokLttokMinustokMultokOpenParenthesistokPeriodtokPlustokDoubleQuoteStringtokIdentifiertokNumbertokSingleQuoteString"
 
-var _tok_index = [...]uint8{0, 10, 29, 37, 43, 48, 53, 58, 63, 68, 76, 82, 100, 109, 116, 136, 149, 158, 178}
+var _tok_index = [...]uint8{0, 10, 16, 35, 43, 49, 54, 59, 64, 69, 74, 82, 88, 106, 115, 122, 142, 155, 164, 184}
 
 func (i tok) String() string {
 	if i < 0 || i >= tok(len(_tok_index)-1) {
