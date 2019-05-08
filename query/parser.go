@@ -10,6 +10,7 @@ var (
 	wordDistinct = token{tok: tokIdentifier, lexeme: "distinct"}
 	wordFrom     = token{tok: tokIdentifier, lexeme: "from"}
 	wordSelect   = token{tok: tokIdentifier, lexeme: "select"}
+	wordWhere    = token{tok: tokIdentifier, lexeme: "where"}
 )
 
 func Parse(query string) (Ast, error) {
@@ -32,8 +33,12 @@ func newParser(query string) *parser {
 	}
 }
 
+func (p *parser) done() bool {
+	return p.pos >= p.len
+}
+
 func (p *parser) peek() token {
-	if p.pos >= p.len {
+	if p.done() {
 		return tokenEof
 	}
 	return p.toks[p.pos]
@@ -183,8 +188,9 @@ func (p *parser) parseColumns() ([]column, error) {
 
 func (p *parser) parseFromClause() (*table, error) {
 	from := &table{}
+	aliased := false
 
-	// A from clause looks like this: "from" name [ alias ]
+	// A from clause looks like this: "from" name [ [ "as" ] alias ]
 	_, err := p.expectWord(wordFrom)
 	if err != nil {
 		return nil, err
@@ -195,6 +201,28 @@ func (p *parser) parseFromClause() (*table, error) {
 		return nil, err
 	}
 	from.name = nameToken.lexeme
+
+	if p.done() {
+		return from, nil
+	}
+
+	if p.peek().ieq(wordAs) {
+		// Eat the `as` token
+		_, _ = p.eat()
+		aliased = true
+	}
+
+	if !p.peek().ieq(wordWhere) {
+		aliased = true
+	}
+
+	if aliased {
+		aliasToken, err := p.expectToks(tokIdentifier)
+		if err != nil {
+			return nil, err
+		}
+		from.alias = aliasToken.lexeme
+	}
 
 	return from, nil
 }
