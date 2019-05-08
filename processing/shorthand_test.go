@@ -41,11 +41,11 @@ func TestExpand_WorkoutSample(t *testing.T) {
 	}
 
 	shorthands := []*model.Shorthand{
-		&model.Shorthand{Expansion: " ", Match: str(`\s{1,}`)},
-		&model.Shorthand{Expansion: ", 3x10", Match: str(`[^,|\.]\s{1,}xxx`), Text: str(" xxx")},
-		&model.Shorthand{Expansion: ", 3x10", Text: str(". Xxx")},
-		&model.Shorthand{Expansion: ", 3x10", Match: str(`\. xxx`)},
-		&model.Shorthand{Expansion: "3x10", Match: str("xxx")},
+		{Expansion: " ", Match: str(`\s{1,}`)},
+		{Expansion: ", 3x10", Match: str(`[^,|\.]\s{1,}xxx`), Text: str(" xxx")},
+		{Expansion: ", 3x10", Text: str(". Xxx")},
+		{Expansion: ", 3x10", Match: str(`\. xxx`)},
+		{Expansion: "3x10", Match: str("xxx")},
 	}
 
 	runExpandTests("TestExpand_WorkoutSample", t, tests, shorthands)

@@ -52,11 +52,11 @@ func TestExtract_WorkoutsSample(t *testing.T) {
 	}
 
 	extractors := []*model.Extractor{
-		&model.Extractor{Label: "exercise", Match: `^(.+),`, Type: model.StringData},
-		&model.Extractor{Label: "sets", Match: `,\s{0,}(\d+)\s{0,}x`, Type: model.NumberData},
-		&model.Extractor{Label: "reps", Match: `x\s{0,}(\d+)\s{0,}@`, Type: model.NumberData},
-		&model.Extractor{Label: "weight", Match: `@\s{0,}(\d+)$`, Type: model.NumberData},
-		&model.Extractor{Label: "time", Match: `(\d+\s{0,}(sec|seconds|min|minutes|hour|hours))`, Type: model.StringData},
+		{Label: "exercise", Match: `^(.+),`, Type: model.StringData},
+		{Label: "sets", Match: `,\s{0,}(\d+)\s{0,}x`, Type: model.NumberData},
+		{Label: "reps", Match: `x\s{0,}(\d+)\s{0,}@`, Type: model.NumberData},
+		{Label: "weight", Match: `@\s{0,}(\d+)$`, Type: model.NumberData},
+		{Label: "time", Match: `(\d+\s{0,}(sec|seconds|min|minutes|hour|hours))`, Type: model.StringData},
 	}
 
 	runExtractTests("TestExtract_WorkoutsSample", t, tests, extractors)
