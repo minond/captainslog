@@ -11,7 +11,7 @@ const (
 	StringData DataType = iota
 	NumberData
 
-	// BooleanData identifies the existance of extracted data. When the
+	// BooleanData identifies the existence of extracted data. When the
 	// extractor does not match, no data is saved. When the extractor matches,
 	// the data will be labeled as "true".
 	BooleanData

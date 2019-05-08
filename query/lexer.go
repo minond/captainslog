@@ -67,7 +67,7 @@ func (t token) String() string {
 }
 
 func (t token) eq(other token) bool {
-	// Compare to late item in the tokens wiht known lexeme values group.
+	// Compare to late item in the tokens with known lexeme values group.
 	if t.tok <= tokPlus {
 		return t.tok == other.tok
 	}

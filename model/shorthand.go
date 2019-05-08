@@ -10,7 +10,7 @@ import (
 // Shorthand is a shorthand/abbreviation that may be used in an entry.
 // Shorthands can be made up of regular expression matches (Match) or plain
 // text matches (Text), or a combination of the two. An expansion is always
-// required. Rules for exapansion:
+// required. Rules for expansion:
 //
 // Rule #1: When Text is not nil and Match is nil, Text will be replaced with
 // Expansion in the entry.

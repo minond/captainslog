@@ -69,7 +69,7 @@ type Method struct {
 	Response string `json:"response"`
 }
 
-// Signature generates a string that is the method defintion of this Method.
+// Signature generates a string that is the method definition of this Method.
 func (m Method) Signature() string {
 	request := "url.Values"
 	if m.Request != "" {
