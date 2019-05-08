@@ -61,9 +61,9 @@ type token struct {
 
 func (t token) String() string {
 	if t.lexeme == "" {
-		return fmt.Sprintf("(%s)", t.tok)
+		return fmt.Sprintf("(%s)", t.tok.String())
 	}
-	return fmt.Sprintf("(%s `%s`)", t.tok, t.lexeme)
+	return fmt.Sprintf("(%s `%s`)", t.tok.String(), t.lexeme)
 }
 
 func (t token) eq(other token) bool {

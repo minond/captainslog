@@ -74,7 +74,7 @@ func (p *parser) expectToks(allowed ...tok) (token, error) {
 			return curr, nil
 		}
 	}
-	return tokenInvalid, fmt.Errorf("invalid token, expecting one of [%s] but found a `%s`",
+	return tokenInvalid, fmt.Errorf("invalid token, expecting one of [%v] but found a `%s`",
 		allowed, curr.tok)
 }
 
