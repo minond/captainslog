@@ -1,0 +1,127 @@
+package query
+
+import (
+	"fmt"
+	"strings"
+)
+
+type queryType int32
+
+const (
+	selectQuery queryType = iota
+)
+
+type Ast interface {
+	String() string
+	queryType() queryType
+}
+
+type selectStmt struct {
+	selectClause []column
+	fromClause   *table
+	whereClause  expr
+}
+
+func (selectStmt) queryType() queryType {
+	return selectQuery
+}
+
+func (s selectStmt) String() string {
+	cols := make([]string, len(s.selectClause))
+	for i, col := range s.selectClause {
+		cols[i] = col.String()
+	}
+
+	var query strings.Builder
+	fmt.Fprint(&query, "select ", strings.Join(cols, ", "))
+	if s.fromClause != nil {
+		fmt.Fprint(&query, "from ", s.fromClause.String())
+	}
+	if s.whereClause != nil {
+		fmt.Fprint(&query, "where ", s.whereClause.String())
+	}
+	return query.String()
+}
+
+type table struct {
+	name  string
+	alias string
+}
+
+func (t table) String() string {
+	if t.alias != "" {
+		return t.name + " as " + t.alias
+	}
+	return t.name
+}
+
+type column struct {
+	name     string
+	alias    string
+	source   string
+	distinct bool
+}
+
+func (c column) String() string {
+	var header string
+	var middle string
+	var footer string
+
+	if c.distinct {
+		header = "distinct"
+	}
+
+	if c.source == "" {
+		middle = c.name
+	} else {
+		middle = c.source + "." + c.name
+	}
+
+	if c.alias != "" {
+		footer = "as " + c.alias
+	}
+
+	return strings.TrimSpace(fmt.Sprintf("%s %s %s", header, middle, footer))
+}
+
+type expr interface {
+	String() string
+	isExpr()
+}
+
+type identifier struct {
+	name   string
+	source string
+}
+
+func (identifier) isExpr() {}
+
+func (x identifier) String() string {
+	if x.source != "" {
+		return x.source + "." + x.name
+	}
+	return x.name
+}
+
+type binaryExpr struct {
+	left  expr
+	op    string
+	right expr
+}
+
+func (binaryExpr) isExpr() {}
+
+func (b binaryExpr) String() string {
+	return fmt.Sprintf("%s %s %s", b.left.String(), b.op, b.right.String())
+}
+
+func (unaryExpr) isExpr() {}
+
+type unaryExpr struct {
+	op    string
+	right expr
+}
+
+func (b unaryExpr) String() string {
+	return fmt.Sprintf("%s %s", b.op, b.right.String())
+}
