@@ -1,5 +1,7 @@
 Captain's log is an application for logging anything you want about yourself.
 
+[![Build Status](https://travis-ci.org/minond/captainslog.svg?branch=master)](https://travis-ci.org/minond/captainslog)
+
 
 ### Usage
 
