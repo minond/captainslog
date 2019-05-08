@@ -17,9 +17,9 @@ type Ast interface {
 }
 
 type selectStmt struct {
-	selectClause []column
-	fromClause   *table
-	whereClause  expr
+	columns []column
+	from    *table
+	where   expr
 }
 
 func (selectStmt) queryType() queryType {
@@ -27,18 +27,18 @@ func (selectStmt) queryType() queryType {
 }
 
 func (s selectStmt) String() string {
-	cols := make([]string, len(s.selectClause))
-	for i, col := range s.selectClause {
+	cols := make([]string, len(s.columns))
+	for i, col := range s.columns {
 		cols[i] = col.String()
 	}
 
 	var query strings.Builder
 	fmt.Fprint(&query, "select ", strings.Join(cols, ", "))
-	if s.fromClause != nil {
-		fmt.Fprint(&query, "from ", s.fromClause.String())
+	if s.from != nil {
+		fmt.Fprint(&query, " from ", s.from.String())
 	}
-	if s.whereClause != nil {
-		fmt.Fprint(&query, "where ", s.whereClause.String())
+	if s.where != nil {
+		fmt.Fprint(&query, " where ", s.where.String())
 	}
 	return query.String()
 }

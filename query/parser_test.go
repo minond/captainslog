@@ -24,21 +24,32 @@ import (
 //
 // `
 
-func queryMismatchMessage(expected Ast, got string) string {
+func queryMismatchMessage(expected string, returned Ast) string {
 	return fmt.Sprintf(`error wth query parser.
 
-      expected: %s
+expected: %s
 
-           got: %s`, expected, got)
+returned: %s`, expected, returned)
 }
 
-func TestParse_Select_QueryWithOnlySelect(t *testing.T) {
+func TestParse_Select_Select(t *testing.T) {
 	sql := `select name, age, color`
 	ast, err := Parse(sql)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	}
 	if ast.String() != sql {
-		t.Error(queryMismatchMessage(ast, sql))
+		t.Error(queryMismatchMessage(sql, ast))
+	}
+}
+
+func TestParse_Select_SelectFrom(t *testing.T) {
+	sql := `select name, age, color from users`
+	ast, err := Parse(sql)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+	if ast.String() != sql {
+		t.Error(queryMismatchMessage(sql, ast))
 	}
 }

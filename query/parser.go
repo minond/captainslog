@@ -83,34 +83,42 @@ func (p *parser) do() (Ast, error) {
 }
 
 func (p *parser) parseSelectStmt() (*selectStmt, error) {
-	_, err := p.expectWord(wordSelect)
+	var err error
+
+	var columns []column
+	var from *table
+	var where expr
+
+	_, err = p.expectWord(wordSelect)
 	if err != nil {
 		return nil, err
 	}
 
-	selectClause, err := p.parseSelectClause()
+	columns, err = p.parseColumns()
 	if err != nil {
 		return nil, err
 	}
 
-	// fromClause, err := p.parseFromClause()
-	// if err != nil {
-	// 	return nil, err
-	// }
-	//
-	// whereClause, err := p.parseWhereClause()
+	if p.peek().ieq(wordFrom) {
+		from, err = p.parseFromClause()
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	// where, err := p.parseWhereClause()
 	// if err != nil {
 	// 	return nil, err
 	// }
 
 	return &selectStmt{
-		selectClause: selectClause,
-		// fromClause:   fromClause,
-		// whereClause:  whereClause,
+		columns: columns,
+		from:    from,
+		where:   where,
 	}, nil
 }
 
-func (p *parser) parseSelectClause() ([]column, error) {
+func (p *parser) parseColumns() ([]column, error) {
 	done := func() bool { return p.peek().ieq(wordFrom) }
 	cont := func() bool { return p.peek().eq(tokenComma) }
 
@@ -171,4 +179,22 @@ func (p *parser) parseSelectClause() ([]column, error) {
 	}
 
 	return cols, nil
+}
+
+func (p *parser) parseFromClause() (*table, error) {
+	from := &table{}
+
+	// A from clause looks like this: "from" name [ alias ]
+	_, err := p.expectWord(wordFrom)
+	if err != nil {
+		return nil, err
+	}
+
+	nameToken, err := p.expectToks(tokIdentifier)
+	if err != nil {
+		return nil, err
+	}
+	from.name = nameToken.lexeme
+
+	return from, nil
 }
