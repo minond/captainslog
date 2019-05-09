@@ -130,3 +130,14 @@ func TestParse_Select_SelectFromWhereWithMultipleIdentifiers(t *testing.T) {
 		t.Error(queryMismatchMessage(sql, ast))
 	}
 }
+
+func TestParse_Select_SelectFromWhereWithMultipleGroupedIdentifiers(t *testing.T) {
+	sql := `select name, age, color from users where ((is_ok and is_alive) or (is_false and is_true)) and true`
+	ast, err := Parse(sql)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+	if ast.String() != sql {
+		t.Error(queryMismatchMessage(sql, ast))
+	}
+}
