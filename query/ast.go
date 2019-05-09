@@ -1,4 +1,3 @@
-//go:generate stringer -type=logicalOp
 package query
 
 import (
@@ -11,6 +10,49 @@ type queryType int32
 const (
 	selectQuery queryType = iota
 )
+
+type operator uint8
+
+const (
+	opInvalid operator = iota
+
+	opAnd
+	opDiv
+	opEq
+	opGe
+	opGt
+	opLe
+	opLike
+	opLt
+	opMinus
+	opMul
+	opOr
+	opPlus
+)
+
+var operatorStrings = map[operator]string{
+	opInvalid: "invalid-operator",
+	opAnd:     "and",
+	opDiv:     "/",
+	opEq:      "=",
+	opGe:      ">=",
+	opGt:      ">",
+	opLe:      "<=",
+	opLike:    "like",
+	opLt:      "<",
+	opMinus:   "-",
+	opMul:     "*",
+	opOr:      "or",
+	opPlus:    "+",
+}
+
+func (o operator) String() string {
+	str, ok := operatorStrings[o]
+	if ok {
+		return str
+	}
+	return "unknown-operator"
+}
 
 type Ast interface {
 	String() string
@@ -133,16 +175,9 @@ func (g grouping) String() string {
 	return fmt.Sprintf("(%s)", g.sub.String())
 }
 
-type logicalOp uint8
-
-const (
-	and logicalOp = iota
-	or
-)
-
 type binaryExpr struct {
 	left  expr
-	op    logicalOp
+	op    operator
 	right expr
 }
 

@@ -85,10 +85,10 @@ func (t token) ieq(other token) bool {
 }
 
 var (
-	tokenEof              = token{tok: tokEof}
 	tokenCloseParenthesis = token{tok: tokCloseParenthesis}
 	tokenComma            = token{tok: tokComma}
 	tokenDiv              = token{tok: tokDiv}
+	tokenEof              = token{tok: tokEof}
 	tokenEq               = token{tok: tokEq}
 	tokenGe               = token{tok: tokGe}
 	tokenGt               = token{tok: tokGt}

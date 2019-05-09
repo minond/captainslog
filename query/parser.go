@@ -11,6 +11,7 @@ var (
 	wordDistinct = token{tok: tokIdentifier, lexeme: "distinct"}
 	wordFalse    = token{tok: tokIdentifier, lexeme: "false"}
 	wordFrom     = token{tok: tokIdentifier, lexeme: "from"}
+	wordLike     = token{tok: tokIdentifier, lexeme: "like"}
 	wordOr       = token{tok: tokIdentifier, lexeme: "or"}
 	wordSelect   = token{tok: tokIdentifier, lexeme: "select"}
 	wordTrue     = token{tok: tokIdentifier, lexeme: "true"}
@@ -18,6 +19,19 @@ var (
 
 	booleanValues    = []token{wordTrue, wordFalse}
 	logicalOperators = []token{wordAnd, wordOr}
+
+	sqlOperators = []token{
+		tokenDiv,
+		tokenEq,
+		tokenGe,
+		tokenGt,
+		tokenLe,
+		tokenLt,
+		tokenMinus,
+		tokenMul,
+		tokenPlus,
+		wordLike,
+	}
 )
 
 func Parse(query string) (Ast, error) {
@@ -283,6 +297,7 @@ func (p *parser) parseWhereClause() (expr, error) {
 
 func (p *parser) parseExprs() (expr, error) {
 	nextIsLogicalOp := func() bool { return p.nextIeqWords(logicalOperators...) }
+	nextIsSqlOperator := func() bool { return p.nextIeqWords(sqlOperators...) }
 
 	// value = string-value
 	//       | number-value
@@ -330,6 +345,24 @@ func (p *parser) parseExprs() (expr, error) {
 		return exp, nil
 	}
 
+	if nextIsSqlOperator() {
+		op, err := p.parseSqlOperator()
+		if err != nil {
+			return nil, err
+		}
+
+		left := exp
+		right, err := p.parseExprs()
+		if err != nil {
+			return nil, err
+		}
+		exp = binaryExpr{
+			left:  left,
+			op:    op,
+			right: right,
+		}
+	}
+
 	if nextIsLogicalOp() {
 		op, err := p.parseLogicalOperator()
 		if err != nil {
@@ -351,15 +384,48 @@ func (p *parser) parseExprs() (expr, error) {
 	return exp, nil
 }
 
-func (p *parser) parseLogicalOperator() (logicalOp, error) {
+func (p *parser) parseSqlOperator() (operator, error) {
+	t, err := p.expectIeqWords(sqlOperators...)
+	if err != nil {
+		return opInvalid, err
+	}
+	switch {
+	case t.ieq(tokenDiv):
+		return opDiv, nil
+	case t.ieq(tokenEq):
+		return opEq, nil
+	case t.ieq(tokenGe):
+		return opGe, nil
+	case t.ieq(tokenGt):
+		return opGt, nil
+	case t.ieq(tokenLe):
+		return opLe, nil
+	case t.ieq(wordLike):
+		return opLike, nil
+	case t.ieq(tokenLt):
+		return opLt, nil
+	case t.ieq(tokenMinus):
+		return opMinus, nil
+	case t.ieq(tokenMul):
+		return opMul, nil
+	case t.ieq(tokenPlus):
+		return opPlus, nil
+	}
+	return opInvalid, nil
+}
+
+func (p *parser) parseLogicalOperator() (operator, error) {
 	t, err := p.expectIeqWords(logicalOperators...)
 	if err != nil {
-		return 0, err
+		return opInvalid, err
 	}
-	if t.ieq(wordAnd) {
-		return and, nil
+	switch {
+	case t.ieq(wordAnd):
+		return opAnd, nil
+	case t.ieq(wordOr):
+		return opOr, nil
 	}
-	return or, nil
+	return opInvalid, nil
 }
 
 func (p *parser) parseIdentifier() (expr, error) {

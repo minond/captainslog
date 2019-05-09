@@ -141,3 +141,25 @@ func TestParse_Select_SelectFromWhereWithMultipleGroupedIdentifiers(t *testing.T
 		t.Error(queryMismatchMessage(sql, ast))
 	}
 }
+
+func TestParse_Select_SelectFromWhereWithOperators(t *testing.T) {
+	sql := `select name, age, color from users where is_ok = true or is_alive = is_dead and age = min_age - something * multiplier / divi`
+	ast, err := Parse(sql)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+	if ast.String() != sql {
+		t.Error(queryMismatchMessage(sql, ast))
+	}
+}
+
+func TestParse_Select_SelectFromWhereWithGroupedOperators(t *testing.T) {
+	sql := `select name, age, color from users where (true or (is_ok = true and is_alive = is_dead and (age > max_age)))`
+	ast, err := Parse(sql)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+	if ast.String() != sql {
+		t.Error(queryMismatchMessage(sql, ast))
+	}
+}
