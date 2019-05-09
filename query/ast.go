@@ -162,6 +162,9 @@ type value struct {
 func (value) isExpr() {}
 
 func (v value) String() string {
+	if v.ty == tyString {
+		return fmt.Sprintf(`'%s'`, v.tok.lexeme)
+	}
 	return v.tok.lexeme
 }
 

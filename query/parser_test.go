@@ -48,6 +48,8 @@ func TestParse_PossibleQueries(t *testing.T) {
 		{"select + from + where with multiple grouped identifiers", `select name, age, color from users where ((is_ok and is_alive) or (is_false and is_true)) and true`},
 		{"select + from + where with operators", `select name, age, color from users where is_ok = true or is_alive = is_dead and age = min_age - something * multiplier / divi`},
 		{"select + from + where with grouped operators", `select name, age, color from users where (true or (is_ok = true and is_alive = is_dead and (age > max_age)))`},
+		{"select + from + where with number filter", `select name from users where age > 30`},
+		{"select + from + where with string filter", `select name from users where name like 'marcos'`},
 	}
 	for _, test := range tests {
 		t.Run(test.label, func(t *testing.T) {

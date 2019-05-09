@@ -328,16 +328,24 @@ func (p *parser) parseExprs() (expr, error) {
 			return nil, err
 		}
 		exp = grouping{sub: sub}
-	} else if p.nextIeqWords(booleanValues...) {
-		// Handles single-boolean expressions
-		val, _ := p.eat()
-		exp = value{ty: tyBool, tok: val}
 	} else if p.nextToks(tokIdentifier) {
 		// Handles single-identifier expressions
 		exp, err = p.parseIdentifier()
 		if err != nil {
 			return nil, err
 		}
+	} else if p.nextIeqWords(booleanValues...) {
+		// Handles single-boolean expressions
+		val, _ := p.eat()
+		exp = value{ty: tyBool, tok: val}
+	} else if p.nextToks(tokNumber) {
+		// Handles single-number expressions
+		val, _ := p.eat()
+		exp = value{ty: tyNumber, tok: val}
+	} else if p.nextToks(tokSingleQuoteString) {
+		// Handles single-string expressions
+		val, _ := p.eat()
+		exp = value{ty: tyString, tok: val}
 	}
 
 	// No need to check for bin-expr when we're at EOF
