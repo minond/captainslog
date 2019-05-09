@@ -274,20 +274,20 @@ func (p *parser) parseExprs() (expr, error) {
 	//      | expr "and" expr
 	//      | identifier
 	//      | boolean-value
-	var err error
 	var exp expr
 
 	if p.peek().eq(tokenOpenParenthesis) {
 		// Eat the open paren token
 		_, _ = p.eat()
-		exp, err = p.parseExprs()
+		sub, err := p.parseExprs()
 		if err != nil {
 			return nil, err
 		}
-		_, err := p.expectToks(tokCloseParenthesis)
+		_, err = p.expectToks(tokCloseParenthesis)
 		if err != nil {
 			return nil, err
 		}
+		exp = grouping{sub: sub}
 	} else if p.nextIeqWords(wordTrue, wordFalse) {
 		val, _ := p.eat()
 		exp = value{ty: tyBool, tok: val}
