@@ -1,3 +1,4 @@
+//go:generate stringer -type=logicalOp
 package query
 
 import (
@@ -132,9 +133,16 @@ func (g grouping) String() string {
 	return fmt.Sprintf("(%s)", g.sub.String())
 }
 
+type logicalOp uint8
+
+const (
+	and logicalOp = iota
+	or
+)
+
 type binaryExpr struct {
 	left  expr
-	op    string
+	op    logicalOp
 	right expr
 }
 

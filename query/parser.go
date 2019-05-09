@@ -91,6 +91,22 @@ func (p *parser) expectIeqWord(expected token) (token, error) {
 	return curr, nil
 }
 
+func (p *parser) expectIeqWords(expected ...token) (token, error) {
+	curr, err := p.eat()
+	if err != nil {
+		return tokenInvalid, err
+	}
+
+	for _, ex := range expected {
+		if ex.ieq(curr) {
+			return curr, nil
+		}
+	}
+
+	return tokenInvalid, fmt.Errorf("invalid token, expecting on of [%v] but found `%s`",
+		expected, curr)
+}
+
 func (p *parser) expectToks(allowed ...tok) (token, error) {
 	curr, err := p.eat()
 	if err != nil {
@@ -282,6 +298,7 @@ func (p *parser) parseExprs() (expr, error) {
 	//      | identifier
 	//      | boolean-value
 	var exp expr
+	var err error
 
 	if p.peek().eq(tokenOpenParenthesis) {
 		// Eat the open paren token
@@ -299,18 +316,42 @@ func (p *parser) parseExprs() (expr, error) {
 		val, _ := p.eat()
 		exp = value{ty: tyBool, tok: val}
 	} else if p.nextToks(tokIdentifier) {
-		id, err := p.parseIdentifier()
+		exp, err = p.parseIdentifier()
 		if err != nil {
 			return nil, err
 		}
-		// Are we at EOF or at the start of another expression?
-		if p.done() || nextIsLogicalOp() {
-			fmt.Println("done")
-			return id, nil
+		if p.done() {
+			return exp, nil
+		}
+	}
+
+	if nextIsLogicalOp() {
+		op, err := p.parseLogicalOperator()
+		if err != nil {
+			return nil, err
+		}
+
+		left := exp
+		right, err := p.parseExprs()
+		exp = binaryExpr{
+			left:  left,
+			op:    op,
+			right: right,
 		}
 	}
 
 	return exp, nil
+}
+
+func (p *parser) parseLogicalOperator() (logicalOp, error) {
+	t, err := p.expectIeqWords(logicalOperators...)
+	if err != nil {
+		return 0, err
+	}
+	if t.ieq(wordAnd) {
+		return and, nil
+	}
+	return or, nil
 }
 
 func (p *parser) parseIdentifier() (expr, error) {
