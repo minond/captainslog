@@ -8,8 +8,10 @@ import (
 var (
 	wordAs       = token{tok: tokIdentifier, lexeme: "as"}
 	wordDistinct = token{tok: tokIdentifier, lexeme: "distinct"}
+	wordFalse    = token{tok: tokIdentifier, lexeme: "false"}
 	wordFrom     = token{tok: tokIdentifier, lexeme: "from"}
 	wordSelect   = token{tok: tokIdentifier, lexeme: "select"}
+	wordTrue     = token{tok: tokIdentifier, lexeme: "true"}
 	wordWhere    = token{tok: tokIdentifier, lexeme: "where"}
 )
 
@@ -44,6 +46,26 @@ func (p *parser) peek() token {
 	return p.toks[p.pos]
 }
 
+func (p *parser) nextIeqWords(ts ...token) bool {
+	next := p.peek()
+	for _, t := range ts {
+		if next.ieq(t) {
+			return true
+		}
+	}
+	return false
+}
+
+func (p *parser) nextToks(ts ...tok) bool {
+	next := p.peek().tok
+	for _, t := range ts {
+		if next == t {
+			return true
+		}
+	}
+	return false
+}
+
 func (p *parser) eat() (token, error) {
 	if p.pos+1 > p.len {
 		return tokenEof, errors.New("unexpected EOF")
@@ -53,7 +75,7 @@ func (p *parser) eat() (token, error) {
 	return prev, nil
 }
 
-func (p *parser) expectWord(expected token) (token, error) {
+func (p *parser) expectIeqWord(expected token) (token, error) {
 	curr, err := p.eat()
 	if err != nil {
 		return tokenInvalid, err
@@ -94,7 +116,7 @@ func (p *parser) parseSelectStmt() (*selectStmt, error) {
 	var from *table
 	var where expr
 
-	_, err = p.expectWord(wordSelect)
+	_, err = p.expectIeqWord(wordSelect)
 	if err != nil {
 		return nil, err
 	}
@@ -111,10 +133,12 @@ func (p *parser) parseSelectStmt() (*selectStmt, error) {
 		}
 	}
 
-	// where, err := p.parseWhereClause()
-	// if err != nil {
-	// 	return nil, err
-	// }
+	if p.peek().ieq(wordWhere) {
+		where, err = p.parseWhereClause()
+		if err != nil {
+			return nil, err
+		}
+	}
 
 	return &selectStmt{
 		columns: columns,
@@ -191,7 +215,7 @@ func (p *parser) parseFromClause() (*table, error) {
 	aliased := false
 
 	// A from clause looks like this: "from" name [ [ "as" ] alias ]
-	_, err := p.expectWord(wordFrom)
+	_, err := p.expectIeqWord(wordFrom)
 	if err != nil {
 		return nil, err
 	}
@@ -225,4 +249,49 @@ func (p *parser) parseFromClause() (*table, error) {
 	}
 
 	return from, nil
+}
+
+func (p *parser) parseWhereClause() (expr, error) {
+	// A where clause looks like this: "where" exprs
+	_, err := p.expectIeqWord(wordWhere)
+	if err != nil {
+		return nil, err
+	}
+	return p.parseExprs()
+}
+
+func (p *parser) parseExprs() (expr, error) {
+	// value = string-value
+	//       | number-value
+	//       | boolean-value
+	//
+	// operator = "list"
+	//          | ...
+	//
+	// expr = ["("] expr [")"]
+	//      | identifier operator value
+	//      | expr "or" expr
+	//      | expr "and" expr
+	//      | identifier
+	//      | boolean-value
+	var err error
+	var exp expr
+
+	if p.peek().eq(tokenOpenParenthesis) {
+		// Eat the open paren token
+		_, _ = p.eat()
+		exp, err = p.parseExprs()
+		if err != nil {
+			return nil, err
+		}
+		_, err := p.expectToks(tokCloseParenthesis)
+		if err != nil {
+			return nil, err
+		}
+	} else if p.nextIeqWords(wordTrue, wordFalse) {
+		val, _ := p.eat()
+		exp = value{ty: tyBool, tok: val}
+	}
+
+	return exp, nil
 }

@@ -75,3 +75,14 @@ func TestParse_Select_SelectFromWithAlias(t *testing.T) {
 		t.Error(queryMismatchMessage(sql, ast))
 	}
 }
+
+func TestParse_Select_SelectFromWhereWithSingleBoolValue(t *testing.T) {
+	sql := `select name, age, color from users where true`
+	ast, err := Parse(sql)
+	if err != nil {
+		t.Errorf("unexpected error: %v", err)
+	}
+	if ast.String() != sql {
+		t.Error(queryMismatchMessage(sql, ast))
+	}
+}

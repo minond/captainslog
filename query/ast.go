@@ -96,11 +96,40 @@ type identifier struct {
 
 func (identifier) isExpr() {}
 
-func (x identifier) String() string {
-	if x.source != "" {
-		return x.source + "." + x.name
+func (i identifier) String() string {
+	if i.source != "" {
+		return i.source + "." + i.name
 	}
-	return x.name
+	return i.name
+}
+
+type valueTy uint8
+
+const (
+	tyBool valueTy = iota
+	tyString
+	tyNumber
+)
+
+type value struct {
+	ty  valueTy
+	tok token
+}
+
+func (value) isExpr() {}
+
+func (v value) String() string {
+	return v.tok.lexeme
+}
+
+type grouping struct {
+	sub expr
+}
+
+func (grouping) isExpr() {}
+
+func (g grouping) String() string {
+	return fmt.Sprintf("(%s)", g.sub.String())
 }
 
 type binaryExpr struct {
