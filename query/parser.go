@@ -6,13 +6,18 @@ import (
 )
 
 var (
+	wordAnd      = token{tok: tokIdentifier, lexeme: "and"}
 	wordAs       = token{tok: tokIdentifier, lexeme: "as"}
 	wordDistinct = token{tok: tokIdentifier, lexeme: "distinct"}
 	wordFalse    = token{tok: tokIdentifier, lexeme: "false"}
 	wordFrom     = token{tok: tokIdentifier, lexeme: "from"}
+	wordOr       = token{tok: tokIdentifier, lexeme: "or"}
 	wordSelect   = token{tok: tokIdentifier, lexeme: "select"}
 	wordTrue     = token{tok: tokIdentifier, lexeme: "true"}
 	wordWhere    = token{tok: tokIdentifier, lexeme: "where"}
+
+	booleanValues    = []token{wordTrue, wordFalse}
+	logicalOperators = []token{wordAnd, wordOr}
 )
 
 func Parse(query string) (Ast, error) {
@@ -261,6 +266,8 @@ func (p *parser) parseWhereClause() (expr, error) {
 }
 
 func (p *parser) parseExprs() (expr, error) {
+	nextIsLogicalOp := func() bool { return p.nextIeqWords(logicalOperators...) }
+
 	// value = string-value
 	//       | number-value
 	//       | boolean-value
@@ -288,10 +295,44 @@ func (p *parser) parseExprs() (expr, error) {
 			return nil, err
 		}
 		exp = grouping{sub: sub}
-	} else if p.nextIeqWords(wordTrue, wordFalse) {
+	} else if p.nextIeqWords(booleanValues...) {
 		val, _ := p.eat()
 		exp = value{ty: tyBool, tok: val}
+	} else if p.nextToks(tokIdentifier) {
+		id, err := p.parseIdentifier()
+		if err != nil {
+			return nil, err
+		}
+		// Are we at EOF or at the start of another expression?
+		if p.done() || nextIsLogicalOp() {
+			fmt.Println("done")
+			return id, nil
+		}
 	}
 
 	return exp, nil
+}
+
+func (p *parser) parseIdentifier() (expr, error) {
+	var source, name string
+
+	sourceOrNameToken, err := p.eat()
+	if err != nil {
+		return nil, err
+	}
+
+	if p.peek().ieq(tokenPeriod) {
+		// Eat the period token
+		_, _ = p.eat()
+		nameToken, err := p.expectToks(tokIdentifier)
+		if err != nil {
+			return nil, err
+		}
+		source = sourceOrNameToken.lexeme
+		name = nameToken.lexeme
+	} else {
+		name = sourceOrNameToken.lexeme
+	}
+
+	return identifier{name: name, source: source}, nil
 }
