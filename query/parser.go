@@ -300,6 +300,7 @@ func (p *parser) parseExprs() (expr, error) {
 	var exp expr
 	var err error
 
+	// Handles grouped expressions
 	if p.peek().eq(tokenOpenParenthesis) {
 		// Eat the open paren token
 		_, _ = p.eat()
@@ -313,16 +314,20 @@ func (p *parser) parseExprs() (expr, error) {
 		}
 		exp = grouping{sub: sub}
 	} else if p.nextIeqWords(booleanValues...) {
+		// Handles single-boolean expressions
 		val, _ := p.eat()
 		exp = value{ty: tyBool, tok: val}
 	} else if p.nextToks(tokIdentifier) {
+		// Handles single-identifier expressions
 		exp, err = p.parseIdentifier()
 		if err != nil {
 			return nil, err
 		}
-		if p.done() {
-			return exp, nil
-		}
+	}
+
+	// No need to check for bin-expr when we're at EOF
+	if p.done() {
+		return exp, nil
 	}
 
 	if nextIsLogicalOp() {
@@ -333,6 +338,9 @@ func (p *parser) parseExprs() (expr, error) {
 
 		left := exp
 		right, err := p.parseExprs()
+		if err != nil {
+			return nil, err
+		}
 		exp = binaryExpr{
 			left:  left,
 			op:    op,
