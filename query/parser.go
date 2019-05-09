@@ -296,9 +296,6 @@ func (p *parser) parseWhereClause() (expr, error) {
 }
 
 func (p *parser) parseExprs() (expr, error) {
-	nextIsLogicalOp := func() bool { return p.nextIeqWords(logicalOperators...) }
-	nextIsSqlOperator := func() bool { return p.nextIeqWords(sqlOperators...) }
-
 	// value = string-value
 	//       | number-value
 	//       | boolean-value
@@ -353,7 +350,7 @@ func (p *parser) parseExprs() (expr, error) {
 		return exp, nil
 	}
 
-	if nextIsSqlOperator() {
+	if p.nextIeqWords(sqlOperators...) {
 		op, err := p.parseSqlOperator()
 		if err != nil {
 			return nil, err
@@ -371,7 +368,7 @@ func (p *parser) parseExprs() (expr, error) {
 		}
 	}
 
-	if nextIsLogicalOp() {
+	if p.nextIeqWords(logicalOperators...) {
 		op, err := p.parseLogicalOperator()
 		if err != nil {
 			return nil, err
