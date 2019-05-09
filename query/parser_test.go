@@ -32,134 +32,31 @@ expected: %s
 returned: %s`, expected, returned)
 }
 
-func TestParse_Select_Select(t *testing.T) {
-	sql := `select name, age, color`
-	ast, err := Parse(sql)
-	if err != nil {
-		t.Errorf("unexpected error: %v", err)
+func TestParse_PossibleQueries(t *testing.T) {
+	tests := []struct {
+		label, sql string
+	}{
+		{"select", `select name, age, color`},
+		{"select with alias", `select name as n, age as a, color as c`},
+		{"select + from", `select name, age, color from users`},
+		{"select + from with alias", `select name, age, color from users as u`},
+		{"select + from + where with single bool value", `select name, age, color from users where true`},
+		{"select + from + where with single bool value in parens", `select name, age, color from users where (((true)))`},
+		{"select + from + where with single identifier", `select name, age, color from users where is_ok`},
+		{"select + from + where with single identifier aliased", `select u.name, u.age, u.color from users as u where u.is_ok`},
+		{"select + from + where with multiple identifiers", `select name, age, color from users where is_ok and is_alive or is_false`},
+		{"select + from + where with multiple grouped identifiers", `select name, age, color from users where ((is_ok and is_alive) or (is_false and is_true)) and true`},
+		{"select + from + where with operators", `select name, age, color from users where is_ok = true or is_alive = is_dead and age = min_age - something * multiplier / divi`},
+		{"select + from + where with grouped operators", `select name, age, color from users where (true or (is_ok = true and is_alive = is_dead and (age > max_age)))`},
 	}
-	if ast.String() != sql {
-		t.Error(queryMismatchMessage(sql, ast))
-	}
-}
-
-func TestParse_Select_SelectWithAlias(t *testing.T) {
-	sql := `select name as n, age as a, color as c`
-	ast, err := Parse(sql)
-	if err != nil {
-		t.Errorf("unexpected error: %v", err)
-	}
-	if ast.String() != sql {
-		t.Error(queryMismatchMessage(sql, ast))
-	}
-}
-
-func TestParse_Select_SelectFrom(t *testing.T) {
-	sql := `select name, age, color from users`
-	ast, err := Parse(sql)
-	if err != nil {
-		t.Errorf("unexpected error: %v", err)
-	}
-	if ast.String() != sql {
-		t.Error(queryMismatchMessage(sql, ast))
-	}
-}
-
-func TestParse_Select_SelectFromWithAlias(t *testing.T) {
-	sql := `select name, age, color from users as u`
-	ast, err := Parse(sql)
-	if err != nil {
-		t.Errorf("unexpected error: %v", err)
-	}
-	if ast.String() != sql {
-		t.Error(queryMismatchMessage(sql, ast))
-	}
-}
-
-func TestParse_Select_SelectFromWhereWithSingleBoolValue(t *testing.T) {
-	sql := `select name, age, color from users where true`
-	ast, err := Parse(sql)
-	if err != nil {
-		t.Errorf("unexpected error: %v", err)
-	}
-	if ast.String() != sql {
-		t.Error(queryMismatchMessage(sql, ast))
-	}
-}
-
-func TestParse_Select_SelectFromWhereWithSingleBoolValueInParen(t *testing.T) {
-	sql := `select name, age, color from users where (((true)))`
-	ast, err := Parse(sql)
-	if err != nil {
-		t.Errorf("unexpected error: %v", err)
-	}
-	if ast.String() != sql {
-		t.Error(queryMismatchMessage(sql, ast))
-	}
-}
-
-func TestParse_Select_SelectFromWhereWithSingleIdentifier(t *testing.T) {
-	sql := `select name, age, color from users where is_ok`
-	ast, err := Parse(sql)
-	if err != nil {
-		t.Errorf("unexpected error: %v", err)
-	}
-	if ast.String() != sql {
-		t.Error(queryMismatchMessage(sql, ast))
-	}
-}
-
-func TestParse_Select_SelectFromWhereWithSingleIdentifierAliased(t *testing.T) {
-	sql := `select u.name, u.age, u.color from users as u where u.is_ok`
-	ast, err := Parse(sql)
-	if err != nil {
-		t.Errorf("unexpected error: %v", err)
-	}
-	if ast.String() != sql {
-		t.Error(queryMismatchMessage(sql, ast))
-	}
-}
-
-func TestParse_Select_SelectFromWhereWithMultipleIdentifiers(t *testing.T) {
-	sql := `select name, age, color from users where is_ok and is_alive or is_false`
-	ast, err := Parse(sql)
-	if err != nil {
-		t.Errorf("unexpected error: %v", err)
-	}
-	if ast.String() != sql {
-		t.Error(queryMismatchMessage(sql, ast))
-	}
-}
-
-func TestParse_Select_SelectFromWhereWithMultipleGroupedIdentifiers(t *testing.T) {
-	sql := `select name, age, color from users where ((is_ok and is_alive) or (is_false and is_true)) and true`
-	ast, err := Parse(sql)
-	if err != nil {
-		t.Errorf("unexpected error: %v", err)
-	}
-	if ast.String() != sql {
-		t.Error(queryMismatchMessage(sql, ast))
-	}
-}
-
-func TestParse_Select_SelectFromWhereWithOperators(t *testing.T) {
-	sql := `select name, age, color from users where is_ok = true or is_alive = is_dead and age = min_age - something * multiplier / divi`
-	ast, err := Parse(sql)
-	if err != nil {
-		t.Errorf("unexpected error: %v", err)
-	}
-	if ast.String() != sql {
-		t.Error(queryMismatchMessage(sql, ast))
-	}
-}
-
-func TestParse_Select_SelectFromWhereWithGroupedOperators(t *testing.T) {
-	sql := `select name, age, color from users where (true or (is_ok = true and is_alive = is_dead and (age > max_age)))`
-	ast, err := Parse(sql)
-	if err != nil {
-		t.Errorf("unexpected error: %v", err)
-	}
-	if ast.String() != sql {
-		t.Error(queryMismatchMessage(sql, ast))
+	for _, test := range tests {
+		t.Run(test.label, func(t *testing.T) {
+			ast, err := Parse(test.sql)
+			if err != nil {
+				t.Errorf("unexpected error: %v", err)
+			} else if ast.String() != test.sql {
+				t.Error(queryMismatchMessage(test.sql, ast))
+			}
+		})
 	}
 }

@@ -8,4 +8,4 @@ env:
 
 script:
   - go build server/main.go
-  - go test ./...
+  - go test ./... -v
