@@ -5,25 +5,6 @@ import (
 	"testing"
 )
 
-// var _ = `
-//
-// select reps, sets, weight
-// from workouts
-// where exercise like 'bicep'
-// or exercise like 'bench press'
-//
-// select min(weight), max(weight)
-// from workouts
-// group by exercise
-//
-// select data ->> 'exercise', min(data ->> 'weight'), max(data ->> 'weight')
-// from entries
-// where (data ->> 'weight') is not null
-// group by data ->> 'exercise'
-// ;
-//
-// `
-
 func queryMismatchMessage(expected string, returned Ast) string {
 	return fmt.Sprintf(`error wth query parser.
 
@@ -50,6 +31,10 @@ func TestParse_PossibleQueries(t *testing.T) {
 		{"select + from + where with grouped operators", `select name, age, color from users where (true or (is_ok = true and is_alive = is_dead and (age > max_age)))`},
 		{"select + from + where with number filter", `select name from users where age > 30`},
 		{"select + from + where with string filter", `select name from users where name like 'marcos'`},
+		{"select + from + where with or condition and two likes", `select reps, sets, weight from workouts where exercise like 'bicep' or exercise like 'bench press'`},
+
+		// {"select with functions", `select min(weight), max(weight)`},
+		// {"select + from + group by", `select min(weight), max(weight) from workouts group by exercise`},
 	}
 	for _, test := range tests {
 		t.Run(test.label, func(t *testing.T) {
