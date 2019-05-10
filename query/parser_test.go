@@ -47,6 +47,7 @@ func TestParse_PossibleQueries(t *testing.T) {
 
 		{"sample workouts query (1)", `select sets, reps, sets * reps as total from workouts where exercise like 'bench press'`},
 		{"sample workouts query (2)", `select exercise, min(weight), max(weight) from workouts group by exercise`},
+		{"sample workouts query (3)", `select exercise, min(weight), max(weight) from workouts where weight is not null group by exercise`},
 	}
 	for _, test := range tests {
 		t.Run(test.label, func(t *testing.T) {
