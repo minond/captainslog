@@ -203,7 +203,7 @@ func (p *parser) parseColumns() ([]column, error) {
 			distinct = true
 		}
 
-		val, err := p.parseExprs()
+		val, err := p.parseExpr()
 		if err != nil {
 			return nil, err
 		}
@@ -282,10 +282,10 @@ func (p *parser) parseWhereClause() (expr, error) {
 	if err != nil {
 		return nil, err
 	}
-	return p.parseExprs()
+	return p.parseExpr()
 }
 
-func (p *parser) parseExprs() (expr, error) {
+func (p *parser) parseExpr() (expr, error) {
 	// value = string-value
 	//       | number-value
 	//       | boolean-value
@@ -306,7 +306,7 @@ func (p *parser) parseExprs() (expr, error) {
 	if p.peek().eq(tokenOpenParenthesis) {
 		// Eat the open paren token
 		_, _ = p.eat()
-		sub, err := p.parseExprs()
+		sub, err := p.parseExpr()
 		if err != nil {
 			return nil, err
 		}
@@ -320,6 +320,32 @@ func (p *parser) parseExprs() (expr, error) {
 		exp, err = p.parseIdentifier()
 		if err != nil {
 			return nil, err
+		}
+
+		if p.nextToks(tokOpenParenthesis) {
+			var args []expr
+			// Eat open paren token
+			_, _ = p.eat()
+			for !p.done() {
+				arg, err := p.parseExpr()
+				if err != nil {
+					return nil, err
+				}
+				args = append(args, arg)
+				if !p.nextToks(tokComma) {
+					break
+				}
+				// Eat comma\ token
+				_, _ = p.eat()
+			}
+			_, err := p.expectToks(tokCloseParenthesis)
+			if err != nil {
+				return nil, err
+			}
+			exp = application{
+				fn:   exp.String(),
+				args: args,
+			}
 		}
 	} else if p.nextIeqWords(booleanValues...) {
 		// Handles single-boolean expressions
@@ -347,7 +373,7 @@ func (p *parser) parseExprs() (expr, error) {
 		}
 
 		left := exp
-		right, err := p.parseExprs()
+		right, err := p.parseExpr()
 		if err != nil {
 			return nil, err
 		}
@@ -365,7 +391,7 @@ func (p *parser) parseExprs() (expr, error) {
 		}
 
 		left := exp
-		right, err := p.parseExprs()
+		right, err := p.parseExpr()
 		if err != nil {
 			return nil, err
 		}

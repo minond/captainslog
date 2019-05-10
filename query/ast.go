@@ -137,6 +137,21 @@ func (i identifier) String() string {
 	return i.name
 }
 
+type application struct {
+	fn   string
+	args []expr
+}
+
+func (application) isExpr() {}
+
+func (a application) String() string {
+	args := make([]string, len(a.args))
+	for i, arg := range a.args {
+		args[i] = arg.String()
+	}
+	return fmt.Sprintf("%s(%s)", a.fn, strings.Join(args, ", "))
+}
+
 type valueTy uint8
 
 const (
