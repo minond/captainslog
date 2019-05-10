@@ -63,6 +63,7 @@ type selectStmt struct {
 	columns []column
 	from    *table
 	where   expr
+	groupBy []expr
 }
 
 func (selectStmt) queryType() queryType {
@@ -82,6 +83,13 @@ func (s selectStmt) String() string {
 	}
 	if s.where != nil {
 		fmt.Fprint(&query, " where ", s.where.String())
+	}
+	if len(s.groupBy) != 0 {
+		group := make([]string, len(s.groupBy))
+		for i, expr := range s.groupBy {
+			group[i] = expr.String()
+		}
+		fmt.Fprint(&query, " group by ", strings.Join(group, ", "))
 	}
 	return query.String()
 }

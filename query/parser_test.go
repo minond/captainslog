@@ -39,7 +39,9 @@ func TestParse_PossibleQueries(t *testing.T) {
 		{"select expressions in functions", `select fn('four', 2 + 2)`},
 		{"select functions in functions", `select fn(fn(fn('four', 2 + 2)))`},
 		{"select functions in where clause", `select 1, 2, 3 where fn(fn(fn('four', 2 + 2)))`},
-		// {"select + from + group by", `select min(weight), max(weight) from workouts group by exercise`},
+		{"select, from, and group by", `select x from y group by z`},
+		{"select, from, and group by multiple values", `select x from y group by a, b, c`},
+		{"select, from, and group by multiple expressions", `select x from y group by min(a, b, c), max(x, y, z)`},
 	}
 	for _, test := range tests {
 		t.Run(test.label, func(t *testing.T) {

@@ -8,9 +8,11 @@ import (
 var (
 	wordAnd      = token{tok: tokIdentifier, lexeme: "and"}
 	wordAs       = token{tok: tokIdentifier, lexeme: "as"}
+	wordBy       = token{tok: tokIdentifier, lexeme: "by"}
 	wordDistinct = token{tok: tokIdentifier, lexeme: "distinct"}
 	wordFalse    = token{tok: tokIdentifier, lexeme: "false"}
 	wordFrom     = token{tok: tokIdentifier, lexeme: "from"}
+	wordGroup    = token{tok: tokIdentifier, lexeme: "group"}
 	wordLike     = token{tok: tokIdentifier, lexeme: "like"}
 	wordOr       = token{tok: tokIdentifier, lexeme: "or"}
 	wordSelect   = token{tok: tokIdentifier, lexeme: "select"}
@@ -150,6 +152,7 @@ func (p *parser) parseSelectStmt() (*selectStmt, error) {
 	var columns []column
 	var from *table
 	var where expr
+	var group []expr
 
 	_, err = p.expectIeqWord(wordSelect)
 	if err != nil {
@@ -175,6 +178,17 @@ func (p *parser) parseSelectStmt() (*selectStmt, error) {
 		}
 	}
 
+	if p.peek().ieq(wordGroup) {
+		_, _ = p.eat()
+		if _, err := p.expectIeqWord(wordBy); err != nil {
+			return nil, err
+		}
+		group, err = p.parseExprs()
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	if !p.done() {
 		return nil, fmt.Errorf("unexpected token `%v`", p.toks[p.pos])
 	}
@@ -183,6 +197,7 @@ func (p *parser) parseSelectStmt() (*selectStmt, error) {
 		columns: columns,
 		from:    from,
 		where:   where,
+		groupBy: group,
 	}, nil
 }
 
@@ -261,7 +276,7 @@ func (p *parser) parseFromClause() (*table, error) {
 		aliased = true
 	}
 
-	if !p.peek().ieq(wordWhere) {
+	if !p.nextIeqWords(wordWhere, wordGroup) {
 		aliased = true
 	}
 
