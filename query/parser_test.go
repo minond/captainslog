@@ -32,7 +32,6 @@ func TestParse_PossibleQueries(t *testing.T) {
 		{"select + from + where with number filter", `select name from users where age > 30`},
 		{"select + from + where with string filter", `select name from users where name like 'marcos'`},
 		{"select + from + where with or condition and two likes", `select reps, sets, weight from workouts where exercise like 'bicep' or exercise like 'bench press'`},
-
 		// {"select with functions", `select min(weight), max(weight)`},
 		// {"select + from + group by", `select min(weight), max(weight) from workouts group by exercise`},
 	}

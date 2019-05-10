@@ -193,32 +193,19 @@ func (p *parser) parseColumns() ([]column, error) {
 	var cols []column
 
 	for !done() {
-		// A column looks like this: [ "distinct" ] [ source "." ] name [ "as"
-		// alias ], right? And columns look like this: column { [","] column }
+		// A column looks like this: [ "distinct" ] expr. Columns are: column {
+		// "," column }
 		var distinct bool
-		var source, name, alias string
+		var alias string
 
 		if p.peek().ieq(wordDistinct) {
 			_, _ = p.eat()
 			distinct = true
 		}
 
-		sourceOrNameToken, err := p.expectToks(tokIdentifier)
+		val, err := p.parseExprs()
 		if err != nil {
 			return nil, err
-		}
-
-		if p.peek().ieq(tokenPeriod) {
-			// Eat the period
-			_, _ = p.eat()
-			nameToken, err := p.expectToks(tokIdentifier)
-			if err != nil {
-				return nil, err
-			}
-			source = sourceOrNameToken.lexeme
-			name = nameToken.lexeme
-		} else {
-			name = sourceOrNameToken.lexeme
 		}
 
 		if p.peek().ieq(wordAs) {
@@ -232,10 +219,9 @@ func (p *parser) parseColumns() ([]column, error) {
 		}
 
 		cols = append(cols, column{
-			alias:    alias,
 			distinct: distinct,
-			name:     name,
-			source:   source,
+			val:      val,
+			alias:    alias,
 		})
 
 		if !cont() {

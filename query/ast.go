@@ -99,32 +99,23 @@ func (t table) String() string {
 }
 
 type column struct {
-	name     string
-	alias    string
-	source   string
 	distinct bool
+	val      expr
+	alias    string
 }
 
 func (c column) String() string {
-	var header string
-	var middle string
-	var footer string
+	var head, tail string
 
 	if c.distinct {
-		header = "distinct"
-	}
-
-	if c.source == "" {
-		middle = c.name
-	} else {
-		middle = c.source + "." + c.name
+		head = "distinct"
 	}
 
 	if c.alias != "" {
-		footer = "as " + c.alias
+		tail = "as " + c.alias
 	}
 
-	return strings.TrimSpace(fmt.Sprintf("%s %s %s", header, middle, footer))
+	return strings.TrimSpace(fmt.Sprintf("%s %s %s", head, c.val.String(), tail))
 }
 
 type expr interface {
@@ -133,8 +124,8 @@ type expr interface {
 }
 
 type identifier struct {
-	name   string
 	source string
+	name   string
 }
 
 func (identifier) isExpr() {}
