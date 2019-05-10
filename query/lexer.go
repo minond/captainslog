@@ -177,8 +177,8 @@ func lex(raw string) []token {
 				lexeme: string(r) + lexeme,
 			})
 
-		case isIdentifier(r):
-			lexeme, curr = eatWhile(isIdentifier, rs, curr+1, total)
+		case isHeadIdentifier(r):
+			lexeme, curr = eatWhile(isTailIdentifier, rs, curr+1, total)
 			toks = append(toks, token{
 				tok:    tokIdentifier,
 				lexeme: string(r) + lexeme,
@@ -207,8 +207,12 @@ func not(fn predicate) predicate {
 	}
 }
 
-func isIdentifier(r rune) bool {
+func isHeadIdentifier(r rune) bool {
 	return unicode.IsLetter(r) || r == underscore
+}
+
+func isTailIdentifier(r rune) bool {
+	return isHeadIdentifier(r) || unicode.IsNumber(r)
 }
 
 func peek(rs []rune, curr, total int) rune {

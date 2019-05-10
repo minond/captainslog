@@ -57,12 +57,13 @@ func TestLexer_Symbols(t *testing.T) {
 }
 
 func TestLexer_Identifiers(t *testing.T) {
-	got := lex(`one two_three four__ __five`)
+	got := lex(`one two_three four__ __five six6`)
 	expecting := []token{
 		{tok: tokIdentifier, lexeme: "one"},
 		{tok: tokIdentifier, lexeme: "two_three"},
 		{tok: tokIdentifier, lexeme: "four__"},
 		{tok: tokIdentifier, lexeme: "__five"},
+		{tok: tokIdentifier, lexeme: "six6"},
 	}
 	if !tokseq(expecting, got) {
 		t.Errorf(compmsg("lexing identifiers did not return expected tokens.",
