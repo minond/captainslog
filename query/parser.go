@@ -285,6 +285,23 @@ func (p *parser) parseWhereClause() (expr, error) {
 	return p.parseExpr()
 }
 
+func (p *parser) parseExprs() ([]expr, error) {
+	var exprs []expr
+	for !p.done() {
+		expr, err := p.parseExpr()
+		if err != nil {
+			return nil, err
+		}
+		exprs = append(exprs, expr)
+		if !p.nextToks(tokComma) {
+			break
+		}
+		// Eat comma token
+		_, _ = p.eat()
+	}
+	return exprs, nil
+}
+
 func (p *parser) parseExpr() (expr, error) {
 	// value = string-value
 	//       | number-value
@@ -326,20 +343,8 @@ func (p *parser) parseExpr() (expr, error) {
 			var args []expr
 			// Eat open paren token
 			_, _ = p.eat()
-			for !p.done() {
-				arg, err := p.parseExpr()
-				if err != nil {
-					return nil, err
-				}
-				args = append(args, arg)
-				if !p.nextToks(tokComma) {
-					break
-				}
-				// Eat comma\ token
-				_, _ = p.eat()
-			}
-			_, err := p.expectToks(tokCloseParenthesis)
-			if err != nil {
+			args, err := p.parseExprs()
+			if _, err = p.expectToks(tokCloseParenthesis); err != nil {
 				return nil, err
 			}
 			exp = application{
