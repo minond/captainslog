@@ -42,6 +42,9 @@ func TestParse_PossibleQueries(t *testing.T) {
 		{"select, from, and group by", `select x from y group by z`},
 		{"select, from, and group by multiple values", `select x from y group by a, b, c`},
 		{"select, from, and group by multiple expressions", `select x from y group by min(a, b, c), max(x, y, z)`},
+
+		{"sample workouts query (1)", `select sets, reps, sets * reps as total from workouts where exercise like 'bench press'`},
+		{"sample workouts query (2)", `select exercise, min(weight), max(weight) from workouts group by exercise`},
 	}
 	for _, test := range tests {
 		t.Run(test.label, func(t *testing.T) {
