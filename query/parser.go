@@ -175,6 +175,10 @@ func (p *parser) parseSelectStmt() (*selectStmt, error) {
 		}
 	}
 
+	if !p.done() {
+		return nil, fmt.Errorf("unexpected token `%v`", p.toks[p.pos])
+	}
+
 	return &selectStmt{
 		columns: columns,
 		from:    from,
