@@ -204,13 +204,27 @@ func (b binaryExpr) String() string {
 	return fmt.Sprintf("%s %s %s", b.left.String(), b.op, b.right.String())
 }
 
-func (unaryExpr) isExpr() {}
-
 type unaryExpr struct {
 	op    string
 	right expr
 }
 
+func (unaryExpr) isExpr() {}
+
 func (b unaryExpr) String() string {
 	return fmt.Sprintf("%s %s", b.op, b.right.String())
+}
+
+type isNull struct {
+	not  bool
+	expr expr
+}
+
+func (isNull) isExpr() {}
+
+func (i isNull) String() string {
+	if i.not {
+		return fmt.Sprintf("%s is not null", i.expr.String())
+	}
+	return fmt.Sprintf("%s is null", i.expr.String())
 }

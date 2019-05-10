@@ -13,7 +13,10 @@ var (
 	wordFalse    = token{tok: tokIdentifier, lexeme: "false"}
 	wordFrom     = token{tok: tokIdentifier, lexeme: "from"}
 	wordGroup    = token{tok: tokIdentifier, lexeme: "group"}
+	wordIs       = token{tok: tokIdentifier, lexeme: "is"}
 	wordLike     = token{tok: tokIdentifier, lexeme: "like"}
+	wordNot      = token{tok: tokIdentifier, lexeme: "not"}
+	wordNull     = token{tok: tokIdentifier, lexeme: "null"}
 	wordOr       = token{tok: tokIdentifier, lexeme: "or"}
 	wordSelect   = token{tok: tokIdentifier, lexeme: "select"}
 	wordTrue     = token{tok: tokIdentifier, lexeme: "true"}
@@ -326,7 +329,10 @@ func (p *parser) parseExpr() (expr, error) {
 	//          | ...
 	//
 	// expr = ["("] expr [")"]
-	//      | identifier operator value
+	//      | expr "(" [ expr { "," expr } ] ")"
+	//      | expr "is null"
+	//      | expr "is not null"
+	//      | expr operator expr
 	//      | expr "or" expr
 	//      | expr "and" expr
 	//      | identifier
@@ -401,6 +407,24 @@ func (p *parser) parseExpr() (expr, error) {
 			left:  left,
 			op:    op,
 			right: right,
+		}
+	}
+
+	if p.nextIeqWords(wordIs) {
+		not := false
+		// Eat "is" token
+		_, _ = p.eat()
+		if p.nextIeqWords(wordNot) {
+			// Eat "nto" token
+			_, _ = p.eat()
+			not = true
+		}
+		if _, err := p.expectIeqWord(wordNull); err != nil {
+			return nil, err
+		}
+		exp = isNull{
+			not:  not,
+			expr: exp,
 		}
 	}
 

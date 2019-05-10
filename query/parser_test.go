@@ -17,8 +17,8 @@ func TestParse_PossibleQueries(t *testing.T) {
 	tests := []struct {
 		label, sql string
 	}{
-		{"select", `select name, age, color`},
-		{"select with alias", `select name as n, age as a, color as c`},
+		{"select with columns", `select name, age, color`},
+		{"select with columns wiht aliases", `select name as n, age as a, color as c`},
 		{"select and from", `select name, age, color from users`},
 		{"select and from with alias", `select name, age, color from users as u`},
 		{"select, from, and where with single bool value", `select name, age, color from users where true`},
@@ -42,6 +42,8 @@ func TestParse_PossibleQueries(t *testing.T) {
 		{"select, from, and group by", `select x from y group by z`},
 		{"select, from, and group by multiple values", `select x from y group by a, b, c`},
 		{"select, from, and group by multiple expressions", `select x from y group by min(a, b, c), max(x, y, z)`},
+		{"where with is null condition", `select x from y where z is null`},
+		{"where with is not null condition", `select x from y where z is not null`},
 
 		{"sample workouts query (1)", `select sets, reps, sets * reps as total from workouts where exercise like 'bench press'`},
 		{"sample workouts query (2)", `select exercise, min(weight), max(weight) from workouts group by exercise`},
