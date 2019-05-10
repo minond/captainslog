@@ -34,6 +34,7 @@ func TestParse_PossibleQueries(t *testing.T) {
 		{"select + from + where with or condition and two likes", `select reps, sets, weight from workouts where exercise like 'bicep' or exercise like 'bench press'`},
 		{"select single expressions + from", `select 1 = 1 and 2 = 2 and 3 = 3 from users`},
 		{"select multiple expressions + from", `select 1 = 1, 2 = 2, 3 = 3 from users`},
+		{"select expressions with extras + from", `select distinct 1 = 1 as t1, distinct 2 = 2 as t2, distinct 3 = 3 as t3 from users as t4`},
 		// {"select with functions", `select min(weight), max(weight)`},
 		// {"select + from + group by", `select min(weight), max(weight) from workouts group by exercise`},
 	}
