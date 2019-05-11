@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+url=http://localhost
+
 log() {
   local label="$1"
   local message="$2"
@@ -13,7 +15,7 @@ new_book() {
   local grouping="$2"
 
   data="{\"name\": \"$name\", \"grouping\": $grouping}"
-  resp=$(curl -s -X POST http://localhost/api/books -d "$data")
+  resp=$(curl -s -X POST "$url/api/books" -d "$data")
 
   echo "$resp" | jq '.guid' -r
 }
@@ -25,7 +27,7 @@ new_extractor() {
   local book_guid="$4"
 
   data="{\"bookGuid\": \"$book_guid\", \"label\": \"$label\", \"match\": \"$match\", \"type\": $typ}"
-  resp=$(curl -s -X POST http://localhost/api/extractors -d "$data")
+  resp=$(curl -s -X POST "$url/api/extractors" -d "$data")
 
   echo "$resp" | jq '.guid' -r
 }
@@ -37,7 +39,7 @@ new_shorthand() {
   local book_guid="$4"
 
   data="{\"bookGuid\": \"$book_guid\", \"expansion\": \"$expansion\", \"match\": \"$match\", \"text\": \"$text\"}"
-  resp=$(curl -s -X POST http://localhost/api/shorthands -d "$data")
+  resp=$(curl -s -X POST "$url/api/shorthands" -d "$data")
 
   echo "$resp" | jq '.guid' -r
 }
@@ -48,7 +50,7 @@ new_entry() {
   local created_at=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
   data="{\"guid\": \"$RANDOM\", \"bookGuid\": \"$book_guid\", \"text\": \"$text\", \"createdAt\": \"$created_at\"}"
-  resp=$(curl -s -X POST http://localhost/api/entries -d "$data")
+  resp=$(curl -s -X POST "$url/api/entries" -d "$data")
 
   echo "$resp" | jq '.entry.guid' -r
 }
@@ -69,12 +71,10 @@ create_workouts() {
   (log "new extractor" $(new_extractor "weight" '@\\s{0,}(\\d+(\\.\\d{1,2})?)$' 1 "$workouts")) &
   (log "new extractor" $(new_extractor "time"      '(\\d+)\\s{0,}(sec|seconds|min|minutes|hour|hours)' 1 "$workouts")) &
   (log "new extractor" $(new_extractor "time_unit" '\\d+\\s{0,}(sec|seconds|min|minutes|hour|hours)' 0 "$workouts")) &
-  (log "new extractor" $(new_extractor "distance"      '(\\d+(\\.\\d+)?)\\s{0,}(miles|k|kilometers)' 1 "$workouts")) &
-  (log "new extractor" $(new_extractor "distance_unit" '\\d+\\s{0,}(miles|k|kilometers)' 0 "$workouts")) &
+  (log "new extractor" $(new_extractor "distance"      '(\\d+(\\.\\d+)?)\\s{0,}(mile|miles|k|kilometers)' 1 "$workouts")) &
+  (log "new extractor" $(new_extractor "distance_unit" '\\d+\\s{0,}(mile|miles|k|kilometers)' 0 "$workouts")) &
 
-  (log "new shorthand" $(new_shorthand "xx @ " "" "xx " "$workouts")) &
   (log "new shorthand" $(new_shorthand "3x10" "" "xxx" "$workouts")) &
-  (log "new shorthand" $(new_shorthand "2x10" "" "xx" "$workouts")) &
 
   wait
 
