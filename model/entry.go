@@ -15,8 +15,8 @@ type Entry struct {
 	Original       string                 `json:"-"`
 	Text           string                 `json:"text"`
 	Data           map[string]interface{} `json:"data"`
-	CreatedAt      time.Time              `json:"createdAt"`
-	UpdatedAt      time.Time              `json:"updatedAt"`
+	CreatedAt      time.Time              `json:"createdAt" sqltype:"timestamp"`
+	UpdatedAt      time.Time              `json:"updatedAt" sqltype:"timestamp"`
 }
 
 func newEntry(original, text string, data map[string]interface{}, collection *Collection) (*Entry, error) {

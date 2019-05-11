@@ -66,7 +66,7 @@
         },
         {
           "Name": "created_at",
-          "Type": "timestamptz",
+          "Type": "timestamp",
           "PrimaryKey": false,
           "Reference": null,
           "NotNull": true,
@@ -127,7 +127,7 @@
         },
         {
           "Name": "created_at",
-          "Type": "timestamptz",
+          "Type": "timestamp",
           "PrimaryKey": false,
           "Reference": null,
           "NotNull": true,
@@ -135,7 +135,7 @@
         },
         {
           "Name": "updated_at",
-          "Type": "timestamptz",
+          "Type": "timestamp",
           "PrimaryKey": false,
           "Reference": null,
           "NotNull": true,

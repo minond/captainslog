@@ -12,7 +12,7 @@ type Collection struct {
 	GUID      kallax.ULID
 	BookGUID  kallax.ULID
 	Open      bool
-	CreatedAt time.Time
+	CreatedAt time.Time `sqltype:"timestamp"`
 }
 
 func newCollection(book *Book) (*Collection, error) {
