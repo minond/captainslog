@@ -90,13 +90,13 @@ export default class Entries extends Component<Props, State> {
     if (withMetadata) {
       getBook(bookGuid).then((book) =>
         getEntriesForBook(bookGuid, now).then((entries) =>
-          this.setState({ loaded: true, entries, book })))
+          this.setState({ loaded: true, entries: entries || [], book })))
 
       return
     }
 
     getEntriesForBook(bookGuid, now).then((entries) =>
-      this.setState({ loaded: true, entries }))
+      this.setState({ loaded: true, entries: entries || [] }))
   }
 
   setViewDate(date: Date) {
