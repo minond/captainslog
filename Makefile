@@ -1,5 +1,4 @@
 IN_MOBILE_CLIENT = cd client/mobile &&
-IN_SERVER = cd server &&
 IN_WEB_CLIENT = cd client/web &&
 
 default: build
@@ -12,7 +11,8 @@ build-web-client:
 	$(IN_WEB_CLIENT) make build
 
 build-server:
-	$(IN_SERVER) go build
+	go build server/main.go
+	go build cmd/migrate/main.go
 
 
 ### Linters ####################################################################
@@ -49,10 +49,7 @@ test-server:
 ### Migrations #################################################################
 
 migrate-up:
-	GO111MODULE=off kallax migrate up --all --dir migrations --dsn "$(DATABASE_URL)"
-
-migrate-down:
-	GO111MODULE=off kallax migrate down --steps 1 --dir migrations --dsn "$(DATABASE_URL)"
+	go run cmd/migrate/main.go up
 
 migration:
 	GO111MODULE=off kallax migrate --input ./model/ --out ./migrations --name $(NAME)
