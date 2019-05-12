@@ -51,5 +51,8 @@ test-server:
 migrate-up:
 	go run cmd/migrate/main.go up
 
+migrate-down:
+	go run cmd/migrate/main.go down
+
 migration:
 	GO111MODULE=off kallax migrate --input ./model/ --out ./migrations --name $(NAME)

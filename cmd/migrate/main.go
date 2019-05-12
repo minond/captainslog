@@ -25,21 +25,30 @@ func main() {
 
 	switch cmd {
 	case "version":
-		version, dirty, err := mig.Version()
-		if err != nil {
-			log.Fatalf("error running version command: %v", err)
-		}
-		log.Printf("version = %d, dirty = %v", version, dirty)
+		printVersion(mig)
 	case "up":
-		log.Print("migrating up...")
-		err := mig.Up()
-		if err == migrate.ErrNoChange {
-			log.Print("no changes to apply")
-		} else if err == migrate.ErrNilVersion {
-			log.Print("no migrations to apply")
-		} else {
-			log.Fatalf("error running migration: %v", err)
-		}
-		log.Print("done")
+		printError(mig.Up())
+		printVersion(mig)
+	case "down":
+		printError(mig.Steps(-1))
+		printVersion(mig)
 	}
+}
+
+func printError(err error) {
+	if err == migrate.ErrNoChange {
+		log.Print("no changes to apply")
+	} else if err == migrate.ErrNilVersion {
+		log.Print("no migrations to apply")
+	} else if err != nil {
+		log.Fatalf("error running migration: %v", err)
+	}
+}
+
+func printVersion(mig *migrate.Migrate) {
+	version, dirty, err := mig.Version()
+	if err != nil {
+		log.Fatalf("error running version command: %v", err)
+	}
+	log.Printf("version = %d, dirty = %v", version, dirty)
 }
