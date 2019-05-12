@@ -17,7 +17,7 @@ func main() {
 	cmd := os.Args[1]
 
 	url := os.Getenv("DATABASE_URL")
-	mig, err := migrate.New("file:///Users/marcosmindon/code/captainslog/migrations/", url)
+	mig, err := migrate.New("file://migrations/", url)
 	if err != nil {
 		log.Fatalf("unable to create migration instance: %v", err)
 	}
