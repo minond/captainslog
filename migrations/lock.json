@@ -208,6 +208,14 @@
           "Unique": false
         },
         {
+          "Name": "priority",
+          "Type": "bigint",
+          "PrimaryKey": false,
+          "Reference": null,
+          "NotNull": true,
+          "Unique": false
+        },
+        {
           "Name": "expansion",
           "Type": "text",
           "PrimaryKey": false,

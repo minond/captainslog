@@ -33,12 +33,13 @@ new_extractor() {
 }
 
 new_shorthand() {
-  local expansion="$1"
-  local match="$2"
-  local text="$3"
-  local book_guid="$4"
+  local priority="$1"
+  local expansion="$2"
+  local match="$3"
+  local text="$4"
+  local book_guid="$5"
 
-  data="{\"bookGuid\": \"$book_guid\", \"expansion\": \"$expansion\", \"match\": \"$match\", \"text\": \"$text\"}"
+  data="{\"bookGuid\": \"$book_guid\", \"priority\": $priority, \"expansion\": \"$expansion\", \"match\": \"$match\", \"text\": \"$text\"}"
   resp=$(curl -s -X POST "$url/api/shorthands" -d "$data")
 
   echo "$resp" | jq '.guid' -r
@@ -74,13 +75,15 @@ create_workouts() {
   (log "new extractor" $(new_extractor "distance"      '(\\d+(\\.\\d+)?)\\s{0,}(mile|miles|k|kilometers)' 1 "$workouts")) &
   (log "new extractor" $(new_extractor "distance_unit" '\\d+\\s{0,}(mile|miles|k|kilometers)' 0 "$workouts")) &
 
-  (log "new shorthand" $(new_shorthand "3x10" "" "xxx" "$workouts")) &
+  (log "new shorthand" $(new_shorthand 1 "xx @ " 'xx \\d' "xx " "$workouts")) &
+  (log "new shorthand" $(new_shorthand 0 "3x10" "" "xxx" "$workouts")) &
 
   wait
 
   (log "new entry" $(new_entry "Bench press, xxx@65" "$workouts")) &
-  (log "new entry" $(new_entry "Squats, 2min" "$workouts")) &
-  (log "new entry" $(new_entry "Squats, xxx@45" "$workouts")) &
+  (log "new entry" $(new_entry "Squats 1, 2min" "$workouts")) &
+  (log "new entry" $(new_entry "Squats 2, xxx@45" "$workouts")) &
+  (log "new entry" $(new_entry "Squats 3, xxx 45" "$workouts")) &
   (log "new entry" $(new_entry "Running, 30min" "$workouts")) &
 
   wait

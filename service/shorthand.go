@@ -23,6 +23,7 @@ func NewShorthandService(db *sql.DB) *ShorthandService {
 
 type ShorthandCreateRequest struct {
 	BookGUID  string `json:"bookGuid"`
+	Priority  int    `json:"priority"`
 	Expansion string `json:"expansion"`
 	Match     string `json:"match"`
 	Text      string `json:"text"`
@@ -35,7 +36,7 @@ func (s ShorthandService) Create(ctx context.Context, req *ShorthandCreateReques
 		return nil, err
 	}
 
-	shorthand, err := model.NewShorthand(req.Expansion, req.Match, req.Text, book)
+	shorthand, err := model.NewShorthand(req.Expansion, req.Match, req.Text, req.Priority, book)
 	if err != nil {
 		return nil, err
 	}

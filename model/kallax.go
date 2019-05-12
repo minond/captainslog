@@ -1825,8 +1825,8 @@ func (rs *ExtractorResultSet) Close() error {
 }
 
 // NewShorthand returns a new instance of Shorthand.
-func NewShorthand(expansion string, match string, text string, book *Book) (record *Shorthand, err error) {
-	return newShorthand(expansion, match, text, book)
+func NewShorthand(expansion string, match string, text string, priority int, book *Book) (record *Shorthand, err error) {
+	return newShorthand(expansion, match, text, priority, book)
 }
 
 // GetID returns the primary key of the model.
@@ -1841,6 +1841,8 @@ func (r *Shorthand) ColumnAddress(col string) (interface{}, error) {
 		return (*kallax.ULID)(&r.GUID), nil
 	case "book_guid":
 		return &r.BookGUID, nil
+	case "priority":
+		return &r.Priority, nil
 	case "expansion":
 		return &r.Expansion, nil
 	case "match":
@@ -1866,6 +1868,8 @@ func (r *Shorthand) Value(col string) (interface{}, error) {
 		return r.GUID, nil
 	case "book_guid":
 		return r.BookGUID, nil
+	case "priority":
+		return r.Priority, nil
 	case "expansion":
 		return r.Expansion, nil
 	case "match":
@@ -2156,6 +2160,12 @@ func (q *ShorthandQuery) FindByGUID(v ...kallax.ULID) *ShorthandQuery {
 // the BookGUID property is equal to the passed value.
 func (q *ShorthandQuery) FindByBookGUID(v kallax.ULID) *ShorthandQuery {
 	return q.Where(kallax.Eq(Schema.Shorthand.BookGUID, v))
+}
+
+// FindByPriority adds a new filter to the query that will require that
+// the Priority property is equal to the passed value.
+func (q *ShorthandQuery) FindByPriority(cond kallax.ScalarCond, v int) *ShorthandQuery {
+	return q.Where(cond(Schema.Shorthand.Priority, v))
 }
 
 // FindByExpansion adds a new filter to the query that will require that
@@ -2742,6 +2752,7 @@ type schemaShorthand struct {
 	*kallax.BaseSchema
 	GUID      kallax.SchemaField
 	BookGUID  kallax.SchemaField
+	Priority  kallax.SchemaField
 	Expansion kallax.SchemaField
 	Match     kallax.SchemaField
 	Text      kallax.SchemaField
@@ -2855,12 +2866,14 @@ var Schema = &schema{
 			false,
 			kallax.NewSchemaField("guid"),
 			kallax.NewSchemaField("book_guid"),
+			kallax.NewSchemaField("priority"),
 			kallax.NewSchemaField("expansion"),
 			kallax.NewSchemaField("match"),
 			kallax.NewSchemaField("text"),
 		),
 		GUID:      kallax.NewSchemaField("guid"),
 		BookGUID:  kallax.NewSchemaField("book_guid"),
+		Priority:  kallax.NewSchemaField("priority"),
 		Expansion: kallax.NewSchemaField("expansion"),
 		Match:     kallax.NewSchemaField("match"),
 		Text:      kallax.NewSchemaField("text"),

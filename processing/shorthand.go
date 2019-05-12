@@ -29,8 +29,6 @@ func Expand(text string, shorthands []*model.Shorthand) (string, error) {
 				text = strings.Replace(text, shorthand.Text.String, shorthand.Expansion, -1)
 			}
 
-			text = reg.ReplaceAllString(text, shorthand.Expansion)
-
 		// Handles rule #3 as defined in the documentation for model.Shorthand.
 		case !validText && validMatch:
 			reg, err := regexp.Compile(shorthand.Match.String)

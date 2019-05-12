@@ -54,7 +54,8 @@ func (b *Book) Extractors(extractorStore *ExtractorStore) ([]*Extractor, error) 
 // Shorthands retrieves all of this Book's shorthands.
 func (b *Book) Shorthands(shorthandStore *ShorthandStore) ([]*Shorthand, error) {
 	query := NewShorthandQuery().
-		Where(kallax.Eq(Schema.Shorthand.BookGUID, b.GUID))
+		Where(kallax.Eq(Schema.Shorthand.BookGUID, b.GUID)).
+		Order(kallax.Desc(Schema.Shorthand.Priority))
 
 	return shorthandStore.FindAll(query)
 }

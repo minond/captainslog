@@ -28,12 +28,13 @@ type Shorthand struct {
 
 	GUID      kallax.ULID `json:"guid"`
 	BookGUID  kallax.ULID
-	Expansion string
-	Match     *sql.NullString `sqltype:"text"`
-	Text      *sql.NullString `sqltype:"text"`
+	Priority  int
+	Expansion string          `sqltype:"text"` // Text the shorthand represents.
+	Match     *sql.NullString `sqltype:"text"` // Regular expression to match
+	Text      *sql.NullString `sqltype:"text"` // Text to match
 }
 
-func newShorthand(expansion, match, text string, book *Book) (*Shorthand, error) {
+func newShorthand(expansion, match, text string, priority int, book *Book) (*Shorthand, error) {
 	validMatch := match != ""
 	validText := text != ""
 	if !validMatch && !validText {
@@ -42,6 +43,7 @@ func newShorthand(expansion, match, text string, book *Book) (*Shorthand, error)
 
 	shorthand := &Shorthand{
 		GUID:      kallax.NewULID(),
+		Priority:  priority,
 		Expansion: expansion,
 		Match:     &sql.NullString{String: match, Valid: validMatch},
 		Text:      &sql.NullString{String: text, Valid: validText},
