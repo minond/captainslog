@@ -224,7 +224,8 @@ export default class Entries extends Component<Props, State> {
 
     return (
       <div className={css(styles.wrapper)}>
-        {book && <BookTitle name={book.name} />}
+        <BookTitle name={book.name} />
+        <a href="/">(home)</a>
         <FieldLabel text="New entry">{textarea}</FieldLabel>
         <FieldLabel text="Date selection" />
         {datePicker}
