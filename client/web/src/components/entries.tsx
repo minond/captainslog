@@ -33,6 +33,11 @@ const styles = StyleSheet.create({
     marginBottom: "10px",
     width: "100%",
   },
+
+  noEntries: {
+    padding: "30px 0 0 0",
+    textAlign: "center",
+  },
 })
 
 interface Props {
@@ -44,7 +49,6 @@ interface State {
   date: Date
   book: Book | null
   entries: Entry[]
-  loaded: boolean
   unsynced: EntryCreateRequest[]
 }
 
@@ -64,7 +68,6 @@ export default class Entries extends Component<Props, State> {
       book: null,
       date: new Date(),
       entries: [],
-      loaded: false,
       unsynced: [],
     }
   }
@@ -88,15 +91,21 @@ export default class Entries extends Component<Props, State> {
     const now = Math.floor(+date / 1000)
 
     if (withMetadata) {
-      getBook(bookGuid).then((book) =>
+      getBook(bookGuid).then((book) => {
+        if (!book) {
+          this.setState({ entries: [], book: null })
+          return
+        }
+
         getEntriesForBook(bookGuid, now).then((entries) =>
-          this.setState({ loaded: true, entries: entries || [], book })))
+          this.setState({ entries: entries || [], book }))
+      })
 
       return
     }
 
     getEntriesForBook(bookGuid, now).then((entries) =>
-      this.setState({ loaded: true, entries: entries || [] }))
+      this.setState({ entries: entries || [] }))
   }
 
   setViewDate(date: Date) {
@@ -195,6 +204,10 @@ export default class Entries extends Component<Props, State> {
     const { date, book } = this.state
     const grouping = book ? book.grouping : Grouping.DAY
 
+    if (!book) {
+      return <div>Book not found. <a href="/">Go back.</a></div>
+    }
+
     const textarea = <textarea
       rows={1}
       className={css(styles.entryInput)}
@@ -204,13 +217,18 @@ export default class Entries extends Component<Props, State> {
     const datePicker = grouping === Grouping.NONE ? null :
       <DateGroupPicker grouping={grouping} date={date} onChange={this.boundSetViewDate} />
 
+    const entries = this.getEntries()
+    const entriesElem = entries && entries.length ?
+      <EntryList items={entries} /> :
+      <div className={css(styles.noEntries)}>No entries</div>
+
     return (
       <div className={css(styles.wrapper)}>
         {book && <BookTitle name={book.name} />}
         <FieldLabel text="New entry">{textarea}</FieldLabel>
         <FieldLabel text="Date selection" />
         {datePicker}
-        <EntryList items={this.getEntries()} />
+        {entriesElem}
       </div>
     )
   }
