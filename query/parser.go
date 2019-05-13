@@ -365,6 +365,9 @@ func (p *parser) parseExpr() (expr, error) {
 			// Eat open paren token
 			_, _ = p.eat()
 			args, err := p.parseExprs()
+			if err != nil {
+				return nil, err
+			}
 			if _, err = p.expectToks(tokCloseParenthesis); err != nil {
 				return nil, err
 			}
