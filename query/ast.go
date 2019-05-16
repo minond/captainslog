@@ -108,8 +108,8 @@ func (t table) String() string {
 
 type column struct {
 	distinct bool
-	val      expr
 	alias    string
+	val      expr
 }
 
 func (c column) String() string {
