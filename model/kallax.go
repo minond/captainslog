@@ -913,8 +913,6 @@ func (r *Entry) ColumnAddress(col string) (interface{}, error) {
 	switch col {
 	case "guid":
 		return (*kallax.ULID)(&r.GUID), nil
-	case "book_guid":
-		return &r.BookGUID, nil
 	case "collection_guid":
 		return &r.CollectionGUID, nil
 	case "original":
@@ -927,6 +925,8 @@ func (r *Entry) ColumnAddress(col string) (interface{}, error) {
 		return &r.CreatedAt, nil
 	case "updated_at":
 		return &r.UpdatedAt, nil
+	case "book_guid":
+		return types.Nullable(kallax.VirtualColumn("book_guid", r, new(kallax.ULID))), nil
 
 	default:
 		return nil, fmt.Errorf("kallax: invalid column in Entry: %s", col)
@@ -938,8 +938,6 @@ func (r *Entry) Value(col string) (interface{}, error) {
 	switch col {
 	case "guid":
 		return r.GUID, nil
-	case "book_guid":
-		return r.BookGUID, nil
 	case "collection_guid":
 		return r.CollectionGUID, nil
 	case "original":
@@ -952,6 +950,12 @@ func (r *Entry) Value(col string) (interface{}, error) {
 		return r.CreatedAt, nil
 	case "updated_at":
 		return r.UpdatedAt, nil
+	case "book_guid":
+		v := r.Model.VirtualColumn(col)
+		if v == nil {
+			return nil, kallax.ErrEmptyVirtualColumn
+		}
+		return v, nil
 
 	default:
 		return nil, fmt.Errorf("kallax: invalid column in Entry: %s", col)
@@ -961,12 +965,30 @@ func (r *Entry) Value(col string) (interface{}, error) {
 // NewRelationshipRecord returns a new record for the relatiobship in the given
 // field.
 func (r *Entry) NewRelationshipRecord(field string) (kallax.Record, error) {
-	return nil, fmt.Errorf("kallax: model Entry has no relationships")
+	switch field {
+	case "Book":
+		return new(Book), nil
+
+	}
+	return nil, fmt.Errorf("kallax: model Entry has no relationship %s", field)
 }
 
 // SetRelationship sets the given relationship in the given field.
 func (r *Entry) SetRelationship(field string, rel interface{}) error {
-	return fmt.Errorf("kallax: model Entry has no relationships")
+	switch field {
+	case "Book":
+		val, ok := rel.(*Book)
+		if !ok {
+			return fmt.Errorf("kallax: record of type %t can't be assigned to relationship Book", rel)
+		}
+		if !val.GetID().IsEmpty() {
+			r.Book = val
+		}
+
+		return nil
+
+	}
+	return fmt.Errorf("kallax: model Entry has no relationship %s", field)
 }
 
 // EntryStore is the entity to access the records of the type Entry
@@ -1008,6 +1030,20 @@ func (s *EntryStore) DisableCacher() *EntryStore {
 	return &EntryStore{s.Store.DisableCacher()}
 }
 
+func (s *EntryStore) inverseRecords(record *Entry) []modelSaveFunc {
+	var result []modelSaveFunc
+
+	if record.Book != nil && !record.Book.IsSaving() {
+		record.AddVirtualColumn("book_guid", record.Book.GetID())
+		result = append(result, func(store *kallax.Store) error {
+			_, err := (&BookStore{store}).Save(record.Book)
+			return err
+		})
+	}
+
+	return result
+}
+
 // Insert inserts a Entry in the database. A non-persisted object is
 // required for this operation.
 func (s *EntryStore) Insert(record *Entry) error {
@@ -1016,6 +1052,24 @@ func (s *EntryStore) Insert(record *Entry) error {
 
 	record.CreatedAt = record.CreatedAt.Truncate(time.Microsecond)
 	record.UpdatedAt = record.UpdatedAt.Truncate(time.Microsecond)
+
+	inverseRecords := s.inverseRecords(record)
+
+	if len(inverseRecords) > 0 {
+		return s.Store.Transaction(func(s *kallax.Store) error {
+			for _, r := range inverseRecords {
+				if err := r(s); err != nil {
+					return err
+				}
+			}
+
+			if err := s.Insert(Schema.Entry.BaseSchema, record); err != nil {
+				return err
+			}
+
+			return nil
+		})
+	}
 
 	return s.Store.Insert(Schema.Entry.BaseSchema, record)
 }
@@ -1032,6 +1086,30 @@ func (s *EntryStore) Update(record *Entry, cols ...kallax.SchemaField) (updated 
 
 	record.SetSaving(true)
 	defer record.SetSaving(false)
+
+	inverseRecords := s.inverseRecords(record)
+
+	if len(inverseRecords) > 0 {
+		err = s.Store.Transaction(func(s *kallax.Store) error {
+			for _, r := range inverseRecords {
+				if err := r(s); err != nil {
+					return err
+				}
+			}
+
+			updated, err = s.Update(Schema.Entry.BaseSchema, record, cols...)
+			if err != nil {
+				return err
+			}
+
+			return nil
+		})
+		if err != nil {
+			return 0, err
+		}
+
+		return updated, nil
+	}
 
 	return s.Store.Update(Schema.Entry.BaseSchema, record, cols...)
 }
@@ -1218,6 +1296,11 @@ func (q *EntryQuery) Where(cond kallax.Condition) *EntryQuery {
 	return q
 }
 
+func (q *EntryQuery) WithBook() *EntryQuery {
+	q.AddRelation(Schema.Book.BaseSchema, "Book", kallax.OneToOne, nil)
+	return q
+}
+
 // FindByGUID adds a new filter to the query that will require that
 // the GUID property is equal to one of the passed values; if no passed values,
 // it will do nothing.
@@ -1230,12 +1313,6 @@ func (q *EntryQuery) FindByGUID(v ...kallax.ULID) *EntryQuery {
 		values[i] = val
 	}
 	return q.Where(kallax.In(Schema.Entry.GUID, values...))
-}
-
-// FindByBookGUID adds a new filter to the query that will require that
-// the BookGUID property is equal to the passed value.
-func (q *EntryQuery) FindByBookGUID(v kallax.ULID) *EntryQuery {
-	return q.Where(kallax.Eq(Schema.Entry.BookGUID, v))
 }
 
 // FindByCollectionGUID adds a new filter to the query that will require that
@@ -1266,6 +1343,12 @@ func (q *EntryQuery) FindByCreatedAt(cond kallax.ScalarCond, v time.Time) *Entry
 // the UpdatedAt property is equal to the passed value.
 func (q *EntryQuery) FindByUpdatedAt(cond kallax.ScalarCond, v time.Time) *EntryQuery {
 	return q.Where(cond(Schema.Entry.UpdatedAt, v))
+}
+
+// FindByBook adds a new filter to the query that will require that
+// the foreign key of Book is equal to the passed value.
+func (q *EntryQuery) FindByBook(v kallax.ULID) *EntryQuery {
+	return q.Where(kallax.Eq(Schema.Entry.BookFK, v))
 }
 
 // EntryResultSet is the set of results returned by a query to the
@@ -2730,13 +2813,13 @@ type schemaCollection struct {
 type schemaEntry struct {
 	*kallax.BaseSchema
 	GUID           kallax.SchemaField
-	BookGUID       kallax.SchemaField
 	CollectionGUID kallax.SchemaField
 	Original       kallax.SchemaField
 	Text           kallax.SchemaField
 	Data           kallax.SchemaField
 	CreatedAt      kallax.SchemaField
 	UpdatedAt      kallax.SchemaField
+	BookFK         kallax.SchemaField
 }
 
 type schemaExtractor struct {
@@ -2809,28 +2892,30 @@ var Schema = &schema{
 			"entries",
 			"__entry",
 			kallax.NewSchemaField("guid"),
-			kallax.ForeignKeys{},
+			kallax.ForeignKeys{
+				"Book": kallax.NewForeignKey("book_guid", true),
+			},
 			func() kallax.Record {
 				return new(Entry)
 			},
 			false,
 			kallax.NewSchemaField("guid"),
-			kallax.NewSchemaField("book_guid"),
 			kallax.NewSchemaField("collection_guid"),
 			kallax.NewSchemaField("original"),
 			kallax.NewSchemaField("text"),
 			kallax.NewSchemaField("data"),
 			kallax.NewSchemaField("created_at"),
 			kallax.NewSchemaField("updated_at"),
+			kallax.NewSchemaField("book_guid"),
 		),
 		GUID:           kallax.NewSchemaField("guid"),
-		BookGUID:       kallax.NewSchemaField("book_guid"),
 		CollectionGUID: kallax.NewSchemaField("collection_guid"),
 		Original:       kallax.NewSchemaField("original"),
 		Text:           kallax.NewSchemaField("text"),
 		Data:           kallax.NewSchemaField("data"),
 		CreatedAt:      kallax.NewSchemaField("created_at"),
 		UpdatedAt:      kallax.NewSchemaField("updated_at"),
+		BookFK:         kallax.NewSchemaField("book_guid"),
 	},
 	Extractor: &schemaExtractor{
 		BaseSchema: kallax.NewBaseSchema(
