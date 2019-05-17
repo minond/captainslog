@@ -2,7 +2,6 @@ package query
 
 import (
 	"fmt"
-	"log"
 
 	"gopkg.in/src-d/go-kallax.v1"
 
@@ -13,11 +12,13 @@ func Convert(ast Ast) (*model.EntryQuery, error) {
 	query := model.NewEntryQuery()
 	switch stmt := ast.(type) {
 	case *selectStmt:
-		fmt.Println("S")
 		for _, col := range stmt.columns {
-			if err := selectColumn(col, query); err != nil {
+			if err := selectColumn(query, col); err != nil {
 				return nil, err
 			}
+		}
+		if stmt.from != nil {
+			filterByBookName(query, *stmt.from)
 		}
 		return query, nil
 	}
@@ -25,10 +26,18 @@ func Convert(ast Ast) (*model.EntryQuery, error) {
 	return nil, fmt.Errorf("invalid query type: %v", ast.queryType())
 }
 
-func selectColumn(col column, query *model.EntryQuery) error {
+func filterByBookName(query *model.EntryQuery, from table) error {
+	query.Where(model.Subquery(
+		model.Schema.Entry.BookFK, model.Eq,
+		model.Schema.Book.GUID, model.Schema.Book.BaseSchema,
+		model.Schema.Book.Name, model.Like, from.name,
+	))
+	return nil
+}
+
+func selectColumn(query *model.EntryQuery, col column) error {
 	switch c := col.val.(type) {
 	case identifier:
-		log.Printf("column %s", c.name)
 		query.Select(kallax.NewJSONSchemaKey(kallax.JSONAny, "data", c.name))
 	}
 	return nil
