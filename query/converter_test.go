@@ -39,6 +39,11 @@ func TestConvert_convertsSelectsToDataSelectors(t *testing.T) {
 			`select exercise, max(cast(weight as decimal)) from workouts where weight is not null`,
 			`SELECT __entry.data #>>'{exercise}', max(CAST(__entry.data #>>'{weight}' as decimal)) FROM entries __entry WHERE __entry.book_guid = (select guid from books where name ilike $1) AND __entry.data #>>'{weight}' is not null`,
 		},
+		{
+			"group by field",
+			`select exercise, max(cast(weight as float)) from workouts where weight is not null group by exercise`,
+			`SELECT __entry.data #>>'{exercise}', max(CAST(__entry.data #>>'{weight}' as float)) FROM entries __entry WHERE __entry.book_guid = (select guid from books where name ilike $1) AND __entry.data #>>'{weight}' is not null group by data #>>'{exercise}'`,
+		},
 	}
 
 	for _, test := range tests {

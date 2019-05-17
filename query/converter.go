@@ -3,13 +3,42 @@ package query
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	"gopkg.in/src-d/go-kallax.v1"
 
 	"github.com/minond/captainslog/model"
 )
 
-func Convert(ast Ast) (*model.EntryQuery, error) {
+type qir struct {
+	kallax.ToSqler
+	query   *model.EntryQuery
+	groupBy []expr
+}
+
+func (q *qir) ToSql() (string, []interface{}, error) {
+	var groupBy string
+	query, args, err := q.query.ToSql()
+	if err == nil && len(q.groupBy) != 0 {
+		parts := make([]string, len(q.groupBy))
+		for i, expr := range q.groupBy {
+			field, err := exprToSchemaField(expr)
+			if err != nil {
+				return "", nil, err
+			}
+			parts[i] = field.String()
+		}
+		groupBy = " group by " + strings.Join(parts, ", ")
+	}
+	return query + groupBy, args, nil
+}
+
+func (q *qir) String() string {
+	query, _, _ := q.ToSql()
+	return query
+}
+
+func Convert(ast Ast) (*qir, error) {
 	query := model.NewEntryQuery()
 	switch stmt := ast.(type) {
 	case *selectStmt:
@@ -34,7 +63,10 @@ func Convert(ast Ast) (*model.EntryQuery, error) {
 			}
 			query.Where(cond)
 		}
-		return query, nil
+		return &qir{
+			query:   query,
+			groupBy: stmt.groupBy,
+		}, nil
 	}
 
 	return nil, fmt.Errorf("invalid query type: %v", ast.queryType())
