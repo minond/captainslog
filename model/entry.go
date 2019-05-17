@@ -9,15 +9,15 @@ import (
 type Entry struct {
 	kallax.Model `table:"entries" pk:"guid"`
 
-	GUID           kallax.ULID            `json:"guid"`
-	CollectionGUID kallax.ULID            `json:"-"`
-	Original       string                 `json:"-"`
-	Text           string                 `json:"text"`
-	Data           map[string]interface{} `json:"data"`
-	CreatedAt      time.Time              `json:"createdAt" sqltype:"timestamp"`
-	UpdatedAt      time.Time              `json:"updatedAt" sqltype:"timestamp"`
+	GUID      kallax.ULID            `json:"guid"`
+	Original  string                 `json:"-"`
+	Text      string                 `json:"text"`
+	Data      map[string]interface{} `json:"data"`
+	CreatedAt time.Time              `json:"createdAt" sqltype:"timestamp"`
+	UpdatedAt time.Time              `json:"updatedAt" sqltype:"timestamp"`
 
-	Book *Book `fk:"book_guid,inverse"`
+	Book       *Book       `fk:"book_guid,inverse"`
+	Collection *Collection `fk:"collection_guid,inverse"`
 }
 
 func newEntry(original, text string, data map[string]interface{}, collection *Collection) (*Entry, error) {
@@ -33,7 +33,7 @@ func newEntry(original, text string, data map[string]interface{}, collection *Co
 
 	if collection != nil {
 		entry.AddVirtualColumn("book_guid", (*kallax.ULID)(&collection.BookGUID))
-		entry.CollectionGUID = collection.GUID
+		entry.AddVirtualColumn("collection_guid", (*kallax.ULID)(&collection.GUID))
 	}
 
 	return entry, nil

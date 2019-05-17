@@ -31,5 +31,5 @@ func newCollection(book *Book) (*Collection, error) {
 
 func (c *Collection) Entries(entryStore *EntryStore) ([]*Entry, error) {
 	return entryStore.FindAll(NewEntryQuery().
-		Where(kallax.Eq(Schema.Entry.CollectionGUID, c.GUID)))
+		Where(kallax.Eq(Schema.Entry.CollectionFK, c.GUID)))
 }
