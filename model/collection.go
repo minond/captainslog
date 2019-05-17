@@ -18,13 +18,10 @@ type Collection struct {
 
 func newCollection(book *Book) (*Collection, error) {
 	collection := &Collection{
+		Book:      book,
+		CreatedAt: time.Now(),
 		GUID:      kallax.NewULID(),
 		Open:      true,
-		CreatedAt: time.Now(),
-	}
-
-	if book != nil {
-		collection.AddVirtualColumn("book_guid", (*kallax.ULID)(&book.GUID))
 	}
 
 	return collection, nil

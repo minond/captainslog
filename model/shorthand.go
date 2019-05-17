@@ -43,15 +43,12 @@ func newShorthand(expansion, match, text string, priority int, book *Book) (*Sho
 	}
 
 	shorthand := &Shorthand{
-		GUID:      kallax.NewULID(),
-		Priority:  priority,
+		Book:      book,
 		Expansion: expansion,
+		GUID:      kallax.NewULID(),
 		Match:     &sql.NullString{String: match, Valid: validMatch},
+		Priority:  priority,
 		Text:      &sql.NullString{String: text, Valid: validText},
-	}
-
-	if book != nil {
-		shorthand.AddVirtualColumn("book_guid", (*kallax.ULID)(&book.GUID))
 	}
 
 	return shorthand, nil

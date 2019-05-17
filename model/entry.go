@@ -23,17 +23,17 @@ type Entry struct {
 func newEntry(original, text string, data map[string]interface{}, collection *Collection) (*Entry, error) {
 	now := time.Now()
 	entry := &Entry{
-		GUID:      kallax.NewULID(),
-		Original:  original,
-		Text:      text,
-		Data:      data,
-		CreatedAt: now,
-		UpdatedAt: now,
+		Collection: collection,
+		CreatedAt:  now,
+		Data:       data,
+		GUID:       kallax.NewULID(),
+		Original:   original,
+		Text:       text,
+		UpdatedAt:  now,
 	}
 
 	if collection != nil {
-		entry.AddVirtualColumn("book_guid", collection.VirtualColumn("book_guid"))
-		entry.AddVirtualColumn("collection_guid", (*kallax.ULID)(&collection.GUID))
+		entry.Book = collection.Book
 	}
 
 	return entry, nil

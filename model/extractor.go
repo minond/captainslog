@@ -30,14 +30,11 @@ type Extractor struct {
 
 func newExtractor(label, match string, typ DataType, book *Book) (*Extractor, error) {
 	extractor := &Extractor{
+		Book:  book,
 		GUID:  kallax.NewULID(),
 		Label: label,
 		Match: match,
 		Type:  typ,
-	}
-
-	if book != nil {
-		extractor.AddVirtualColumn("book_guid", (*kallax.ULID)(&book.GUID))
 	}
 
 	return extractor, nil

@@ -33,12 +33,9 @@ type Book struct {
 func newBook(name string, grouping int32, user *User) (*Book, error) {
 	book := &Book{
 		GUID:     kallax.NewULID(),
-		Name:     name,
 		Grouping: grouping,
-	}
-
-	if user != nil {
-		book.AddVirtualColumn("user_guid", (*kallax.ULID)(&user.GUID))
+		Name:     name,
+		User:     user,
 	}
 
 	return book, nil
@@ -75,6 +72,7 @@ func (b *Book) Collection(collectionStore *CollectionStore, at time.Time, create
 	}
 
 	if len(colls) != 0 {
+		colls[0].Book = b
 		return colls[0], nil
 	}
 
