@@ -89,9 +89,24 @@ func TestFunctionSelect(t *testing.T) {
 	)
 
 	sql := fn.QualifiedName(Schema.Entry)
-	println(sql)
 
 	if sql != "max(__entry.text, __entry.data #>'{sets}', __entry.data #>'{reps}')" {
 		t.Errorf("unexpected sql for function: %v", sql)
+	}
+}
+
+func TestIsNull(t *testing.T) {
+	fn := IsNull(Schema.Entry.Text)
+	sql := fn.QualifiedName(Schema.Entry)
+	if sql != "__entry.text is null" {
+		t.Errorf("unexpected sql for is null: %v", sql)
+	}
+}
+
+func TestIsNotNull(t *testing.T) {
+	fn := IsNotNull(Schema.Entry.Text)
+	sql := fn.QualifiedName(Schema.Entry)
+	if sql != "__entry.text is not null" {
+		t.Errorf("unexpected sql for is not null: %v", sql)
 	}
 }

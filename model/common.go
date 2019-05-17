@@ -123,3 +123,34 @@ func FunctionSelect(fn string, args ...kallax.SchemaField) kallax.SchemaField {
 		args: args,
 	}
 }
+
+type isNull struct {
+	kallax.SchemaField
+
+	not   bool
+	field kallax.SchemaField
+}
+
+func (i *isNull) QualifiedName(schema kallax.Schema) string {
+	if i.not {
+		return i.field.QualifiedName(schema) + " is not null"
+	}
+	return i.field.QualifiedName(schema) + " is null"
+}
+
+func (i *isNull) String() string { return i.QualifiedName(nil) }
+func (*isNull) isSchemaField()   {}
+
+func IsNull(field kallax.SchemaField) kallax.SchemaField {
+	return &isNull{
+		not:   false,
+		field: field,
+	}
+}
+
+func IsNotNull(field kallax.SchemaField) kallax.SchemaField {
+	return &isNull{
+		not:   true,
+		field: field,
+	}
+}
