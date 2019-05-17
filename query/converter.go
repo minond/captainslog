@@ -27,6 +27,13 @@ func Convert(ast Ast) (*model.EntryQuery, error) {
 			}
 			query.Where(cond)
 		}
+		if stmt.where != nil {
+			cond, err := exprToCondition(stmt.where)
+			if err != nil {
+				return nil, err
+			}
+			query.Where(cond)
+		}
 		return query, nil
 	}
 
@@ -39,6 +46,21 @@ func tableToCondition(from table) (kallax.Condition, error) {
 		model.Schema.Book.GUID, model.Schema.Book.BaseSchema,
 		model.Schema.Book.Name, model.Ilike, from.name,
 	), nil
+}
+
+func exprToCondition(ex expr) (kallax.Condition, error) {
+	switch c := ex.(type) {
+	case isNull:
+		field, err := exprToSchemaField(c.expr)
+		if err != nil {
+			return nil, err
+		}
+		if c.not {
+			return model.IsNotNull(field), nil
+		}
+		return model.IsNull(field), nil
+	}
+	return nil, errors.New("unknown expression")
 }
 
 func exprToSchemaField(ex expr) (kallax.SchemaField, error) {
@@ -65,5 +87,5 @@ func exprToSchemaField(ex expr) (kallax.SchemaField, error) {
 		}
 		return model.FunctionSelect(c.fn, params...), nil
 	}
-	return nil, errors.New("unknown column")
+	return nil, errors.New("unknown expression")
 }
