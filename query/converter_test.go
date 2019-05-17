@@ -22,12 +22,12 @@ func TestConvert_convertsSelectsToDataSelectors(t *testing.T) {
 		{
 			"columns are converted to data selctros",
 			`select exercise, reps, sets`,
-			`SELECT __entry.data #>'{exercise}', __entry.data #>'{reps}', __entry.data #>'{sets}' FROM entries __entry`,
+			`SELECT __entry.data #>>'{exercise}', __entry.data #>>'{reps}', __entry.data #>>'{sets}' FROM entries __entry`,
 		},
 		{
 			"from clause is converted into a sub query selecting the book",
 			`select exercise from workouts`,
-			`SELECT __entry.data #>'{exercise}' FROM entries __entry WHERE __entry.book_guid = (select guid from books where name like $1)`,
+			`SELECT __entry.data #>>'{exercise}' FROM entries __entry WHERE __entry.book_guid = (select guid from books where name like $1)`,
 		},
 	}
 
