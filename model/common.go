@@ -125,32 +125,33 @@ func FunctionSelect(fn string, args ...kallax.SchemaField) kallax.SchemaField {
 }
 
 type isNull struct {
-	kallax.SchemaField
+	kallax.ToSqler
 
 	not   bool
-	field kallax.SchemaField
+	field string
 }
 
-func (i *isNull) QualifiedName(schema kallax.Schema) string {
+func (i *isNull) ToSql() (string, []interface{}, error) {
 	if i.not {
-		return i.field.QualifiedName(schema) + " is not null"
+		return i.field + " is not null", nil, nil
 	}
-	return i.field.QualifiedName(schema) + " is null"
+	return i.field + " is null", nil, nil
 }
 
-func (i *isNull) String() string { return i.QualifiedName(nil) }
-func (*isNull) isSchemaField()   {}
-
-func IsNull(field kallax.SchemaField) kallax.SchemaField {
-	return &isNull{
-		not:   false,
-		field: field,
+func IsNull(field kallax.SchemaField) kallax.Condition {
+	return func(schema kallax.Schema) kallax.ToSqler {
+		return &isNull{
+			not:   false,
+			field: field.QualifiedName(schema),
+		}
 	}
 }
 
-func IsNotNull(field kallax.SchemaField) kallax.SchemaField {
-	return &isNull{
-		not:   true,
-		field: field,
+func IsNotNull(field kallax.SchemaField) kallax.Condition {
+	return func(schema kallax.Schema) kallax.ToSqler {
+		return &isNull{
+			not:   true,
+			field: field.QualifiedName(schema),
+		}
 	}
 }

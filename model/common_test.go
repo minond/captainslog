@@ -96,17 +96,35 @@ func TestFunctionSelect(t *testing.T) {
 }
 
 func TestIsNull(t *testing.T) {
-	fn := IsNull(Schema.Entry.Text)
-	sql := fn.QualifiedName(Schema.Entry)
+	cond := IsNull(Schema.Entry.Text)(Schema.Entry)
+	sql, args, err := cond.ToSql()
+
+	if err != nil {
+		t.Errorf("unexpected error for is null: %v", err)
+	}
+
 	if sql != "__entry.text is null" {
 		t.Errorf("unexpected sql for is null: %v", sql)
+	}
+
+	if len(args) != 0 {
+		t.Errorf("did not expect any arguments but got: %v", args)
 	}
 }
 
 func TestIsNotNull(t *testing.T) {
-	fn := IsNotNull(Schema.Entry.Text)
-	sql := fn.QualifiedName(Schema.Entry)
+	cond := IsNotNull(Schema.Entry.Text)(Schema.Entry)
+	sql, args, err := cond.ToSql()
+
+	if err != nil {
+		t.Errorf("unexpected error for is not null: %v", err)
+	}
+
 	if sql != "__entry.text is not null" {
 		t.Errorf("unexpected sql for is not null: %v", sql)
+	}
+
+	if len(args) != 0 {
+		t.Errorf("did not expect any arguments but got: %v", args)
 	}
 }
