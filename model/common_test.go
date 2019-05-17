@@ -3,6 +3,8 @@ package model
 import (
 	"testing"
 	"time"
+
+	"gopkg.in/src-d/go-kallax.v1"
 )
 
 func TestBetween(t *testing.T) {
@@ -75,5 +77,29 @@ func TestSubquery(t *testing.T) {
 		t.Errorf("expected only one arg for subquery but got: %v", args)
 	} else if args[0] != expectedName {
 		t.Errorf("unexpected arg for subquery: %v", args)
+	}
+}
+
+func TestFunctionSelect(t *testing.T) {
+	factory := FunctionSelect(
+		"max",
+		Schema.Entry.Text,
+		kallax.NewJSONSchemaKey(kallax.JSONAny, "data", "sets"),
+		kallax.NewJSONSchemaKey(kallax.JSONAny, "data", "reps"),
+	)
+
+	subq := factory(Schema.Entry)
+	sql, args, err := subq.ToSql()
+
+	if err != nil {
+		t.Errorf("unexpected error for function: %v", err)
+	}
+
+	if sql != "max(text, data #>'{sets}', data #>'{reps}')" {
+		t.Errorf("unexpected sql for function: %v", sql)
+	}
+
+	if len(args) != 0 {
+		t.Errorf("did not expect any args but for: %v", args)
 	}
 }

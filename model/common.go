@@ -2,6 +2,7 @@ package model
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"gopkg.in/src-d/go-kallax.v1"
@@ -91,6 +92,48 @@ func Subquery(
 			destWhereCol: destWhereCol,
 			destOp:       destOp,
 			destVal:      destVal,
+		}
+	}
+}
+
+type fnloc uint8
+
+const (
+	fnselect fnloc = iota
+)
+
+type function struct {
+	kallax.ToSqler
+
+	fn     string
+	loc    fnloc
+	schema kallax.Schema
+
+	args []kallax.SchemaField
+}
+
+func (f *function) ToSql() (string, []interface{}, error) {
+	var params []string
+	var args []interface{}
+
+	if f.loc == fnselect {
+		params = make([]string, len(f.args))
+		for i, a := range f.args {
+			params[i] = a.String()
+		}
+	}
+
+	sql := fmt.Sprintf("%s(%s)", f.fn, strings.Join(params, ", "))
+	return sql, args, nil
+}
+
+func FunctionSelect(fn string, args ...kallax.SchemaField) kallax.Condition {
+	return func(schema kallax.Schema) kallax.ToSqler {
+		return &function{
+			fn:     fn,
+			loc:    fnselect,
+			args:   args,
+			schema: schema,
 		}
 	}
 }
