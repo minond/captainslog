@@ -1,6 +1,7 @@
 package query
 
 import (
+	"errors"
 	"fmt"
 
 	"gopkg.in/src-d/go-kallax.v1"
@@ -13,12 +14,18 @@ func Convert(ast Ast) (*model.EntryQuery, error) {
 	switch stmt := ast.(type) {
 	case *selectStmt:
 		for _, col := range stmt.columns {
-			if err := selectColumn(query, col); err != nil {
+			field, err := exprToSchemaField(col.val)
+			if err != nil {
 				return nil, err
 			}
+			query.Select(field)
 		}
 		if stmt.from != nil {
-			filterByBookName(query, *stmt.from)
+			cond, err := tableToCondition(*stmt.from)
+			if err != nil {
+				return nil, err
+			}
+			query.Where(cond)
 		}
 		return query, nil
 	}
@@ -26,19 +33,28 @@ func Convert(ast Ast) (*model.EntryQuery, error) {
 	return nil, fmt.Errorf("invalid query type: %v", ast.queryType())
 }
 
-func filterByBookName(query *model.EntryQuery, from table) error {
-	query.Where(model.Subquery(
+func tableToCondition(from table) (kallax.Condition, error) {
+	return model.Subquery(
 		model.Schema.Entry.BookFK, model.Eq,
 		model.Schema.Book.GUID, model.Schema.Book.BaseSchema,
 		model.Schema.Book.Name, model.Like, from.name,
-	))
-	return nil
+	), nil
 }
 
-func selectColumn(query *model.EntryQuery, col column) error {
-	switch c := col.val.(type) {
+func exprToSchemaField(ex expr) (kallax.SchemaField, error) {
+	switch c := ex.(type) {
 	case identifier:
-		query.Select(kallax.NewJSONSchemaKey(kallax.JSONAny, "data", c.name))
+		return kallax.NewJSONSchemaKey(kallax.JSONText, "data", c.name), nil
+	case application:
+		params := make([]kallax.SchemaField, len(c.args))
+		for i, arg := range c.args {
+			field, err := exprToSchemaField(arg)
+			if err != nil {
+				return nil, err
+			}
+			params[i] = field
+		}
+		return model.FunctionSelect(c.fn, params...), nil
 	}
-	return nil
+	return nil, errors.New("unknown column")
 }
