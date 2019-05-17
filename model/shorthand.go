@@ -27,11 +27,12 @@ type Shorthand struct {
 	kallax.Model `table:"shorthands" pk:"guid"`
 
 	GUID      kallax.ULID `json:"guid"`
-	BookGUID  kallax.ULID
 	Priority  int
 	Expansion string          `sqltype:"text"` // Text the shorthand represents.
 	Match     *sql.NullString `sqltype:"text"` // Regular expression to match
 	Text      *sql.NullString `sqltype:"text"` // Text to match
+
+	Book *Book `fk:"book_guid,inverse"`
 }
 
 func newShorthand(expansion, match, text string, priority int, book *Book) (*Shorthand, error) {
@@ -50,7 +51,7 @@ func newShorthand(expansion, match, text string, priority int, book *Book) (*Sho
 	}
 
 	if book != nil {
-		shorthand.BookGUID = book.GUID
+		shorthand.AddVirtualColumn("book_guid", (*kallax.ULID)(&book.GUID))
 	}
 
 	return shorthand, nil

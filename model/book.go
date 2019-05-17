@@ -38,7 +38,7 @@ func newBook(name string, grouping int32, user *User) (*Book, error) {
 	}
 
 	if user != nil {
-		book.AddVirtualColumn("user_guid", (*kallax.ULID)(&book.GUID))
+		book.AddVirtualColumn("user_guid", (*kallax.ULID)(&user.GUID))
 	}
 
 	return book, nil
@@ -47,7 +47,7 @@ func newBook(name string, grouping int32, user *User) (*Book, error) {
 // Extractors retrieves all of this Book's extractors.
 func (b *Book) Extractors(extractorStore *ExtractorStore) ([]*Extractor, error) {
 	query := NewExtractorQuery().
-		Where(kallax.Eq(Schema.Extractor.BookGUID, b.GUID))
+		Where(kallax.Eq(Schema.Extractor.BookFK, b.GUID))
 
 	return extractorStore.FindAll(query)
 }
@@ -55,7 +55,7 @@ func (b *Book) Extractors(extractorStore *ExtractorStore) ([]*Extractor, error) 
 // Shorthands retrieves all of this Book's shorthands.
 func (b *Book) Shorthands(shorthandStore *ShorthandStore) ([]*Shorthand, error) {
 	query := NewShorthandQuery().
-		Where(kallax.Eq(Schema.Shorthand.BookGUID, b.GUID)).
+		Where(kallax.Eq(Schema.Shorthand.BookFK, b.GUID)).
 		Order(kallax.Desc(Schema.Shorthand.Priority))
 
 	return shorthandStore.FindAll(query)
@@ -92,7 +92,7 @@ func (b *Book) Collection(collectionStore *CollectionStore, at time.Time, create
 // collection at a given time.
 func collectionQuery(b *Book, at time.Time) (*CollectionQuery, error) {
 	query := NewCollectionQuery().
-		Where(kallax.Eq(Schema.Collection.BookGUID, b.GUID)).
+		Where(kallax.Eq(Schema.Collection.BookFK, b.GUID)).
 		Where(kallax.Eq(Schema.Collection.Open, true))
 
 	if grouping := Grouping(b.Grouping); grouping != GroupingNone {

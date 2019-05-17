@@ -10,9 +10,10 @@ type Collection struct {
 	kallax.Model `table:"collections" pk:"guid"`
 
 	GUID      kallax.ULID
-	BookGUID  kallax.ULID
 	Open      bool
 	CreatedAt time.Time `sqltype:"timestamp"`
+
+	Book *Book `fk:"book_guid,inverse"`
 }
 
 func newCollection(book *Book) (*Collection, error) {
@@ -23,7 +24,7 @@ func newCollection(book *Book) (*Collection, error) {
 	}
 
 	if book != nil {
-		collection.BookGUID = book.GUID
+		collection.AddVirtualColumn("book_guid", (*kallax.ULID)(&book.GUID))
 	}
 
 	return collection, nil

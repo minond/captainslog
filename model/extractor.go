@@ -20,11 +20,12 @@ const (
 type Extractor struct {
 	kallax.Model `table:"extractors" pk:"guid"`
 
-	GUID     kallax.ULID `json:"guid"`
-	BookGUID kallax.ULID
-	Label    string
-	Match    string
-	Type     DataType
+	GUID  kallax.ULID `json:"guid"`
+	Label string
+	Match string
+	Type  DataType
+
+	Book *Book `fk:"book_guid,inverse"`
 }
 
 func newExtractor(label, match string, typ DataType, book *Book) (*Extractor, error) {
@@ -36,7 +37,7 @@ func newExtractor(label, match string, typ DataType, book *Book) (*Extractor, er
 	}
 
 	if book != nil {
-		extractor.BookGUID = book.GUID
+		extractor.AddVirtualColumn("book_guid", (*kallax.ULID)(&book.GUID))
 	}
 
 	return extractor, nil

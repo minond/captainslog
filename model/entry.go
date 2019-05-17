@@ -32,7 +32,7 @@ func newEntry(original, text string, data map[string]interface{}, collection *Co
 	}
 
 	if collection != nil {
-		entry.AddVirtualColumn("book_guid", (*kallax.ULID)(&collection.BookGUID))
+		entry.AddVirtualColumn("book_guid", collection.VirtualColumn("book_guid"))
 		entry.AddVirtualColumn("collection_guid", (*kallax.ULID)(&collection.GUID))
 	}
 

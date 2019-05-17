@@ -59,8 +59,8 @@ func TestBook_activeCollectionQuery(t *testing.T) {
 
 	cleaner := regexp.MustCompile(`\s+`)
 	expectedSQL := cleaner.ReplaceAll([]byte(`
-		SELECT __collection.guid, __collection.book_guid,
-			__collection.open, __collection.created_at
+		SELECT __collection.guid, __collection.open, __collection.created_at,
+			__collection.book_guid
 		FROM collections __collection
 		WHERE __collection.book_guid = $1
 		AND __collection.open = $2
@@ -68,7 +68,11 @@ func TestBook_activeCollectionQuery(t *testing.T) {
 	`), []byte{})
 
 	if string(cleaner.ReplaceAll([]byte(sql), []byte{})) != string(expectedSQL) {
-		t.Errorf("unexpected sql: %v", sql)
+		t.Errorf(`unexpected sql
+
+returned: %v
+
+expected: %v`, sql, string(expectedSQL))
 	}
 
 	if len(args) != 4 {
