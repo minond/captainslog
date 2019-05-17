@@ -33,12 +33,12 @@ func (r *Book) ColumnAddress(col string) (interface{}, error) {
 	switch col {
 	case "guid":
 		return (*kallax.ULID)(&r.GUID), nil
-	case "user_guid":
-		return &r.UserGUID, nil
 	case "name":
 		return &r.Name, nil
 	case "grouping":
 		return &r.Grouping, nil
+	case "user_guid":
+		return types.Nullable(kallax.VirtualColumn("user_guid", r, new(kallax.ULID))), nil
 
 	default:
 		return nil, fmt.Errorf("kallax: invalid column in Book: %s", col)
@@ -50,12 +50,16 @@ func (r *Book) Value(col string) (interface{}, error) {
 	switch col {
 	case "guid":
 		return r.GUID, nil
-	case "user_guid":
-		return r.UserGUID, nil
 	case "name":
 		return r.Name, nil
 	case "grouping":
 		return r.Grouping, nil
+	case "user_guid":
+		v := r.Model.VirtualColumn(col)
+		if v == nil {
+			return nil, kallax.ErrEmptyVirtualColumn
+		}
+		return v, nil
 
 	default:
 		return nil, fmt.Errorf("kallax: invalid column in Book: %s", col)
@@ -65,12 +69,30 @@ func (r *Book) Value(col string) (interface{}, error) {
 // NewRelationshipRecord returns a new record for the relatiobship in the given
 // field.
 func (r *Book) NewRelationshipRecord(field string) (kallax.Record, error) {
-	return nil, fmt.Errorf("kallax: model Book has no relationships")
+	switch field {
+	case "User":
+		return new(User), nil
+
+	}
+	return nil, fmt.Errorf("kallax: model Book has no relationship %s", field)
 }
 
 // SetRelationship sets the given relationship in the given field.
 func (r *Book) SetRelationship(field string, rel interface{}) error {
-	return fmt.Errorf("kallax: model Book has no relationships")
+	switch field {
+	case "User":
+		val, ok := rel.(*User)
+		if !ok {
+			return fmt.Errorf("kallax: record of type %t can't be assigned to relationship User", rel)
+		}
+		if !val.GetID().IsEmpty() {
+			r.User = val
+		}
+
+		return nil
+
+	}
+	return fmt.Errorf("kallax: model Book has no relationship %s", field)
 }
 
 // BookStore is the entity to access the records of the type Book
@@ -112,11 +134,43 @@ func (s *BookStore) DisableCacher() *BookStore {
 	return &BookStore{s.Store.DisableCacher()}
 }
 
+func (s *BookStore) inverseRecords(record *Book) []modelSaveFunc {
+	var result []modelSaveFunc
+
+	if record.User != nil && !record.User.IsSaving() {
+		record.AddVirtualColumn("user_guid", record.User.GetID())
+		result = append(result, func(store *kallax.Store) error {
+			_, err := (&UserStore{store}).Save(record.User)
+			return err
+		})
+	}
+
+	return result
+}
+
 // Insert inserts a Book in the database. A non-persisted object is
 // required for this operation.
 func (s *BookStore) Insert(record *Book) error {
 	record.SetSaving(true)
 	defer record.SetSaving(false)
+
+	inverseRecords := s.inverseRecords(record)
+
+	if len(inverseRecords) > 0 {
+		return s.Store.Transaction(func(s *kallax.Store) error {
+			for _, r := range inverseRecords {
+				if err := r(s); err != nil {
+					return err
+				}
+			}
+
+			if err := s.Insert(Schema.Book.BaseSchema, record); err != nil {
+				return err
+			}
+
+			return nil
+		})
+	}
 
 	return s.Store.Insert(Schema.Book.BaseSchema, record)
 }
@@ -130,6 +184,30 @@ func (s *BookStore) Insert(record *Book) error {
 func (s *BookStore) Update(record *Book, cols ...kallax.SchemaField) (updated int64, err error) {
 	record.SetSaving(true)
 	defer record.SetSaving(false)
+
+	inverseRecords := s.inverseRecords(record)
+
+	if len(inverseRecords) > 0 {
+		err = s.Store.Transaction(func(s *kallax.Store) error {
+			for _, r := range inverseRecords {
+				if err := r(s); err != nil {
+					return err
+				}
+			}
+
+			updated, err = s.Update(Schema.Book.BaseSchema, record, cols...)
+			if err != nil {
+				return err
+			}
+
+			return nil
+		})
+		if err != nil {
+			return 0, err
+		}
+
+		return updated, nil
+	}
 
 	return s.Store.Update(Schema.Book.BaseSchema, record, cols...)
 }
@@ -316,6 +394,11 @@ func (q *BookQuery) Where(cond kallax.Condition) *BookQuery {
 	return q
 }
 
+func (q *BookQuery) WithUser() *BookQuery {
+	q.AddRelation(Schema.User.BaseSchema, "User", kallax.OneToOne, nil)
+	return q
+}
+
 // FindByGUID adds a new filter to the query that will require that
 // the GUID property is equal to one of the passed values; if no passed values,
 // it will do nothing.
@@ -330,12 +413,6 @@ func (q *BookQuery) FindByGUID(v ...kallax.ULID) *BookQuery {
 	return q.Where(kallax.In(Schema.Book.GUID, values...))
 }
 
-// FindByUserGUID adds a new filter to the query that will require that
-// the UserGUID property is equal to the passed value.
-func (q *BookQuery) FindByUserGUID(v kallax.ULID) *BookQuery {
-	return q.Where(kallax.Eq(Schema.Book.UserGUID, v))
-}
-
 // FindByName adds a new filter to the query that will require that
 // the Name property is equal to the passed value.
 func (q *BookQuery) FindByName(v string) *BookQuery {
@@ -346,6 +423,12 @@ func (q *BookQuery) FindByName(v string) *BookQuery {
 // the Grouping property is equal to the passed value.
 func (q *BookQuery) FindByGrouping(cond kallax.ScalarCond, v int32) *BookQuery {
 	return q.Where(cond(Schema.Book.Grouping, v))
+}
+
+// FindByUser adds a new filter to the query that will require that
+// the foreign key of User is equal to the passed value.
+func (q *BookQuery) FindByUser(v kallax.ULID) *BookQuery {
+	return q.Where(kallax.Eq(Schema.Book.UserFK, v))
 }
 
 // BookResultSet is the set of results returned by a query to the
@@ -2826,9 +2909,9 @@ type schema struct {
 type schemaBook struct {
 	*kallax.BaseSchema
 	GUID     kallax.SchemaField
-	UserGUID kallax.SchemaField
 	Name     kallax.SchemaField
 	Grouping kallax.SchemaField
+	UserFK   kallax.SchemaField
 }
 
 type schemaCollection struct {
@@ -2881,20 +2964,22 @@ var Schema = &schema{
 			"books",
 			"__book",
 			kallax.NewSchemaField("guid"),
-			kallax.ForeignKeys{},
+			kallax.ForeignKeys{
+				"User": kallax.NewForeignKey("user_guid", true),
+			},
 			func() kallax.Record {
 				return new(Book)
 			},
 			false,
 			kallax.NewSchemaField("guid"),
-			kallax.NewSchemaField("user_guid"),
 			kallax.NewSchemaField("name"),
 			kallax.NewSchemaField("grouping"),
+			kallax.NewSchemaField("user_guid"),
 		),
 		GUID:     kallax.NewSchemaField("guid"),
-		UserGUID: kallax.NewSchemaField("user_guid"),
 		Name:     kallax.NewSchemaField("name"),
 		Grouping: kallax.NewSchemaField("grouping"),
+		UserFK:   kallax.NewSchemaField("user_guid"),
 	},
 	Collection: &schemaCollection{
 		BaseSchema: kallax.NewBaseSchema(

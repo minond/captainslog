@@ -24,9 +24,10 @@ type Book struct {
 	kallax.Model `table:"books" pk:"guid"`
 
 	GUID     kallax.ULID `json:"guid"`
-	UserGUID kallax.ULID `json:"-"`
 	Name     string      `json:"name"`
 	Grouping int32       `json:"grouping"`
+
+	User *User `fk:"user_guid,inverse" json:"-"`
 }
 
 func newBook(name string, grouping int32, user *User) (*Book, error) {
@@ -37,7 +38,7 @@ func newBook(name string, grouping int32, user *User) (*Book, error) {
 	}
 
 	if user != nil {
-		book.UserGUID = user.GUID
+		book.AddVirtualColumn("user_guid", (*kallax.ULID)(&book.GUID))
 	}
 
 	return book, nil

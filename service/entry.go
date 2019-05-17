@@ -52,7 +52,7 @@ func (s EntryService) Create(ctx context.Context, req *EntryCreateRequest) (*Ent
 
 	book, err := s.bookStore.FindOne(model.NewBookQuery().
 		Where(kallax.Eq(model.Schema.Book.GUID, req.BookGUID)).
-		Where(kallax.Eq(model.Schema.Book.UserGUID, userGUID)))
+		Where(kallax.Eq(model.Schema.Book.UserFK, userGUID)))
 	if err != nil {
 		return nil, err
 	}
@@ -134,7 +134,7 @@ func (s EntryService) Retrieve(ctx context.Context, req url.Values) (*EntryRetri
 
 	book, err := s.bookStore.FindOne(model.NewBookQuery().
 		Where(kallax.Eq(model.Schema.Book.GUID, bookGUID)).
-		Where(kallax.Eq(model.Schema.Book.UserGUID, userGUID)))
+		Where(kallax.Eq(model.Schema.Book.UserFK, userGUID)))
 	if err != nil {
 		return nil, err
 	}

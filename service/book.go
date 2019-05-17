@@ -65,7 +65,7 @@ func (s BookService) Retrieve(ctx context.Context, req url.Values) (*BookRetriev
 	}
 
 	query := model.NewBookQuery().
-		Where(kallax.Eq(model.Schema.Book.UserGUID, userGUID))
+		Where(kallax.Eq(model.Schema.Book.UserFK, userGUID))
 
 	// Retrieve a single book
 	if guid, ok := req["guid"]; ok {
