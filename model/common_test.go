@@ -51,3 +51,29 @@ func TestBetweenTimes(t *testing.T) {
 		t.Errorf("unexpected args for between: %v", args)
 	}
 }
+
+func TestSubquery(t *testing.T) {
+	expectedName := "workouts"
+	factory := Subquery(
+		Schema.Entry.BookFK, Eq,
+		Schema.Book.GUID, Schema.Book.BaseSchema,
+		Schema.Book.Name, Like, expectedName,
+	)
+
+	subq := factory(Schema.Entry)
+	sql, args, err := subq.ToSql()
+
+	if err != nil {
+		t.Errorf("unexpected error for subquery: %v", err)
+	}
+
+	if sql != "__entry.book_guid = (select guid from books where name like ?)" {
+		t.Errorf("unexpected sql for subquery: %v", sql)
+	}
+
+	if len(args) != 1 {
+		t.Errorf("expected only one arg for subquery but got: %v", args)
+	} else if args[0] != expectedName {
+		t.Errorf("unexpected arg for subquery: %v", args)
+	}
+}
