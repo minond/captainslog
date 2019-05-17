@@ -134,15 +134,20 @@ type expr interface {
 type identifier struct {
 	source string
 	name   string
+	as     string
 }
 
 func (identifier) isExpr() {}
 
 func (i identifier) String() string {
+	v := i.name
 	if i.source != "" {
-		return i.source + "." + i.name
+		v = i.source + "." + v
 	}
-	return i.name
+	if i.as != "" {
+		v = v + " as " + i.as
+	}
+	return v
 }
 
 type application struct {

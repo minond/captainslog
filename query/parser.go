@@ -328,6 +328,9 @@ func (p *parser) parseExpr() (expr, error) {
 	// operator = "list"
 	//          | ...
 	//
+	// typ = "decimal"
+	//     | "float"
+	//
 	// expr = ["("] expr [")"]
 	//      | expr "(" [ expr { "," expr } ] ")"
 	//      | expr "is null"
@@ -335,7 +338,7 @@ func (p *parser) parseExpr() (expr, error) {
 	//      | expr operator expr
 	//      | expr "or" expr
 	//      | expr "and" expr
-	//      | identifier
+	//      | identifier [ "as" typ ]
 	//      | boolean-value
 	var exp expr
 	var err error
@@ -497,7 +500,7 @@ func (p *parser) parseLogicalOperator() (operator, error) {
 }
 
 func (p *parser) parseIdentifier() (expr, error) {
-	var source, name string
+	var source, name, as string
 
 	sourceOrNameToken, err := p.eat()
 	if err != nil {
@@ -517,5 +520,16 @@ func (p *parser) parseIdentifier() (expr, error) {
 		name = sourceOrNameToken.lexeme
 	}
 
-	return identifier{name: name, source: source}, nil
+	if p.peek().ieq(wordAs) {
+		// Eat the "as" token
+		_, _ = p.eat()
+		// cast, err := p.expectIeqWords(typValues...)
+		cast, err := p.expectToks(tokIdentifier)
+		if err != nil {
+			return nil, err
+		}
+		as = cast.lexeme
+	}
+
+	return identifier{source: source, name: name, as: as}, nil
 }

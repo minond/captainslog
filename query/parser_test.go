@@ -44,6 +44,7 @@ func TestParse_PossibleQueries(t *testing.T) {
 		{"select, from, and group by multiple expressions", `select x from y group by min(a, b, c), max(x, y, z)`},
 		{"where with is null condition", `select x from y where z is null`},
 		{"where with is not null condition", `select x from y where z is not null`},
+		{"cast with as expression", `select cast(x as decimal) as xd from y where z is not null`},
 
 		{"sample workouts query (1)", `select sets, reps, sets * reps as total from workouts where exercise like 'bench press'`},
 		{"sample workouts query (2)", `select exercise, min(weight), max(weight) from workouts group by exercise`},
