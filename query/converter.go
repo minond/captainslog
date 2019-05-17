@@ -46,6 +46,15 @@ func exprToSchemaField(ex expr) (kallax.SchemaField, error) {
 	case identifier:
 		return kallax.NewJSONSchemaKey(kallax.JSONText, "data", c.name), nil
 	case application:
+		// Handle casts for json data fields here.
+		if c.fn == "cast" && len(c.args) == 1 {
+			switch c2 := c.args[0].(type) {
+			case identifier:
+				typ := kallax.JSONKeyType(c2.as)
+				return kallax.NewJSONSchemaKey(typ, "data", c2.name), nil
+			}
+		}
+
 		params := make([]kallax.SchemaField, len(c.args))
 		for i, arg := range c.args {
 			field, err := exprToSchemaField(arg)

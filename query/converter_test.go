@@ -29,6 +29,11 @@ func TestConvert_convertsSelectsToDataSelectors(t *testing.T) {
 			`select exercise from workouts`,
 			`SELECT __entry.data #>>'{exercise}' FROM entries __entry WHERE __entry.book_guid = (select guid from books where name like $1)`,
 		},
+		{
+			"cast in select clause passed to function",
+			`select max(cast(reps as decimal)) from workouts`,
+			`SELECT max(CAST(__entry.data #>>'{reps}' as decimal)) FROM entries __entry WHERE __entry.book_guid = (select guid from books where name like $1)`,
+		},
 	}
 
 	for _, test := range tests {
