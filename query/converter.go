@@ -37,7 +37,7 @@ func tableToCondition(from table) (kallax.Condition, error) {
 	return model.Subquery(
 		model.Schema.Entry.BookFK, model.Eq,
 		model.Schema.Book.GUID, model.Schema.Book.BaseSchema,
-		model.Schema.Book.Name, model.Like, from.name,
+		model.Schema.Book.Name, model.Ilike, from.name,
 	), nil
 }
 

@@ -42,12 +42,15 @@ type op uint8
 const (
 	Eq op = iota
 	Like
+	Ilike
 )
 
 func (o op) String() string {
 	switch o {
 	case Like:
 		return "like"
+	case Ilike:
+		return "ilike"
 	default:
 		return "="
 	}
