@@ -96,44 +96,27 @@ func Subquery(
 	}
 }
 
-type fnloc uint8
-
-const (
-	fnselect fnloc = iota
-)
-
 type function struct {
-	kallax.ToSqler
+	kallax.SchemaField
 
-	fn     string
-	loc    fnloc
-	schema kallax.Schema
-
+	fn   string
 	args []kallax.SchemaField
 }
 
-func (f *function) ToSql() (string, []interface{}, error) {
-	var params []string
-	var args []interface{}
-
-	if f.loc == fnselect {
-		params = make([]string, len(f.args))
-		for i, a := range f.args {
-			params[i] = a.String()
-		}
+func (f *function) QualifiedName(schema kallax.Schema) string {
+	params := make([]string, len(f.args))
+	for i, a := range f.args {
+		params[i] = a.QualifiedName(schema)
 	}
-
-	sql := fmt.Sprintf("%s(%s)", f.fn, strings.Join(params, ", "))
-	return sql, args, nil
+	return fmt.Sprintf("%s(%s)", f.fn, strings.Join(params, ", "))
 }
 
-func FunctionSelect(fn string, args ...kallax.SchemaField) kallax.Condition {
-	return func(schema kallax.Schema) kallax.ToSqler {
-		return &function{
-			fn:     fn,
-			loc:    fnselect,
-			args:   args,
-			schema: schema,
-		}
+func (f *function) String() string { return f.QualifiedName(nil) }
+func (*function) isSchemaField()   {}
+
+func FunctionSelect(fn string, args ...kallax.SchemaField) kallax.SchemaField {
+	return &function{
+		fn:   fn,
+		args: args,
 	}
 }
