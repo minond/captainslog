@@ -56,6 +56,7 @@ func (o operator) String() string {
 
 type Ast interface {
 	String() string
+	Print(bool) string
 	queryType() queryType
 }
 
@@ -71,7 +72,7 @@ func (selectStmt) queryType() queryType {
 	return selectQuery
 }
 
-func (s selectStmt) String() string {
+func (s selectStmt) Print(pretty bool) string {
 	cols := make([]string, len(s.columns))
 	for i, col := range s.columns {
 		cols[i] = col.String()
@@ -84,19 +85,35 @@ func (s selectStmt) String() string {
 	}
 	fmt.Fprint(&query, strings.Join(cols, ", "))
 	if s.from != nil {
-		fmt.Fprint(&query, " from ", s.from.String())
+		if pretty {
+			fmt.Fprint(&query, "\nfrom ", s.from.String())
+		} else {
+			fmt.Fprint(&query, " from ", s.from.String())
+		}
 	}
 	if s.where != nil {
-		fmt.Fprint(&query, " where ", s.where.String())
+		if pretty {
+			fmt.Fprint(&query, "\nwhere ", s.where.String())
+		} else {
+			fmt.Fprint(&query, " where ", s.where.String())
+		}
 	}
 	if len(s.groupBy) != 0 {
 		group := make([]string, len(s.groupBy))
 		for i, expr := range s.groupBy {
 			group[i] = expr.String()
 		}
-		fmt.Fprint(&query, " group by ", strings.Join(group, ", "))
+		if pretty {
+			fmt.Fprint(&query, "\ngroup by ", strings.Join(group, ", "))
+		} else {
+			fmt.Fprint(&query, " group by ", strings.Join(group, ", "))
+		}
 	}
 	return query.String()
+}
+
+func (s selectStmt) String() string {
+	return s.Print(false)
 }
 
 type table struct {

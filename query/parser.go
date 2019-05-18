@@ -40,23 +40,15 @@ var (
 )
 
 func Parse(query string) (Ast, error) {
-	p := newParser(query)
-	return p.do()
+	toks := lex(query)
+	parse := &parser{len: len(toks), toks: toks}
+	return parse.do()
 }
 
 type parser struct {
 	pos  int
 	len  int
 	toks []token
-}
-
-func newParser(query string) *parser {
-	toks := lex(query)
-	return &parser{
-		pos:  0,
-		len:  len(toks),
-		toks: toks,
-	}
 }
 
 func (p *parser) done() bool {
@@ -141,12 +133,22 @@ func (p *parser) expectToks(allowed ...tok) (token, error) {
 }
 
 func (p *parser) do() (Ast, error) {
+	var err error
+	var stmt Ast
+
 	t := p.peek()
 	switch {
 	case t.ieq(wordSelect):
-		return p.parseSelectStmt()
+		stmt, err = p.parseSelectStmt()
+	default:
+		return nil, fmt.Errorf("invalid query, unknown token `%s`", t)
 	}
-	return nil, fmt.Errorf("invalid query, unknown token `%s`", t)
+
+	if !p.done() {
+		return nil, fmt.Errorf("unexpected token `%v`, expecting EOF", p.toks[p.pos])
+	}
+
+	return stmt, err
 }
 
 func (p *parser) parseSelectStmt() (*selectStmt, error) {
@@ -197,10 +199,6 @@ func (p *parser) parseSelectStmt() (*selectStmt, error) {
 		if err != nil {
 			return nil, err
 		}
-	}
-
-	if !p.done() {
-		return nil, fmt.Errorf("unexpected token `%v`", p.toks[p.pos])
 	}
 
 	return &selectStmt{
