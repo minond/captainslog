@@ -110,10 +110,7 @@ func rewriteAst(ast Ast, env environment) (Ast, error) {
 func rewriteExpr(expr expr, env environment) (expr, environment) {
 	switch x := expr.(type) {
 	case identifier:
-		if !env.defined(x.name) {
-			return jsonfield{col: "data", prop: x.name}, env
-		}
-		return x, env
+		return jsonfield{col: "data", prop: x.name}, env
 	case application:
 		for i, expr := range x.args {
 			newexpr, newenv := rewriteExpr(expr, env)
