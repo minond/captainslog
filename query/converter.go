@@ -22,7 +22,51 @@ func (env environment) define(alias string) environment {
 
 func Convert(ast Ast) (Ast, error) {
 	env := make(environment)
-	return rewriteAst(ast, env)
+	switch stmt := ast.(type) {
+	case *selectStmt:
+		rewritten, err := rewriteAst(stmt, env)
+		if err != nil {
+			return nil, err
+		}
+		return rewriteFromClause(rewritten.(*selectStmt)), nil
+	}
+	return nil, fmt.Errorf("invalid query type: %v", ast.queryType())
+}
+
+func rewriteFromClause(stmt *selectStmt) *selectStmt {
+	from := &table{name: "entries"}
+	if stmt.from != nil {
+		tableMatcher := binaryExpr{
+			left: identifier{name: "book_guid"},
+			op:   opEq,
+			right: subquery{
+				stmt: &selectStmt{
+					columns: []expr{identifier{name: "guid"}},
+					from:    &table{name: "books"},
+					where: binaryExpr{
+						left: identifier{name: "name"},
+						op:   opIlike,
+						right: value{
+							ty:  tyString,
+							tok: token{lexeme: stmt.from.name},
+						},
+					},
+				},
+			},
+		}
+
+		if stmt.where == nil {
+			stmt.where = tableMatcher
+		} else {
+			stmt.where = binaryExpr{
+				left:  tableMatcher,
+				op:    opAnd,
+				right: grouping{sub: stmt.where},
+			}
+		}
+	}
+	stmt.from = from
+	return stmt
 }
 
 func rewriteAst(ast Ast, env environment) (Ast, error) {
@@ -80,6 +124,10 @@ func rewriteExpr(expr expr, env environment) (expr, environment) {
 		newexpr, _ := rewriteExpr(x.expr, env)
 		x.expr = newexpr
 		env = env.define(x.as)
+		return x, env
+	case jsonfield:
+		return x, env
+	case subquery:
 		return x, env
 	}
 	return expr, env

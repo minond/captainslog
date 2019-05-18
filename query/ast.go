@@ -21,6 +21,7 @@ const (
 	opEq
 	opGe
 	opGt
+	opIlike
 	opLe
 	opLike
 	opLt
@@ -37,6 +38,7 @@ var operatorStrings = map[operator]string{
 	opEq:      "=",
 	opGe:      ">=",
 	opGt:      ">",
+	opIlike:   "ilike",
 	opLe:      "<=",
 	opLike:    "like",
 	opLt:      "<",
@@ -252,4 +254,14 @@ func (jsonfield) isExpr() {}
 
 func (j jsonfield) String() string {
 	return fmt.Sprintf("%s #>> '{%s}'", j.col, j.prop)
+}
+
+type subquery struct {
+	stmt *selectStmt
+}
+
+func (subquery) isExpr() {}
+
+func (s subquery) String() string {
+	return fmt.Sprintf("(%s)", s.stmt.String())
 }
