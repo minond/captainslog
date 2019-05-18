@@ -338,6 +338,10 @@ func (p *parser) parseExpr() (expr, error) {
 			return nil, err
 		}
 		exp = grouping{sub: sub}
+	} else if p.nextIeqWords(booleanValues...) {
+		// Handles single-boolean expressions
+		val, _ := p.eat()
+		exp = value{ty: tyBool, tok: val}
 	} else if p.nextToks(tokIdentifier) {
 		// Handles single-identifier expressions
 		exp, err = p.parseIdentifier()
@@ -361,10 +365,6 @@ func (p *parser) parseExpr() (expr, error) {
 				args: args,
 			}
 		}
-	} else if p.nextIeqWords(booleanValues...) {
-		// Handles single-boolean expressions
-		val, _ := p.eat()
-		exp = value{ty: tyBool, tok: val}
 	} else if p.nextToks(tokNumber) {
 		// Handles single-number expressions
 		val, _ := p.eat()

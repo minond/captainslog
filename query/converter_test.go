@@ -44,6 +44,11 @@ func TestConvert_rewrite(t *testing.T) {
 			`select exercise as exercise, max(cast(weight as float)) as weight from workouts where weight is not null group by exercise`,
 			`select data #>> '{exercise}' as exercise, max(cast(data #>> '{weight}' as float)) as weight from workouts where weight is not null group by exercise`,
 		},
+		{
+			"grouping in where clause",
+			`select exercise from workouts where (weight is not null) and true`,
+			`select data #>> '{exercise}' from workouts where (data #>> '{weight}' is not null) and true`,
+		},
 	}
 
 	for _, test := range tests {

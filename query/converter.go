@@ -125,6 +125,8 @@ func rewriteExpr(expr expr, env environment) (expr, environment) {
 		x.expr = newexpr
 		env = env.define(x.as)
 		return x, env
+	case value:
+		return x, env
 	case jsonfield:
 		return x, env
 	case subquery:
