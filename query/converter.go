@@ -49,7 +49,7 @@ func and(stmt *selectStmt, expr expr) *selectStmt {
 func withUserFilter(stmt *selectStmt, userGUID string) *selectStmt {
 	return and(stmt, binaryExpr{
 		left: identifier{name: "user_guid"},
-		op:   opIlike,
+		op:   opEq,
 		right: value{
 			ty:  tyString,
 			tok: token{lexeme: userGUID},
