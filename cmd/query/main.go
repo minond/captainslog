@@ -89,10 +89,20 @@ func main() {
 			buff = ""
 			continue
 		}
-		fmt.Println("")
-		printData(cols, rows)
-		fmt.Println("")
+
 		buff = ""
+
+		switch len(rows) {
+		case 0:
+			fmt.Println("(0 rows)")
+		case 1:
+			printData(cols, rows)
+			fmt.Println("(1 row)")
+		default:
+			printData(cols, rows)
+			fmt.Printf("(%d rows)\n", len(rows))
+		}
+		fmt.Print("\n")
 	}
 }
 
