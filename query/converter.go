@@ -1,123 +1,86 @@
 package query
 
 import (
-	"errors"
 	"fmt"
-	"strings"
-
-	"gopkg.in/src-d/go-kallax.v1"
-
-	"github.com/minond/captainslog/model"
 )
 
-type qir struct {
-	kallax.ToSqler
-	query   *model.EntryQuery
-	groupBy []expr
+func Convert(ast Ast) (Ast, error) {
+	return rewrite(ast)
 }
 
-func (q *qir) ToSql() (string, []interface{}, error) {
-	var groupBy string
-	query, args, err := q.query.ToSql()
-	if err == nil && len(q.groupBy) != 0 {
-		parts := make([]string, len(q.groupBy))
-		for i, expr := range q.groupBy {
-			field, err := exprToSchemaField(expr)
-			if err != nil {
-				return "", nil, err
-			}
-			parts[i] = field.String()
+type environment map[string]struct{}
+
+func (env environment) defined(alias string) bool {
+	for v := range env {
+		if v == alias {
+			return true
 		}
-		groupBy = " group by " + strings.Join(parts, ", ")
 	}
-	return query + groupBy, args, nil
+	return false
 }
 
-func (q *qir) String() string {
-	query, _, _ := q.ToSql()
-	return query
+func (env environment) define(alias string) environment {
+	env[alias] = struct{}{}
+	return env
 }
 
-func Convert(ast Ast) (*qir, error) {
-	query := model.NewEntryQuery()
+func rewrite(ast Ast) (Ast, error) {
 	switch stmt := ast.(type) {
 	case *selectStmt:
-		for _, col := range stmt.columns {
-			field, err := exprToSchemaField(col.val)
-			if err != nil {
-				return nil, err
-			}
-			query.Select(field)
+		env := make(environment)
+		for i, expr := range stmt.columns {
+			newexpr, newenv := rewriteExpr(expr, env)
+			env = newenv
+			stmt.columns[i] = newexpr
 		}
-		if stmt.from != nil {
-			cond, err := tableToCondition(*stmt.from)
-			if err != nil {
-				return nil, err
-			}
-			query.Where(cond)
+		for i, expr := range stmt.groupBy {
+			newexpr, _ := rewriteExpr(expr, env)
+			stmt.groupBy[i] = newexpr
 		}
-		if stmt.where != nil {
-			cond, err := exprToCondition(stmt.where)
-			if err != nil {
-				return nil, err
-			}
-			query.Where(cond)
-		}
-		return &qir{
-			query:   query,
-			groupBy: stmt.groupBy,
-		}, nil
+		newexpr, _ := rewriteExpr(stmt.where, env)
+		stmt.where = newexpr
+		return ast, nil
 	}
-
 	return nil, fmt.Errorf("invalid query type: %v", ast.queryType())
 }
 
-func tableToCondition(from table) (kallax.Condition, error) {
-	return model.Subquery(
-		model.Schema.Entry.BookFK, model.Eq,
-		model.Schema.Book.GUID, model.Schema.Book.BaseSchema,
-		model.Schema.Book.Name, model.Ilike, from.name,
-	), nil
-}
-
-func exprToCondition(ex expr) (kallax.Condition, error) {
-	switch c := ex.(type) {
-	case isNull:
-		field, err := exprToSchemaField(c.expr)
-		if err != nil {
-			return nil, err
-		}
-		if c.not {
-			return model.IsNotNull(field), nil
-		}
-		return model.IsNull(field), nil
-	}
-	return nil, errors.New("unknown expression")
-}
-
-func exprToSchemaField(ex expr) (kallax.SchemaField, error) {
-	switch c := ex.(type) {
+func rewriteExpr(expr expr, env environment) (expr, environment) {
+	switch x := expr.(type) {
 	case identifier:
-		return kallax.NewJSONSchemaKey(kallax.JSONText, "data", c.name), nil
+		if !env.defined(x.name) {
+			return jsonfield{col: "data", prop: x.name}, env
+		}
+		return x, env
 	case application:
-		// Handle casts for json data fields here.
-		if c.fn == "cast" && len(c.args) == 1 {
-			switch c2 := c.args[0].(type) {
-			case identifier:
-				typ := kallax.JSONKeyType(c2.as)
-				return kallax.NewJSONSchemaKey(typ, "data", c2.name), nil
-			}
+		for i, expr := range x.args {
+			newexpr, newenv := rewriteExpr(expr, env)
+			env = newenv
+			x.args[i] = newexpr
 		}
-
-		params := make([]kallax.SchemaField, len(c.args))
-		for i, arg := range c.args {
-			field, err := exprToSchemaField(arg)
-			if err != nil {
-				return nil, err
-			}
-			params[i] = field
-		}
-		return model.FunctionSelect(c.fn, params...), nil
+		return x, env
+	case grouping:
+		newexpr, newenv := rewriteExpr(x.sub, env)
+		x.sub = newexpr
+		return x, newenv
+	case binaryExpr:
+		newleft, newenv := rewriteExpr(x.left, env)
+		newright, lastenv := rewriteExpr(x.right, newenv)
+		x.left = newleft
+		x.right = newright
+		return x, lastenv
+	case unaryExpr:
+		newexpr, newenv := rewriteExpr(x.right, env)
+		x.right = newexpr
+		return x, newenv
+	case isNull:
+		newexpr, newenv := rewriteExpr(x.expr, env)
+		x.expr = newexpr
+		return x, newenv
+	case aliased:
+		newexpr, _ := rewriteExpr(x.expr, env)
+		x.expr = newexpr
+		env = env.define(x.as)
+		return x, env
 	}
-	return nil, errors.New("unknown expression")
+	return expr, env
 }

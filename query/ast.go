@@ -225,3 +225,14 @@ func (aliased) isExpr() {}
 func (a aliased) String() string {
 	return fmt.Sprintf("%s as %s", a.expr.String(), a.as)
 }
+
+type jsonfield struct {
+	col  string
+	prop string
+}
+
+func (jsonfield) isExpr() {}
+
+func (j jsonfield) String() string {
+	return fmt.Sprintf("%s #>> '{%s}'", j.col, j.prop)
+}

@@ -13,36 +13,36 @@ func compstrmsg(msg, expecting, got string) string {
 		      got: %s`, msg, expecting, got)
 }
 
-func TestConvert_convertsSelectsToDataSelectors(t *testing.T) {
+func TestConvert_rewrite(t *testing.T) {
 	tests := []struct {
 		label    string
 		input    string
 		expected string
 	}{
 		{
-			"columns are converted to data selctros",
+			"columns are converted to data selectors",
 			`select exercise, reps, sets`,
-			`SELECT __entry.data #>>'{exercise}', __entry.data #>>'{reps}', __entry.data #>>'{sets}' FROM entries __entry`,
+			`select data #>> '{exercise}', data #>> '{reps}', data #>> '{sets}'`,
 		},
 		{
 			"from clause is converted into a sub query selecting the book",
 			`select exercise from workouts`,
-			`SELECT __entry.data #>>'{exercise}' FROM entries __entry WHERE __entry.book_guid = (select guid from books where name ilike $1)`,
+			`select data #>> '{exercise}' from workouts`,
 		},
 		{
 			"cast in select clause passed to function",
 			`select max(cast(reps as decimal)) from workouts`,
-			`SELECT max(CAST(__entry.data #>>'{reps}' as decimal)) FROM entries __entry WHERE __entry.book_guid = (select guid from books where name ilike $1)`,
+			`select max(cast(data #>> '{reps}' as decimal)) from workouts`,
 		},
 		{
 			"is not null in where clause",
-			`select exercise, max(cast(weight as decimal)) from workouts where weight is not null`,
-			`SELECT __entry.data #>>'{exercise}', max(CAST(__entry.data #>>'{weight}' as decimal)) FROM entries __entry WHERE __entry.book_guid = (select guid from books where name ilike $1) AND __entry.data #>>'{weight}' is not null`,
+			`select exercise, max(cast(weight as decimal)) as weight from workouts where weight is not null`,
+			`select data #>> '{exercise}', max(cast(data #>> '{weight}' as decimal)) as weight from workouts where weight is not null`,
 		},
 		{
 			"group by field",
-			`select exercise, max(cast(weight as float)) from workouts where weight is not null group by exercise`,
-			`SELECT __entry.data #>>'{exercise}', max(CAST(__entry.data #>>'{weight}' as float)) FROM entries __entry WHERE __entry.book_guid = (select guid from books where name ilike $1) AND __entry.data #>>'{weight}' is not null group by data #>>'{exercise}'`,
+			`select exercise as exercise, max(cast(weight as float)) as weight from workouts where weight is not null group by exercise`,
+			`select data #>> '{exercise}' as exercise, max(cast(data #>> '{weight}' as float)) as weight from workouts where weight is not null group by exercise`,
 		},
 	}
 
@@ -52,7 +52,7 @@ func TestConvert_convertsSelectsToDataSelectors(t *testing.T) {
 			if err != nil {
 				t.Errorf("unexpected error parsing query: %v", err)
 			}
-			query, err := Convert(ast)
+			query, err := rewrite(ast)
 			if err != nil {
 				t.Errorf("unexpected error converting query: %v", err)
 			}
