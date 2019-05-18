@@ -2,10 +2,45 @@ package query
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 
 	"gopkg.in/src-d/go-kallax.v1"
 )
+
+type querier interface {
+	RawQuery(sql string, params ...interface{}) (kallax.ResultSet, error)
+}
+
+func Exec(s string, store querier) ([]string, [][]interface{}, error) {
+	ast, err := Parse(s)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	converted, err := Convert(ast)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	sqlstr, params, err := converted.ToSql()
+	if err != nil {
+		return nil, nil, err
+	}
+
+	irs, err := store.RawQuery(sqlstr, params...)
+	if err != nil {
+		return nil, nil, err
+	}
+	defer irs.Close()
+
+	switch rs := irs.(type) {
+	case *kallax.BaseResultSet:
+		return Scan(rs)
+	}
+
+	return nil, nil, errors.New("bad record set")
+}
 
 func Scan(rs *kallax.BaseResultSet) ([]string, [][]interface{}, error) {
 	var rows [][]interface{}
