@@ -101,3 +101,39 @@ func TestConvert_rewriteFromClause(t *testing.T) {
 		})
 	}
 }
+
+func TestConvert_Convert(t *testing.T) {
+	tests := []struct {
+		label    string
+		input    string
+		expected string
+	}{
+		{
+			"sample query 1",
+			`select exercise as exercise, max(cast(weight as float)) from workouts where weight is not null group by exercise`,
+			`select data #>> '{exercise}' as exercise, max(cast(data #>> '{weight}' as float)) from entries where book_guid = (select guid from books where name ilike 'workouts') and (data #>> '{weight}' is not null) group by exercise`,
+		},
+		{
+			"sample query 2",
+			`select distinct exercise as name from workouts where exercise ilike '%bicep%'`,
+			`select distinct data #>> '{exercise}' as name from entries where book_guid = (select guid from books where name ilike 'workouts') and (data #>> '{exercise}' ilike '%bicep%')`,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.label, func(t *testing.T) {
+			ast, err := Parse(test.input)
+			if err != nil {
+				t.Errorf("unexpected error parsing query: %v", err)
+			}
+			query, err := Convert(ast)
+			if err != nil {
+				t.Errorf("unexpected error converting query: %v", err)
+			}
+			if query.String() != test.expected {
+				t.Errorf(compstrmsg("bad conversion",
+					test.expected, query.String()))
+			}
+		})
+	}
+}
