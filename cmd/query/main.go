@@ -107,7 +107,7 @@ func printData(cols []string, rows [][]interface{}) {
 			case *sql.NullString:
 				ss[i] = v.String
 			case *sql.NullFloat64:
-				ss[i] = fmt.Sprintf("%d", v.Float64)
+				ss[i] = fmt.Sprintf("%f", v.Float64)
 			default:
 				ss[i] = fmt.Sprintf("%v", col)
 			}

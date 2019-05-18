@@ -111,12 +111,12 @@ func TestConvert_Convert(t *testing.T) {
 		{
 			"sample query 1",
 			`select exercise as exercise, max(cast(weight as float)) from workouts where weight is not null group by exercise`,
-			`select data #>> '{exercise}' as exercise, max(cast(data #>> '{weight}' as float)) from entries where book_guid = (select guid from books where name ilike 'workouts') and (user_guid ilike 'e26e269c-0587-4094-bf01-108c61b0fa8a' and (data #>> '{weight}' is not null)) group by exercise`,
+			`select data #>> '{exercise}' as exercise, max(cast(data #>> '{weight}' as float)) from entries where book_guid = (select guid from books where name ilike 'workouts') and (user_guid = 'e26e269c-0587-4094-bf01-108c61b0fa8a' and (data #>> '{weight}' is not null)) group by exercise`,
 		},
 		{
 			"sample query 2",
 			`select distinct exercise as name from workouts where exercise ilike '%bicep%'`,
-			`select distinct data #>> '{exercise}' as name from entries where book_guid = (select guid from books where name ilike 'workouts') and (user_guid ilike 'e26e269c-0587-4094-bf01-108c61b0fa8a' and (data #>> '{exercise}' ilike '%bicep%'))`,
+			`select distinct data #>> '{exercise}' as name from entries where book_guid = (select guid from books where name ilike 'workouts') and (user_guid = 'e26e269c-0587-4094-bf01-108c61b0fa8a' and (data #>> '{exercise}' ilike '%bicep%'))`,
 		},
 	}
 
