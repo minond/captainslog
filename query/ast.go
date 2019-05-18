@@ -68,6 +68,7 @@ type selectStmt struct {
 	from     *table
 	where    expr
 	groupBy  []expr
+	limit    *limit
 }
 
 func (selectStmt) queryType() queryType {
@@ -111,6 +112,13 @@ func (s selectStmt) Print(pretty bool) string {
 			fmt.Fprint(&query, " group by ", strings.Join(group, ", "))
 		}
 	}
+	if s.limit != nil && s.limit.expr != nil {
+		if pretty {
+			fmt.Fprint(&query, "\nlimit ", s.limit.expr.String())
+		} else {
+			fmt.Fprint(&query, " limit ", s.limit.expr.String())
+		}
+	}
 	return query.String()
 }
 
@@ -128,6 +136,15 @@ func (t table) String() string {
 		return t.name + " as " + t.alias
 	}
 	return t.name
+}
+
+// https://github.com/postgres/postgres/blob/93f03dad824f14f40519597e5e4a8fe7b6df858e/src/backend/parser/gram.y#L11579
+type limit struct {
+	expr expr
+}
+
+func (l limit) String() string {
+	return ""
 }
 
 type expr interface {

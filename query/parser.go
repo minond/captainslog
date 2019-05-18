@@ -16,6 +16,7 @@ var (
 	wordIlike    = token{tok: tokIdentifier, lexeme: "ilike"}
 	wordIs       = token{tok: tokIdentifier, lexeme: "is"}
 	wordLike     = token{tok: tokIdentifier, lexeme: "like"}
+	wordLimit    = token{tok: tokIdentifier, lexeme: "limit"}
 	wordNot      = token{tok: tokIdentifier, lexeme: "not"}
 	wordNull     = token{tok: tokIdentifier, lexeme: "null"}
 	wordOr       = token{tok: tokIdentifier, lexeme: "or"}
@@ -160,7 +161,8 @@ func (p *parser) parseSelectStmt() (*selectStmt, error) {
 	var columns []expr
 	var from *table
 	var where expr
-	var group []expr
+	var groupBy []expr
+	var lim *limit
 
 	_, err = p.expectIeqWord(wordSelect)
 	if err != nil {
@@ -197,10 +199,19 @@ func (p *parser) parseSelectStmt() (*selectStmt, error) {
 		if _, err := p.expectIeqWord(wordBy); err != nil {
 			return nil, err
 		}
-		group, err = p.parseExprs()
+		groupBy, err = p.parseExprs()
 		if err != nil {
 			return nil, err
 		}
+	}
+
+	if p.peek().ieq(wordLimit) {
+		_, _ = p.eat()
+		expr, err := p.parseExpr()
+		if err != nil {
+			return nil, err
+		}
+		lim = &limit{expr}
 	}
 
 	return &selectStmt{
@@ -208,7 +219,8 @@ func (p *parser) parseSelectStmt() (*selectStmt, error) {
 		columns:  columns,
 		from:     from,
 		where:    where,
-		groupBy:  group,
+		groupBy:  groupBy,
+		limit:    lim,
 	}, nil
 }
 
@@ -263,7 +275,7 @@ func (p *parser) parseFromClause() (*table, error) {
 		aliased = true
 	}
 
-	if !p.nextIeqWords(wordWhere, wordGroup) {
+	if !p.nextIeqWords(wordWhere, wordGroup, wordLimit) {
 		aliased = true
 	}
 
