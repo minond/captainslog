@@ -27,6 +27,7 @@ func main() {
 	defer db.Close()
 
 	var buff string
+	var debugging bool
 
 	reader := bufio.NewReader(os.Stdin)
 	store := model.NewEntryStore(db)
@@ -45,6 +46,15 @@ func main() {
 		if buff == "exit" {
 			fmt.Println("goodbye")
 			break
+		} else if buff == "debug" {
+			buff = ""
+			debugging = !debugging
+			if debugging {
+				fmt.Println("debug on")
+			} else {
+				fmt.Println("debug off")
+			}
+			continue
 		} else if strings.HasPrefix(buff, "set user") {
 			setUserGUID(strings.TrimSpace(strings.TrimPrefix(buff, "set user")))
 			buff = ""
@@ -53,15 +63,36 @@ func main() {
 			continue
 		}
 		buff = strings.TrimSuffix(buff, ";")
+
+		if debugging {
+			ast, err := query.Parse(buff)
+			if err != nil {
+				fmt.Printf("\nsyntax error: %v\n", err)
+				buff = ""
+				continue
+			}
+
+			ast, err = query.Convert(ast, userGUID)
+			if err != nil {
+				fmt.Printf("\nconversion error: %v\n", err)
+				buff = ""
+				continue
+			}
+
+			fmt.Println("\ngenerated query:")
+			fmt.Println(ast.Print(true))
+		}
+
 		cols, rows, err := query.Exec(store, buff, userGUID)
-		buff = ""
 		if err != nil {
 			fmt.Printf("\nerror: %v\n\n", err)
+			buff = ""
 			continue
 		}
 		fmt.Println("")
 		printData(cols, rows)
 		fmt.Println("")
+		buff = ""
 	}
 }
 
