@@ -48,7 +48,7 @@ func main() {
 		cols, rows, err := query.Exec(store, buff, userGUID)
 		buff = ""
 		if err != nil {
-			fmt.Printf("error: %v\n\n", err)
+			fmt.Printf("\nerror: %v\n\n", err)
 			continue
 		}
 		fmt.Println("")
