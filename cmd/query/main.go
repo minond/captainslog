@@ -116,6 +116,20 @@ func printData(cols []string, rows [][]interface{}) {
 				} else {
 					ss[i] = "NULL"
 				}
+			case *sql.NullInt64:
+				if v.Valid {
+					ss[i] = fmt.Sprintf("%d", v.Int64)
+				} else {
+					ss[i] = "NULL"
+				}
+			case *sql.NullBool:
+				if !v.Valid {
+					ss[i] = "NULL"
+				} else if v.Bool {
+					ss[i] = "t"
+				} else {
+					ss[i] = "f"
+				}
 			default:
 				ss[i] = fmt.Sprintf("%v", col)
 			}

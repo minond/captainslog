@@ -80,6 +80,10 @@ func rowContainer(typs []*sql.ColumnType) ([]interface{}, error) {
 			row[i] = &sql.NullString{}
 		case isFloat(typ):
 			row[i] = &sql.NullFloat64{}
+		case isInt(typ):
+			row[i] = &sql.NullInt64{}
+		case isBool(typ):
+			row[i] = &sql.NullBool{}
 		default:
 			return nil, fmt.Errorf("bad type: %v", typ)
 		}
@@ -88,7 +92,9 @@ func rowContainer(typs []*sql.ColumnType) ([]interface{}, error) {
 }
 
 const (
+	pgBool   = "BOOL"
 	pgFloat8 = "FLOAT8"
+	pgInt8   = "INT8"
 	pgText   = "TEXT"
 )
 
@@ -98,4 +104,12 @@ func isString(typ *sql.ColumnType) bool {
 
 func isFloat(typ *sql.ColumnType) bool {
 	return typ.DatabaseTypeName() == pgFloat8
+}
+
+func isInt(typ *sql.ColumnType) bool {
+	return typ.DatabaseTypeName() == pgInt8
+}
+
+func isBool(typ *sql.ColumnType) bool {
+	return typ.DatabaseTypeName() == pgBool
 }
