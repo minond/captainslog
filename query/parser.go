@@ -13,6 +13,7 @@ var (
 	wordFalse    = token{tok: tokIdentifier, lexeme: "false"}
 	wordFrom     = token{tok: tokIdentifier, lexeme: "from"}
 	wordGroup    = token{tok: tokIdentifier, lexeme: "group"}
+	wordIlike    = token{tok: tokIdentifier, lexeme: "ilike"}
 	wordIs       = token{tok: tokIdentifier, lexeme: "is"}
 	wordLike     = token{tok: tokIdentifier, lexeme: "like"}
 	wordNot      = token{tok: tokIdentifier, lexeme: "not"}
@@ -35,6 +36,7 @@ var (
 		tokenMinus,
 		tokenMul,
 		tokenPlus,
+		wordIlike,
 		wordLike,
 	}
 )
@@ -467,6 +469,8 @@ func (p *parser) parseSqlOperator() (operator, error) {
 		return opGt, nil
 	case t.ieq(tokenLe):
 		return opLe, nil
+	case t.ieq(wordIlike):
+		return opIlike, nil
 	case t.ieq(wordLike):
 		return opLike, nil
 	case t.ieq(tokenLt):
