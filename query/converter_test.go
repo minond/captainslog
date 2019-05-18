@@ -37,12 +37,12 @@ func TestConvert_rewriteAst(t *testing.T) {
 		{
 			"is not null in where clause",
 			`select exercise, max(cast(weight as decimal)) as weight from workouts where weight is not null`,
-			`select data #>> '{exercise}', max(cast(data #>> '{weight}' as decimal)) as weight from workouts where weight is not null`,
+			`select data #>> '{exercise}', max(cast(data #>> '{weight}' as decimal)) as weight from workouts where data #>> '{weight}' is not null`,
 		},
 		{
 			"group by field",
 			`select exercise as exercise, max(cast(weight as float)) as weight from workouts where weight is not null group by exercise`,
-			`select data #>> '{exercise}' as exercise, max(cast(data #>> '{weight}' as float)) as weight from workouts where weight is not null group by exercise`,
+			`select data #>> '{exercise}' as exercise, max(cast(data #>> '{weight}' as float)) as weight from workouts where data #>> '{weight}' is not null group by exercise`,
 		},
 		{
 			"grouping in where clause",
@@ -62,7 +62,7 @@ func TestConvert_rewriteAst(t *testing.T) {
 				t.Errorf("unexpected error converting query: %v", err)
 			}
 			if query.String() != test.expected {
-				t.Errorf(compstrmsg("bad conversion",
+				t.Errorf(compstrmsg("bad conversion in "+test.label,
 					test.expected, query.String()))
 			}
 		})
@@ -95,7 +95,7 @@ func TestConvert_rewriteFromClause(t *testing.T) {
 			}
 			query := rewriteFromClause(ast.(*selectStmt))
 			if query.String() != test.expected {
-				t.Errorf(compstrmsg("bad conversion",
+				t.Errorf(compstrmsg("bad conversion in "+test.label,
 					test.expected, query.String()))
 			}
 		})
@@ -131,7 +131,7 @@ func TestConvert_Convert(t *testing.T) {
 				t.Errorf("unexpected error converting query: %v", err)
 			}
 			if query.String() != test.expected {
-				t.Errorf(compstrmsg("bad conversion",
+				t.Errorf(compstrmsg("bad conversion in "+test.label,
 					test.expected, query.String()))
 			}
 		})

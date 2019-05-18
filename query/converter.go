@@ -81,7 +81,10 @@ func rewriteAst(ast Ast, env environment) (Ast, error) {
 			newexpr, _ := rewriteExpr(expr, env)
 			stmt.groupBy[i] = newexpr
 		}
-		newexpr, _ := rewriteExpr(stmt.where, env)
+
+		// Column aliases are not available in where clause, so we use a new
+		// environment when rewriting the where clause expression.
+		newexpr, _ := rewriteExpr(stmt.where, make(environment))
 		stmt.where = newexpr
 		return ast, nil
 	}
