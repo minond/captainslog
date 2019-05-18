@@ -4,10 +4,6 @@ import (
 	"fmt"
 )
 
-func Convert(ast Ast) (Ast, error) {
-	return rewrite(ast)
-}
-
 type environment map[string]struct{}
 
 func (env environment) defined(alias string) bool {
@@ -24,10 +20,14 @@ func (env environment) define(alias string) environment {
 	return env
 }
 
-func rewrite(ast Ast) (Ast, error) {
+func Convert(ast Ast) (Ast, error) {
+	env := make(environment)
+	return rewriteAst(ast, env)
+}
+
+func rewriteAst(ast Ast, env environment) (Ast, error) {
 	switch stmt := ast.(type) {
 	case *selectStmt:
-		env := make(environment)
 		for i, expr := range stmt.columns {
 			newexpr, newenv := rewriteExpr(expr, env)
 			env = newenv

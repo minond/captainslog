@@ -52,7 +52,7 @@ func TestConvert_rewrite(t *testing.T) {
 			if err != nil {
 				t.Errorf("unexpected error parsing query: %v", err)
 			}
-			query, err := rewrite(ast)
+			query, err := rewriteAst(ast, make(environment))
 			if err != nil {
 				t.Errorf("unexpected error converting query: %v", err)
 			}
