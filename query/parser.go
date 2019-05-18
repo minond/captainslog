@@ -405,7 +405,7 @@ func (p *parser) parseExpr() (expr, error) {
 		// Eat "is" token
 		_, _ = p.eat()
 		if p.nextIeqWords(wordNot) {
-			// Eat "nto" token
+			// Eat "not" token
 			_, _ = p.eat()
 			not = true
 		}

@@ -18,7 +18,7 @@ func TestParse_PossibleQueries(t *testing.T) {
 		label, sql string
 	}{
 		{"select with columns", `select name, age, color`},
-		{"select with columns wiht aliases", `select name as n, age as a, color as c`},
+		{"select with columns with aliases", `select name as n, age as a, color as c`},
 		{"select and from", `select name, age, color from users`},
 		{"select and from with alias", `select name, age, color from users as u`},
 		{"select, from, and where with single bool value", `select name, age, color from users where true`},
