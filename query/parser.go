@@ -152,7 +152,8 @@ func (p *parser) do() (Ast, error) {
 func (p *parser) parseSelectStmt() (*selectStmt, error) {
 	var err error
 
-	var columns []column
+	var distinct bool
+	var columns []expr
 	var from *table
 	var where expr
 	var group []expr
@@ -160,6 +161,12 @@ func (p *parser) parseSelectStmt() (*selectStmt, error) {
 	_, err = p.expectIeqWord(wordSelect)
 	if err != nil {
 		return nil, err
+	}
+
+	if p.peek().ieq(wordDistinct) {
+		// Eat "distinct" token
+		_, _ = p.eat()
+		distinct = true
 	}
 
 	columns, err = p.parseColumns()
@@ -197,50 +204,27 @@ func (p *parser) parseSelectStmt() (*selectStmt, error) {
 	}
 
 	return &selectStmt{
-		columns: columns,
-		from:    from,
-		where:   where,
-		groupBy: group,
+		distinct: distinct,
+		columns:  columns,
+		from:     from,
+		where:    where,
+		groupBy:  group,
 	}, nil
 }
 
-func (p *parser) parseColumns() ([]column, error) {
+func (p *parser) parseColumns() ([]expr, error) {
 	done := func() bool { return p.peek().ieq(wordFrom) }
 	cont := func() bool { return p.peek().eq(tokenComma) }
 
-	var cols []column
+	var cols []expr
 
 	for !done() {
-		// A column looks like this: [ "distinct" ] expr. Columns are: column {
-		// "," column }
-		var distinct bool
-		var alias string
-
-		if p.peek().ieq(wordDistinct) {
-			_, _ = p.eat()
-			distinct = true
-		}
-
 		val, err := p.parseExpr()
 		if err != nil {
 			return nil, err
 		}
 
-		if p.peek().ieq(wordAs) {
-			// Eat the `as` token
-			_, _ = p.eat()
-			aliasToken, err := p.expectToks(tokIdentifier)
-			if err != nil {
-				return nil, err
-			}
-			alias = aliasToken.lexeme
-		}
-
-		cols = append(cols, column{
-			distinct: distinct,
-			val:      val,
-			alias:    alias,
-		})
+		cols = append(cols, val)
 
 		if !cont() {
 			break

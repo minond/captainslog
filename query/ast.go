@@ -60,10 +60,11 @@ type Ast interface {
 }
 
 type selectStmt struct {
-	columns []column
-	from    *table
-	where   expr
-	groupBy []expr
+	distinct bool
+	columns  []expr
+	from     *table
+	where    expr
+	groupBy  []expr
 }
 
 func (selectStmt) queryType() queryType {
@@ -77,7 +78,11 @@ func (s selectStmt) String() string {
 	}
 
 	var query strings.Builder
-	fmt.Fprint(&query, "select ", strings.Join(cols, ", "))
+	fmt.Fprint(&query, "select ")
+	if s.distinct {
+		fmt.Fprint(&query, "distinct ")
+	}
+	fmt.Fprint(&query, strings.Join(cols, ", "))
 	if s.from != nil {
 		fmt.Fprint(&query, " from ", s.from.String())
 	}
@@ -104,26 +109,6 @@ func (t table) String() string {
 		return t.name + " as " + t.alias
 	}
 	return t.name
-}
-
-type column struct {
-	distinct bool
-	alias    string
-	val      expr
-}
-
-func (c column) String() string {
-	var head, tail string
-
-	if c.distinct {
-		head = "distinct"
-	}
-
-	if c.alias != "" {
-		tail = "as " + c.alias
-	}
-
-	return strings.TrimSpace(fmt.Sprintf("%s %s %s", head, c.val.String(), tail))
 }
 
 type expr interface {
