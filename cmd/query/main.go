@@ -98,16 +98,24 @@ func main() {
 
 func printData(cols []string, rows [][]interface{}) {
 	table := tablewriter.NewWriter(os.Stdout)
-	table.SetBorder(false)
+	table.SetBorder(true)
 	table.SetHeader(cols)
 	for _, row := range rows {
 		ss := make([]string, len(cols))
 		for i, col := range row {
 			switch v := col.(type) {
 			case *sql.NullString:
-				ss[i] = v.String
+				if v.Valid {
+					ss[i] = v.String
+				} else {
+					ss[i] = "NULL"
+				}
 			case *sql.NullFloat64:
-				ss[i] = fmt.Sprintf("%f", v.Float64)
+				if v.Valid {
+					ss[i] = fmt.Sprintf("%f", v.Float64)
+				} else {
+					ss[i] = "NULL"
+				}
 			default:
 				ss[i] = fmt.Sprintf("%v", col)
 			}
