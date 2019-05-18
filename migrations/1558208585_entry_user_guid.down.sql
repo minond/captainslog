@@ -1,0 +1,5 @@
+BEGIN;
+
+ALTER TABLE entries DROP COLUMN user_guid;
+
+COMMIT;

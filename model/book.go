@@ -41,6 +41,20 @@ func newBook(name string, grouping int32, user *User) (*Book, error) {
 	return book, nil
 }
 
+func FindBook(bookStore *BookStore, user *User, guid string) (*Book, error) {
+	if user == nil || user.GUID.IsEmpty() {
+		return nil, errors.New("a valid user is required in order to find a book")
+	}
+	book, err := bookStore.FindOne(NewBookQuery().
+		Where(kallax.Eq(Schema.Book.GUID, guid)).
+		Where(kallax.Eq(Schema.Book.UserFK, user.GUID)))
+	if err != nil {
+		return nil, err
+	}
+	book.User = user
+	return book, nil
+}
+
 // Extractors retrieves all of this Book's extractors.
 func (b *Book) Extractors(extractorStore *ExtractorStore) ([]*Extractor, error) {
 	query := NewExtractorQuery().

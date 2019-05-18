@@ -1093,6 +1093,8 @@ func (r *Entry) ColumnAddress(col string) (interface{}, error) {
 		return types.Nullable(kallax.VirtualColumn("book_guid", r, new(kallax.ULID))), nil
 	case "collection_guid":
 		return types.Nullable(kallax.VirtualColumn("collection_guid", r, new(kallax.ULID))), nil
+	case "user_guid":
+		return types.Nullable(kallax.VirtualColumn("user_guid", r, new(kallax.ULID))), nil
 
 	default:
 		return nil, fmt.Errorf("kallax: invalid column in Entry: %s", col)
@@ -1126,6 +1128,12 @@ func (r *Entry) Value(col string) (interface{}, error) {
 			return nil, kallax.ErrEmptyVirtualColumn
 		}
 		return v, nil
+	case "user_guid":
+		v := r.Model.VirtualColumn(col)
+		if v == nil {
+			return nil, kallax.ErrEmptyVirtualColumn
+		}
+		return v, nil
 
 	default:
 		return nil, fmt.Errorf("kallax: invalid column in Entry: %s", col)
@@ -1140,6 +1148,8 @@ func (r *Entry) NewRelationshipRecord(field string) (kallax.Record, error) {
 		return new(Book), nil
 	case "Collection":
 		return new(Collection), nil
+	case "User":
+		return new(User), nil
 
 	}
 	return nil, fmt.Errorf("kallax: model Entry has no relationship %s", field)
@@ -1165,6 +1175,16 @@ func (r *Entry) SetRelationship(field string, rel interface{}) error {
 		}
 		if !val.GetID().IsEmpty() {
 			r.Collection = val
+		}
+
+		return nil
+	case "User":
+		val, ok := rel.(*User)
+		if !ok {
+			return fmt.Errorf("kallax: record of type %t can't be assigned to relationship User", rel)
+		}
+		if !val.GetID().IsEmpty() {
+			r.User = val
 		}
 
 		return nil
@@ -1227,6 +1247,14 @@ func (s *EntryStore) inverseRecords(record *Entry) []modelSaveFunc {
 		record.AddVirtualColumn("collection_guid", record.Collection.GetID())
 		result = append(result, func(store *kallax.Store) error {
 			_, err := (&CollectionStore{store}).Save(record.Collection)
+			return err
+		})
+	}
+
+	if record.User != nil && !record.User.IsSaving() {
+		record.AddVirtualColumn("user_guid", record.User.GetID())
+		result = append(result, func(store *kallax.Store) error {
+			_, err := (&UserStore{store}).Save(record.User)
 			return err
 		})
 	}
@@ -1496,6 +1524,11 @@ func (q *EntryQuery) WithCollection() *EntryQuery {
 	return q
 }
 
+func (q *EntryQuery) WithUser() *EntryQuery {
+	q.AddRelation(Schema.User.BaseSchema, "User", kallax.OneToOne, nil)
+	return q
+}
+
 // FindByGUID adds a new filter to the query that will require that
 // the GUID property is equal to one of the passed values; if no passed values,
 // it will do nothing.
@@ -1544,6 +1577,12 @@ func (q *EntryQuery) FindByBook(v kallax.ULID) *EntryQuery {
 // the foreign key of Collection is equal to the passed value.
 func (q *EntryQuery) FindByCollection(v kallax.ULID) *EntryQuery {
 	return q.Where(kallax.Eq(Schema.Entry.CollectionFK, v))
+}
+
+// FindByUser adds a new filter to the query that will require that
+// the foreign key of User is equal to the passed value.
+func (q *EntryQuery) FindByUser(v kallax.ULID) *EntryQuery {
+	return q.Where(kallax.Eq(Schema.Entry.UserFK, v))
 }
 
 // EntryResultSet is the set of results returned by a query to the
@@ -3181,6 +3220,7 @@ type schemaEntry struct {
 	UpdatedAt    kallax.SchemaField
 	BookFK       kallax.SchemaField
 	CollectionFK kallax.SchemaField
+	UserFK       kallax.SchemaField
 }
 
 type schemaExtractor struct {
@@ -3260,6 +3300,7 @@ var Schema = &schema{
 			kallax.ForeignKeys{
 				"Book":       kallax.NewForeignKey("book_guid", true),
 				"Collection": kallax.NewForeignKey("collection_guid", true),
+				"User":       kallax.NewForeignKey("user_guid", true),
 			},
 			func() kallax.Record {
 				return new(Entry)
@@ -3273,6 +3314,7 @@ var Schema = &schema{
 			kallax.NewSchemaField("updated_at"),
 			kallax.NewSchemaField("book_guid"),
 			kallax.NewSchemaField("collection_guid"),
+			kallax.NewSchemaField("user_guid"),
 		),
 		GUID:         kallax.NewSchemaField("guid"),
 		Original:     kallax.NewSchemaField("original"),
@@ -3282,6 +3324,7 @@ var Schema = &schema{
 		UpdatedAt:    kallax.NewSchemaField("updated_at"),
 		BookFK:       kallax.NewSchemaField("book_guid"),
 		CollectionFK: kallax.NewSchemaField("collection_guid"),
+		UserFK:       kallax.NewSchemaField("user_guid"),
 	},
 	Extractor: &schemaExtractor{
 		BaseSchema: kallax.NewBaseSchema(

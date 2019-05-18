@@ -12,14 +12,6 @@
           "Unique": false
         },
         {
-          "Name": "user_guid",
-          "Type": "uuid",
-          "PrimaryKey": false,
-          "Reference": null,
-          "NotNull": true,
-          "Unique": false
-        },
-        {
           "Name": "name",
           "Type": "text",
           "PrimaryKey": false,
@@ -34,6 +26,17 @@
           "Reference": null,
           "NotNull": true,
           "Unique": false
+        },
+        {
+          "Name": "user_guid",
+          "Type": "uuid",
+          "PrimaryKey": false,
+          "Reference": {
+            "Table": "users",
+            "Column": "guid"
+          },
+          "NotNull": false,
+          "Unique": false
         }
       ]
     },
@@ -44,14 +47,6 @@
           "Name": "guid",
           "Type": "uuid",
           "PrimaryKey": true,
-          "Reference": null,
-          "NotNull": true,
-          "Unique": false
-        },
-        {
-          "Name": "book_guid",
-          "Type": "uuid",
-          "PrimaryKey": false,
           "Reference": null,
           "NotNull": true,
           "Unique": false
@@ -71,6 +66,17 @@
           "Reference": null,
           "NotNull": true,
           "Unique": false
+        },
+        {
+          "Name": "book_guid",
+          "Type": "uuid",
+          "PrimaryKey": false,
+          "Reference": {
+            "Table": "books",
+            "Column": "guid"
+          },
+          "NotNull": false,
+          "Unique": false
         }
       ]
     },
@@ -81,22 +87,6 @@
           "Name": "guid",
           "Type": "uuid",
           "PrimaryKey": true,
-          "Reference": null,
-          "NotNull": true,
-          "Unique": false
-        },
-        {
-          "Name": "book_guid",
-          "Type": "uuid",
-          "PrimaryKey": false,
-          "Reference": null,
-          "NotNull": true,
-          "Unique": false
-        },
-        {
-          "Name": "collection_guid",
-          "Type": "uuid",
-          "PrimaryKey": false,
           "Reference": null,
           "NotNull": true,
           "Unique": false
@@ -140,6 +130,39 @@
           "Reference": null,
           "NotNull": true,
           "Unique": false
+        },
+        {
+          "Name": "book_guid",
+          "Type": "uuid",
+          "PrimaryKey": false,
+          "Reference": {
+            "Table": "books",
+            "Column": "guid"
+          },
+          "NotNull": false,
+          "Unique": false
+        },
+        {
+          "Name": "collection_guid",
+          "Type": "uuid",
+          "PrimaryKey": false,
+          "Reference": {
+            "Table": "collections",
+            "Column": "guid"
+          },
+          "NotNull": false,
+          "Unique": false
+        },
+        {
+          "Name": "user_guid",
+          "Type": "uuid",
+          "PrimaryKey": false,
+          "Reference": {
+            "Table": "users",
+            "Column": "guid"
+          },
+          "NotNull": false,
+          "Unique": false
         }
       ]
     },
@@ -150,14 +173,6 @@
           "Name": "guid",
           "Type": "uuid",
           "PrimaryKey": true,
-          "Reference": null,
-          "NotNull": true,
-          "Unique": false
-        },
-        {
-          "Name": "book_guid",
-          "Type": "uuid",
-          "PrimaryKey": false,
           "Reference": null,
           "NotNull": true,
           "Unique": false
@@ -185,6 +200,17 @@
           "Reference": null,
           "NotNull": true,
           "Unique": false
+        },
+        {
+          "Name": "book_guid",
+          "Type": "uuid",
+          "PrimaryKey": false,
+          "Reference": {
+            "Table": "books",
+            "Column": "guid"
+          },
+          "NotNull": false,
+          "Unique": false
         }
       ]
     },
@@ -195,14 +221,6 @@
           "Name": "guid",
           "Type": "uuid",
           "PrimaryKey": true,
-          "Reference": null,
-          "NotNull": true,
-          "Unique": false
-        },
-        {
-          "Name": "book_guid",
-          "Type": "uuid",
-          "PrimaryKey": false,
           "Reference": null,
           "NotNull": true,
           "Unique": false
@@ -236,6 +254,17 @@
           "Type": "text",
           "PrimaryKey": false,
           "Reference": null,
+          "NotNull": false,
+          "Unique": false
+        },
+        {
+          "Name": "book_guid",
+          "Type": "uuid",
+          "PrimaryKey": false,
+          "Reference": {
+            "Table": "books",
+            "Column": "guid"
+          },
           "NotNull": false,
           "Unique": false
         }

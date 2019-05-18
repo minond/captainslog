@@ -20,6 +20,7 @@ type EntryService struct {
 	entryStore      *model.EntryStore
 	extractorStore  *model.ExtractorStore
 	shorthandStore  *model.ShorthandStore
+	userStore       *model.UserStore
 }
 
 func NewEntryService(db *sql.DB) *EntryService {
@@ -29,6 +30,7 @@ func NewEntryService(db *sql.DB) *EntryService {
 		entryStore:      model.NewEntryStore(db),
 		extractorStore:  model.NewExtractorStore(db),
 		shorthandStore:  model.NewShorthandStore(db),
+		userStore:       model.NewUserStore(db),
 	}
 }
 
@@ -45,14 +47,12 @@ type EntryCreateResponse struct {
 }
 
 func (s EntryService) Create(ctx context.Context, req *EntryCreateRequest) (*EntryCreateResponse, error) {
-	userGUID, err := getUserGUID(ctx)
+	user, err := getUser(ctx, s.userStore)
 	if err != nil {
 		return nil, err
 	}
 
-	book, err := s.bookStore.FindOne(model.NewBookQuery().
-		Where(kallax.Eq(model.Schema.Book.GUID, req.BookGUID)).
-		Where(kallax.Eq(model.Schema.Book.UserFK, userGUID)))
+	book, err := model.FindBook(s.bookStore, user, req.BookGUID)
 	if err != nil {
 		return nil, err
 	}

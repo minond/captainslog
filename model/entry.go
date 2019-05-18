@@ -18,6 +18,7 @@ type Entry struct {
 
 	Book       *Book       `fk:"book_guid,inverse"`
 	Collection *Collection `fk:"collection_guid,inverse"`
+	User       *User       `fk:"user_guid,inverse"`
 }
 
 func newEntry(original, text string, data map[string]interface{}, collection *Collection) (*Entry, error) {
@@ -32,8 +33,9 @@ func newEntry(original, text string, data map[string]interface{}, collection *Co
 		UpdatedAt:  now,
 	}
 
-	if collection != nil {
+	if collection != nil && collection.Book != nil {
 		entry.Book = collection.Book
+		entry.User = collection.Book.User
 	}
 
 	return entry, nil
