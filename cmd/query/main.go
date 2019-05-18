@@ -108,7 +108,7 @@ func main() {
 
 func printData(cols []string, rows [][]interface{}) {
 	table := tablewriter.NewWriter(os.Stdout)
-	table.SetBorder(true)
+	table.SetBorder(false)
 	table.SetHeader(cols)
 	for _, row := range rows {
 		ss := make([]string, len(cols))
@@ -118,23 +118,23 @@ func printData(cols []string, rows [][]interface{}) {
 				if v.Valid {
 					ss[i] = v.String
 				} else {
-					ss[i] = "NULL"
+					ss[i] = ""
 				}
 			case *sql.NullFloat64:
 				if v.Valid {
 					ss[i] = fmt.Sprintf("%f", v.Float64)
 				} else {
-					ss[i] = "NULL"
+					ss[i] = ""
 				}
 			case *sql.NullInt64:
 				if v.Valid {
 					ss[i] = fmt.Sprintf("%d", v.Int64)
 				} else {
-					ss[i] = "NULL"
+					ss[i] = ""
 				}
 			case *sql.NullBool:
 				if !v.Valid {
-					ss[i] = "NULL"
+					ss[i] = ""
 				} else if v.Bool {
 					ss[i] = "t"
 				} else {
