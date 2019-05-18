@@ -12,8 +12,8 @@ type querier interface {
 	RawQuery(sql string, params ...interface{}) (kallax.ResultSet, error)
 }
 
-func Exec(s string, store querier) ([]string, [][]interface{}, error) {
-	ast, err := Parse(s)
+func Exec(store querier, origSQL, userGUID string) ([]string, [][]interface{}, error) {
+	ast, err := Parse(origSQL)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -22,7 +22,7 @@ func Exec(s string, store querier) ([]string, [][]interface{}, error) {
 		return nil, nil, errors.New("only select statements are allowed")
 	}
 
-	converted, err := Convert(ast)
+	converted, err := Convert(ast, userGUID)
 	if err != nil {
 		return nil, nil, err
 	}

@@ -69,7 +69,7 @@ func TestConvert_rewriteAst(t *testing.T) {
 	}
 }
 
-func TestConvert_rewriteFromClause(t *testing.T) {
+func TestConvert_withBookFilter(t *testing.T) {
 	tests := []struct {
 		label    string
 		input    string
@@ -93,7 +93,7 @@ func TestConvert_rewriteFromClause(t *testing.T) {
 			if err != nil {
 				t.Errorf("unexpected error parsing query: %v", err)
 			}
-			query := rewriteFromClause(ast.(*selectStmt))
+			query := withBookFilter(ast.(*selectStmt))
 			if query.String() != test.expected {
 				t.Errorf(compstrmsg("bad conversion in "+test.label,
 					test.expected, query.String()))
@@ -111,12 +111,12 @@ func TestConvert_Convert(t *testing.T) {
 		{
 			"sample query 1",
 			`select exercise as exercise, max(cast(weight as float)) from workouts where weight is not null group by exercise`,
-			`select data #>> '{exercise}' as exercise, max(cast(data #>> '{weight}' as float)) from entries where book_guid = (select guid from books where name ilike 'workouts') and (data #>> '{weight}' is not null) group by exercise`,
+			`select data #>> '{exercise}' as exercise, max(cast(data #>> '{weight}' as float)) from entries where book_guid = (select guid from books where name ilike 'workouts') and (user_guid ilike 'e26e269c-0587-4094-bf01-108c61b0fa8a' and (data #>> '{weight}' is not null)) group by exercise`,
 		},
 		{
 			"sample query 2",
 			`select distinct exercise as name from workouts where exercise ilike '%bicep%'`,
-			`select distinct data #>> '{exercise}' as name from entries where book_guid = (select guid from books where name ilike 'workouts') and (data #>> '{exercise}' ilike '%bicep%')`,
+			`select distinct data #>> '{exercise}' as name from entries where book_guid = (select guid from books where name ilike 'workouts') and (user_guid ilike 'e26e269c-0587-4094-bf01-108c61b0fa8a' and (data #>> '{exercise}' ilike '%bicep%'))`,
 		},
 	}
 
@@ -126,7 +126,7 @@ func TestConvert_Convert(t *testing.T) {
 			if err != nil {
 				t.Errorf("unexpected error parsing query: %v", err)
 			}
-			query, err := Convert(ast)
+			query, err := Convert(ast, "e26e269c-0587-4094-bf01-108c61b0fa8a")
 			if err != nil {
 				t.Errorf("unexpected error converting query: %v", err)
 			}

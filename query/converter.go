@@ -20,7 +20,7 @@ func (env environment) define(alias string) environment {
 	return env
 }
 
-func Convert(ast Ast) (Ast, error) {
+func Convert(ast Ast, userGUID string) (Ast, error) {
 	env := make(environment)
 	switch stmt := ast.(type) {
 	case *selectStmt:
@@ -28,12 +28,36 @@ func Convert(ast Ast) (Ast, error) {
 		if err != nil {
 			return nil, err
 		}
-		return rewriteFromClause(rewritten.(*selectStmt)), nil
+		return withBookFilter(withUserFilter(rewritten.(*selectStmt), userGUID)), nil
 	}
 	return nil, fmt.Errorf("invalid query type: %v", ast.queryType())
 }
 
-func rewriteFromClause(stmt *selectStmt) *selectStmt {
+func and(stmt *selectStmt, expr expr) *selectStmt {
+	if stmt.where == nil {
+		stmt.where = expr
+	} else {
+		stmt.where = binaryExpr{
+			left:  expr,
+			op:    opAnd,
+			right: grouping{sub: stmt.where},
+		}
+	}
+	return stmt
+}
+
+func withUserFilter(stmt *selectStmt, userGUID string) *selectStmt {
+	return and(stmt, binaryExpr{
+		left: identifier{name: "user_guid"},
+		op:   opIlike,
+		right: value{
+			ty:  tyString,
+			tok: token{lexeme: userGUID},
+		},
+	})
+}
+
+func withBookFilter(stmt *selectStmt) *selectStmt {
 	from := &table{name: "entries"}
 	if stmt.from != nil {
 		tableMatcher := binaryExpr{
@@ -55,15 +79,7 @@ func rewriteFromClause(stmt *selectStmt) *selectStmt {
 			},
 		}
 
-		if stmt.where == nil {
-			stmt.where = tableMatcher
-		} else {
-			stmt.where = binaryExpr{
-				left:  tableMatcher,
-				op:    opAnd,
-				right: grouping{sub: stmt.where},
-			}
-		}
+		stmt = and(stmt, tableMatcher)
 	}
 	stmt.from = from
 	return stmt
