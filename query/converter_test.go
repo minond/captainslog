@@ -13,7 +13,7 @@ func compstrmsg(msg, expecting, got string) string {
 		      got: %s`, msg, expecting, got)
 }
 
-func TestConvert_rewrite(t *testing.T) {
+func TestConvert_rewriteAst(t *testing.T) {
 	tests := []struct {
 		label    string
 		input    string
@@ -61,6 +61,39 @@ func TestConvert_rewrite(t *testing.T) {
 			if err != nil {
 				t.Errorf("unexpected error converting query: %v", err)
 			}
+			if query.String() != test.expected {
+				t.Errorf(compstrmsg("bad conversion",
+					test.expected, query.String()))
+			}
+		})
+	}
+}
+
+func TestConvert_rewriteFromClause(t *testing.T) {
+	tests := []struct {
+		label    string
+		input    string
+		expected string
+	}{
+		{
+			"a subquery filter is added",
+			`select exercise from workouts`,
+			`select exercise from entries where book_guid = (select guid from books where name ilike 'workouts')`,
+		},
+		{
+			"previous filters are kept",
+			`select exercise from workouts where true and false and 1`,
+			`select exercise from entries where book_guid = (select guid from books where name ilike 'workouts') and (true and false and 1)`,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.label, func(t *testing.T) {
+			ast, err := Parse(test.input)
+			if err != nil {
+				t.Errorf("unexpected error parsing query: %v", err)
+			}
+			query := rewriteFromClause(ast.(*selectStmt))
 			if query.String() != test.expected {
 				t.Errorf(compstrmsg("bad conversion",
 					test.expected, query.String()))
