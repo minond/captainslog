@@ -72,7 +72,14 @@ func printData(cols []string, rows [][]interface{}) {
 	for _, row := range rows {
 		ss := make([]string, len(cols))
 		for i, col := range row {
-			ss[i] = fmt.Sprintf("%v", col)
+			switch v := col.(type) {
+			case *sql.NullString:
+				ss[i] = v.String
+			case *sql.NullFloat64:
+				ss[i] = fmt.Sprintf("%d", v.Float64)
+			default:
+				ss[i] = fmt.Sprintf("%v", col)
+			}
 		}
 		table.Append(ss)
 	}
