@@ -42,7 +42,7 @@ func TestConvert_rewriteAst(t *testing.T) {
 		{
 			"group by field",
 			`select exercise as exercise, max(cast(weight as float)) as weight from workouts where weight is not null group by exercise`,
-			`select data #>> '{exercise}' as exercise, max(cast(data #>> '{weight}' as float)) as weight from workouts where data #>> '{weight}' is not null group by exercise`,
+			`select data #>> '{exercise}' as exercise, max(cast(data #>> '{weight}' as float)) as weight from workouts where data #>> '{weight}' is not null group by data #>> '{exercise}'`,
 		},
 		{
 			"grouping in where clause",
@@ -111,7 +111,7 @@ func TestConvert_Convert(t *testing.T) {
 		{
 			"sample query 1",
 			`select exercise as exercise, max(cast(weight as float)) from workouts where weight is not null group by exercise`,
-			`select data #>> '{exercise}' as exercise, max(cast(data #>> '{weight}' as float)) from entries where book_guid = (select guid from books where name ilike 'workouts') and (user_guid = 'e26e269c-0587-4094-bf01-108c61b0fa8a' and (data #>> '{weight}' is not null)) group by exercise`,
+			`select data #>> '{exercise}' as exercise, max(cast(data #>> '{weight}' as float)) from entries where book_guid = (select guid from books where name ilike 'workouts') and (user_guid = 'e26e269c-0587-4094-bf01-108c61b0fa8a' and (data #>> '{weight}' is not null)) group by data #>> '{exercise}'`,
 		},
 		{
 			"sample query 2",
