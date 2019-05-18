@@ -134,7 +134,6 @@ type expr interface {
 type identifier struct {
 	source string
 	name   string
-	as     string
 }
 
 func (identifier) isExpr() {}
@@ -143,9 +142,6 @@ func (i identifier) String() string {
 	v := i.name
 	if i.source != "" {
 		v = i.source + "." + v
-	}
-	if i.as != "" {
-		v = v + " as " + i.as
 	}
 	return v
 }
@@ -232,4 +228,15 @@ func (i isNull) String() string {
 		return fmt.Sprintf("%s is not null", i.expr.String())
 	}
 	return fmt.Sprintf("%s is null", i.expr.String())
+}
+
+type aliased struct {
+	as   string
+	expr expr
+}
+
+func (aliased) isExpr() {}
+
+func (a aliased) String() string {
+	return fmt.Sprintf("%s as %s", a.expr.String(), a.as)
 }

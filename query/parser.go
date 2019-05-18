@@ -452,6 +452,20 @@ func (p *parser) parseExpr() (expr, error) {
 		}
 	}
 
+	if p.peek().ieq(wordAs) {
+		// Eat the "as" token
+		_, _ = p.eat()
+		// cast, err := p.expectIeqWords(typValues...)
+		as, err := p.expectToks(tokIdentifier)
+		if err != nil {
+			return nil, err
+		}
+		exp = aliased{
+			as:   as.lexeme,
+			expr: exp,
+		}
+	}
+
 	return exp, nil
 }
 
@@ -500,7 +514,7 @@ func (p *parser) parseLogicalOperator() (operator, error) {
 }
 
 func (p *parser) parseIdentifier() (expr, error) {
-	var source, name, as string
+	var source, name string
 
 	sourceOrNameToken, err := p.eat()
 	if err != nil {
@@ -520,16 +534,5 @@ func (p *parser) parseIdentifier() (expr, error) {
 		name = sourceOrNameToken.lexeme
 	}
 
-	if p.peek().ieq(wordAs) {
-		// Eat the "as" token
-		_, _ = p.eat()
-		// cast, err := p.expectIeqWords(typValues...)
-		cast, err := p.expectToks(tokIdentifier)
-		if err != nil {
-			return nil, err
-		}
-		as = cast.lexeme
-	}
-
-	return identifier{source: source, name: name, as: as}, nil
+	return identifier{source: source, name: name}, nil
 }

@@ -47,7 +47,7 @@ func TestParse_PossibleQueries(t *testing.T) {
 		{"cast with as expression", `select cast(x as decimal) as xd from y where z is not null`},
 
 		{"sample workouts query (1)", `select sets, reps, sets * reps as total from workouts where exercise like 'bench press'`},
-		{"sample workouts query (2)", `select exercise, min(weight), max(weight) from workouts group by exercise`},
+		{"sample workouts query (2)", `select exercise, min(weight) as min_weight, max(weight) as max_weight from workouts group by exercise`},
 		{"sample workouts query (3)", `select exercise, min(weight), max(weight) from workouts where weight is not null group by exercise`},
 	}
 	for _, test := range tests {
