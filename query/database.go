@@ -94,6 +94,7 @@ func rowContainer(typs []*sql.ColumnType) ([]interface{}, error) {
 const (
 	pgBool   = "BOOL"
 	pgFloat8 = "FLOAT8"
+	pgInt4   = "INT4"
 	pgInt8   = "INT8"
 	pgText   = "TEXT"
 )
@@ -107,7 +108,8 @@ func isFloat(typ *sql.ColumnType) bool {
 }
 
 func isInt(typ *sql.ColumnType) bool {
-	return typ.DatabaseTypeName() == pgInt8
+	return typ.DatabaseTypeName() == pgInt8 ||
+		typ.DatabaseTypeName() == pgInt4
 }
 
 func isBool(typ *sql.ColumnType) bool {
