@@ -47,6 +47,18 @@
       ]
     },
     {
+      "endpoint": "/api/query",
+      "service": "service.QueryService",
+      "methods": [
+        {
+          "method": "POST",
+          "handler": "Query",
+          "request": "service.QueryRequest",
+          "response": "service.QueryResponse"
+        }
+      ]
+    },
+    {
       "endpoint": "/api/shorthands",
       "service": "service.ShorthandService",
       "methods": [
