@@ -1,4 +1,6 @@
-Captain's log is an application for logging anything you want about yourself.
+# Captain's Log
+
+Captain's Log is an application for logging anything you want about yourself.
 
 [![Build Status](https://travis-ci.org/minond/captainslog.svg?branch=master)](https://travis-ci.org/minond/captainslog)
 [![Go Report Card](https://goreportcard.com/badge/github.com/minond/captainslog)](https://goreportcard.com/report/github.com/minond/captainslog)
@@ -11,9 +13,9 @@ anything in relatively free form, and still be able to extract (or inject)
 important information from the logs. This is done using features like
 Extractors that know how to extract and label data from a piece of text.
 
-#### Workouts sample
+### Workouts sample
 
-##### Extracting data from logs
+#### Extracting data from logs
 
 Let's say I want to log my workouts. I'd start by creating a new "Workouts"
 Book and group by Day since I think of workouts on a day-by-day basis. I'd then
@@ -47,7 +49,7 @@ These allow us to take a log like `"Running, 5k 42min"` and get `distance = 5`,
 `distance_unit = k`, `exercise = Running`, `time = 42`, `time_unit = min` out
 of it.
 
-##### Using the extracted data
+#### Using the extracted data
 
 I need to spen some time writing this, but the tl;dw is that the extracted data
 is stored in a JSON field, and this lets us query it like we would any other
