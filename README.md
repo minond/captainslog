@@ -13,16 +13,16 @@ anything in relatively free form, and still be able to extract (or inject)
 important information from the logs. This is done using features like
 Extractors that know how to extract and label data from a piece of text.
 
-### Workouts sample
+### Sample use-case: Workouts log
 
 #### Extracting data from logs
 
-Let's say I want to log my workouts. I'd start by creating a new "Workouts"
-Book and group by Day since I think of workouts on a day-by-day basis. I'd then
-add some Extractors to extract the exercise, weight, set/rep, and time
-information. Since Extractors are regular expression based, I first need to
-know what my general format will be. I'll use the grammar below to explain the
-format:
+Here's an example use-case: Let's say I want to log my workouts. I'd start by
+creating a new "Workouts" Book and group it by Day since I think of workouts on
+a day-by-day basis. I'd then add some Extractors to extract the exercise,
+weight, set/rep, and time information. Since Extractors are regular expression
+based, I first need to know what my general format will be. I'll use the
+grammar below to explain the format:
 
 ```
 exercise = ?? any character except comma ??
@@ -34,7 +34,8 @@ distance = ?? real number ?? , [ "mile" | "miles" | "k" | "kilometer" | "kilomet
 log = exercise "," [ sets , "x" reps ] [ "@" weight ] [ distance ] [ time ] ]
 ```
 
-We convert that into extractors with the following regular expression:
+We convert that into Extractors with the following labels and regular
+expression matches:
 
 - "exercise", `/^(.+),/`
 - "sets", `/,\s{0,}(\d+)\s{0,}x/`
@@ -47,17 +48,16 @@ We convert that into extractors with the following regular expression:
 
 These allow us to take a log like `"Running, 5k 42min"` and get `distance = 5`,
 `distance_unit = k`, `exercise = Running`, `time = 42`, `time_unit = min` out
-of it.
+of it. At this point we can start entering logs.
 
 #### Using the extracted data
 
-I need to spen some time writing this, but the tl;dw is that the extracted data
-is stored in a JSON field, and this lets us query it like we would any other
-column. In addition, there is an additional layer in between the user and the
-database that extracts a lot of the data section and access scoping. Included
-in this project is a `captainslog-repl` command which acts as a database client
-that processes the SQL the user inputs as a user-friendly form into SQL we can
-actually send to the database. For example, instead of writing:
+Now that we have our Extractors set up and we're entering logs, we need a way
+to get that data... I need to spend some time writing this in more detail, but
+the tl;dw is that the extracted data is stored in a JSON field, and this lets
+us query it like we would any other column. In addition, there is a layer in
+between the user and the database that processes and scopes SQL queries to make
+writing them a lot easier. For example, instead of writing:
 
 ```sql
 select data #>> '{exercise}',
@@ -80,6 +80,10 @@ where exercise ilike 'running'
 and distance is not null;
 ```
 
+This can currently be done with the `captainslog-repl` program. Start it and
+set the user scope with the `\user <GUID>` command and then run any query (only
+select statements are supported):
+
 ```
 $ ./captainslog-repl
 > \user e26e269c-0587-4094-bf01-108c61b0fa8a
@@ -97,10 +101,9 @@ $ ./captainslog-repl
 ```
 
 This part of the application is still in its early stages and the interaction
-may change, though the SQL interface is more or less how I want it. Clients
-should also have easy access to this data, so with the web or mobile client,
-one should be able to execute any query one could run in the `captainslog-repl`
-tool. More to come on this.
+may change, though the SQL interface is more or less how I want it. One of the
+features to come is the ability to execute queries from clients instead of
+having to run them in this repl. More to come on this.
 
 
 ## Development
