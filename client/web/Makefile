@@ -1,3 +1,5 @@
+default: build
+
 build:
 	if [ ! -d dist ]; then mkdir dist; fi
 	cp src/index.html dist/
