@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"database/sql"
 	"fmt"
+	"io"
 	"log"
 	"os"
 	"strings"
@@ -14,102 +15,137 @@ import (
 	"github.com/minond/captainslog/query"
 )
 
-func main() {
-	var userGUID string
-	setUserGUID := func(s string) {
-		fmt.Printf("running as %s\n", s)
-		userGUID = s
-	}
-	db, err := sql.Open(os.Getenv("DATABASE_DRIVER"), os.Getenv("DATABASE_CONN"))
-	if err != nil {
-		log.Fatalf("unable get database connection: %v", err)
-	}
-	defer db.Close()
+type repl struct {
+	userGuid  string
+	debugging bool
+	stopped   bool
 
-	var buff string
-	var debugging bool
+	db     *sql.DB
+	buff   strings.Builder
+	input  io.Reader
+	output io.Writer
+}
 
-	reader := bufio.NewReader(os.Stdin)
-	store := model.NewEntryStore(db)
-
-	setUserGUID("e26e269c-0587-4094-bf01-108c61b0fa8a")
-
-	for {
-		if buff == "" {
-			fmt.Print("> ")
-		} else {
-			fmt.Print("  ")
-		}
-
-		input, _ := reader.ReadString('\n')
-		buff = strings.TrimSpace(buff + " " + input)
-		if buff == "exit" {
-			fmt.Println("goodbye")
-			break
-		} else if buff == "debug" {
-			buff = ""
-			debugging = !debugging
-			if debugging {
-				fmt.Println("debug on")
-			} else {
-				fmt.Println("debug off")
-			}
-			continue
-		} else if strings.HasPrefix(buff, "set user") {
-			setUserGUID(strings.TrimSpace(strings.TrimPrefix(buff, "set user")))
-			buff = ""
-			continue
-		} else if !strings.HasSuffix(buff, ";") {
-			continue
-		}
-		buff = strings.TrimSuffix(buff, ";")
-
-		if debugging {
-			ast, err := query.Parse(buff)
-			if err != nil {
-				fmt.Printf("\nsyntax error: %v\n", err)
-				buff = ""
-				continue
-			}
-
-			ast, err = query.Convert(ast, userGUID)
-			if err != nil {
-				fmt.Printf("\nconversion error: %v\n", err)
-				buff = ""
-				continue
-			}
-
-			fmt.Println("\ngenerated query:")
-			fmt.Println(ast.Print(true))
-		}
-
-		cols, rows, err := query.Exec(store, buff, userGUID)
-		if err != nil {
-			fmt.Printf("\nerror: %v\n\n", err)
-			buff = ""
-			continue
-		}
-
-		buff = ""
-
-		switch len(rows) {
-		case 0:
-			fmt.Println("(0 rows)")
-		case 1:
-			printData(cols, rows)
-			fmt.Println("(1 row)")
-		default:
-			printData(cols, rows)
-			fmt.Printf("(%d rows)\n", len(rows))
-		}
-		fmt.Print("\n")
+func (r *repl) prompt() {
+	if r.buff.Len() == 0 {
+		fmt.Fprint(r.output, "> ")
+	} else {
+		fmt.Fprint(r.output, "  ")
 	}
 }
 
-func printData(cols []string, rows [][]interface{}) {
-	table := tablewriter.NewWriter(os.Stdout)
+func (r *repl) read() {
+	reader := bufio.NewReader(r.input)
+	input, _ := reader.ReadBytes('\n')
+	r.buff.WriteString(" ")
+	r.buff.Write(input)
+}
+
+func (r *repl) printf(f string, args ...interface{}) {
+	fmt.Fprintf(r.output, f, args...)
+}
+
+func (r *repl) print(str string) {
+	fmt.Fprint(r.output, str)
+}
+
+func (r *repl) process() error {
+	return r.execute(r.buff.String())
+}
+
+func (r *repl) query(input string) error {
+	if r.debugging {
+		ast, err := query.Parse(input)
+		if err != nil {
+			return fmt.Errorf("syntax error: %v", err)
+		}
+
+		ast, err = query.Convert(ast, r.userGuid)
+		if err != nil {
+			fmt.Errorf("conversion error: %v", err)
+		}
+
+		r.print("\n")
+		r.print(ast.Print(true))
+		r.print("\n")
+	}
+
+	store := model.NewEntryStore(r.db)
+	cols, rows, err := query.Exec(store, input, r.userGuid)
+	if err != nil {
+		return fmt.Errorf("exec error: %v", err)
+	}
+
+	r.print("\n")
+	r.printResults(cols, rows)
+	r.print("\n")
+	return nil
+}
+
+func (r *repl) execute(input string) error {
+	input = strings.TrimSpace(input)
+
+	if strings.HasSuffix(input, ";") {
+		r.buff.Reset()
+		return r.query(strings.TrimSuffix(input, ";"))
+	}
+
+	parts := strings.Split(input, " ")
+	switch parts[0] {
+	case "\\q":
+		fallthrough
+	case "\\quit":
+		r.buff.Reset()
+		r.print("goodbye\n")
+		r.stopped = true
+
+	case "\\debug":
+		r.buff.Reset()
+		r.debugging = !r.debugging
+		r.printf("debug mode enabled: %v\n", r.debugging)
+
+	case "\\u":
+		fallthrough
+	case "\\user":
+		r.buff.Reset()
+		r.userGuid = parts[1]
+		r.printf("running as user: %s\n", r.userGuid)
+
+	case "\\?":
+		r.buff.Reset()
+		r.print(`
+General:
+  \q				quit repl
+  \d				toggle debug mode
+  \u [guid]			set user guid
+
+Help:
+  \?				print this help output
+
+`)
+	}
+
+	return nil
+}
+
+func (r *repl) printResults(cols []string, rows [][]interface{}) {
+	switch len(rows) {
+	case 0:
+		r.print("(0 rows)\n")
+	case 1:
+		r.printData(cols, rows)
+		r.print("(1 row)\n")
+	default:
+		r.printData(cols, rows)
+		r.printf("(%d rows)\n", len(rows))
+	}
+}
+
+func (r *repl) printData(cols []string, rows [][]interface{}) {
+	table := tablewriter.NewWriter(r.output)
 	table.SetBorder(false)
 	table.SetHeader(cols)
+
 	for _, row := range rows {
 		ss := make([]string, len(cols))
 		for i, col := range row {
@@ -146,5 +182,31 @@ func printData(cols []string, rows [][]interface{}) {
 		}
 		table.Append(ss)
 	}
+
 	table.Render()
+}
+
+func main() {
+	db, err := sql.Open(os.Getenv("DATABASE_DRIVER"), os.Getenv("DATABASE_CONN"))
+	if err != nil {
+		log.Fatalf("unable get database connection: %v", err)
+	}
+	defer db.Close()
+
+	r := repl{
+		output: os.Stdout,
+		input:  os.Stdin,
+		db:     db,
+	}
+
+	r.execute("\\user e26e269c-0587-4094-bf01-108c61b0fa8a")
+
+	for !r.stopped {
+		r.prompt()
+		r.read()
+		if err := r.process(); err != nil {
+			r.printf("\nerror handling input: %v\n\n", err)
+		}
+
+	}
 }
