@@ -12,7 +12,8 @@ build-web-client:
 
 build-server:
 	go build server/main.go
-	go build cmd/migrate/main.go
+	go build cmd/captainslog-migrate/main.go
+	go build cmd/captainslog-repl/main.go
 
 
 ### Linters ####################################################################
@@ -49,10 +50,10 @@ test-server:
 ### Migrations #################################################################
 
 migrate-up:
-	go run cmd/migrate/main.go up
+	go run cmd/captainslog-migrate/main.go up
 
 migrate-down:
-	go run cmd/migrate/main.go down
+	go run cmd/captainslog-migrate/main.go down
 
 migration:
 	GO111MODULE=off kallax migrate --input ./model/ --out ./migrations --name $(NAME)
