@@ -62,7 +62,7 @@ func (r *repl) query(input string) error {
 
 		ast, err = query.Convert(ast, r.userGuid)
 		if err != nil {
-			fmt.Errorf("conversion error: %v", err)
+			return fmt.Errorf("conversion error: %v", err)
 		}
 
 		r.print("\n")
@@ -199,7 +199,9 @@ func main() {
 		db:     db,
 	}
 
-	r.execute("\\user e26e269c-0587-4094-bf01-108c61b0fa8a")
+	if err := r.execute("\\user e26e269c-0587-4094-bf01-108c61b0fa8a"); err != nil {
+		r.printf("\nerror setting user: %v\n\n", err)
+	}
 
 	for !r.stopped {
 		r.prompt()
