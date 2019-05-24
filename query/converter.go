@@ -89,55 +89,63 @@ func rewriteAst(ast Ast, env environment) (Ast, error) {
 	switch stmt := ast.(type) {
 	case *selectStmt:
 		for i, expr := range stmt.columns {
-			newexpr, newenv := rewriteExpr(expr, env)
+			newexpr, newenv := rewriteExpr(expr, env, true)
 			env = newenv
 			stmt.columns[i] = newexpr
 		}
 		for i, expr := range stmt.groupBy {
-			newexpr, _ := rewriteExpr(expr, env)
+			newexpr, _ := rewriteExpr(expr, env, false)
 			stmt.groupBy[i] = newexpr
 		}
 
 		// Column aliases are not available in where clause, so we use a new
 		// environment when rewriting the where clause expression.
-		newexpr, _ := rewriteExpr(stmt.where, make(environment))
+		newexpr, _ := rewriteExpr(stmt.where, make(environment), false)
 		stmt.where = newexpr
 		return ast, nil
 	}
 	return nil, fmt.Errorf("invalid query type: %v", ast.queryType())
 }
 
-func rewriteExpr(expr expr, env environment) (expr, environment) {
-	switch x := expr.(type) {
+func rewriteExpr(ex expr, env environment, autoAlias bool) (expr, environment) {
+	switch x := ex.(type) {
 	case identifier:
-		return jsonfield{col: "data", prop: x.name}, env
+		var field expr
+		field = jsonfield{col: "data", prop: x.name}
+		if autoAlias {
+			field = aliased{as: x.name, expr: field}
+		}
+		return field, env
 	case application:
-		for i, expr := range x.args {
-			newexpr, newenv := rewriteExpr(expr, env)
+		for i, ex := range x.args {
+			newexpr, newenv := rewriteExpr(ex, env, false)
 			env = newenv
 			x.args[i] = newexpr
 		}
+		if autoAlias {
+			return aliased{as: x.fn, expr: x}, env
+		}
 		return x, env
 	case grouping:
-		newexpr, newenv := rewriteExpr(x.sub, env)
+		newexpr, newenv := rewriteExpr(x.sub, env, false)
 		x.sub = newexpr
 		return x, newenv
 	case binaryExpr:
-		newleft, newenv := rewriteExpr(x.left, env)
-		newright, lastenv := rewriteExpr(x.right, newenv)
+		newleft, newenv := rewriteExpr(x.left, env, false)
+		newright, lastenv := rewriteExpr(x.right, newenv, false)
 		x.left = newleft
 		x.right = newright
 		return x, lastenv
 	case unaryExpr:
-		newexpr, newenv := rewriteExpr(x.right, env)
+		newexpr, newenv := rewriteExpr(x.right, env, false)
 		x.right = newexpr
 		return x, newenv
 	case isNull:
-		newexpr, newenv := rewriteExpr(x.expr, env)
+		newexpr, newenv := rewriteExpr(x.expr, env, false)
 		x.expr = newexpr
 		return x, newenv
 	case aliased:
-		newexpr, _ := rewriteExpr(x.expr, env)
+		newexpr, _ := rewriteExpr(x.expr, env, false)
 		x.expr = newexpr
 		env = env.define(x.as)
 		return x, env
@@ -148,5 +156,5 @@ func rewriteExpr(expr expr, env environment) (expr, environment) {
 	case subquery:
 		return x, env
 	}
-	return expr, env
+	return ex, env
 }

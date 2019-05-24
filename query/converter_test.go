@@ -22,22 +22,22 @@ func TestConvert_rewriteAst(t *testing.T) {
 		{
 			"columns are converted to data selectors",
 			`select exercise, reps, sets`,
-			`select data #>> '{exercise}', data #>> '{reps}', data #>> '{sets}'`,
+			`select data #>> '{exercise}' as exercise, data #>> '{reps}' as reps, data #>> '{sets}' as sets`,
 		},
 		{
 			"from clause is converted into a sub query selecting the book",
 			`select exercise from workouts`,
-			`select data #>> '{exercise}' from workouts`,
+			`select data #>> '{exercise}' as exercise from workouts`,
 		},
 		{
 			"cast in select clause passed to function",
 			`select max(cast(reps as decimal)) from workouts`,
-			`select max(cast(data #>> '{reps}' as decimal)) from workouts`,
+			`select max(cast(data #>> '{reps}' as decimal)) as max from workouts`,
 		},
 		{
 			"is not null in where clause",
 			`select exercise, max(cast(weight as decimal)) as weight from workouts where weight is not null`,
-			`select data #>> '{exercise}', max(cast(data #>> '{weight}' as decimal)) as weight from workouts where data #>> '{weight}' is not null`,
+			`select data #>> '{exercise}' as exercise, max(cast(data #>> '{weight}' as decimal)) as weight from workouts where data #>> '{weight}' is not null`,
 		},
 		{
 			"group by field",
@@ -47,7 +47,7 @@ func TestConvert_rewriteAst(t *testing.T) {
 		{
 			"grouping in where clause",
 			`select exercise from workouts where (weight is not null) and true`,
-			`select data #>> '{exercise}' from workouts where (data #>> '{weight}' is not null) and true`,
+			`select data #>> '{exercise}' as exercise from workouts where (data #>> '{weight}' is not null) and true`,
 		},
 	}
 
@@ -111,7 +111,7 @@ func TestConvert_Convert(t *testing.T) {
 		{
 			"sample query 1",
 			`select exercise as exercise, max(cast(weight as float)) from workouts where weight is not null group by exercise`,
-			`select data #>> '{exercise}' as exercise, max(cast(data #>> '{weight}' as float)) from entries where book_guid = (select guid from books where name ilike 'workouts') and (user_guid = 'e26e269c-0587-4094-bf01-108c61b0fa8a' and (data #>> '{weight}' is not null)) group by data #>> '{exercise}'`,
+			`select data #>> '{exercise}' as exercise, max(cast(data #>> '{weight}' as float)) as max from entries where book_guid = (select guid from books where name ilike 'workouts') and (user_guid = 'e26e269c-0587-4094-bf01-108c61b0fa8a' and (data #>> '{weight}' is not null)) group by data #>> '{exercise}'`,
 		},
 		{
 			"sample query 2",
