@@ -68,6 +68,7 @@ type selectStmt struct {
 	from     *table
 	where    expr
 	groupBy  []expr
+	orderBy  []order
 	limit    *limit
 }
 
@@ -112,6 +113,17 @@ func (s selectStmt) Print(pretty bool) string {
 			fmt.Fprint(&query, " group by ", strings.Join(group, ", "))
 		}
 	}
+	if len(s.orderBy) != 0 {
+		order := make([]string, len(s.orderBy))
+		for i, expr := range s.orderBy {
+			order[i] = expr.String()
+		}
+		if pretty {
+			fmt.Fprint(&query, "\norder by ", strings.Join(order, ", "))
+		} else {
+			fmt.Fprint(&query, " order by ", strings.Join(order, ", "))
+		}
+	}
 	if s.limit != nil && s.limit.expr != nil {
 		if pretty {
 			fmt.Fprint(&query, "\nlimit ", s.limit.expr.String())
@@ -145,6 +157,26 @@ type limit struct {
 
 func (l limit) String() string {
 	return ""
+}
+
+type orderDir uint8
+
+const (
+	asc orderDir = iota
+	desc
+)
+
+type order struct {
+	dir  orderDir
+	expr expr
+}
+
+func (o order) String() string {
+	dir := "asc"
+	if o.dir == desc {
+		dir = "desc"
+	}
+	return o.expr.String() + " " + dir
 }
 
 type expr interface {

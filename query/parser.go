@@ -6,9 +6,13 @@ import (
 )
 
 var (
+	// Remember that adding a new word here likely means it is a keyword and
+	// should be added to the sqlInvalidTableAliasTokens array.
 	wordAnd      = token{tok: tokIdentifier, lexeme: "and"}
 	wordAs       = token{tok: tokIdentifier, lexeme: "as"}
+	wordAsc      = token{tok: tokIdentifier, lexeme: "asc"}
 	wordBy       = token{tok: tokIdentifier, lexeme: "by"}
+	wordDesc     = token{tok: tokIdentifier, lexeme: "desc"}
 	wordDistinct = token{tok: tokIdentifier, lexeme: "distinct"}
 	wordFalse    = token{tok: tokIdentifier, lexeme: "false"}
 	wordFrom     = token{tok: tokIdentifier, lexeme: "from"}
@@ -20,6 +24,7 @@ var (
 	wordNot      = token{tok: tokIdentifier, lexeme: "not"}
 	wordNull     = token{tok: tokIdentifier, lexeme: "null"}
 	wordOr       = token{tok: tokIdentifier, lexeme: "or"}
+	wordOrder    = token{tok: tokIdentifier, lexeme: "order"}
 	wordSelect   = token{tok: tokIdentifier, lexeme: "select"}
 	wordTrue     = token{tok: tokIdentifier, lexeme: "true"}
 	wordWhere    = token{tok: tokIdentifier, lexeme: "where"}
@@ -39,6 +44,30 @@ var (
 		tokenPlus,
 		wordIlike,
 		wordLike,
+	}
+
+	// Array of reserved keywords in sql. These cannot be used as table
+	// aliases (but may be used in column aliases)
+	sqlInvalidTableAliasTokens = []token{
+		wordAnd,
+		wordAs,
+		wordAsc,
+		wordDesc,
+		wordDistinct,
+		wordFalse,
+		wordFrom,
+		wordGroup,
+		wordIlike,
+		wordIs,
+		wordLike,
+		wordLimit,
+		wordNot,
+		wordNull,
+		wordOr,
+		wordOrder,
+		wordSelect,
+		wordTrue,
+		wordWhere,
 	}
 )
 
@@ -162,6 +191,7 @@ func (p *parser) parseSelectStmt() (*selectStmt, error) {
 	var from *table
 	var where expr
 	var groupBy []expr
+	var orderBy []order
 	var lim *limit
 
 	_, err = p.expectIeqWord(wordSelect)
@@ -205,6 +235,18 @@ func (p *parser) parseSelectStmt() (*selectStmt, error) {
 		}
 	}
 
+	if p.peek().ieq(wordOrder) {
+		// Eat "order" token
+		_, _ = p.eat()
+		if _, err := p.expectIeqWord(wordBy); err != nil {
+			return nil, err
+		}
+		orderBy, err = p.parseOrders()
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	if p.peek().ieq(wordLimit) {
 		_, _ = p.eat()
 		expr, err := p.parseExpr()
@@ -220,6 +262,7 @@ func (p *parser) parseSelectStmt() (*selectStmt, error) {
 		from:     from,
 		where:    where,
 		groupBy:  groupBy,
+		orderBy:  orderBy,
 		limit:    lim,
 	}, nil
 }
@@ -275,7 +318,7 @@ func (p *parser) parseFromClause() (*table, error) {
 		aliased = true
 	}
 
-	if !p.nextIeqWords(wordWhere, wordGroup, wordLimit) {
+	if !p.nextIeqWords(sqlInvalidTableAliasTokens...) {
 		aliased = true
 	}
 
@@ -297,6 +340,33 @@ func (p *parser) parseWhereClause() (expr, error) {
 		return nil, err
 	}
 	return p.parseExpr()
+}
+
+func (p *parser) parseOrders() ([]order, error) {
+	var orders []order
+	for !p.done() {
+		expr, err := p.parseExpr()
+		if err != nil {
+			return nil, err
+		}
+
+		dir := asc
+		if p.nextIeqWords(wordAsc, wordDesc) {
+			if tok, _ := p.eat(); tok.ieq(wordAsc) {
+				dir = asc
+			} else {
+				dir = desc
+			}
+		}
+
+		orders = append(orders, order{dir: dir, expr: expr})
+		if !p.nextToks(tokComma) {
+			break
+		}
+		// Eat comma token
+		_, _ = p.eat()
+	}
+	return orders, nil
 }
 
 func (p *parser) parseExprs() ([]expr, error) {
