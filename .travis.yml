@@ -6,6 +6,9 @@ go:
 services:
   - postgresql
 
+addons:
+  postgresql: "10"
+
 before_script:
   - psql -c "create database testing;" -U postgres
 
