@@ -84,20 +84,29 @@ This can currently be done with the `./captainslog repl` command. Start it and
 set the user scope with the `\user <GUID>` command and then run any query (only
 select statements are supported):
 
-```
-$ ./captainslog-repl
+```text
+$ ./captainslog repl
 > \user e26e269c-0587-4094-bf01-108c61b0fa8a
+running as user: e26e269c-0587-4094-bf01-108c61b0fa8a
 > select exercise, distance, distance_unit, time, time_unit
   from workouts
   where exercise ilike 'running'
   and distance is not null;
 
-  ?COLUMN? | ?COLUMN? | ?COLUMN? | ?COLUMN? | ?COLUMN?
-+----------+----------+----------+----------+----------+
-  Running  |        5 | k        |       42 | min
-(1 row)
+  EXERCISE | DISTANCE | DISTANCE UNIT | TIME | TIME UNIT
++----------+----------+---------------+------+-----------+
+  Running  |     1.15 | mile          |   14 | min
+  Running  |        1 | mile          |   12 | min
+  Running  |        1 | mile          |   30 | min
+  Running  |        1 | mile          |   12 | min
+  Running  |      2.1 | mile          |   30 | min
+  Running  |        1 | mile          |   30 | min
+  Running  |        1 | mile          |   13 | min
+  Running  |        5 | k             |   42 | min
+(8 rows)
 
 > \q
+goodbye
 ```
 
 This part of the application is still in its early stages and the interaction
