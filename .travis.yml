@@ -27,9 +27,9 @@ before_script:
   - sudo -u postgres psql -c "create user testuser with password 'testpass'"
   - sudo -u postgres psql -c "alter role testuser superuser"
   - sudo -u postgres psql -c "create database testdb;" -U postgres
+  - go build -o captainslog cmd/captainslog/*
+  - ./captainslog migrate up
 
 script:
   - go build ./...
-  - go build -o captainslog-migrate cmd/captainslog-migrate/main.go
-  - ./captainslog-migrate up
   - go test ./... -v
