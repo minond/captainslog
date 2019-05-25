@@ -24,6 +24,7 @@ env:
     - DATABASE_DRIVER=postgres
     - DATABASE_CONN="host=127.0.0.1 port=5432 user=postgres dbname=testing sslmode=disable"
     - DATABASE_URL="postgres://postgres@localhost:5432/testing?sslmode=disable"
+    - PGPORT=5433
 
 script:
   - go build ./...
