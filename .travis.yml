@@ -26,7 +26,7 @@ env:
 before_script:
   - sudo -u postgres psql -c "create user testuser"
   - sudo -u postgres psql -c "alter role testuser superuser"
-  - sudo -u postgres psql -c "create database testdb;" -U testuser
+  - sudo -u postgres psql -c "create database testdb;" -U postgres
 
 script:
   - go build ./...
