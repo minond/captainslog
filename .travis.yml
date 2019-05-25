@@ -19,12 +19,12 @@ env:
   global:
     - GO111MODULE=on
     - DATABASE_DRIVER=postgres
-    - DATABASE_CONN="host=127.0.0.1 port=5433 user=testuser dbname=testdb sslmode=disable"
-    - DATABASE_URL="postgres://testuser@localhost:5433/testdb?sslmode=disable"
+    - DATABASE_CONN="host=127.0.0.1 port=5433 user=testuser dbname=testdb sslmode=disable password=testpass"
+    - DATABASE_URL="postgres://testuser:testpass@localhost:5433/testdb?sslmode=disable"
     - PGPORT=5433
 
 before_script:
-  - sudo -u postgres psql -c "create user testuser"
+  - sudo -u postgres psql -c "create user testuser with password 'testpass'"
   - sudo -u postgres psql -c "alter role testuser superuser"
   - sudo -u postgres psql -c "create database testdb;" -U postgres
 
