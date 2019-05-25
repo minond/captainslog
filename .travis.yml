@@ -3,8 +3,17 @@ language: go
 go:
   - 1.11.x
 
+services:
+  - postgresql
+
+before_script:
+  - psql -c "create database testing;" -U postgres
+
 env:
   - GO111MODULE=on
+  - DATABASE_DRIVER=postgres
+  - DATABASE_CONN="host=127.0.0.1 port=5432 user=postgres dbname=testing sslmode=disable"
+  - DATABASE_URL="postgres://postgres@localhost:5432/testing?sslmode=disable"
 
 script:
   - go build ./...
