@@ -5,10 +5,7 @@ default: build
 
 build:
 	$(IN_WEB_CLIENT) make build
-	packr2 build ./cmd/captainslog-server/main.go
-	go build -o captainslog-server cmd/captainslog-server/main.go
-	go build -o captainslog-migrate cmd/captainslog-migrate/main.go
-	go build -o captainslog-repl cmd/captainslog-repl/main.go
+	go build -o captainslog cmd/captainslog/*
 
 lint:
 	$(IN_MOBILE_CLIENT) dartanalyzer ./lib
@@ -19,9 +16,6 @@ lint:
 fmt:
 	$(IN_MOBILE_CLIENT) dartfmt -w ./lib
 	gofmt -s -w $(find . -name *.go)
-
-test:
-	go test ./...
 
 migration:
 	GO111MODULE=off kallax migrate --input ./model/ --out ./migrations --name $(NAME)

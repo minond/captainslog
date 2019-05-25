@@ -10,5 +10,6 @@ require (
 	github.com/mattn/go-runewidth v0.0.4 // indirect
 	github.com/oklog/ulid v1.3.1 // indirect
 	github.com/olekukonko/tablewriter v0.0.1
+	github.com/spf13/cobra v0.0.4
 	gopkg.in/src-d/go-kallax.v1 v1.3.5
 )

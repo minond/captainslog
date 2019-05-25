@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/olekukonko/tablewriter"
+	"github.com/spf13/cobra"
 
 	"github.com/minond/captainslog/model"
 	"github.com/minond/captainslog/query"
@@ -186,29 +187,33 @@ func (r *repl) printData(cols []string, rows [][]interface{}) {
 	table.Render()
 }
 
-func main() {
-	db, err := sql.Open(os.Getenv("DATABASE_DRIVER"), os.Getenv("DATABASE_CONN"))
-	if err != nil {
-		log.Fatalf("unable get database connection: %v", err)
-	}
-	defer db.Close()
+var cmdRepl = &cobra.Command{
+	Use:   "repl",
+	Short: "Start database repl",
+	Run: func(cmd *cobra.Command, args []string) {
+		db, err := database()
+		if err != nil {
+			log.Fatalf("unable get database connection: %v", err)
+		}
+		defer db.Close()
 
-	r := repl{
-		output: os.Stdout,
-		input:  os.Stdin,
-		db:     db,
-	}
-
-	if err := r.execute("\\user e26e269c-0587-4094-bf01-108c61b0fa8a"); err != nil {
-		r.printf("\nerror setting user: %v\n\n", err)
-	}
-
-	for !r.stopped {
-		r.prompt()
-		r.read()
-		if err := r.process(); err != nil {
-			r.printf("\nerror handling input: %v\n\n", err)
+		r := repl{
+			output: os.Stdout,
+			input:  os.Stdin,
+			db:     db,
 		}
 
-	}
+		if err := r.execute("\\user e26e269c-0587-4094-bf01-108c61b0fa8a"); err != nil {
+			r.printf("\nerror setting user: %v\n\n", err)
+		}
+
+		for !r.stopped {
+			r.prompt()
+			r.read()
+			if err := r.process(); err != nil {
+				r.printf("\nerror handling input: %v\n\n", err)
+			}
+
+		}
+	},
 }

@@ -108,14 +108,10 @@ having to run them in this repl. More to come on this.
 
 ## Development
 
-Run `make` to build server and web client, `make run` to run the server in
-development mode. Run linterns and autoformatters with `make fmt lint`. `make
-build` will build everything including the tooling. Here's a breakdown of what
-the commands do:
-
-- `captainslog-server` runs the HTTP server process.
-- `captainslog-migrate` executes database migrations.
-- `captainslog-repl` starts a database client that accepts Captain's Log SQL.
+Run `make` to build server and web client, run linterns and autoformatters with
+`make fmt lint`. To start the application server, run `./captainslog server`
+after building project. Run `./captainslog help` to see a list of other
+commands.
 
 Developing on the mobile client can be done with an emulator. To start an iOS
 emulator and run the application:
