@@ -1,3 +1,5 @@
+sudo: true
+
 language: go
 
 go:
@@ -8,12 +10,21 @@ services:
 
 addons:
   postgresql: "10"
+  apt:
+    packages:
+      - postgresql-10-postgis-2.4
+      - postgresql-10-postgis-2.4-scripts
+      - postgresql-client-10
 
 before_script:
   - psql -c "create database testing;" -U postgres
 
 env:
-  - GO111MODULE=on DATABASE_DRIVER=postgres DATABASE_CONN="host=127.0.0.1 port=5432 user=postgres dbname=testing sslmode=disable" DATABASE_URL="postgres://postgres@localhost:5432/testing?sslmode=disable"
+  global:
+    - GO111MODULE=on
+    - DATABASE_DRIVER=postgres
+    - DATABASE_CONN="host=127.0.0.1 port=5432 user=postgres dbname=testing sslmode=disable"
+    - DATABASE_URL="postgres://postgres@localhost:5432/testing?sslmode=disable"
 
 script:
   - go build ./...
