@@ -80,7 +80,7 @@ where exercise ilike 'running'
 and distance is not null;
 ```
 
-This can currently be done with the `captainslog-repl` program. Start it and
+This can currently be done with the `./captainslog repl` command. Start it and
 set the user scope with the `\user <GUID>` command and then run any query (only
 select statements are supported):
 
