@@ -3,9 +3,18 @@ IN_WEB_CLIENT = cd client/web &&
 
 default: build
 
-build:
+build: build-web build-server
+
+build-web:
 	$(IN_WEB_CLIENT) make build
+
+build-server:
 	go build -o captainslog cmd/captainslog/*
+
+build-server-prod:
+	go run generator/assets/main.go -input ./client/web/dist/ -output ./cmd/captainslog/tmp-assets.go -package main
+	$(MAKE) build-server
+	rm ./cmd/captainslog/tmp-assets.go
 
 lint:
 	$(IN_MOBILE_CLIENT) dartanalyzer ./lib

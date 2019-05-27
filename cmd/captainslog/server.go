@@ -9,9 +9,12 @@ import (
 	"github.com/gorilla/sessions"
 	"github.com/spf13/cobra"
 
+	"github.com/minond/captainslog/assets"
 	"github.com/minond/captainslog/httpmount"
 	"github.com/minond/captainslog/service"
 )
+
+var dist = assets.Dir("./client/web/dist/")
 
 var cmdServer = &cobra.Command{
 	Use:   "server",
@@ -50,9 +53,11 @@ var cmdServer = &cobra.Command{
 		httpmount.MountQueryService(router, queryService)
 		httpmount.MountShorthandService(router, shorthandService)
 
-		router.PathPrefix("/static").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./client/web/dist/"))))
+		router.PathPrefix("/static").Handler(http.StripPrefix("/static/", http.FileServer(dist)))
 		router.PathPrefix("/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			http.ServeFile(w, r, "./client/web/dist/index.html")
+			index, _ := dist.Open("index.html")
+			stat, _ := index.Stat()
+			http.ServeContent(w, r, "index.html", stat.ModTime(), index)
 		})
 
 		listen := os.Getenv("LISTEN")
