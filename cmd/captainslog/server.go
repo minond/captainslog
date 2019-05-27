@@ -55,7 +55,11 @@ var cmdServer = &cobra.Command{
 
 		router.PathPrefix("/static").Handler(http.StripPrefix("/static/", http.FileServer(dist)))
 		router.PathPrefix("/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			index, _ := dist.Open("index.html")
+			index, err := dist.Open("index.html")
+			if err != nil || index == nil {
+				w.WriteHeader(http.StatusNotFound)
+				return
+			}
 			stat, _ := index.Stat()
 			http.ServeContent(w, r, "index.html", stat.ModTime(), index)
 		})
