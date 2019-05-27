@@ -3,10 +3,10 @@ package assets
 import (
 	"bytes"
 	"errors"
-	"fmt"
 	"io"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -28,10 +28,8 @@ func (d *dir) Mount(f *file) *dir {
 }
 
 func (d *dir) Open(path string) (http.File, error) {
-	fullpath := d.path + path
-	fmt.Printf("searching for %s\n", fullpath)
-
 	// Does this file exists? If so, return the real thing
+	fullpath := d.path + path
 	if _, err := os.Stat(fullpath); !os.IsNotExist(err) {
 		f, err := os.Open(fullpath)
 		if err != nil {
@@ -42,7 +40,7 @@ func (d *dir) Open(path string) (http.File, error) {
 	}
 
 	// Return the in-memory version if that exists
-	if f, exist := d.contents[path]; exist {
+	if f, exist := d.contents[strings.TrimPrefix(path, "/")]; exist {
 		return f, nil
 	}
 
