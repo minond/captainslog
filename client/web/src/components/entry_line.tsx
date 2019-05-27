@@ -3,7 +3,7 @@ import { HTMLAttributes } from "react"
 
 import { css, StyleSheet } from "aphrodite"
 
-import { accentColor, normalText, mediumText } from "../styles"
+import { accentColor, mediumText, normalText } from "../styles"
 
 const styles = StyleSheet.create({
   item: {
