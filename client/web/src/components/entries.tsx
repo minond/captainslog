@@ -13,7 +13,6 @@ import BookTitle from "./book_title"
 import DateGroupPicker, { Grouping } from "./date_group_picker"
 import EntryLine from "./entry_line"
 import EntryList from "./entry_list"
-import FieldLabel from "./field_label"
 
 import { inputField, textAreaField } from "../styles"
 
@@ -212,6 +211,7 @@ export default class Entries extends Component<Props, State> {
       rows={1}
       className={css(styles.entryInput)}
       onKeyPress={this.boundOnEntryInputKeyPress}
+      placeholder="Enter a new log!"
     />
 
     const datePicker = grouping === Grouping.NONE ? null :
@@ -224,10 +224,7 @@ export default class Entries extends Component<Props, State> {
 
     return (
       <div className={css(styles.wrapper)}>
-        <BookTitle name={book.name} />
-        <a href="/">(home)</a>
-        <FieldLabel text="New entry">{textarea}</FieldLabel>
-        <FieldLabel text="Date selection" />
+        {textarea}
         {datePicker}
         {entriesElem}
       </div>

@@ -18,7 +18,10 @@ export const Index = () => (
         let guid = prop.match.params["guid"]
         let at = prop.match.params["at"] || Date.now()
         let date = new Date(+at)
-        return <Entries bookGuid={guid} date={date} />
+        return <>
+          <BooksNavigation />
+          <Entries bookGuid={guid} date={date} />
+        </>
       }} />
     </Router>
   </div>

@@ -13,7 +13,6 @@ const styles = StyleSheet.create({
     ...largerText,
     borderBottom: "1px solid transparent",
     display: "inline-block",
-    fontFamily: "baskerville,serif",
     margin: "0 10px 10px 0",
     transition: "border-color .2s",
 

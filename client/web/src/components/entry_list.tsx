@@ -12,15 +12,8 @@ type EntryView = Entry | (EntryCreateRequest & MaybeData)
 
 const styles = StyleSheet.create({
   entries: {
-    borderBottom: "1px solid #dadada",
-    borderTop: "1px solid #dadada",
-    marginTop: "20px",
     maxHeight: "calc(100vh - 220px)",
     overflow: "auto",
-  },
-
-  separator: {
-    borderTop: "1px solid #dadada",
   },
 })
 
@@ -42,7 +35,6 @@ export default function EntryList({ items }: Props) {
   const entries = sorted.map((entry, i) => (
     <EntryLine
       key={entry.guid}
-      className={css(i ? styles.separator : null)}
       text={entry.text}
       data={entry.data}
     />))
