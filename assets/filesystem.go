@@ -13,13 +13,13 @@ import (
 // dir meets the http.FileSystem interface.
 type dir struct {
 	path     string
-	contents map[string]http.File
+	contents map[string]*file
 }
 
 var _ http.FileSystem = &dir{}
 
 func Dir(path string) *dir {
-	return &dir{path: path, contents: make(map[string]http.File)}
+	return &dir{path: path, contents: make(map[string]*file)}
 }
 
 func (d *dir) Mount(f *file) *dir {
@@ -31,17 +31,12 @@ func (d *dir) Open(path string) (http.File, error) {
 	// Does this file exists? If so, return the real thing
 	fullpath := d.path + path
 	if _, err := os.Stat(fullpath); !os.IsNotExist(err) {
-		f, err := os.Open(fullpath)
-		if err != nil {
-			return nil, err
-		}
-		d.contents[path] = f
-		return f, nil
+		return os.Open(fullpath)
 	}
 
 	// Return the in-memory version if that exists
 	if f, exist := d.contents[strings.TrimPrefix(path, "/")]; exist {
-		return f, nil
+		return f.fresh(), nil
 	}
 
 	// Otherwise return file not found error
@@ -56,6 +51,7 @@ type file struct {
 	offset   int64
 	mode     os.FileMode
 	modified time.Time
+	contents []byte
 	bytes.Buffer
 }
 
@@ -63,9 +59,15 @@ var _ os.FileInfo = &file{}
 var _ http.File = &file{}
 
 func File(name string, size int64, mode os.FileMode, modified time.Time, contents []byte) *file {
-	f := &file{name: name, size: size, mode: mode, modified: modified}
+	f := &file{name: name, size: size, mode: mode, modified: modified, contents: contents}
 	f.Write(contents)
 	return f
+}
+
+func (f *file) fresh() *file {
+	close := &file{name: f.name, size: f.size, mode: f.mode, modified: f.modified, contents: f.contents}
+	close.Write(f.contents)
+	return close
 }
 
 // Close closes the file; subsequent reads will return no bytes and EOF.
