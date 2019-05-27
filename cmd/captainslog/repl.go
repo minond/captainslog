@@ -51,7 +51,15 @@ func (r *repl) print(str string) {
 }
 
 func (r *repl) process() error {
-	return r.execute(r.buff.String())
+	input := strings.TrimSpace(r.buff.String())
+	if strings.HasPrefix(input, "\\") {
+		r.buff.Reset()
+		return r.execute(input)
+	} else if strings.HasSuffix(input, ";") {
+		r.buff.Reset()
+		return r.query(strings.TrimSuffix(input, ";"))
+	}
+	return nil
 }
 
 func (r *repl) query(input string) error {
@@ -77,53 +85,42 @@ func (r *repl) query(input string) error {
 		return fmt.Errorf("exec error: %v", err)
 	}
 
-	r.print("\n")
 	r.printResults(cols, rows)
 	r.print("\n")
 	return nil
 }
 
 func (r *repl) execute(input string) error {
-	input = strings.TrimSpace(input)
-
-	if strings.HasSuffix(input, ";") {
-		r.buff.Reset()
-		return r.query(strings.TrimSuffix(input, ";"))
-	}
-
 	parts := strings.Split(input, " ")
 	switch parts[0] {
 	case "\\q":
 		fallthrough
 	case "\\quit":
-		r.buff.Reset()
 		r.print("goodbye\n")
 		r.stopped = true
 
 	case "\\debug":
-		r.buff.Reset()
 		r.debugging = !r.debugging
 		r.printf("debug mode enabled: %v\n", r.debugging)
 
 	case "\\u":
 		fallthrough
 	case "\\user":
-		r.buff.Reset()
 		r.userGuid = parts[1]
 		r.printf("running as user: %s\n", r.userGuid)
 
 	case "\\?":
-		r.buff.Reset()
-		r.print(`
-General:
+		r.print(`General:
   \q				quit repl
   \d				toggle debug mode
   \u [guid]			set user guid
 
 Help:
   \?				print this help output
-
 `)
+
+	default:
+		return fmt.Errorf("invalid command: %s, try \\? for help.", parts[0])
 	}
 
 	return nil
@@ -211,9 +208,8 @@ var cmdRepl = &cobra.Command{
 			r.prompt()
 			r.read()
 			if err := r.process(); err != nil {
-				r.printf("\nerror handling input: %v\n\n", err)
+				r.printf("error handling input: %v\n", err)
 			}
-
 		}
 	},
 }
