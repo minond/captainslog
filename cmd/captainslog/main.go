@@ -7,5 +7,5 @@ import (
 func main() {
 	var app = &cobra.Command{Use: "captainslog"}
 	app.AddCommand(cmdServer, cmdRepl, cmdMigrate)
-	app.Execute()
+	_ = app.Execute()
 }
