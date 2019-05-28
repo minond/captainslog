@@ -77,6 +77,7 @@ create_workouts() {
 
   (log "new shorthand" $(new_shorthand 1 "xx @ " 'xx \\d' "xx " "$workouts")) &
   (log "new shorthand" $(new_shorthand 0 "3x10" "" "xxx" "$workouts")) &
+  (log "new shorthand" $(new_shorthand 0 " @ " '\\d@\\d' "@" "$workouts")) &
 
   wait
 
@@ -94,7 +95,7 @@ create_blood_pressure() {
   log "new book" "$blood_pressure"
 
   (log "new extractor" $(new_extractor "a" '^(\\d+)\\s{0,}/' 1 "$blood_pressure")) &
-  (log "new extractor" $(new_extractor "b" '/\\s{0,}(\\d+)\\s' 1 "$blood_pressure")) &
+  (log "new extractor" $(new_extractor "b" '/\\s{0,}(\\d+)' 1 "$blood_pressure")) &
   (log "new extractor" $(new_extractor "pulse" '\\(pulse (\\d+)\\)' 1 "$blood_pressure")) &
 
   wait
