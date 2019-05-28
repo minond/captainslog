@@ -33,9 +33,8 @@ const styles = StyleSheet.create({
     width: "100%",
   },
 
-  noEntries: {
+  noContent: {
     padding: "30px 0 0 0",
-    textAlign: "center",
   },
 })
 
@@ -204,7 +203,7 @@ export default class Entries extends Component<Props, State> {
     const grouping = book ? book.grouping : Grouping.DAY
 
     if (!book) {
-      return <div>Book not found. <a href="/">Go back.</a></div>
+      return <div className={css(styles.noContent)}>Book not found.</div>
     }
 
     const textarea = <textarea
@@ -220,7 +219,7 @@ export default class Entries extends Component<Props, State> {
     const entries = this.getEntries()
     const entriesElem = entries && entries.length ?
       <EntryList items={entries} /> :
-      <div className={css(styles.noEntries)}>No entries</div>
+      <div className={css(styles.noContent)}>No entries.</div>
 
     return (
       <div className={css(styles.wrapper)}>
