@@ -3,7 +3,7 @@ import DatePicker from "react-datepicker"
 
 import { css, StyleSheet } from "aphrodite"
 
-import { inputField, normalText } from "../styles"
+import { button, inputField, normalText } from "../styles"
 
 const styles = StyleSheet.create({
   input: {
@@ -11,8 +11,7 @@ const styles = StyleSheet.create({
   },
 
   btn: {
-    ...normalText,
-    marginLeft: "4px",
+    ...button,
   },
 })
 

@@ -14,8 +14,12 @@ interface State {
   books: Book[]
 }
 
-export default class BooksNavigation extends Component<{}, State> {
-  constructor(props: {}) {
+interface Props {
+  active?: string
+}
+
+export default class BooksNavigation extends Component<Props, State> {
+  constructor(props: Props) {
     super(props)
 
     this.state = {
@@ -31,9 +35,10 @@ export default class BooksNavigation extends Component<{}, State> {
 
   render() {
     const { books } = this.state
+    const { active } = this.props
     const links = books.map((book) =>
       <Link key={book.guid} to={`/${book.guid}`} style={link}>
-        <BookTitle name={book.name} />
+        <BookTitle name={book.name} active={book.guid === active} />
       </Link>)
 
     return <div>{links}</div>

@@ -1,7 +1,7 @@
 import { CSSProperties } from "aphrodite"
 
-export const mainColor = "#0031FE"
-export const accentColor = "#c3c3c3"
+export const mainColor = "black"
+export const fadeColor = "#96ccff"
 export const contrastColor = "white"
 
 export const link = {
@@ -44,13 +44,26 @@ export const mainTextColor = {
 
 export const inputField: CSSProperties = {
   ...normalText,
-  border: "1px solid #c3c3c3",
+  height: "25px",
+  border: "0",
+  borderBottom: "1px solid black",
+}
+
+export const button: CSSProperties = {
+  ...normalText,
+  backgroundColor: "white",
+  border: "1px solid black",
+  fontSize: ".8rem",
+  height: "29px",
+  lineHeight: 1,
+  marginLeft: "4px",
+  verticalAlign: "top",
 }
 
 export const textAreaField: CSSProperties = {
   ...normalText,
   border: "0",
-  borderBottom: `1px solid ${accentColor}`,
+  borderBottom: `1px solid black`,
   boxSizing: "border-box",
   margin: 0,
   outline: 0,

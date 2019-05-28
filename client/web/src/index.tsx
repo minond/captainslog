@@ -19,7 +19,7 @@ export const Index = () => (
         let at = prop.match.params["at"] || Date.now()
         let date = new Date(+at)
         return <>
-          <BooksNavigation />
+          <BooksNavigation active={guid} />
           <Entries bookGuid={guid} date={date} />
         </>
       }} />

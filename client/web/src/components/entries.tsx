@@ -27,6 +27,10 @@ const styles = StyleSheet.create({
     boxSizing: "content-box",
   },
 
+  dateWrapper: {
+    marginBottom: "10px",
+  },
+
   entryInput: {
     ...textAreaField,
     marginBottom: "10px",
@@ -34,7 +38,7 @@ const styles = StyleSheet.create({
   },
 
   noContent: {
-    padding: "30px 0 0 0",
+    padding: "20px 0 0 0",
   },
 })
 
@@ -214,7 +218,9 @@ export default class Entries extends Component<Props, State> {
     />
 
     const datePicker = grouping === Grouping.NONE ? null :
-      <DateGroupPicker grouping={grouping} date={date} onChange={this.boundSetViewDate} />
+      <div className={css(styles.dateWrapper)}>
+        <DateGroupPicker grouping={grouping} date={date} onChange={this.boundSetViewDate} />
+      </div>
 
     const entries = this.getEntries()
     const entriesElem = entries && entries.length ?
