@@ -14,7 +14,7 @@ export const Index = () => (
   <div>
     <Router history={history}>
       <Route exact={true} path="/" component={BooksNavigation} />
-      <Route exact={true} path="/book/:guid/:at?" render={(prop) => {
+      <Route exact={true} path="/:guid/:at?" render={(prop) => {
         let guid = prop.match.params["guid"]
         let at = prop.match.params["at"] || Date.now()
         let date = new Date(+at)

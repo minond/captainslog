@@ -110,7 +110,7 @@ export default class Entries extends Component<Props, State> {
   setViewDate(date: Date) {
     const { bookGuid } = this.props
     this.setState({ date }, () => this.loadData(false))
-    history.replace(`/book/${bookGuid}/${+date}`)
+    history.replace(`/${bookGuid}/${+date}`)
   }
 
   getEntries(): EntryView[] {
