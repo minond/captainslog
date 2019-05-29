@@ -1,0 +1,124 @@
+#!/bin/bash
+
+set -euo pipefail
+
+CL_HOME=/home/marcos/apps/captainslog
+CL_HOST=marcos@minond.xyz
+
+task() {
+  echo "- $*"
+}
+
+help() {
+  echo "Usage: ./script/deploy [ -v | --version <version> ] [ --migrate ]"
+  echo "                       [ --skip-build ] [ --skip-upload ] [ --skip-restart ]"
+  echo "                       [ -h | --help ]"
+}
+
+build() {
+  task "building web client..."
+  make build-web &> /dev/null
+
+  task "bundling client assets..."
+  go run generator/assets/main.go -input ./client/web/dist/ -output ./cmd/captainslog/tmp-assets.go -package main &> /dev/null
+
+  task "building http executable..."
+  make build-server GOOS=linux GOARCH=amd64 &> /dev/null
+
+  task "cleaning up..."
+  rm ./cmd/captainslog/tmp-assets.go &> /dev/null
+}
+
+upload() {
+  local version="$1"
+  local name="captainslog-v$version"
+  task "uploading executable..."
+  scp captainslog "$CL_HOST:$CL_HOME/$name" &> /dev/null
+  run_remote "chmod +x $name"
+}
+
+run_remote() {
+  task "executing $*"
+  ssh "$CL_HOST" "cd $CL_HOME; $*"
+}
+
+restart() {
+  local version="$1"
+
+  task "shutting down server..."
+  run_remote 'kill $(ps aux | grep captainslog | grep server | head -n1 | awk "{ print \$2 }")' || true
+
+  task "starting server..."
+  run_remote ". env.sh; nohup ./captainslog-v$version server 1>out.log 2>err.log &"
+}
+
+main() {
+  run_build=1
+  run_migrations=0
+  run_restart=1
+  run_upload=1
+  version=$(date +%s)
+
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      --skip-build)
+        run_build=0
+        shift
+        ;;
+
+      --skip-upload)
+        run_upload=0
+        shift
+        ;;
+
+      --skip-restart)
+        run_restart=0
+        shift
+        ;;
+
+      --migrate)
+        run_migrations=1
+        shift
+        ;;
+
+      -v|--version)
+        version="$2"
+        shift
+        shift
+        ;;
+
+      -h|--help)
+        help
+        exit 0
+        ;;
+
+      *)
+        echo "invalid argument: $1"
+        help
+        exit 1
+        ;;
+    esac
+  done
+
+  task "releasing v$version"
+  if (( $run_build == 1 )); then
+    build
+  fi
+
+  if (( $run_upload == 1 )); then
+    upload "$version"
+  fi
+
+  if (( $run_migrations == 1 )); then
+    task "running migrations..."
+    run_remote "git pull origin master && . env.sh && ./captainslog-v$version migrate up"
+  fi
+
+  if (( $run_restart == 1 )); then
+    restart "$version"
+  fi
+
+  task "done"
+}
+
+main $*
