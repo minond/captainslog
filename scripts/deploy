@@ -37,19 +37,24 @@ upload() {
   run_remote "chmod +x $name"
 }
 
+link() {
+  local version="$1"
+  local name="captainslog-v$version"
+  task "linking executable..."
+  run_remote "ln --force -s $name captainslog"
+}
+
 run_remote() {
   task "executing $*"
   ssh "$CL_HOST" "cd $CL_HOME; $*"
 }
 
 restart() {
-  local version="$1"
-
   task "shutting down server..."
   run_remote 'kill $(ps aux | grep captainslog | grep server | head -n1 | awk "{ print \$2 }")' || true
 
   task "starting server..."
-  run_remote ". env.sh; nohup ./captainslog-v$version server 1>out.log 2>err.log &"
+  run_remote ". env.sh; nohup ./captainslog server 1>out.log 2>err.log &"
 }
 
 main() {
@@ -109,13 +114,15 @@ main() {
     upload "$version"
   fi
 
+  link "$version"
+
   if (( $run_migrations == 1 )); then
     task "running migrations..."
-    run_remote "git pull origin master && . env.sh && ./captainslog-v$version migrate up"
+    run_remote "git pull origin master && . env.sh && ./captainslog migrate up"
   fi
 
   if (( $run_restart == 1 )); then
-    restart "$version"
+    restart
   fi
 
   task "done"
