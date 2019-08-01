@@ -7,7 +7,6 @@ import { Book } from "../definitions/book"
 import { Entry, EntryCreateRequest } from "../definitions/entry"
 import { createEntry, getBook, getEntriesForBook } from "../remote"
 
-import BookTitle from "./book_title"
 import DateGroupPicker, { Grouping } from "./date_group_picker"
 import EntryLine from "./entry_line"
 import EntryList from "./entry_list"

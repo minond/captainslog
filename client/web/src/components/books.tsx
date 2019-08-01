@@ -2,8 +2,6 @@ import * as React from "react"
 import { useState } from "react"
 import { Link } from "react-router-dom"
 
-import BookTitle from "./book_title"
-
 import { Book } from "../definitions/book"
 import { getBooks } from "../remote"
 
@@ -12,11 +10,7 @@ interface State {
   books: Book[]
 }
 
-interface Props {
-  active?: string
-}
-
-export default function BooksNavigation(props: Props) {
+export default function Books(props: {}) {
   const [books, setBooks] = useState<Book[]>([])
   const [loaded, setLoaded] = useState(false)
 
@@ -27,10 +21,9 @@ export default function BooksNavigation(props: Props) {
     })
   }
 
-  const { active } = props
   const links = books.map((book) =>
     <Link key={book.guid} to={`/${book.guid}`}>
-      <BookTitle name={book.name} active={book.guid === active} />
+      <div>{book.name}</div>
     </Link>)
 
   return <div>{links}</div>
