@@ -25,8 +25,8 @@ export const getBooks = (): Promise<Book[]> =>
   axios.get<BooksRetrieveResponse>(uris.books)
     .then((res) => res.data.books)
 
-export const getEntriesForBook = (bookGuid: string, at: number): Promise<Entry[]> =>
-  axios.get<EntriesRetrieveResponse>(`${uris.entries}?book=${bookGuid}&at=${at}`)
+export const getEntriesForBook = (bookGuid: string, at: Date): Promise<Entry[]> =>
+  axios.get<EntriesRetrieveResponse>(`${uris.entries}?book=${bookGuid}&at=${Math.floor(+at / 1000)}`)
     .then((res) => res.data.entries)
 
 export const createEntry = (entry: EntryCreateRequest): Promise<EntryCreateResponse> =>

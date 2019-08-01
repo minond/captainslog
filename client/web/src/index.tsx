@@ -4,8 +4,11 @@ import { Router, Route } from "react-router-dom"
 
 import Books from "./components/books"
 import Entries from "./components/entries"
+import { Entries2 } from "./components/entries"
 
 import history from "./history"
+
+require("./index.css")
 
 export const Index = () => (
   <div>
@@ -18,6 +21,7 @@ export const Index = () => (
         return <>
           <Books />
           <Entries bookGuid={guid} date={date} />
+          <Entries2 bookGuid={guid} date={date} />
         </>
       }} />
     </Router>

@@ -1,4 +1,5 @@
 import * as React from "react"
+import { useState } from "react"
 import { Component, KeyboardEvent, RefObject } from "react"
 
 import history from "../history"
@@ -26,6 +27,20 @@ interface State {
   book: Book | null
   entries: Entry[]
   unsynced: EntryCreateRequest[]
+}
+
+export function Entries2(props: Props) {
+  const [entries, setEntries] = useState<Entry[]>([])
+  const [loaded, setLoaded] = useState(false)
+
+  if (!loaded) {
+    getEntriesForBook(props.bookGuid, props.date).then((res) => {
+      setEntries(res)
+      setLoaded(true)
+    })
+  }
+
+  return <EntryList items={entries} />
 }
 
 export default class Entries extends Component<Props, State> {
@@ -64,7 +79,6 @@ export default class Entries extends Component<Props, State> {
   loadData(withMetadata: boolean) {
     const { date } = this.state
     const { bookGuid } = this.props
-    const now = Math.floor(+date / 1000)
 
     if (withMetadata) {
       getBook(bookGuid).then((book) => {
@@ -73,14 +87,14 @@ export default class Entries extends Component<Props, State> {
           return
         }
 
-        getEntriesForBook(bookGuid, now).then((entries) =>
+        getEntriesForBook(bookGuid, date).then((entries) =>
           this.setState({ entries: entries || [], book }))
       })
 
       return
     }
 
-    getEntriesForBook(bookGuid, now).then((entries) =>
+    getEntriesForBook(bookGuid, date).then((entries) =>
       this.setState({ entries: entries || [] }))
   }
 
