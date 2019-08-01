@@ -1,7 +1,9 @@
 import * as React from "react"
 import ReactDatePicker from "react-datepicker"
 
+/* tslint:disable:no-var-requires */
 require("../react-datepicker.css")
+/* tslint:enable:no-var-requires */
 
 type Props = {
   date: Date

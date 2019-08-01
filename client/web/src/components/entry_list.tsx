@@ -26,8 +26,8 @@ const sortByCreatedAt = (a: EntryView, b: EntryView) => {
 export default function EntryList({ items }: Props) {
   const sorted = items.sort(sortByCreatedAt)
   const elems = sorted.map((entry, i) => {
-    const datalist = !entry.data ? null : mmap(entry.data, (key, val, i) =>
-      <span key={i}>{key}: {val}</span>)
+    const datalist = !entry.data ? null : mmap(entry.data, (key, val, j) =>
+      <span key={j}>{key}: {val}</span>)
 
     return (
       <div key={entry.guid}>
