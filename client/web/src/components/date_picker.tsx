@@ -1,5 +1,7 @@
 import * as React from "react"
-import DatePicker from "react-datepicker"
+import ReactDatePicker from "react-datepicker"
+
+require("../react-datepicker.css")
 
 type Props = {
   date: Date
@@ -33,7 +35,7 @@ function Btn({ label, action }: { label: string, action: () => void }) {
   return <input type="button" onClick={action} value={label} />
 }
 
-export default function DateGroupPicker({ grouping, date, onChange }: Props) {
+export default function DatePicker({ grouping, date, onChange }: Props) {
   const unit = GroupUnit[grouping] || 0
   const handler = (maybeDate: Date | null) => {
     if (maybeDate) {
@@ -43,7 +45,7 @@ export default function DateGroupPicker({ grouping, date, onChange }: Props) {
 
   return (
     <div>
-      <DatePicker
+      <ReactDatePicker
         selected={date}
         onChange={handler}
       />

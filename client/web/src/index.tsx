@@ -7,8 +7,6 @@ import Entries from "./components/entries"
 
 import history from "./history"
 
-require("./react-datepicker.css")
-
 export const Index = () => (
   <div>
     <Router history={history}>

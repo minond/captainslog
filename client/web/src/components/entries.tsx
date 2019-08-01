@@ -7,8 +7,7 @@ import { Book } from "../definitions/book"
 import { Entry, EntryCreateRequest } from "../definitions/entry"
 import { createEntry, getBook, getEntriesForBook } from "../remote"
 
-import DateGroupPicker, { Grouping } from "./date_group_picker"
-import EntryLine from "./entry_line"
+import DatePicker, { Grouping } from "./date_picker"
 import EntryList from "./entry_list"
 
 type MaybeData = { data?: { [index: string]: string } }
@@ -193,7 +192,7 @@ export default class Entries extends Component<Props, State> {
 
     const datePicker = grouping === Grouping.NONE ? null :
       <div>
-        <DateGroupPicker grouping={grouping} date={date} onChange={this.boundSetViewDate} />
+        <DatePicker grouping={grouping} date={date} onChange={this.boundSetViewDate} />
       </div>
 
     const entries = this.getEntries()
