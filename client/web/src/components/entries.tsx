@@ -1,8 +1,6 @@
 import * as React from "react"
 import { Component, KeyboardEvent, RefObject } from "react"
 
-import { css, StyleSheet } from "aphrodite"
-
 import history from "../history"
 
 import { Book } from "../definitions/book"
@@ -14,33 +12,11 @@ import DateGroupPicker, { Grouping } from "./date_group_picker"
 import EntryLine from "./entry_line"
 import EntryList from "./entry_list"
 
-import { inputField, textAreaField } from "../styles"
-
 type MaybeData = { data?: { [index: string]: string } }
 type EntryView = Entry | (EntryCreateRequest & MaybeData)
 type UnsavedEntry = { at: Date, item: string }
 
 const KEY_ENTER = 13
-
-const styles = StyleSheet.create({
-  wrapper: {
-    boxSizing: "content-box",
-  },
-
-  dateWrapper: {
-    marginBottom: "10px",
-  },
-
-  entryInput: {
-    ...textAreaField,
-    marginBottom: "10px",
-    width: "100%",
-  },
-
-  noContent: {
-    padding: "20px 0 0 0",
-  },
-})
 
 interface Props {
   date: Date
@@ -207,28 +183,27 @@ export default class Entries extends Component<Props, State> {
     const grouping = book ? book.grouping : Grouping.DAY
 
     if (!book) {
-      return <div className={css(styles.noContent)}>Book not found.</div>
+      return <div>Book not found.</div>
     }
 
     const textarea = <textarea
       rows={1}
-      className={css(styles.entryInput)}
       onKeyPress={this.boundOnEntryInputKeyPress}
       placeholder="Enter a new log!"
     />
 
     const datePicker = grouping === Grouping.NONE ? null :
-      <div className={css(styles.dateWrapper)}>
+      <div>
         <DateGroupPicker grouping={grouping} date={date} onChange={this.boundSetViewDate} />
       </div>
 
     const entries = this.getEntries()
     const entriesElem = entries && entries.length ?
       <EntryList items={entries} /> :
-      <div className={css(styles.noContent)}>No entries.</div>
+      <div>No entries.</div>
 
     return (
-      <div className={css(styles.wrapper)}>
+      <div>
         {textarea}
         {datePicker}
         {entriesElem}

@@ -1,21 +1,12 @@
 import * as React from "react"
 import { Component } from "react"
 
-import { css, StyleSheet } from "aphrodite"
-
 import { Entry, EntryCreateRequest } from "../definitions/entry"
 
 import EntryLine from "./entry_line"
 
 type MaybeData = { data?: { [index: string]: string } }
 type EntryView = Entry | (EntryCreateRequest & MaybeData)
-
-const styles = StyleSheet.create({
-  entries: {
-    maxHeight: "calc(100vh - 220px)",
-    overflow: "auto",
-  },
-})
 
 interface Props {
   items: EntryView[]
@@ -39,5 +30,5 @@ export default function EntryList({ items }: Props) {
       data={entry.data}
     />))
 
-  return <div className={css(styles.entries)}>{entries}</div>
+  return <div>{entries}</div>
 }

@@ -7,8 +7,6 @@ import BookTitle from "./book_title"
 import { Book } from "../definitions/book"
 import { getBooks } from "../remote"
 
-import { link } from "../styles"
-
 interface State {
   loaded: boolean
   books: Book[]
@@ -31,7 +29,7 @@ export default function BooksNavigation(props: Props) {
 
   const { active } = props
   const links = books.map((book) =>
-    <Link key={book.guid} to={`/${book.guid}`} style={link}>
+    <Link key={book.guid} to={`/${book.guid}`}>
       <BookTitle name={book.name} active={book.guid === active} />
     </Link>)
 

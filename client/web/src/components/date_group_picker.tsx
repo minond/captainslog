@@ -1,20 +1,6 @@
 import * as React from "react"
 import DatePicker from "react-datepicker"
 
-import { css, StyleSheet } from "aphrodite"
-
-import { button, inputField, normalText } from "../styles"
-
-const styles = StyleSheet.create({
-  input: {
-    ...inputField,
-  },
-
-  btn: {
-    ...button,
-  },
-})
-
 type Props = {
   date: Date
   onChange: (_: Date) => void
@@ -44,7 +30,7 @@ function sub(date: Date, unit: Unit): Date {
 }
 
 function Btn({ label, action }: { label: string, action: () => void }) {
-  return <input className={css(styles.btn)} type="button" onClick={action} value={label} />
+  return <input type="button" onClick={action} value={label} />
 }
 
 export default function DateGroupPicker({ grouping, date, onChange }: Props) {
@@ -59,7 +45,6 @@ export default function DateGroupPicker({ grouping, date, onChange }: Props) {
     <div>
       <DatePicker
         selected={date}
-        className={css(styles.input)}
         onChange={handler}
       />
       <Btn label="prev" action={() => onChange(sub(date, unit))} />

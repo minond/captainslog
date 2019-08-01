@@ -1,15 +1,15 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto+Mono');
-
-#body {
-  cursor: default;
-  font-size: 1rem;
-  max-width: 720px;
-  padding: 30px 30px 0px 30px;
-}
-
-#body, #body * {
-  font-family: 'Roboto Mono', monospace;
-}
+/* @import url('https://fonts.googleapis.com/css?family=Roboto+Mono'); */
+/*  */
+/* #body { */
+/*   cursor: default; */
+/*   font-size: 1rem; */
+/*   max-width: 720px; */
+/*   padding: 30px 30px 0px 30px; */
+/* } */
+/*  */
+/* #body, #body * { */
+/*   font-family: 'Roboto Mono', monospace; */
+/* } */
 
 /* small */
 @media screen and (min-width: 45em) {
