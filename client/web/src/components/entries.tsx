@@ -1,12 +1,18 @@
 import * as React from "react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Component, KeyboardEvent, RefObject } from "react"
 
 import history from "../history"
 
 import { Book } from "../definitions/book"
 import { Entry, EntryCreateRequest } from "../definitions/entry"
-import { createEntry, getBook, getEntriesForBook } from "../remote"
+import {
+  cachedGetBook,
+  cachedGetEntriesForBook,
+  createEntry,
+  getBook,
+  getEntriesForBook
+} from "../remote"
 
 import DatePicker, { Grouping } from "./date_picker"
 import EntryList from "./entry_list"
@@ -31,14 +37,12 @@ interface State {
 
 export function Entries2(props: Props) {
   const [entries, setEntries] = useState<Entry[]>([])
-  const [loaded, setLoaded] = useState(false)
+  const [book, setBook] = useState<Book | null>(null)
 
-  if (!loaded) {
-    getEntriesForBook(props.bookGuid, props.date).then((res) => {
-      setEntries(res)
-      setLoaded(true)
-    })
-  }
+  useEffect(() => {
+    cachedGetBook(props.bookGuid).then(setBook)
+    cachedGetEntriesForBook(props.bookGuid, props.date).then(setEntries)
+  }, [props.bookGuid, props.date])
 
   return <EntryList items={entries} />
 }
