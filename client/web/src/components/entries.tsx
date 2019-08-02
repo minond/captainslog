@@ -1,5 +1,5 @@
 import * as React from "react"
-import { useEffect, useState } from "react"
+import { useEffect, useReducer, useState } from "react"
 import { Component, KeyboardEvent, RefObject } from "react"
 
 import history from "../history"
@@ -34,30 +34,36 @@ interface State {
   entries: Entry[]
   unsynced: EntryCreateRequest[]
 }
+  // const [entries, dispatchEntry] = useReducer(entriesReducer, entries_)
+
+const genDatePicker = (date: Date, book: Book | null) =>
+  !book || book.grouping === Grouping.NONE ? null :
+    <div>
+      <DatePicker
+        grouping={book.grouping}
+        date={date}
+        onChange={(d) => history.replace(`/${book.guid}/${+d}`)}
+      />
+    </div>
+
+const genTextarea = () =>
+  <textarea
+    rows={1}
+    placeholder="Enter a new log!"
+  />
 
 export function Entries2(props: Props) {
-  const [entries, setEntries] = useState<Entry[]>([])
   const [book, setBook] = useState<Book | null>(null)
+  const [entries, setEntries] = useState<Entry[]>([])
 
   useEffect(() => {
     cachedGetBook(props.bookGuid).then(setBook)
     cachedGetEntriesForBook(props.bookGuid, props.date).then(setEntries)
   }, [props.bookGuid, props.date])
 
-  let datePicker
-  if (book && book.grouping !== Grouping.NONE) {
-    datePicker =
-      <div>
-        <DatePicker
-          grouping={book.grouping}
-          date={props.date}
-          onChange={(d) => history.replace(`/${props.bookGuid}/${+d}`)}
-        />
-      </div>
-  }
-
   return <div>
-    {datePicker}
+    {genTextarea()}
+    {genDatePicker(props.date, book)}
     <EntryList items={entries} />
   </div>
 }
