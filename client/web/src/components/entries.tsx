@@ -44,7 +44,22 @@ export function Entries2(props: Props) {
     cachedGetEntriesForBook(props.bookGuid, props.date).then(setEntries)
   }, [props.bookGuid, props.date])
 
-  return <EntryList items={entries} />
+  let datePicker
+  if (book && book.grouping !== Grouping.NONE) {
+    datePicker =
+      <div>
+        <DatePicker
+          grouping={book.grouping}
+          date={props.date}
+          onChange={(d) => history.replace(`/${props.bookGuid}/${+d}`)}
+        />
+      </div>
+  }
+
+  return <div>
+    {datePicker}
+    <EntryList items={entries} />
+  </div>
 }
 
 export default class Entries extends Component<Props, State> {
