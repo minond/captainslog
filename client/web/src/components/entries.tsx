@@ -70,7 +70,8 @@ export function Entries2(props: Props) {
       return
     }
 
-    console.log("making request!", req)
+    createEntry(req).then((res) =>
+      getEntriesForBook(props.bookGuid, props.date).then(setEntries))
   }, [req])
 
   const handleKeyPress = (ev: KeyboardEvent<HTMLTextAreaElement>) => {
