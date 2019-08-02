@@ -1,5 +1,5 @@
 import * as React from "react"
-import { useEffect, useReducer, useState } from "react"
+import { useEffect, useState } from "react"
 import { Component, KeyboardEvent, RefObject } from "react"
 
 import history from "../history"
@@ -34,7 +34,15 @@ interface State {
   entries: Entry[]
   unsynced: EntryCreateRequest[]
 }
-  // const [entries, dispatchEntry] = useReducer(entriesReducer, entries_)
+
+const buildEntryCreateRequest =
+  (book: Book, text: string, createdAt: Date): EntryCreateRequest =>
+    ({
+      bookGuid: book.guid,
+      createdAt: createdAt.toISOString(),
+      guid: Math.random().toString(),
+      text,
+    })
 
 const genDatePicker = (date: Date, book: Book | null) =>
   !book || book.grouping === Grouping.NONE ? null :
@@ -46,23 +54,44 @@ const genDatePicker = (date: Date, book: Book | null) =>
       />
     </div>
 
-const genTextarea = () =>
-  <textarea
-    rows={1}
-    placeholder="Enter a new log!"
-  />
-
 export function Entries2(props: Props) {
+  const [text, setText] = useState("")
   const [book, setBook] = useState<Book | null>(null)
   const [entries, setEntries] = useState<Entry[]>([])
+  const [req, setReq] = useState<EntryCreateRequest | null>(null)
 
   useEffect(() => {
     cachedGetBook(props.bookGuid).then(setBook)
     cachedGetEntriesForBook(props.bookGuid, props.date).then(setEntries)
   }, [props.bookGuid, props.date])
 
+  useEffect(() => {
+    if (!req) {
+      return
+    }
+
+    console.log("making request!", req)
+  }, [req])
+
+  const handleKeyPress = (ev: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (ev.charCode !== KEY_ENTER || !book || !text.trim()) {
+      setReq(null)
+      return
+    }
+
+    setReq(buildEntryCreateRequest(book, text.trim(), props.date))
+    setText("")
+    ev.preventDefault()
+  }
+
   return <div>
-    {genTextarea()}
+    <textarea
+      rows={1}
+      placeholder="Enter a new log!"
+      value={text}
+      onChange={(e) => setText(e.target.value)}
+      onKeyPress={handleKeyPress}
+    />
     {genDatePicker(props.date, book)}
     <EntryList items={entries} />
   </div>
