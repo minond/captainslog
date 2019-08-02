@@ -42,48 +42,35 @@ const ttls = {
 const ttlFor = <T extends Function>(fn: T) =>
   fn.toString() in ttls ? ttls[fn.toString()] : 100
 
-type ArgTy<T> = T extends (...a: infer A) => any ? A : never
 type CachePouch<T> = { [index: string]: CacheEntry<T> }
-type CacheEntry<T> = { ttd: number, val: T, pro: boolean }
+type CacheEntry<T> = { ttd: number, val: T }
+
+type ArgTy<T> = T extends (...a: infer A) => any ? A : never
+type RetTy<T> = T extends (...a: any[]) => infer R ? R : never
+type PromiseOf<T> = T extends Promise<infer V> ? V : T
 
 export const cached = <T extends Function>(fn: T, ttl: number = ttlFor(fn)) => {
-  // NOTE Not thread safe but that's ok
-  // TODO find a way to extract T from ReturnType<Promise<T>> and replace the
-  // `any` used here.
-  let cache: CachePouch<any> = {}
+  type Value = PromiseOf<RetTy<T>>
+  let cache: CachePouch<Value> = {}
 
-  return (...args: ArgTy<T>) => {
+  return (...args: ArgTy<T>): Promise<Value> => {
     let key = args.join("-")
     let entry = cache[key] = cache[key] || {
       ttd: 0,
       val: null,
-      pro: false,
     }
 
     if (entry.ttd >= Date.now()) {
-      if (entry.pro) {
-        return new Promise((resolve, reject) => resolve(entry.val))
-      }
-
-      return entry.val
+      return new Promise((resolve, reject) => resolve(entry.val))
     }
 
     delete entry.val
     entry.ttd = Date.now() + ttl
-    entry.pro = false
 
-    let val = fn(...args)
-    if (val instanceof Promise) {
-      entry.pro = true
-      val.then((res) => {
-        entry.val = res
-        return res
-      })
-    } else {
-      entry.val = val
-    }
-
-    return val
+    return fn(...args).then((res: Value) => {
+      entry.val = res
+      return res
+    })
   }
 }
 
