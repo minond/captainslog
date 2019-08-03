@@ -22,13 +22,11 @@ const buildEntryCreateRequest =
 
 const genDatePicker = (date: Date, book: Book | null) =>
   !book || book.grouping === Grouping.NONE ? null :
-    <div>
-      <DatePicker
-        grouping={book.grouping}
-        date={date}
-        onChange={(d) => history.replace(`/${book.guid}/${+d}`)}
-      />
-    </div>
+    <DatePicker
+      grouping={book.grouping}
+      date={date}
+      onChange={(d) => history.replace(`/${book.guid}/${+d}`)}
+    />
 
 type EntryListViewProps = {
   date: Date
@@ -61,15 +59,18 @@ export const EntryListView = (props: EntryListViewProps) => {
     ev.preventDefault()
   }
 
-  return <div>
-    <textarea
-      rows={1}
-      placeholder="Enter a new log!"
-      value={text}
-      onChange={(e) => setText(e.target.value)}
-      onKeyPress={handleKeyPress}
-    />
-    {genDatePicker(props.date, book)}
+  return <div className={"entries"}>
+    <div className={"entries-action-header"}>
+      <textarea
+        rows={1}
+        placeholder="Enter a new log!"
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        onKeyPress={handleKeyPress}
+        className={"entries-textarea"}
+      />
+      {genDatePicker(props.date, book)}
+    </div>
     <EntryList items={entries} />
   </div>
 }

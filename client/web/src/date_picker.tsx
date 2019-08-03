@@ -41,10 +41,10 @@ export const DatePicker = ({ grouping, date, onChange }: DatePickerProps) => {
   const handler = (maybeDate: Date | null) =>
     maybeDate ? onChange(maybeDate) : null
 
-  return <div>
+  return <>
     <ReactDatePicker selected={date} onChange={handler} />
     <Btn label="prev" action={() => onChange(sub(date, unit))} />
     <Btn label="next" action={() => onChange(add(date, unit))} />
     <Btn label="current" action={() => onChange(new Date())} />
-  </div>
+  </>
 }
