@@ -5,12 +5,7 @@ import { Link } from "react-router-dom"
 import { Book } from "../definitions/book"
 import { getBooks } from "../remote"
 
-interface State {
-  loaded: boolean
-  books: Book[]
-}
-
-export default function Books(props: {}) {
+export const BookListView = (props: {}) => {
   const [books, setBooks] = useState<Book[]>([])
   const [loaded, setLoaded] = useState(false)
 
