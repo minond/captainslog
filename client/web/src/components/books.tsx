@@ -2,7 +2,7 @@ import * as React from "react"
 import { useState } from "react"
 import { Link } from "react-router-dom"
 
-import { Book } from "../definitions/book"
+import { Book } from "../definitions"
 import { getBooks } from "../remote"
 
 export const BookListView = (props: {}) => {

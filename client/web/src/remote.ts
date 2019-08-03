@@ -3,14 +3,11 @@ import axios from "axios"
 import {
   Book,
   BooksRetrieveResponse,
-} from "./definitions/book"
-
-import {
   EntriesRetrieveResponse,
   Entry,
   EntryCreateRequest,
   EntryCreateResponse,
-} from "./definitions/entry"
+} from "./definitions"
 
 enum uris {
   books = "/api/books",
