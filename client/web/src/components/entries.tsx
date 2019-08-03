@@ -58,29 +58,24 @@ export function Entries2(props: Props) {
   const [text, setText] = useState("")
   const [book, setBook] = useState<Book | null>(null)
   const [entries, setEntries] = useState<Entry[]>([])
-  const [req, setReq] = useState<EntryCreateRequest | null>(null)
+
+  const fetchEntries = () =>
+    getEntriesForBook(props.bookGuid, props.date).then(setEntries)
 
   useEffect(() => {
-    cachedGetBook(props.bookGuid).then(setBook)
-    cachedGetEntriesForBook(props.bookGuid, props.date).then(setEntries)
+    cachedGetBook(props.bookGuid)
+      .then(setBook)
+      .then(fetchEntries)
   }, [props.bookGuid, props.date])
-
-  useEffect(() => {
-    if (!req) {
-      return
-    }
-
-    createEntry(req).then((res) =>
-      getEntriesForBook(props.bookGuid, props.date).then(setEntries))
-  }, [req])
 
   const handleKeyPress = (ev: KeyboardEvent<HTMLTextAreaElement>) => {
     if (ev.charCode !== KEY_ENTER || !book || !text.trim()) {
-      setReq(null)
       return
     }
 
-    setReq(buildEntryCreateRequest(book, text.trim(), props.date))
+    createEntry(buildEntryCreateRequest(book, text.trim(), props.date))
+      .then(fetchEntries)
+
     setText("")
     ev.preventDefault()
   }
