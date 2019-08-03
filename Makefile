@@ -13,7 +13,7 @@ build-server:
 
 build-server-prod: build-web
 	go run generator/assets/main.go -input ./client/web/dist/ -output ./cmd/captainslog/tmp-assets.go -package main
-	make build-server
+	make build-server GOOS=linux GOARCH=amd64
 	rm ./cmd/captainslog/tmp-assets.go
 
 lint:

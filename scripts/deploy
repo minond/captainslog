@@ -5,6 +5,8 @@ set -euo pipefail
 CL_HOME=/home/marcos/apps/captainslog
 CL_HOST=marcos@minond.xyz
 
+LOG=.deploy.log
+
 task() {
   echo "- $*"
 }
@@ -17,23 +19,20 @@ help() {
 
 build() {
   task "building web client..."
-  make build-web &> /dev/null
+  make build-web >>$LOG 2>&1
 
   task "bundling client assets..."
-  go run generator/assets/main.go -input ./client/web/dist/ -output ./cmd/captainslog/tmp-assets.go -package main &> /dev/null
+  go run generator/assets/main.go -input ./client/web/dist/ -output ./cmd/captainslog/tmp-assets.go -package main >>$LOG 2>&1
 
   task "building http executable..."
-  make build-server GOOS=linux GOARCH=amd64 &> /dev/null
-
-  task "cleaning up..."
-  rm ./cmd/captainslog/tmp-assets.go &> /dev/null
+  make build-server-prod >>$LOG 2>&1
 }
 
 upload() {
   local version="$1"
   local name="captainslog-v$version"
   task "uploading executable..."
-  scp captainslog "$CL_HOST:$CL_HOME/$name" &> /dev/null
+  scp captainslog "$CL_HOST:$CL_HOME/$name" >>$LOG 2>&1
   run_remote "chmod +x $name"
 }
 
@@ -104,6 +103,8 @@ main() {
         ;;
     esac
   done
+
+  echo -n > "$LOG"
 
   task "releasing v$version"
   if (( $run_build == 1 )); then
