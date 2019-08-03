@@ -2,8 +2,8 @@ import * as React from "react"
 import * as ReactDOM from "react-dom"
 import { Router, Route } from "react-router-dom"
 
-import { BookListView } from "./components/books"
-import { EntryListView } from "./components/entries"
+import { BookListView } from "./books"
+import { EntryListView } from "./entries"
 
 import history from "./history"
 

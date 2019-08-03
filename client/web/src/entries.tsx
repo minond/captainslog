@@ -2,10 +2,10 @@ import * as React from "react"
 import { useEffect, useState } from "react"
 import { KeyboardEvent } from "react"
 
-import history from "../history"
+import history from "./history"
 
-import { Book, Entry, EntryCreateRequest } from "../definitions"
-import { cachedGetBook, createEntry, getEntriesForBook } from "../remote"
+import { Book, Entry, EntryCreateRequest } from "./definitions"
+import { cachedGetBook, createEntry, getEntriesForBook } from "./remote"
 
 import { DatePicker, Grouping } from "./date_picker"
 
