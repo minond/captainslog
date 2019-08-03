@@ -98,12 +98,12 @@ export const EntryList = ({ items }: EntryListProps) => {
   const sorted = items.sort(sortByCreatedAt)
   const elems = sorted.map((entry, i) => {
     const datalist = !entry.data ? null : mmap(entry.data, (key, val, j) =>
-      <span key={j}>{key}: {val}</span>)
+      <span key={j} className={"entry-data-item"}>{key}: {val}</span>)
 
     return (
-      <div key={entry.guid}>
+      <div key={entry.guid} className={"entry"}>
         <div>{entry.text}</div>
-        <div>{datalist}</div>
+        <div className={"entry-data"}>{datalist}</div>
       </div>
     )
   })

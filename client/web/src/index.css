@@ -42,7 +42,7 @@ input, textarea {
 }
 
 .entries {
-  padding: 10px;
+  padding: 0 10px 10px 10px;
 }
 
 .entries-action-header {
@@ -52,6 +52,22 @@ input, textarea {
 
 .entries-textarea {
   width: 250px;
+}
+
+.entry {
+  border-top: 1px solid #f0f0f0;
+  padding: 8px 0;
+}
+
+.entry-data-item {
+  border-radius: 2px;
+  border: 1px solid #cccccc;
+  color: #525252;
+  display: inline-block;
+  font-size: .85rem;
+  margin-right: 5px;
+  margin-top: 5px;
+  padding: 2px 8px;
 }
 
 /* small */
