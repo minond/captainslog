@@ -35,7 +35,7 @@ type EntryListViewProps = {
   bookGuid: string
 }
 
-export function EntryListView(props: EntryListViewProps) {
+export const EntryListView = (props: EntryListViewProps) => {
   const [text, setText] = useState("")
   const [book, setBook] = useState<Book | null>(null)
   const [entries, setEntries] = useState<Entry[]>([])
