@@ -20,6 +20,14 @@ export type EntriesRetrieveResponse = {
   entries: Entry[]
 }
 
+export type EntriesCreateRequest = {
+  entries: EntryCreateRequest[]
+}
+
+export type EntriesCreateResponse = {
+  ok: boolean
+}
+
 export type EntryCreateRequest = {
   guid: string
   text: string

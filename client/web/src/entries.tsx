@@ -4,21 +4,33 @@ import { KeyboardEvent } from "react"
 
 import history from "./history"
 
-import { Book, Entry, EntryCreateRequest } from "./definitions"
-import { cachedGetBook, createEntry, getEntriesForBook } from "./remote"
+import { Book, Entry, EntryCreateRequest, EntriesCreateRequest } from "./definitions"
+import { cachedGetBook, createEntries, getEntriesForBook } from "./remote"
 
 import { DatePicker, Grouping } from "./date_picker"
 
 const KEY_ENTER = 13
 
-const buildEntryCreateRequest =
-  (book: Book, text: string, createdAt: Date): EntryCreateRequest =>
-    ({
-      bookGuid: book.guid,
-      createdAt: createdAt.toISOString(),
-      guid: Math.random().toString(),
-      text,
-    })
+type EntriesGenerationId = {
+  entries: EntryCreateRequest[]
+  createdAt: Date
+}
+
+const buildEntriesCreateRequest =
+  (book: Book, text: string, createdAt: Date): EntriesCreateRequest =>
+    text.trim().split("\n").reduce((acc, line) => {
+      if (line[0] === "#") {
+        acc.createdAt = new Date(Date.parse(line.replace(/^#+/, "")))
+      } else if (line) {
+        acc.entries.push({
+          bookGuid: book.guid,
+          createdAt: acc.createdAt.toISOString(),
+          guid: Math.random().toString(),
+          text: line,
+        })
+      }
+      return acc
+    }, { entries: [], createdAt } as EntriesGenerationId)
 
 const genDatePicker = (date: Date, book: Book | null) =>
   !book || book.grouping === Grouping.NONE ? null :
@@ -52,7 +64,7 @@ export const EntryListView = (props: EntryListViewProps) => {
       return
     }
 
-    createEntry(buildEntryCreateRequest(book, text.trim(), props.date))
+    createEntries(buildEntriesCreateRequest(book, text, props.date))
       .then(fetchEntries)
 
     setText("")

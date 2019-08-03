@@ -3,6 +3,8 @@ import axios from "axios"
 import {
   Book,
   BooksRetrieveResponse,
+  EntriesCreateRequest,
+  EntriesCreateResponse,
   EntriesRetrieveResponse,
   Entry,
   EntryCreateRequest,
@@ -24,7 +26,14 @@ export const getBooks = (): Promise<Book[]> =>
 
 export const getEntriesForBook = (bookGuid: string, at: Date): Promise<Entry[]> =>
   axios.get<EntriesRetrieveResponse>(`${uris.entries}?book=${bookGuid}&at=${Math.floor(+at / 1000)}`)
-    .then((res) => res.data.entries)
+    .then((res) => res.data.entries || [])
+
+// FIXME This is a hack to get aroung the lack of a real "create entries"
+// endpoint. Once it's created make sure to use it here.
+export const createEntries = (req: EntriesCreateRequest): Promise<EntriesCreateResponse> =>
+  req.entries.splice(1).reduce((prev, curr) =>
+    prev.then(() => createEntry(curr)), createEntry(req.entries[0]))
+    .then(() => ({ ok: true }))
 
 export const createEntry = (entry: EntryCreateRequest): Promise<EntryCreateResponse> =>
   axios.post<EntryCreateResponse>(uris.entries, entry)
