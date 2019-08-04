@@ -7,8 +7,8 @@ CL_HOST=marcos@minond.xyz
 
 LOG=.deploy.log
 
-task() {
-  echo "- $*"
+info() {
+  echo "info: $*"
 }
 
 help() {
@@ -18,20 +18,20 @@ help() {
 }
 
 build() {
-  task "building web client..."
+  info "building web client..."
   make build-web >>$LOG 2>&1
 
-  task "bundling client assets..."
+  info "bundling client assets..."
   go run generator/assets/main.go -input ./client/web/dist/ -output ./cmd/captainslog/tmp-assets.go -package main >>$LOG 2>&1
 
-  task "building http executable..."
+  info "building http executable..."
   make build-server-prod >>$LOG 2>&1
 }
 
 upload() {
   local version="$1"
   local name="captainslog-v$version"
-  task "uploading executable..."
+  info "uploading executable..."
   scp captainslog "$CL_HOST:$CL_HOME/$name" >>$LOG 2>&1
   run_remote "chmod +x $name"
 }
@@ -39,20 +39,20 @@ upload() {
 link() {
   local version="$1"
   local name="captainslog-v$version"
-  task "linking executable..."
+  info "linking executable..."
   run_remote "ln --force -s $name captainslog"
 }
 
 run_remote() {
-  task "executing $*"
+  info "executing $*"
   ssh "$CL_HOST" "cd $CL_HOME; $*"
 }
 
 restart() {
-  task "shutting down server..."
+  info "shutting down server..."
   run_remote 'kill $(ps aux | grep captainslog | grep server | head -n1 | awk "{ print \$2 }")' || true
 
-  task "starting server..."
+  info "starting server..."
   run_remote ". env.sh; nohup ./captainslog server 1>out.log 2>err.log &"
 }
 
@@ -106,7 +106,7 @@ main() {
 
   echo -n > "$LOG"
 
-  task "releasing v$version"
+  info "releasing v$version"
   if (( $run_build == 1 )); then
     build
   fi
@@ -118,7 +118,7 @@ main() {
   link "$version"
 
   if (( $run_migrations == 1 )); then
-    task "running migrations..."
+    info "running migrations..."
     run_remote "git pull origin master && . env.sh && ./captainslog migrate up"
   fi
 
@@ -126,7 +126,7 @@ main() {
     restart
   fi
 
-  task "done"
+  info "done"
 }
 
 main $*
