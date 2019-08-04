@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -euo pipefail
+set -Eeuo pipefail
 
 CL_HOME=/home/marcos/apps/captainslog
 CL_HOST=marcos@minond.xyz
@@ -128,5 +128,20 @@ main() {
 
   info "done"
 }
+
+err_trap() {
+  if [ -f $LOG ]; then
+    echo
+    echo "========================="
+    tail -n 10 $LOG
+    echo "========================="
+    echo
+    info "error detected, see $LOG for full log output"
+  else
+    info "error detected but no log was generated"
+  fi
+}
+
+trap err_trap ERR
 
 main $*
