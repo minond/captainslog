@@ -54,6 +54,7 @@ export const EntryListView = (props: EntryListViewProps) => {
     getEntriesForBook(props.bookGuid, props.date).then(setEntries)
 
   useEffect(() => {
+    setEntries([])
     cachedGetBook(props.bookGuid)
       .then(setBook)
       .then(fetchEntries)
