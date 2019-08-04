@@ -18,20 +18,14 @@ help() {
 }
 
 build() {
-  info "building web client..."
-  make build-web >>$LOG 2>&1
-
-  info "bundling client assets..."
-  go run generator/assets/main.go -input ./client/web/dist/ -output ./cmd/captainslog/tmp-assets.go -package main >>$LOG 2>&1
-
-  info "building http executable..."
+  info "building"
   make build-server-prod >>$LOG 2>&1
 }
 
 upload() {
   local version="$1"
   local name="captainslog-v$version"
-  info "uploading executable..."
+  info "uploading"
   scp captainslog "$CL_HOST:$CL_HOME/$name" >>$LOG 2>&1
   run_remote "chmod +x $name"
 }
@@ -39,7 +33,7 @@ upload() {
 link() {
   local version="$1"
   local name="captainslog-v$version"
-  info "linking executable..."
+  info "linking"
   run_remote "ln --force -s $name captainslog"
 }
 
