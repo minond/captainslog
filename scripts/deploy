@@ -27,14 +27,13 @@ upload() {
   local name="captainslog-v$version"
   info "uploading"
   scp captainslog "$CL_HOST:$CL_HOME/$name" >>$LOG 2>&1
-  run_remote "chmod +x $name"
 }
 
 link() {
   local version="$1"
   local name="captainslog-v$version"
-  info "linking"
-  run_remote "ln --force -s $name captainslog"
+  info "linking remote executable"
+  run_remote "chmod +x $name ; ln --force -s $name captainslog"
 }
 
 run_remote() {
@@ -42,12 +41,12 @@ run_remote() {
   ssh "$CL_HOST" "cd $CL_HOME; $*"
 }
 
-restart() {
-  info "shutting down server..."
-  run_remote 'kill $(ps aux | grep captainslog | grep server | head -n1 | awk "{ print \$2 }")' || true
+CMD_KILL_CURRENT='kill $(ps aux | grep captainslog | grep server | head -n1 | awk "{ print \$2 }")'
+CMD_START_BG='. env.sh; nohup ./captainslog server 1>out.log 2>err.log &'
 
-  info "starting server..."
-  run_remote ". env.sh; nohup ./captainslog server 1>out.log 2>err.log &"
+restart() {
+  info "restarting server"
+  run_remote "$CMD_KILL_CURRENT ; $CMD_START_BG"
 }
 
 main() {
