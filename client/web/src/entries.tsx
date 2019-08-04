@@ -71,17 +71,21 @@ export const EntryListView = (props: EntryListViewProps) => {
     ev.preventDefault()
   }
 
-  return <div className={"entries"}>
-    <div className={"entries-action-header"}>
-      <textarea
-        rows={1}
-        placeholder="Enter a new log!"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        onKeyPress={handleKeyPress}
-        className={"entries-textarea"}
-      />
-      {genDatePicker(props.date, book)}
+  return <div className="entries">
+    <div className="entries-action-header">
+      <div className="entries-action-header-col">
+        <textarea
+          rows={1}
+          placeholder="Enter a new log!"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          onKeyPress={handleKeyPress}
+          className="entries-textarea"
+        />
+      </div>
+      <div className="entries-action-header-col">
+        {genDatePicker(props.date, book)}
+      </div>
     </div>
     <EntryList items={entries} />
   </div>
@@ -110,12 +114,12 @@ export const EntryList = ({ items }: EntryListProps) => {
   const sorted = items.sort(sortByCreatedAt)
   const elems = sorted.map((entry, i) => {
     const datalist = !entry.data ? null : mmap(entry.data, (key, val, j) =>
-      <span key={j} className={"entry-data-item"}>{key}: {val}</span>)
+      <span key={j} className="entry-data-item">{key}: {val}</span>)
 
     return (
-      <div key={entry.guid} className={"entry"}>
+      <div key={entry.guid} className="entry">
         <div>{entry.text}</div>
-        <div className={"entry-data"}>{datalist}</div>
+        <div className="entry-data">{datalist}</div>
       </div>
     )
   })

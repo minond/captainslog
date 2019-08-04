@@ -13,7 +13,7 @@ export const BookListView = (props: {}) => {
   }, [])
 
   const links = books.map((book) =>
-    <Link key={book.guid} to={`/${book.guid}`} className={"book"}>{book.name}</Link>)
+    <Link key={book.guid} to={`/${book.guid}`} className="book">{book.name}</Link>)
 
-  return <div className={"books"}>{links}</div>
+  return <div className="books">{links}</div>
 }
