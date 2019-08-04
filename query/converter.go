@@ -114,6 +114,12 @@ func rewriteAst(ast Ast, env environment) (Ast, error) {
 func rewriteExpr(ex expr, env environment, autoAlias bool) (expr, environment) {
 	switch x := ex.(type) {
 	case identifier:
+		// Note that alises are no possible to use in where clauses. In order
+		// to respect this, an empty environment is passed in when rewriting
+		// the where clause.
+		if env.defined(x.name) {
+			return ex, env
+		}
 		var field expr
 		field = jsonfield{col: "data", prop: x.name}
 		if autoAlias {
