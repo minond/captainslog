@@ -28,6 +28,8 @@ textarea {
 
 .books {
   border-bottom: 1px solid gainsboro;
+  box-sizing: border-box;
+  height: 56px;
   margin-bottom: 10px;
   padding: 10px;
 }
