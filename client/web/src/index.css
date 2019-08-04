@@ -15,8 +15,15 @@ html, body, input, textarea {
 input, textarea {
   -webkit-appearance: inherit;
   border: 1px solid black;
-  margin-right: 5px;
   padding: 2px 5px;
+}
+
+input + input {
+  margin-left: 5px;
+}
+
+textarea {
+  box-sizing: border-box;
 }
 
 .books {
@@ -38,7 +45,6 @@ input, textarea {
 }
 
 .entries {
-  max-width: 720px;
   padding: 0 10px 10px 10px;
 }
 
@@ -49,9 +55,11 @@ input, textarea {
 .entries-action-header-col .react-datepicker-wrapper input {
   text-align: center;
   width: 90px;
+  margin-right: 5px;
 }
 
 .entries-textarea {
+  max-width: 400px;
   width: 100%;
 }
 
@@ -69,6 +77,22 @@ input, textarea {
   margin-right: 5px;
   margin-top: 5px;
   padding: 2px 8px;
+}
+
+.entries-column {
+  display: inline-block;
+  vertical-align: top;
+  width: 50%;
+}
+
+.query {
+  padding: 0 10px;
+}
+
+.query .query-textarea {
+  font-family: monospace;
+  font-size: 1.25rem;
+  width: 100%;
 }
 
 /* small */

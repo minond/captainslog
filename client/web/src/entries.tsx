@@ -8,6 +8,7 @@ import { Book, Entry, EntryCreateRequest, EntriesCreateRequest } from "./definit
 import { cachedGetBook, createEntries, getEntriesForBook } from "./remote"
 
 import { DatePicker, Grouping } from "./date_picker"
+import { QueryView } from "./query"
 
 const KEY_ENTER = 13
 
@@ -73,22 +74,27 @@ export const EntryListView = (props: EntryListViewProps) => {
   }
 
   return <div className="entries">
-    <div className="entries-action-header">
-      <div className="entries-action-header-col">
-        <textarea
-          rows={1}
-          placeholder="Enter a new log!"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          onKeyPress={handleKeyPress}
-          className="entries-textarea"
-        />
+    <div className="entries-column">
+      <div className="entries-action-header">
+        <div className="entries-action-header-col">
+          <textarea
+            rows={1}
+            placeholder="Enter a new log!"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            onKeyPress={handleKeyPress}
+            className="entries-textarea"
+          />
+        </div>
+        <div className="entries-action-header-col">
+          {genDatePicker(props.date, book)}
+        </div>
       </div>
-      <div className="entries-action-header-col">
-        {genDatePicker(props.date, book)}
-      </div>
+      <EntryList items={entries} />
     </div>
-    <EntryList items={entries} />
+    <div className="entries-column">
+      <QueryView bookGuid={props.bookGuid} />
+    </div>
   </div>
 }
 

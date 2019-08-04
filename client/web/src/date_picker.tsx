@@ -43,8 +43,8 @@ export const DatePicker = ({ grouping, date, onChange }: DatePickerProps) => {
 
   return <>
     <ReactDatePicker selected={date} onChange={handler} />
-    <Btn label="prev" action={() => onChange(sub(date, unit))} />
-    <Btn label="next" action={() => onChange(add(date, unit))} />
-    <Btn label="current" action={() => onChange(new Date())} />
+    <Btn label="Previous" action={() => onChange(sub(date, unit))} />
+    <Btn label="Next" action={() => onChange(add(date, unit))} />
+    <Btn label="Current" action={() => onChange(new Date())} />
   </>
 }
