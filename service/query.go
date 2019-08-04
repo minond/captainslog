@@ -18,16 +18,16 @@ func NewQueryService(db *sql.DB) *QueryService {
 	}
 }
 
-type QueryRequest struct {
+type QueryExecuteRequest struct {
 	Query string `json:"query"`
 }
 
-type QueryResponse struct {
+type QueryResults struct {
 	Cols []string        `json:"cols"`
 	Data [][]interface{} `json:"data"`
 }
 
-func (s QueryService) Query(ctx context.Context, req *QueryRequest) (*QueryResponse, error) {
+func (s QueryService) Query(ctx context.Context, req *QueryExecuteRequest) (*QueryResults, error) {
 	userGUID, err := getUserGUID(ctx)
 	if err != nil {
 		return nil, err
@@ -38,5 +38,5 @@ func (s QueryService) Query(ctx context.Context, req *QueryRequest) (*QueryRespo
 		return nil, err
 	}
 
-	return &QueryResponse{cols, data}, nil
+	return &QueryResults{cols, data}, nil
 }

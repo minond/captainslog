@@ -9,11 +9,14 @@ import {
   Entry,
   EntryCreateRequest,
   EntryCreateResponse,
+  QueryExecuteRequest,
+  QueryResults,
 } from "./definitions"
 
 enum uris {
-  books = "/api/books",
+  books   = "/api/books",
   entries = "/api/entries",
+  query   = "/api/query",
 }
 
 export const getBook = (guid: string): Promise<Book | null> =>
@@ -37,6 +40,10 @@ export const createEntries = (req: EntriesCreateRequest): Promise<EntriesCreateR
 
 export const createEntry = (entry: EntryCreateRequest): Promise<EntryCreateResponse> =>
   axios.post<EntryCreateResponse>(uris.entries, entry)
+    .then((res) => res.data)
+
+export const executeQuery = (query: string): Promise<QueryResults> =>
+  axios.post<QueryResults>(uris.query, { query } as QueryExecuteRequest)
     .then((res) => res.data)
 
 const ttls = {

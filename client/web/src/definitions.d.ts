@@ -39,3 +39,12 @@ export type EntryCreateResponse = {
   guid: string
   entry: Entry
 }
+
+export type QueryExecuteRequest = {
+  query: string
+}
+
+export type QueryResults = {
+  cols: string[]
+  data: string[][]
+}

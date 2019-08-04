@@ -53,8 +53,8 @@
         {
           "method": "POST",
           "handler": "Query",
-          "request": "service.QueryRequest",
-          "response": "service.QueryResponse"
+          "request": "service.QueryExecuteRequest",
+          "response": "service.QueryResults"
         }
       ]
     },

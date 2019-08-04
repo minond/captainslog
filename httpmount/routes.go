@@ -58,7 +58,7 @@ type EntryServiceContract interface {
 // the request, and the response.
 type QueryServiceContract interface {
 	// Query runs when a POST /api/query request comes in.
-	Query(ctx context.Context, req *service.QueryRequest) (*service.QueryResponse, error)
+	Query(ctx context.Context, req *service.QueryExecuteRequest) (*service.QueryResults, error)
 }
 
 // ShorthandServiceContract defines what an implementation of service.ShorthandService
@@ -312,7 +312,7 @@ func MountQueryService(router *mux.Router, serv QueryServiceContract) {
 				return
 			}
 
-			req := &service.QueryRequest{}
+			req := &service.QueryExecuteRequest{}
 			if err = json.Unmarshal(data, req); err != nil {
 				http.Error(w, "unable to decode request", http.StatusBadRequest)
 				log.Printf("[ERROR] error unmarshaling request: %v", err)
