@@ -13,12 +13,26 @@ type QueryViewProps = {
 const rowCount = (val: string): number =>
   val.split("\n").length
 
-const valueOf = (val: QueryResult): string | number | undefined =>
+const isBool = (val: QueryResult): boolean => "Bool" in val
+const isString = (val: QueryResult): boolean => "String" in val
+const isFloat64 = (val: QueryResult): boolean => "Float64" in val
+const isInt64 = (val: QueryResult): boolean => "Int64" in val
+const isNumber = (val: QueryResult): boolean => isFloat64(val) || isInt64(val)
+
+const valueOf = (val: QueryResult): string | number | boolean | undefined =>
   !val.Valid ? undefined :
-    "String" in val ? val.String :
-    "Float64" in val ? val.Float64 :
-    "Int64" in val ? val.Int64 :
+    isString(val) ? val.String :
+    isFloat64(val) ? val.Float64 :
+    isInt64(val) ? val.Int64 :
+    isBool(val) ? val.Bool :
     undefined
+
+const classOf = (val: QueryResult): string =>
+  !val.Valid ? "query-res-type-null" :
+    isString(val) ? "query-res-type-string" :
+    isNumber(val) ? "query-res-type-number" :
+    isBool(val) ? "query-res-type-boolean" :
+    "query-res-type-unknown"
 
 const resultsTable = (res: QueryResults) =>
   <table className="query-results">
@@ -32,7 +46,7 @@ const resultsTable = (res: QueryResults) =>
       {res.data.map((row, ridx) =>
         <tr key={ridx}>
           {row.map((val, vidx) =>
-            <td key={vidx}>{valueOf(val)}</td>)}
+            <td key={vidx} className={classOf(val)}>{valueOf(val)}</td>)}
         </tr>)}
     </tbody>
   </table>

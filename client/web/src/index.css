@@ -110,6 +110,15 @@ textarea {
   padding: 2px 5px;
 }
 
+.query-res-type-number {
+  text-align: right;
+}
+
+.query-res-type-boolean {}
+.query-res-type-null {}
+.query-res-type-string {}
+.query-res-type-unknown {}
+
 /* small */
 @media screen and (min-width: 45em) {
 }

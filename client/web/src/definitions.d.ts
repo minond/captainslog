@@ -50,8 +50,9 @@ export type QueryResults = {
 }
 
 export type QueryResult = {
-  Valid: boolean
-  String?: string
-  Int64?: number
+  Bool?: boolean
   Float64?: number
+  Int64?: number
+  String?: string
+  Valid: boolean
 }
