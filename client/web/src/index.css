@@ -81,14 +81,13 @@ textarea {
   padding: 2px 8px;
 }
 
-.entries-column {
-  display: inline-block;
-  vertical-align: top;
-  width: 50%;
-}
-
-.query {
-  padding: 0 10px;
+/* larger than medium */
+@media screen and (min-width: 45em) {
+  .entries-column {
+    display: inline-block;
+    vertical-align: top;
+    width: 50%;
+  }
 }
 
 .query .query-textarea {
