@@ -11,7 +11,7 @@ type QueryViewProps = {
 }
 
 const rowCount = (val: string): number =>
-  val.split("\n").length
+  val.trim() === "" ? 1 : val.trim().split("\n").length + 1
 
 const isBool = (val: QueryResult): boolean => "Bool" in val
 const isString = (val: QueryResult): boolean => "String" in val
@@ -51,20 +51,8 @@ const resultsTable = (res: QueryResults) =>
     </tbody>
   </table>
 
-const SAMPLE_QUERY = `select distinct exercise,
-  max(cast(weight as float))
-from workouts
-where exercise is not null
-group by exercise`
-
-const _ = `select exercise, count(1) as count
-from workouts
-group by exercise
-order by count desc
-limit 20`
-
 export const QueryView = (props: QueryViewProps) => {
-  const [query, setQuery] = useState<string>(SAMPLE_QUERY)
+  const [query, setQuery] = useState<string>("")
   const [rows, setRows] = useState<number>(rowCount(query))
   const [results, setResults] = useState<QueryResults | null>(null)
 
@@ -90,7 +78,6 @@ export const QueryView = (props: QueryViewProps) => {
       rows={rows}
       onChange={(ev) => updateQuery(ev.target.value)}
       onKeyPress={textareaKeyPress}
-      defaultValue={SAMPLE_QUERY}
     />
     <input type="button" value="Execute" onClick={execute} />
     {results && resultsTable(results)}
