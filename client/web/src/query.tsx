@@ -8,6 +8,9 @@ type QueryViewProps = {
   bookGuid: string
 }
 
+const rowCount = (val: string): number =>
+  val.split("\n").length
+
 const valueOf = (val: QueryResult): string | number | undefined =>
   !val.Valid ? undefined :
     "String" in val ? val.String :
@@ -46,16 +49,22 @@ limit 20`
 
 export const QueryView = (props: QueryViewProps) => {
   const [query, setQuery] = useState<string>(SAMPLE_QUERY)
+  const [rows, setRows] = useState<number>(rowCount(query))
   const [results, setResults] = useState<QueryResults | null>(null)
 
   const execute = () =>
     cachedExecuteQuery(query).then(setResults)
 
+  const updateQuery = (query: string) => {
+    setQuery(query)
+    setRows(rowCount(query))
+  }
+
   return <div className="query">
     <textarea
       className="query-textarea"
-      rows={5}
-      onChange={(e) => setQuery(e.target.value)}
+      rows={rows}
+      onChange={(e) => updateQuery(e.target.value)}
       defaultValue={SAMPLE_QUERY}
     />
     <input type="button" value="Execute" onClick={execute} />
