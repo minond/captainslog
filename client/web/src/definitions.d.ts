@@ -46,7 +46,7 @@ export type QueryExecuteRequest = {
 
 export type QueryResults = {
   cols: string[]
-  data: QueryResult[][]
+  data?: QueryResult[][]
 }
 
 export type QueryResult = {

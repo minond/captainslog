@@ -39,7 +39,7 @@ const resultsTable = (res: QueryResults) =>
       </tr>
     </thead>
     <tbody>
-      {res.data.map((row, ridx) =>
+      {res.data && res.data.map((row, ridx) =>
         <tr key={ridx}>
           {row.map((val, vidx) =>
             <td key={vidx} className={classOf(val)}>{valueOf(val)}</td>)}
@@ -75,7 +75,10 @@ export const QueryView = (props: QueryViewProps) => {
       .then((res) => {
         const elapsedTime = Date.now() - startTime
         setResults(res)
-        setMessage({ ok: true, message: `${res.data.length} row(s) (${elapsedTime}ms)` })
+        setMessage({
+          ok: true,
+          message: `(${res.data ? res.data.length : 0} rows) (${elapsedTime}ms)`,
+        })
       })
       .catch((err) => {
         setResults(null)
