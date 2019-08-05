@@ -46,5 +46,12 @@ export type QueryExecuteRequest = {
 
 export type QueryResults = {
   cols: string[]
-  data: string[][]
+  data: QueryResult[][]
+}
+
+export type QueryResult = {
+  Valid: boolean
+  String?: string
+  Int64?: number
+  Float64?: number
 }

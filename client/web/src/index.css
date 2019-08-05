@@ -97,6 +97,19 @@ textarea {
   width: 100%;
 }
 
+.query-results {
+  margin-top: 10px;
+}
+
+.query-results, .query-results tr, .query-results td {
+  border-collapse: collapse;
+}
+
+.query-results td {
+  border: 1px solid #e1e1e1;
+  padding: 2px 5px;
+}
+
 /* small */
 @media screen and (min-width: 45em) {
 }
