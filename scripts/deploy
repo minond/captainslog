@@ -41,8 +41,8 @@ run_remote() {
   ssh "$CL_HOST" "cd $CL_HOME; $*"
 }
 
-CMD_KILL_CURRENT='kill $(ps aux | grep captainslog | grep server | head -n1 | awk "{ print \$2 }")'
-CMD_START_BG='. env.sh; nohup ./captainslog server 1>out.log 2>err.log &'
+CMD_KILL_CURRENT='kill -SIGINT $(ps aux | grep captainslog | grep server | head -n1 | awk "{ print \$2 }") || true'
+CMD_START_BG='. env.sh; nohup ./captainslog server &>> out.log &'
 
 restart() {
   info "restarting server"

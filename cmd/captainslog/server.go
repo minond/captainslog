@@ -1,9 +1,12 @@
 package main
 
 import (
+	"context"
 	"log"
 	"net/http"
 	"os"
+	"os/signal"
+	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
@@ -27,8 +30,6 @@ var cmdServer = &cobra.Command{
 		}
 		defer db.Close()
 
-		router := mux.NewRouter()
-
 		bookService := service.NewBookService(db)
 		entryService := service.NewEntryService(db)
 		extractorService := service.NewExtractorService(db)
@@ -37,6 +38,8 @@ var cmdServer = &cobra.Command{
 
 		// TODO add real sessions with real auth
 		store := sessions.NewCookieStore([]byte(os.Getenv("SESSION_KEY")))
+
+		router := mux.NewRouter()
 		router.Use(func(next http.Handler) http.Handler {
 			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				log.Printf("[INFO] %s %s", r.Method, r.URL.String())
@@ -65,7 +68,26 @@ var cmdServer = &cobra.Command{
 		})
 
 		listen := os.Getenv("LISTEN")
+		server := http.Server{
+			Addr:    listen,
+			Handler: router,
+		}
+
 		log.Printf("[INFO] listening on `%s`", listen)
-		log.Fatal(http.ListenAndServe(listen, router))
+
+		go func() {
+			if err := server.ListenAndServe(); err != nil {
+				log.Fatal(err)
+			}
+		}()
+
+		stopper := make(chan os.Signal)
+		signal.Notify(stopper, os.Interrupt)
+
+		<-stopper
+		log.Print("[INFO] shutting server down")
+		ctx, _ := context.WithTimeout(context.Background(), 2*time.Second)
+		server.Shutdown(ctx)
+		log.Print("[INFO] server shut down")
 	},
 }
