@@ -6,10 +6,6 @@ import { QueryExecuteRequest, QueryResults, QueryResult } from "./definitions"
 
 const KEY_ENTER = 13
 
-type QueryViewProps = {
-  bookGuid: string
-}
-
 const rowCount = (val: string): number =>
   val.trim() === "" ? 1 : val.trim().split("\n").length + 1
 
@@ -51,14 +47,41 @@ const resultsTable = (res: QueryResults) =>
     </tbody>
   </table>
 
+type Message = {
+  ok: boolean
+  message: string
+}
+
+type QueryViewProps = {
+  bookGuid: string
+}
+
 export const QueryView = (props: QueryViewProps) => {
+  const [message, setMessage] = useState<Message | null>(null)
   const [query, setQuery] = useState<string>("")
   const [rows, setRows] = useState<number>(rowCount(query))
   const [results, setResults] = useState<QueryResults | null>(null)
 
-  const execute = () =>
-    query ? cachedExecuteQuery(query).then(setResults) :
+  const executeQuery = () => {
+    setMessage(null)
+
+    if (!query) {
       setResults(null)
+      return
+    }
+
+    const startTime = Date.now()
+    cachedExecuteQuery(query)
+      .then((res) => {
+        const elapsedTime = Date.now() - startTime
+        setResults(res)
+        setMessage({ ok: true, message: `Executed query in ${elapsedTime}ms` })
+      })
+      .catch((err) => {
+        setResults(null)
+        setMessage({ ok: false, message: "Error executing query" })
+      })
+  }
 
   const updateQuery = (query: string) => {
     setQuery(query)
@@ -67,10 +90,12 @@ export const QueryView = (props: QueryViewProps) => {
 
   const textareaKeyPress = (ev: KeyboardEvent<HTMLTextAreaElement>) => {
     if (ev.charCode === KEY_ENTER && ev.shiftKey) {
-      execute()
+      executeQuery()
       ev.preventDefault()
     }
   }
+
+  const messageClass = `query-message ${message && message.ok ? "query-message-ok" : "query-message-error"}`
 
   return <div className="query">
     <textarea
@@ -79,7 +104,8 @@ export const QueryView = (props: QueryViewProps) => {
       onChange={(ev) => updateQuery(ev.target.value)}
       onKeyPress={textareaKeyPress}
     />
-    <input type="button" value="Execute" onClick={execute} />
+    <input type="button" value="Execute" onClick={executeQuery} />
+    {message && <div className={messageClass}>{message.message}</div>}
     {results && resultsTable(results)}
   </div>
 }
