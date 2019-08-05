@@ -1,8 +1,10 @@
 import * as React from "react"
-import { useState } from "react"
+import { useState, KeyboardEvent } from "react"
 
 import { cachedExecuteQuery } from "./remote"
 import { QueryExecuteRequest, QueryResults, QueryResult } from "./definitions"
+
+const KEY_ENTER = 13
 
 type QueryViewProps = {
   bookGuid: string
@@ -53,18 +55,27 @@ export const QueryView = (props: QueryViewProps) => {
   const [results, setResults] = useState<QueryResults | null>(null)
 
   const execute = () =>
-    cachedExecuteQuery(query).then(setResults)
+    query ? cachedExecuteQuery(query).then(setResults) :
+      setResults(null)
 
   const updateQuery = (query: string) => {
     setQuery(query)
     setRows(rowCount(query))
   }
 
+  const textareaKeyPress = (ev: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (ev.charCode === KEY_ENTER && ev.shiftKey) {
+      execute()
+      ev.preventDefault()
+    }
+  }
+
   return <div className="query">
     <textarea
       className="query-textarea"
       rows={rows}
-      onChange={(e) => updateQuery(e.target.value)}
+      onChange={(ev) => updateQuery(ev.target.value)}
+      onKeyPress={textareaKeyPress}
       defaultValue={SAMPLE_QUERY}
     />
     <input type="button" value="Execute" onClick={execute} />
