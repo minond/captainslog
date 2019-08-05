@@ -17,6 +17,7 @@ var (
 	wordFalse    = token{tok: tokIdentifier, lexeme: "false"}
 	wordFrom     = token{tok: tokIdentifier, lexeme: "from"}
 	wordGroup    = token{tok: tokIdentifier, lexeme: "group"}
+	wordHaving   = token{tok: tokIdentifier, lexeme: "having"}
 	wordIlike    = token{tok: tokIdentifier, lexeme: "ilike"}
 	wordIs       = token{tok: tokIdentifier, lexeme: "is"}
 	wordLike     = token{tok: tokIdentifier, lexeme: "like"}
@@ -57,6 +58,7 @@ var (
 		wordFalse,
 		wordFrom,
 		wordGroup,
+		wordHaving,
 		wordIlike,
 		wordIs,
 		wordLike,
@@ -191,6 +193,7 @@ func (p *parser) parseSelectStmt() (*selectStmt, error) {
 	var from *table
 	var where expr
 	var groupBy []expr
+	var having expr
 	var orderBy []order
 	var lim *limit
 
@@ -218,7 +221,7 @@ func (p *parser) parseSelectStmt() (*selectStmt, error) {
 	}
 
 	if p.peek().ieq(wordWhere) {
-		where, err = p.parseWhereClause()
+		where, err = p.parseFilterClause()
 		if err != nil {
 			return nil, err
 		}
@@ -230,6 +233,13 @@ func (p *parser) parseSelectStmt() (*selectStmt, error) {
 			return nil, err
 		}
 		groupBy, err = p.parseExprs()
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	if p.peek().ieq(wordHaving) {
+		having, err = p.parseFilterClause()
 		if err != nil {
 			return nil, err
 		}
@@ -262,6 +272,7 @@ func (p *parser) parseSelectStmt() (*selectStmt, error) {
 		from:     from,
 		where:    where,
 		groupBy:  groupBy,
+		having:   having,
 		orderBy:  orderBy,
 		limit:    lim,
 	}, nil
@@ -333,9 +344,9 @@ func (p *parser) parseFromClause() (*table, error) {
 	return from, nil
 }
 
-func (p *parser) parseWhereClause() (expr, error) {
-	// A where clause looks like this: "where" exprs
-	_, err := p.expectIeqWord(wordWhere)
+func (p *parser) parseFilterClause() (expr, error) {
+	// A filter clause looks like this: "where" exprs | "having" exprs
+	_, err := p.expectIeqWords(wordWhere, wordHaving)
 	if err != nil {
 		return nil, err
 	}

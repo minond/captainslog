@@ -68,6 +68,7 @@ type selectStmt struct {
 	from     *table
 	where    expr
 	groupBy  []expr
+	having   expr
 	orderBy  []order
 	limit    *limit
 }
@@ -111,6 +112,13 @@ func (s selectStmt) Print(pretty bool) string {
 			fmt.Fprint(&query, "\ngroup by ", strings.Join(group, ", "))
 		} else {
 			fmt.Fprint(&query, " group by ", strings.Join(group, ", "))
+		}
+	}
+	if s.having != nil {
+		if pretty {
+			fmt.Fprint(&query, "\nhaving ", s.having.String())
+		} else {
+			fmt.Fprint(&query, " having ", s.having.String())
 		}
 	}
 	if len(s.orderBy) != 0 {
