@@ -47,6 +47,7 @@ export const executeQuery = (query: string): Promise<QueryResults> =>
     .then((res) => res.data)
 
 const ttls = {
+  [executeQuery.toString()]: 100,
   [getBook.toString()]: 5000,
   [getBooks.toString()]: 5000,
   [getEntriesForBook.toString()]: 500,
@@ -87,6 +88,7 @@ export const cached = <T extends Function>(fn: T, ttl: number = ttlFor(fn)) => {
   }
 }
 
+export const cachedExecuteQuery = cached(executeQuery)
 export const cachedGetBook = cached(getBook)
 export const cachedGetBooks = cached(getBooks)
 export const cachedGetEntriesForBook = cached(getEntriesForBook)
