@@ -117,6 +117,7 @@ func (s EntryService) Retrieve(ctx context.Context, req url.Values) (*EntryRetri
 		return nil, err
 	}
 
+	at = time.Now()
 	if atDate, ok := req["at"]; ok {
 		if len(atDate) == 1 {
 			i, err := strconv.ParseInt(atDate[0], 10, 64)
@@ -127,10 +128,29 @@ func (s EntryService) Retrieve(ctx context.Context, req url.Values) (*EntryRetri
 		} else {
 			return nil, errors.New("multiple dates passed but only a single is allowed")
 		}
+	}
+
+	var offsetMin int64 = 0
+	if offset, ok := req["offset"]; ok {
+		if len(offset) == 1 {
+			i, err := strconv.ParseInt(offset[0], 10, 32)
+			if err != nil {
+				return nil, errors.New("invalid offset value, expecting an integer")
+			}
+			offsetMin = i
+		} else {
+			return nil, errors.New("multiple offsets passed but only a single is allowed")
+		}
 	} else {
 		at = time.Now()
 	}
-	at = at.In(time.UTC)
+
+	// NOTE Let's see how this works out for me. In order to show logs for the
+	// actual date/time that the _client_ is on, the time zone offset is
+	// optionally passed into this request along with the timestamp. The
+	// combination of the two are then used to generate a UTC date/time value,
+	// which is what is stored in the database.
+	at = at.In(time.UTC).Add(time.Duration(offsetMin) * time.Minute * -1)
 
 	book, err := s.bookStore.FindOne(model.NewBookQuery().
 		Where(kallax.Eq(model.Schema.Book.GUID, bookGUID)).

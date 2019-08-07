@@ -28,7 +28,7 @@ export const getBooks = (): Promise<Book[]> =>
     .then((res) => res.data.books)
 
 export const getEntriesForBook = (bookGuid: string, at: Date): Promise<Entry[]> =>
-  axios.get<EntriesRetrieveResponse>(`${uris.entries}?book=${bookGuid}&at=${Math.floor(+at / 1000)}`)
+  axios.get<EntriesRetrieveResponse>(`${uris.entries}?book=${bookGuid}&at=${Math.floor(+at / 1000)}&offset=${at.getTimezoneOffset()}`)
     .then((res) => res.data.entries || [])
 
 // FIXME This is a hack to get aroung the lack of a real "create entries"
