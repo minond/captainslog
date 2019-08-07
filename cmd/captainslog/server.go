@@ -81,13 +81,14 @@ var cmdServer = &cobra.Command{
 			}
 		}()
 
-		stopper := make(chan os.Signal)
+		stopper := make(chan os.Signal, 1)
 		signal.Notify(stopper, os.Interrupt)
 
 		<-stopper
 		log.Print("[INFO] shutting server down")
-		ctx, _ := context.WithTimeout(context.Background(), 2*time.Second)
-		server.Shutdown(ctx)
+		ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+		defer cancel()
+		_ = server.Shutdown(ctx)
 		log.Print("[INFO] server shut down")
 	},
 }
