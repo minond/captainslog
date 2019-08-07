@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"database/sql"
+	"log"
 
 	"github.com/minond/captainslog/model"
 	"github.com/minond/captainslog/query"
@@ -33,10 +34,11 @@ func (s QueryService) Query(ctx context.Context, req *QueryExecuteRequest) (*Que
 		return nil, err
 	}
 
-	cols, data, err := query.Exec(s.entryStore, req.Query, userGUID)
+	sql, cols, data, err := query.Exec(s.entryStore, req.Query, userGUID)
 	if err != nil {
 		return nil, err
 	}
+	log.Printf("sql: %s", sql)
 
 	return &QueryResults{cols, data}, nil
 }

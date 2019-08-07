@@ -12,33 +12,35 @@ type querier interface {
 	RawQuery(sql string, params ...interface{}) (kallax.ResultSet, error)
 }
 
-func Exec(store querier, origSQL, userGUID string) ([]string, [][]interface{}, error) {
+func Exec(store querier, origSQL, userGUID string) (string, []string, [][]interface{}, error) {
 	ast, err := Parse(origSQL)
 	if err != nil {
-		return nil, nil, err
+		return "", nil, nil, err
 	}
 
 	if _, ok := ast.(*selectStmt); !ok {
-		return nil, nil, errors.New("only select statements are allowed")
+		return "", nil, nil, errors.New("only select statements are allowed")
 	}
 
 	converted, err := Convert(ast, userGUID)
 	if err != nil {
-		return nil, nil, err
+		return "", nil, nil, err
 	}
 
-	irs, err := store.RawQuery(converted.String())
+	executedQuery := converted.String()
+	irs, err := store.RawQuery(executedQuery)
 	if err != nil {
-		return nil, nil, err
+		return executedQuery, nil, nil, err
 	}
 	defer irs.Close()
 
 	switch rs := irs.(type) {
 	case *kallax.BaseResultSet:
-		return scan(rs)
+		cols, rows, err := scan(rs)
+		return executedQuery, cols, rows, err
 	}
 
-	return nil, nil, errors.New("bad record set")
+	return executedQuery, nil, nil, errors.New("bad record set")
 }
 
 func scan(rs *kallax.BaseResultSet) ([]string, [][]interface{}, error) {

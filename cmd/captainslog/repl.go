@@ -80,7 +80,7 @@ func (r *repl) query(input string) error {
 	}
 
 	store := model.NewEntryStore(r.db)
-	cols, rows, err := query.Exec(store, input, r.userGuid)
+	_, cols, rows, err := query.Exec(store, input, r.userGuid)
 	if err != nil {
 		return fmt.Errorf("exec error: %v", err)
 	}

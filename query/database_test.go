@@ -44,7 +44,7 @@ func TestExec(t *testing.T) {
 		store := model.NewEntryStore(db)
 		user := newUser(t, db)
 		sql := `select exercise as exercise where 1 = 0`
-		cols, _, err := Exec(store, sql, user.GUID.String())
+		_, cols, _, err := Exec(store, sql, user.GUID.String())
 		if err != nil {
 			t.Errorf("error: %v", err)
 		}
