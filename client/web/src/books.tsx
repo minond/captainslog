@@ -5,7 +5,7 @@ import { Link } from "react-router-dom"
 import { Book } from "./definitions"
 import { cachedGetBooks } from "./remote"
 
-export const BookListView = (props: {}) => {
+export const Books = (props: {}) => {
   const [books, setBooks] = useState<Book[]>([])
 
   useEffect(() => {

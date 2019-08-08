@@ -40,12 +40,12 @@ const genDatePicker = (date: Date, book: Book | null) =>
       onChange={(d) => history.replace(`/${book.guid}/${+d}`)}
     />
 
-type EntryListViewProps = {
+type EntriesProps = {
   date: Date
   bookGuid: string
 }
 
-export const EntryListView = (props: EntryListViewProps) => {
+export const Entries = (props: EntriesProps) => {
   const [text, setText] = useState("")
   const [book, setBook] = useState<Book | null>(null)
   const [entries, setEntries] = useState<Entry[]>([])

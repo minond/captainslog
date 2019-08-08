@@ -52,7 +52,7 @@ type Message = {
   message: string
 }
 
-export const QueryView = (props: {}) => {
+export const Query = (props: {}) => {
   const [message, setMessage] = useState<Message | null>(null)
   const [query, setQuery] = useState<string>("")
   const [rows, setRows] = useState<number>(rowCount(query))
