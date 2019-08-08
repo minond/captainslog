@@ -35,10 +35,11 @@ func (s QueryService) Query(ctx context.Context, req *QueryExecuteRequest) (*Que
 	}
 
 	sql, cols, data, err := query.Exec(s.entryStore, req.Query, userGUID)
+	log.Printf("sql: %s", sql)
 	if err != nil {
+		log.Printf("err: %s", err)
 		return nil, err
 	}
-	log.Printf("sql: %s", sql)
 
 	return &QueryResults{cols, data}, nil
 }

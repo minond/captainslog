@@ -88,23 +88,29 @@ func withBookFilter(stmt *selectStmt) *selectStmt {
 func rewriteAst(ast Ast, env environment) (Ast, error) {
 	switch stmt := ast.(type) {
 	case *selectStmt:
+		var newexpr expr
+		var newenv environment
+
 		for i, expr := range stmt.columns {
-			newexpr, newenv := rewriteExpr(expr, env, true)
+			newexpr, newenv = rewriteExpr(expr, env, true)
 			env = newenv
 			stmt.columns[i] = newexpr
 		}
 		for i, expr := range stmt.groupBy {
-			newexpr, _ := rewriteExpr(expr, env, false)
+			newexpr, _ = rewriteExpr(expr, env, false)
 			stmt.groupBy[i] = newexpr
 		}
 		for i, expr := range stmt.orderBy {
-			newexpr, _ := rewriteExpr(expr.expr, env, false)
+			newexpr, _ = rewriteExpr(expr.expr, env, false)
 			stmt.orderBy[i].expr = newexpr
 		}
 
+		newexpr, _ = rewriteExpr(stmt.having, env, false)
+		stmt.having = newexpr
+
 		// Column aliases are not available in where clause, so we use a new
 		// environment when rewriting the where clause expression.
-		newexpr, _ := rewriteExpr(stmt.where, make(environment), false)
+		newexpr, _ = rewriteExpr(stmt.where, make(environment), false)
 		stmt.where = newexpr
 		return ast, nil
 	}
