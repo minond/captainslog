@@ -106,6 +106,7 @@ export const QueryView = (props: QueryViewProps) => {
       rows={rows}
       onChange={(ev) => updateQuery(ev.target.value)}
       onKeyPress={textareaKeyPress}
+      placeholder="Execute query"
     />
     <input type="button" value="Execute" onClick={executeQuery} />
     {message && <div className={messageClass}>{message.message}</div>}
