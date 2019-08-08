@@ -81,15 +81,6 @@ textarea {
   padding: 2px 8px;
 }
 
-/* larger than medium */
-@media screen and (min-width: 45em) {
-  .entries-column {
-    display: inline-block;
-    vertical-align: top;
-    width: 50%;
-  }
-}
-
 .query .query-textarea {
   font-family: monospace;
   font-size: 1.25rem;
