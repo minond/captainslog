@@ -1,6 +1,3 @@
-/* https://fonts.google.com/specimen/Titillium+Web?selection.family=Titillium+Web:300,400,600,700 */
-@import url('https://fonts.googleapis.com/css?family=Titillium+Web:300,400,600,700&display=swap');
-
 html, body {
   cursor: default;
   margin: 0;
@@ -8,8 +5,14 @@ html, body {
 }
 
 html, body, input, textarea {
-  font-family: 'Titillium Web', sans-serif;
+  font-family: PT Mono, monospace;
   font-size: .95rem;
+  line-height: 1.4;
+}
+
+h1, h2, h3 {
+  font-family: baskerville, serif;
+  font-weight: 500;
 }
 
 input, textarea {
@@ -66,6 +69,7 @@ textarea {
 
 .entries-action-header {
   margin-bottom: 10px;
+  padding-top: 10px;
 }
 
 /* medium+ */
@@ -115,8 +119,7 @@ textarea {
 }
 
 .query .query-textarea {
-  font-family: monospace;
-  font-size: 1.25rem;
+  outline: none;
   width: 100%;
 }
 
