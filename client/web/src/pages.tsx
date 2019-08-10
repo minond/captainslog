@@ -16,7 +16,7 @@ const Page = (props: PageProps) =>
     <div className={"page-header " + (props.active ? "page-header-active" : "")}>
       <div className="page-header-content">
         <span className="logo">Captain's log</span>
-        <Link to="/">Home</Link>
+        <Link to="/" className={props.active === "home" ? "active" : ""}>Home</Link>
         <Link to="/query" className={props.active === "query" ? "active" : ""}>Query</Link>
         <Books active={props.active} />
       </div>
@@ -27,7 +27,7 @@ const Page = (props: PageProps) =>
   </div>
 
 export const IndexPage = (props: {}) =>
-  <Page />
+  <Page active="home" />
 
 export const QueryPage = (props: {}) =>
   <Page active="query">
