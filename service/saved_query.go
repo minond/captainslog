@@ -5,6 +5,8 @@ import (
 	"database/sql"
 	"net/url"
 
+	"gopkg.in/src-d/go-kallax.v1"
+
 	"github.com/minond/captainslog/model"
 )
 
@@ -48,5 +50,18 @@ type SavedQueryRetrieveResponse struct {
 }
 
 func (s SavedQueryService) Retrieve(ctx context.Context, req url.Values) (*SavedQueryRetrieveResponse, error) {
-	return nil, nil
+	userGUID, err := getUserGUID(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	query := model.NewSavedQueryQuery().
+		Where(kallax.Eq(model.Schema.SavedQuery.UserFK, userGUID))
+
+	queries, err := s.savedQueryStore.FindAll(query)
+	if err != nil {
+		return nil, err
+	}
+
+	return &SavedQueryRetrieveResponse{Queries: queries}, nil
 }
