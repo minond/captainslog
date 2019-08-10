@@ -73,6 +73,7 @@ export const Entries = (props: EntriesProps) => {
   }
 
   return <div className="entries">
+    <h1>{book ? book.name : "\u00A0"}</h1>
     <div className="entries-action-header">
       <div className="entries-action-header-col">
         <textarea
