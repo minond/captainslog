@@ -17,13 +17,13 @@ const Page = (props: PageProps) => {
   useEffect(() => {
     document.title = `Captain's Log`
   })
+  console.log("props.active", props.active)
 
   return <>
     <div className="page-wrapper">
       <div className={"page-header " + (props.active ? "page-header-active" : "")}>
         <div className="page-header-content">
-          <span className="logo">Captain's log</span>
-          <Link to="/" className={props.active === "home" ? "active" : ""}>Home</Link>
+          <Link to="/">Captain's Log</Link>
           <Link to="/query" className={props.active === "query" ? "active" : ""}>Query</Link>
           <Books active={props.active} />
         </div>
@@ -36,7 +36,7 @@ const Page = (props: PageProps) => {
 }
 
 export const IndexPage = (props: {}) =>
-  <Page active="home" />
+  <Page />
 
 export const QueryPage = (props: {}) =>
   <Page active="query">
