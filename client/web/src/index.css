@@ -68,6 +68,21 @@ textarea {
   margin-bottom: 10px;
 }
 
+/* medium+ */
+@media screen and (min-width: 45em) {
+  .entries-action-header {
+    display: flex;
+  }
+
+  .entries-action-header-col + .entries-action-header-col {
+    text-align: right;
+  }
+}
+
+.entries-action-header-col {
+  width: 50%;
+}
+
 .entries-action-header-col .react-datepicker-wrapper input {
   text-align: center;
   width: 90px;
@@ -75,7 +90,11 @@ textarea {
 }
 
 .entries-textarea {
-  max-width: 400px;
+  border-bottom: 1px solid #acacac;
+  border: none;
+  outline: none;
+  padding: 2px 0;
+  resize: none;
   width: 100%;
 }
 
