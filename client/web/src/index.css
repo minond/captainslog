@@ -27,16 +27,18 @@ textarea {
 }
 
 .page-header {
-  border-bottom: 2px solid #00449e;
+  border-bottom: 1px solid black;
 }
 
-.page-header,
+.page-header-content,
 .page-content {
+  margin: 0 auto;
+  max-width: 900px;
   padding: 10px;
 }
 
 .page-header a {
-  color: #357edd;
+  color: black;
   margin-left: 5px;
   text-decoration: none;
 }

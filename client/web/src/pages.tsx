@@ -14,10 +14,12 @@ type PageProps = {
 const Page = (props: PageProps) =>
   <div className="page-wrapper">
     <div className="page-header">
-      <span className="logo">Captain's log</span>
-      <Link to="/">Home</Link>
-      <Link to="/query">Query</Link>
-      <Books active={props.active} />
+      <div className="page-header-content">
+        <span className="logo">Captain's log</span>
+        <Link to="/">Home</Link>
+        <Link to="/query">Query</Link>
+        <Books active={props.active} />
+      </div>
     </div>
     <div className="page-content">
       {props.children}
