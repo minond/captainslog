@@ -17,7 +17,7 @@ h1, h2, h3 {
 
 input, textarea {
   -webkit-appearance: inherit;
-  border: 1px solid black;
+  border: 1px solid #2e2e2e;
   padding: 2px 5px;
 }
 
