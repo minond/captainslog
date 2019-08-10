@@ -18,6 +18,23 @@
       ]
     },
     {
+      "endpoint": "/api/saved_query",
+      "service": "service.SavedQueryService",
+      "methods": [
+        {
+          "method": "POST",
+          "handler": "Create",
+          "request": "service.SavedQueryCreateRequest",
+          "response": "model.SavedQuery"
+        },
+        {
+          "method": "GET",
+          "handler": "Retrieve",
+          "response": "service.SavedQueryRetrieveResponse"
+        }
+      ]
+    },
+    {
       "endpoint": "/api/extractors",
       "service": "service.ExtractorService",
       "methods": [

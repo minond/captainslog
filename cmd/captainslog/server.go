@@ -34,6 +34,7 @@ var cmdServer = &cobra.Command{
 		entryService := service.NewEntryService(db)
 		extractorService := service.NewExtractorService(db)
 		queryService := service.NewQueryService(db)
+		savedQueryService := service.NewSavedQueryService(db)
 		shorthandService := service.NewShorthandService(db)
 
 		// TODO add real sessions with real auth
@@ -54,6 +55,7 @@ var cmdServer = &cobra.Command{
 		httpmount.MountEntryService(router, entryService)
 		httpmount.MountExtractorService(router, extractorService)
 		httpmount.MountQueryService(router, queryService)
+		httpmount.MountSavedQueryService(router, savedQueryService)
 		httpmount.MountShorthandService(router, shorthandService)
 
 		router.PathPrefix("/static").Handler(http.StripPrefix("/static/", http.FileServer(dist)))

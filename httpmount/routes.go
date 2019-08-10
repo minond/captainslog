@@ -31,6 +31,18 @@ type BookServiceContract interface {
 	Retrieve(ctx context.Context, req url.Values) (*service.BookRetrieveResponse, error)
 }
 
+// SavedQueryServiceContract defines what an implementation of service.SavedQueryService
+// should look like. This interface is derived from the routes.json file
+// provided as input to this generator, and it is a combination of the handler,
+// the request, and the response.
+type SavedQueryServiceContract interface {
+	// Create runs when a POST /api/saved_query request comes in.
+	Create(ctx context.Context, req *service.SavedQueryCreateRequest) (*model.SavedQuery, error)
+
+	// Retrieve runs when a GET /api/saved_query request comes in.
+	Retrieve(ctx context.Context, req url.Values) (*service.SavedQueryRetrieveResponse, error)
+}
+
 // ExtractorServiceContract defines what an implementation of service.ExtractorService
 // should look like. This interface is derived from the routes.json file
 // provided as input to this generator, and it is a combination of the handler,
@@ -94,6 +106,87 @@ func MountBookService(router *mux.Router, serv BookServiceContract) {
 			}
 
 			req := &service.BookCreateRequest{}
+			if err = json.Unmarshal(data, req); err != nil {
+				http.Error(w, "unable to decode request", http.StatusBadRequest)
+				log.Printf("[ERROR] error unmarshaling request: %v", err)
+				return
+			}
+
+			ctx := context.Background()
+			for key, val := range session.Values {
+				ctx = context.WithValue(ctx, key, val)
+			}
+
+			res, err := serv.Create(ctx, req)
+			if err != nil {
+				http.Error(w, "unable to handle request", http.StatusInternalServerError)
+				log.Printf("[ERROR] error handling request: %v", err)
+				return
+			}
+
+			out, err := json.Marshal(res)
+			if err != nil {
+				http.Error(w, "unable to encode response", http.StatusInternalServerError)
+				log.Printf("[ERROR] error marshaling response: %v", err)
+				return
+			}
+
+			w.Write(out)
+
+		case "GET":
+			req := r.URL.Query()
+
+			ctx := context.Background()
+			for key, val := range session.Values {
+				ctx = context.WithValue(ctx, key, val)
+			}
+
+			res, err := serv.Retrieve(ctx, req)
+			if err != nil {
+				http.Error(w, "unable to handle request", http.StatusInternalServerError)
+				log.Printf("[ERROR] error handling request: %v", err)
+				return
+			}
+
+			out, err := json.Marshal(res)
+			if err != nil {
+				http.Error(w, "unable to encode response", http.StatusInternalServerError)
+				log.Printf("[ERROR] error marshaling response: %v", err)
+				return
+			}
+
+			w.Write(out)
+
+		default:
+			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+		}
+	})
+}
+
+// MountSavedQueryService add a handler to a Gorilla Mux Router that will route
+// an incoming request through the service.SavedQueryService service.
+func MountSavedQueryService(router *mux.Router, serv SavedQueryServiceContract) {
+	log.Print("[INFO] mounting service.SavedQueryService on /api/saved_query endpoint")
+	router.HandleFunc("/api/saved_query", func(w http.ResponseWriter, r *http.Request) {
+		session, err := store.Get(r, "main")
+		if err != nil {
+			http.Error(w, "unable to read request data", http.StatusInternalServerError)
+			log.Printf("[ERROR] error getting session: %v", err)
+			return
+		}
+
+		switch r.Method {
+
+		case "POST":
+			defer r.Body.Close()
+			data, err := ioutil.ReadAll(r.Body)
+			if err != nil {
+				http.Error(w, "unable to read request body", http.StatusBadRequest)
+				log.Printf("[ERROR] error reading request body: %v", err)
+				return
+			}
+
+			req := &service.SavedQueryCreateRequest{}
 			if err = json.Unmarshal(data, req); err != nil {
 				http.Error(w, "unable to decode request", http.StatusBadRequest)
 				log.Printf("[ERROR] error unmarshaling request: %v", err)
