@@ -42,13 +42,13 @@ textarea {
 
 .page-header a {
   color: black;
-  margin-left: 5px;
   text-decoration: none;
 }
 
 .page-header a + a::before {
   color: #d6d6d6;
   content: '/';
+  margin-left: 5px;
   margin-right: 5px;
 }
 
