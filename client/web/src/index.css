@@ -26,28 +26,25 @@ textarea {
   box-sizing: border-box;
 }
 
-.books {
-  border-bottom: 1px solid gainsboro;
-  box-sizing: border-box;
-  height: 56px;
-  margin-bottom: 10px;
+.page-header {
+  border-bottom: 2px solid #00449e;
+}
+
+.page-header,
+.page-content {
   padding: 10px;
 }
 
-.book {
-  color: black;
-  cursor: pointer;
-  font-size: 1.5rem;
-  font-weight: 600;
+.page-header a {
+  color: #357edd;
+  margin-left: 5px;
   text-decoration: none;
 }
 
-.book + .book {
-  margin-left: 15px;
-}
-
-.entries {
-  padding: 0 10px 10px 10px;
+.page-header a::before {
+  color: #d6d6d6;
+  content: '/';
+  margin-right: 5px;
 }
 
 .entries-action-header {
