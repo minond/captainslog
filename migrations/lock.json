@@ -215,6 +215,35 @@
       ]
     },
     {
+      "Name": "saved_queries",
+      "Columns": [
+        {
+          "Name": "guid",
+          "Type": "uuid",
+          "PrimaryKey": true,
+          "Reference": null,
+          "NotNull": true,
+          "Unique": false
+        },
+        {
+          "Name": "label",
+          "Type": "text",
+          "PrimaryKey": false,
+          "Reference": null,
+          "NotNull": true,
+          "Unique": false
+        },
+        {
+          "Name": "content",
+          "Type": "text",
+          "PrimaryKey": false,
+          "Reference": null,
+          "NotNull": true,
+          "Unique": false
+        }
+      ]
+    },
+    {
       "Name": "shorthands",
       "Columns": [
         {

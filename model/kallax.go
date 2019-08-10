@@ -2224,6 +2224,434 @@ func (rs *ExtractorResultSet) Close() error {
 	return rs.ResultSet.Close()
 }
 
+// NewSavedQuery returns a new instance of SavedQuery.
+func NewSavedQuery() (record *SavedQuery) {
+	return new(SavedQuery)
+}
+
+// GetID returns the primary key of the model.
+func (r *SavedQuery) GetID() kallax.Identifier {
+	return (*kallax.ULID)(&r.GUID)
+}
+
+// ColumnAddress returns the pointer to the value of the given column.
+func (r *SavedQuery) ColumnAddress(col string) (interface{}, error) {
+	switch col {
+	case "guid":
+		return (*kallax.ULID)(&r.GUID), nil
+	case "label":
+		return &r.Label, nil
+	case "content":
+		return &r.Content, nil
+
+	default:
+		return nil, fmt.Errorf("kallax: invalid column in SavedQuery: %s", col)
+	}
+}
+
+// Value returns the value of the given column.
+func (r *SavedQuery) Value(col string) (interface{}, error) {
+	switch col {
+	case "guid":
+		return r.GUID, nil
+	case "label":
+		return r.Label, nil
+	case "content":
+		return r.Content, nil
+
+	default:
+		return nil, fmt.Errorf("kallax: invalid column in SavedQuery: %s", col)
+	}
+}
+
+// NewRelationshipRecord returns a new record for the relatiobship in the given
+// field.
+func (r *SavedQuery) NewRelationshipRecord(field string) (kallax.Record, error) {
+	return nil, fmt.Errorf("kallax: model SavedQuery has no relationships")
+}
+
+// SetRelationship sets the given relationship in the given field.
+func (r *SavedQuery) SetRelationship(field string, rel interface{}) error {
+	return fmt.Errorf("kallax: model SavedQuery has no relationships")
+}
+
+// SavedQueryStore is the entity to access the records of the type SavedQuery
+// in the database.
+type SavedQueryStore struct {
+	*kallax.Store
+}
+
+// NewSavedQueryStore creates a new instance of SavedQueryStore
+// using a SQL database.
+func NewSavedQueryStore(db *sql.DB) *SavedQueryStore {
+	return &SavedQueryStore{kallax.NewStore(db)}
+}
+
+// GenericStore returns the generic store of this store.
+func (s *SavedQueryStore) GenericStore() *kallax.Store {
+	return s.Store
+}
+
+// SetGenericStore changes the generic store of this store.
+func (s *SavedQueryStore) SetGenericStore(store *kallax.Store) {
+	s.Store = store
+}
+
+// Debug returns a new store that will print all SQL statements to stdout using
+// the log.Printf function.
+func (s *SavedQueryStore) Debug() *SavedQueryStore {
+	return &SavedQueryStore{s.Store.Debug()}
+}
+
+// DebugWith returns a new store that will print all SQL statements using the
+// given logger function.
+func (s *SavedQueryStore) DebugWith(logger kallax.LoggerFunc) *SavedQueryStore {
+	return &SavedQueryStore{s.Store.DebugWith(logger)}
+}
+
+// DisableCacher turns off prepared statements, which can be useful in some scenarios.
+func (s *SavedQueryStore) DisableCacher() *SavedQueryStore {
+	return &SavedQueryStore{s.Store.DisableCacher()}
+}
+
+// Insert inserts a SavedQuery in the database. A non-persisted object is
+// required for this operation.
+func (s *SavedQueryStore) Insert(record *SavedQuery) error {
+	record.SetSaving(true)
+	defer record.SetSaving(false)
+
+	return s.Store.Insert(Schema.SavedQuery.BaseSchema, record)
+}
+
+// Update updates the given record on the database. If the columns are given,
+// only these columns will be updated. Otherwise all of them will be.
+// Be very careful with this, as you will have a potentially different object
+// in memory but not on the database.
+// Only writable records can be updated. Writable objects are those that have
+// been just inserted or retrieved using a query with no custom select fields.
+func (s *SavedQueryStore) Update(record *SavedQuery, cols ...kallax.SchemaField) (updated int64, err error) {
+	record.SetSaving(true)
+	defer record.SetSaving(false)
+
+	return s.Store.Update(Schema.SavedQuery.BaseSchema, record, cols...)
+}
+
+// Save inserts the object if the record is not persisted, otherwise it updates
+// it. Same rules of Update and Insert apply depending on the case.
+func (s *SavedQueryStore) Save(record *SavedQuery) (updated bool, err error) {
+	if !record.IsPersisted() {
+		return false, s.Insert(record)
+	}
+
+	rowsUpdated, err := s.Update(record)
+	if err != nil {
+		return false, err
+	}
+
+	return rowsUpdated > 0, nil
+}
+
+// Delete removes the given record from the database.
+func (s *SavedQueryStore) Delete(record *SavedQuery) error {
+	return s.Store.Delete(Schema.SavedQuery.BaseSchema, record)
+}
+
+// Find returns the set of results for the given query.
+func (s *SavedQueryStore) Find(q *SavedQueryQuery) (*SavedQueryResultSet, error) {
+	rs, err := s.Store.Find(q)
+	if err != nil {
+		return nil, err
+	}
+
+	return NewSavedQueryResultSet(rs), nil
+}
+
+// MustFind returns the set of results for the given query, but panics if there
+// is any error.
+func (s *SavedQueryStore) MustFind(q *SavedQueryQuery) *SavedQueryResultSet {
+	return NewSavedQueryResultSet(s.Store.MustFind(q))
+}
+
+// Count returns the number of rows that would be retrieved with the given
+// query.
+func (s *SavedQueryStore) Count(q *SavedQueryQuery) (int64, error) {
+	return s.Store.Count(q)
+}
+
+// MustCount returns the number of rows that would be retrieved with the given
+// query, but panics if there is an error.
+func (s *SavedQueryStore) MustCount(q *SavedQueryQuery) int64 {
+	return s.Store.MustCount(q)
+}
+
+// FindOne returns the first row returned by the given query.
+// `ErrNotFound` is returned if there are no results.
+func (s *SavedQueryStore) FindOne(q *SavedQueryQuery) (*SavedQuery, error) {
+	q.Limit(1)
+	q.Offset(0)
+	rs, err := s.Find(q)
+	if err != nil {
+		return nil, err
+	}
+
+	if !rs.Next() {
+		return nil, kallax.ErrNotFound
+	}
+
+	record, err := rs.Get()
+	if err != nil {
+		return nil, err
+	}
+
+	if err := rs.Close(); err != nil {
+		return nil, err
+	}
+
+	return record, nil
+}
+
+// FindAll returns a list of all the rows returned by the given query.
+func (s *SavedQueryStore) FindAll(q *SavedQueryQuery) ([]*SavedQuery, error) {
+	rs, err := s.Find(q)
+	if err != nil {
+		return nil, err
+	}
+
+	return rs.All()
+}
+
+// MustFindOne returns the first row retrieved by the given query. It panics
+// if there is an error or if there are no rows.
+func (s *SavedQueryStore) MustFindOne(q *SavedQueryQuery) *SavedQuery {
+	record, err := s.FindOne(q)
+	if err != nil {
+		panic(err)
+	}
+	return record
+}
+
+// Reload refreshes the SavedQuery with the data in the database and
+// makes it writable.
+func (s *SavedQueryStore) Reload(record *SavedQuery) error {
+	return s.Store.Reload(Schema.SavedQuery.BaseSchema, record)
+}
+
+// Transaction executes the given callback in a transaction and rollbacks if
+// an error is returned.
+// The transaction is only open in the store passed as a parameter to the
+// callback.
+func (s *SavedQueryStore) Transaction(callback func(*SavedQueryStore) error) error {
+	if callback == nil {
+		return kallax.ErrInvalidTxCallback
+	}
+
+	return s.Store.Transaction(func(store *kallax.Store) error {
+		return callback(&SavedQueryStore{store})
+	})
+}
+
+// SavedQueryQuery is the object used to create queries for the SavedQuery
+// entity.
+type SavedQueryQuery struct {
+	*kallax.BaseQuery
+}
+
+// NewSavedQueryQuery returns a new instance of SavedQueryQuery.
+func NewSavedQueryQuery() *SavedQueryQuery {
+	return &SavedQueryQuery{
+		BaseQuery: kallax.NewBaseQuery(Schema.SavedQuery.BaseSchema),
+	}
+}
+
+// Select adds columns to select in the query.
+func (q *SavedQueryQuery) Select(columns ...kallax.SchemaField) *SavedQueryQuery {
+	if len(columns) == 0 {
+		return q
+	}
+	q.BaseQuery.Select(columns...)
+	return q
+}
+
+// SelectNot excludes columns from being selected in the query.
+func (q *SavedQueryQuery) SelectNot(columns ...kallax.SchemaField) *SavedQueryQuery {
+	q.BaseQuery.SelectNot(columns...)
+	return q
+}
+
+// Copy returns a new identical copy of the query. Remember queries are mutable
+// so make a copy any time you need to reuse them.
+func (q *SavedQueryQuery) Copy() *SavedQueryQuery {
+	return &SavedQueryQuery{
+		BaseQuery: q.BaseQuery.Copy(),
+	}
+}
+
+// Order adds order clauses to the query for the given columns.
+func (q *SavedQueryQuery) Order(cols ...kallax.ColumnOrder) *SavedQueryQuery {
+	q.BaseQuery.Order(cols...)
+	return q
+}
+
+// BatchSize sets the number of items to fetch per batch when there are 1:N
+// relationships selected in the query.
+func (q *SavedQueryQuery) BatchSize(size uint64) *SavedQueryQuery {
+	q.BaseQuery.BatchSize(size)
+	return q
+}
+
+// Limit sets the max number of items to retrieve.
+func (q *SavedQueryQuery) Limit(n uint64) *SavedQueryQuery {
+	q.BaseQuery.Limit(n)
+	return q
+}
+
+// Offset sets the number of items to skip from the result set of items.
+func (q *SavedQueryQuery) Offset(n uint64) *SavedQueryQuery {
+	q.BaseQuery.Offset(n)
+	return q
+}
+
+// Where adds a condition to the query. All conditions added are concatenated
+// using a logical AND.
+func (q *SavedQueryQuery) Where(cond kallax.Condition) *SavedQueryQuery {
+	q.BaseQuery.Where(cond)
+	return q
+}
+
+// FindByGUID adds a new filter to the query that will require that
+// the GUID property is equal to one of the passed values; if no passed values,
+// it will do nothing.
+func (q *SavedQueryQuery) FindByGUID(v ...kallax.ULID) *SavedQueryQuery {
+	if len(v) == 0 {
+		return q
+	}
+	values := make([]interface{}, len(v))
+	for i, val := range v {
+		values[i] = val
+	}
+	return q.Where(kallax.In(Schema.SavedQuery.GUID, values...))
+}
+
+// FindByLabel adds a new filter to the query that will require that
+// the Label property is equal to the passed value.
+func (q *SavedQueryQuery) FindByLabel(v string) *SavedQueryQuery {
+	return q.Where(kallax.Eq(Schema.SavedQuery.Label, v))
+}
+
+// FindByContent adds a new filter to the query that will require that
+// the Content property is equal to the passed value.
+func (q *SavedQueryQuery) FindByContent(v string) *SavedQueryQuery {
+	return q.Where(kallax.Eq(Schema.SavedQuery.Content, v))
+}
+
+// SavedQueryResultSet is the set of results returned by a query to the
+// database.
+type SavedQueryResultSet struct {
+	ResultSet kallax.ResultSet
+	last      *SavedQuery
+	lastErr   error
+}
+
+// NewSavedQueryResultSet creates a new result set for rows of the type
+// SavedQuery.
+func NewSavedQueryResultSet(rs kallax.ResultSet) *SavedQueryResultSet {
+	return &SavedQueryResultSet{ResultSet: rs}
+}
+
+// Next fetches the next item in the result set and returns true if there is
+// a next item.
+// The result set is closed automatically when there are no more items.
+func (rs *SavedQueryResultSet) Next() bool {
+	if !rs.ResultSet.Next() {
+		rs.lastErr = rs.ResultSet.Close()
+		rs.last = nil
+		return false
+	}
+
+	var record kallax.Record
+	record, rs.lastErr = rs.ResultSet.Get(Schema.SavedQuery.BaseSchema)
+	if rs.lastErr != nil {
+		rs.last = nil
+	} else {
+		var ok bool
+		rs.last, ok = record.(*SavedQuery)
+		if !ok {
+			rs.lastErr = fmt.Errorf("kallax: unable to convert record to *SavedQuery")
+			rs.last = nil
+		}
+	}
+
+	return true
+}
+
+// Get retrieves the last fetched item from the result set and the last error.
+func (rs *SavedQueryResultSet) Get() (*SavedQuery, error) {
+	return rs.last, rs.lastErr
+}
+
+// ForEach iterates over the complete result set passing every record found to
+// the given callback. It is possible to stop the iteration by returning
+// `kallax.ErrStop` in the callback.
+// Result set is always closed at the end.
+func (rs *SavedQueryResultSet) ForEach(fn func(*SavedQuery) error) error {
+	for rs.Next() {
+		record, err := rs.Get()
+		if err != nil {
+			return err
+		}
+
+		if err := fn(record); err != nil {
+			if err == kallax.ErrStop {
+				return rs.Close()
+			}
+
+			return err
+		}
+	}
+	return nil
+}
+
+// All returns all records on the result set and closes the result set.
+func (rs *SavedQueryResultSet) All() ([]*SavedQuery, error) {
+	var result []*SavedQuery
+	for rs.Next() {
+		record, err := rs.Get()
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, record)
+	}
+	return result, nil
+}
+
+// One returns the first record on the result set and closes the result set.
+func (rs *SavedQueryResultSet) One() (*SavedQuery, error) {
+	if !rs.Next() {
+		return nil, kallax.ErrNotFound
+	}
+
+	record, err := rs.Get()
+	if err != nil {
+		return nil, err
+	}
+
+	if err := rs.Close(); err != nil {
+		return nil, err
+	}
+
+	return record, nil
+}
+
+// Err returns the last error occurred.
+func (rs *SavedQueryResultSet) Err() error {
+	return rs.lastErr
+}
+
+// Close closes the result set.
+func (rs *SavedQueryResultSet) Close() error {
+	return rs.ResultSet.Close()
+}
+
 // NewShorthand returns a new instance of Shorthand.
 func NewShorthand(expansion string, match string, text string, priority int, book *Book) (record *Shorthand, err error) {
 	return newShorthand(expansion, match, text, priority, book)
@@ -3190,6 +3618,7 @@ type schema struct {
 	Collection *schemaCollection
 	Entry      *schemaEntry
 	Extractor  *schemaExtractor
+	SavedQuery *schemaSavedQuery
 	Shorthand  *schemaShorthand
 	User       *schemaUser
 }
@@ -3230,6 +3659,13 @@ type schemaExtractor struct {
 	Match  kallax.SchemaField
 	Type   kallax.SchemaField
 	BookFK kallax.SchemaField
+}
+
+type schemaSavedQuery struct {
+	*kallax.BaseSchema
+	GUID    kallax.SchemaField
+	Label   kallax.SchemaField
+	Content kallax.SchemaField
 }
 
 type schemaShorthand struct {
@@ -3349,6 +3785,24 @@ var Schema = &schema{
 		Match:  kallax.NewSchemaField("match"),
 		Type:   kallax.NewSchemaField("type"),
 		BookFK: kallax.NewSchemaField("book_guid"),
+	},
+	SavedQuery: &schemaSavedQuery{
+		BaseSchema: kallax.NewBaseSchema(
+			"saved_queries",
+			"__savedquery",
+			kallax.NewSchemaField("guid"),
+			kallax.ForeignKeys{},
+			func() kallax.Record {
+				return new(SavedQuery)
+			},
+			false,
+			kallax.NewSchemaField("guid"),
+			kallax.NewSchemaField("label"),
+			kallax.NewSchemaField("content"),
+		),
+		GUID:    kallax.NewSchemaField("guid"),
+		Label:   kallax.NewSchemaField("label"),
+		Content: kallax.NewSchemaField("content"),
 	},
 	Shorthand: &schemaShorthand{
 		BaseSchema: kallax.NewBaseSchema(
