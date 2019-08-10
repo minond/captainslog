@@ -5,9 +5,13 @@ import { cachedExecuteQuery } from "./remote"
 import { QueryExecuteRequest, QueryResults, QueryResult } from "./definitions"
 
 const KEY_ENTER = 13
+const MIN_ROWS = 5
+const MAX_ROWS = 20
+
+const { max, min } = Math
 
 const rowCount = (val: string): number =>
-  val.trim() === "" ? 1 : val.trim().split("\n").length + 1
+  min(MAX_ROWS, max(MIN_ROWS, val.split("\n").length + 1))
 
 const isBool = (val: QueryResult): boolean => "Bool" in val
 const isString = (val: QueryResult): boolean => "String" in val
