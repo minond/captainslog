@@ -45,11 +45,11 @@ func (s SavedQueryService) Create(ctx context.Context, req *SavedQueryCreateRequ
 	return savedQuery, nil
 }
 
-type SavedQueryRetrieveResponse struct {
+type SavedQueriesRetrieveResponse struct {
 	Queries []*model.SavedQuery `json:"queries"`
 }
 
-func (s SavedQueryService) Retrieve(ctx context.Context, req url.Values) (*SavedQueryRetrieveResponse, error) {
+func (s SavedQueryService) Retrieve(ctx context.Context, req url.Values) (*SavedQueriesRetrieveResponse, error) {
 	userGUID, err := getUserGUID(ctx)
 	if err != nil {
 		return nil, err
@@ -63,5 +63,5 @@ func (s SavedQueryService) Retrieve(ctx context.Context, req url.Values) (*Saved
 		return nil, err
 	}
 
-	return &SavedQueryRetrieveResponse{Queries: queries}, nil
+	return &SavedQueriesRetrieveResponse{Queries: queries}, nil
 }

@@ -30,7 +30,7 @@
         {
           "method": "GET",
           "handler": "Retrieve",
-          "response": "service.SavedQueryRetrieveResponse"
+          "response": "service.SavedQueriesRetrieveResponse"
         }
       ]
     },

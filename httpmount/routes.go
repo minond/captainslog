@@ -40,7 +40,7 @@ type SavedQueryServiceContract interface {
 	Create(ctx context.Context, req *service.SavedQueryCreateRequest) (*model.SavedQuery, error)
 
 	// Retrieve runs when a GET /api/saved_query request comes in.
-	Retrieve(ctx context.Context, req url.Values) (*service.SavedQueryRetrieveResponse, error)
+	Retrieve(ctx context.Context, req url.Values) (*service.SavedQueriesRetrieveResponse, error)
 }
 
 // ExtractorServiceContract defines what an implementation of service.ExtractorService
