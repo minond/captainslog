@@ -57,7 +57,7 @@ const ttlFor = <T extends Function>(fn: T) =>
   fn.toString() in ttls ? ttls[fn.toString()] : 100
 
 type CachePouch<T> = { [index: string]: CacheEntry<T> }
-type CacheEntry<T> = { ttd: number, val: T }
+type CacheEntry<T> = { ttd: number, wip: Promise<T>; val: T }
 
 type ArgTy<T> = T extends (...a: infer A) => any ? A : never
 type RetTy<T> = T extends (...a: any[]) => infer R ? R : never
@@ -74,17 +74,23 @@ export const cached = <T extends Function>(fn: T, ttl: number = ttlFor(fn)) => {
       val: null,
     }
 
-    if (entry.ttd >= Date.now()) {
+    if (!entry.wip && entry.ttd >= Date.now()) {
       return new Promise((resolve, reject) => resolve(entry.val))
+    } else if (entry.wip) {
+      return entry.wip
     }
 
     delete entry.val
     entry.ttd = Date.now() + ttl
+    entry.wip = fn(...args)
 
-    return fn(...args).then((res: Value) => {
+    entry.wip.then((res: Value) => {
+      delete entry.wip
       entry.val = res
       return res
     })
+
+    return entry.wip
   }
 }
 
