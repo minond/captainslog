@@ -49,8 +49,19 @@ textarea {
   margin-right: 5px;
 }
 
-a.active {
+.page-header a.active {
   font-weight: bold;
+}
+
+.page-header-active {
+  opacity: 0;
+  transition: opacity .2s;
+}
+
+.page-header-active:active,
+.page-header-active:focus,
+.page-header-active:hover {
+  opacity: 1;
 }
 
 .entries-action-header {

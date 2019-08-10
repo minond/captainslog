@@ -13,11 +13,11 @@ type PageProps = {
 
 const Page = (props: PageProps) =>
   <div className="page-wrapper">
-    <div className="page-header">
+    <div className={"page-header " + (props.active ? "page-header-active" : "")}>
       <div className="page-header-content">
         <span className="logo">Captain's log</span>
         <Link to="/">Home</Link>
-        <Link to="/query">Query</Link>
+        <Link to="/query" className={props.active === "query" ? "active" : ""}>Query</Link>
         <Books active={props.active} />
       </div>
     </div>
@@ -30,7 +30,7 @@ export const IndexPage = (props: {}) =>
   <Page />
 
 export const QueryPage = (props: {}) =>
-  <Page>
+  <Page active="query">
     <Query />
   </Page>
 
