@@ -2225,8 +2225,8 @@ func (rs *ExtractorResultSet) Close() error {
 }
 
 // NewSavedQuery returns a new instance of SavedQuery.
-func NewSavedQuery() (record *SavedQuery) {
-	return new(SavedQuery)
+func NewSavedQuery(label string, content string, user *User) (record *SavedQuery, err error) {
+	return newSavedQuery(label, content, user)
 }
 
 // GetID returns the primary key of the model.
@@ -2243,6 +2243,8 @@ func (r *SavedQuery) ColumnAddress(col string) (interface{}, error) {
 		return &r.Label, nil
 	case "content":
 		return &r.Content, nil
+	case "user_guid":
+		return types.Nullable(kallax.VirtualColumn("user_guid", r, new(kallax.ULID))), nil
 
 	default:
 		return nil, fmt.Errorf("kallax: invalid column in SavedQuery: %s", col)
@@ -2258,6 +2260,12 @@ func (r *SavedQuery) Value(col string) (interface{}, error) {
 		return r.Label, nil
 	case "content":
 		return r.Content, nil
+	case "user_guid":
+		v := r.Model.VirtualColumn(col)
+		if v == nil {
+			return nil, kallax.ErrEmptyVirtualColumn
+		}
+		return v, nil
 
 	default:
 		return nil, fmt.Errorf("kallax: invalid column in SavedQuery: %s", col)
@@ -2267,12 +2275,30 @@ func (r *SavedQuery) Value(col string) (interface{}, error) {
 // NewRelationshipRecord returns a new record for the relatiobship in the given
 // field.
 func (r *SavedQuery) NewRelationshipRecord(field string) (kallax.Record, error) {
-	return nil, fmt.Errorf("kallax: model SavedQuery has no relationships")
+	switch field {
+	case "User":
+		return new(User), nil
+
+	}
+	return nil, fmt.Errorf("kallax: model SavedQuery has no relationship %s", field)
 }
 
 // SetRelationship sets the given relationship in the given field.
 func (r *SavedQuery) SetRelationship(field string, rel interface{}) error {
-	return fmt.Errorf("kallax: model SavedQuery has no relationships")
+	switch field {
+	case "User":
+		val, ok := rel.(*User)
+		if !ok {
+			return fmt.Errorf("kallax: record of type %t can't be assigned to relationship User", rel)
+		}
+		if !val.GetID().IsEmpty() {
+			r.User = val
+		}
+
+		return nil
+
+	}
+	return fmt.Errorf("kallax: model SavedQuery has no relationship %s", field)
 }
 
 // SavedQueryStore is the entity to access the records of the type SavedQuery
@@ -2314,11 +2340,43 @@ func (s *SavedQueryStore) DisableCacher() *SavedQueryStore {
 	return &SavedQueryStore{s.Store.DisableCacher()}
 }
 
+func (s *SavedQueryStore) inverseRecords(record *SavedQuery) []modelSaveFunc {
+	var result []modelSaveFunc
+
+	if record.User != nil && !record.User.IsSaving() {
+		record.AddVirtualColumn("user_guid", record.User.GetID())
+		result = append(result, func(store *kallax.Store) error {
+			_, err := (&UserStore{store}).Save(record.User)
+			return err
+		})
+	}
+
+	return result
+}
+
 // Insert inserts a SavedQuery in the database. A non-persisted object is
 // required for this operation.
 func (s *SavedQueryStore) Insert(record *SavedQuery) error {
 	record.SetSaving(true)
 	defer record.SetSaving(false)
+
+	inverseRecords := s.inverseRecords(record)
+
+	if len(inverseRecords) > 0 {
+		return s.Store.Transaction(func(s *kallax.Store) error {
+			for _, r := range inverseRecords {
+				if err := r(s); err != nil {
+					return err
+				}
+			}
+
+			if err := s.Insert(Schema.SavedQuery.BaseSchema, record); err != nil {
+				return err
+			}
+
+			return nil
+		})
+	}
 
 	return s.Store.Insert(Schema.SavedQuery.BaseSchema, record)
 }
@@ -2332,6 +2390,30 @@ func (s *SavedQueryStore) Insert(record *SavedQuery) error {
 func (s *SavedQueryStore) Update(record *SavedQuery, cols ...kallax.SchemaField) (updated int64, err error) {
 	record.SetSaving(true)
 	defer record.SetSaving(false)
+
+	inverseRecords := s.inverseRecords(record)
+
+	if len(inverseRecords) > 0 {
+		err = s.Store.Transaction(func(s *kallax.Store) error {
+			for _, r := range inverseRecords {
+				if err := r(s); err != nil {
+					return err
+				}
+			}
+
+			updated, err = s.Update(Schema.SavedQuery.BaseSchema, record, cols...)
+			if err != nil {
+				return err
+			}
+
+			return nil
+		})
+		if err != nil {
+			return 0, err
+		}
+
+		return updated, nil
+	}
 
 	return s.Store.Update(Schema.SavedQuery.BaseSchema, record, cols...)
 }
@@ -2518,6 +2600,11 @@ func (q *SavedQueryQuery) Where(cond kallax.Condition) *SavedQueryQuery {
 	return q
 }
 
+func (q *SavedQueryQuery) WithUser() *SavedQueryQuery {
+	q.AddRelation(Schema.User.BaseSchema, "User", kallax.OneToOne, nil)
+	return q
+}
+
 // FindByGUID adds a new filter to the query that will require that
 // the GUID property is equal to one of the passed values; if no passed values,
 // it will do nothing.
@@ -2542,6 +2629,12 @@ func (q *SavedQueryQuery) FindByLabel(v string) *SavedQueryQuery {
 // the Content property is equal to the passed value.
 func (q *SavedQueryQuery) FindByContent(v string) *SavedQueryQuery {
 	return q.Where(kallax.Eq(Schema.SavedQuery.Content, v))
+}
+
+// FindByUser adds a new filter to the query that will require that
+// the foreign key of User is equal to the passed value.
+func (q *SavedQueryQuery) FindByUser(v kallax.ULID) *SavedQueryQuery {
+	return q.Where(kallax.Eq(Schema.SavedQuery.UserFK, v))
 }
 
 // SavedQueryResultSet is the set of results returned by a query to the
@@ -3666,6 +3759,7 @@ type schemaSavedQuery struct {
 	GUID    kallax.SchemaField
 	Label   kallax.SchemaField
 	Content kallax.SchemaField
+	UserFK  kallax.SchemaField
 }
 
 type schemaShorthand struct {
@@ -3791,7 +3885,9 @@ var Schema = &schema{
 			"saved_queries",
 			"__savedquery",
 			kallax.NewSchemaField("guid"),
-			kallax.ForeignKeys{},
+			kallax.ForeignKeys{
+				"User": kallax.NewForeignKey("user_guid", true),
+			},
 			func() kallax.Record {
 				return new(SavedQuery)
 			},
@@ -3799,10 +3895,12 @@ var Schema = &schema{
 			kallax.NewSchemaField("guid"),
 			kallax.NewSchemaField("label"),
 			kallax.NewSchemaField("content"),
+			kallax.NewSchemaField("user_guid"),
 		),
 		GUID:    kallax.NewSchemaField("guid"),
 		Label:   kallax.NewSchemaField("label"),
 		Content: kallax.NewSchemaField("content"),
+		UserFK:  kallax.NewSchemaField("user_guid"),
 	},
 	Shorthand: &schemaShorthand{
 		BaseSchema: kallax.NewBaseSchema(

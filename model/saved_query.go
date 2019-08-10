@@ -13,3 +13,14 @@ type SavedQuery struct {
 
 	User *User `fk:"user_guid,inverse" json:"-"`
 }
+
+func newSavedQuery(label, content string, user *User) (*SavedQuery, error) {
+	savedQuery := &SavedQuery{
+		GUID:    kallax.NewULID(),
+		Label:   label,
+		Content: content,
+		User:    user,
+	}
+
+	return savedQuery, nil
+}
