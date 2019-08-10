@@ -240,6 +240,17 @@
           "Reference": null,
           "NotNull": true,
           "Unique": false
+        },
+        {
+          "Name": "user_guid",
+          "Type": "uuid",
+          "PrimaryKey": false,
+          "Reference": {
+            "Table": "users",
+            "Column": "guid"
+          },
+          "NotNull": false,
+          "Unique": false
         }
       ]
     },
