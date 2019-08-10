@@ -1,8 +1,8 @@
 import * as React from "react"
-import { useState, KeyboardEvent } from "react"
+import { useEffect, useState, KeyboardEvent } from "react"
 
-import { cachedExecuteQuery } from "./remote"
-import { QueryExecuteRequest, QueryResults, QueryResult } from "./definitions"
+import { cachedExecuteQuery, cachedGetSavedQueries, createSavedQuery } from "./remote"
+import { QueryExecuteRequest, QueryResults, QueryResult, SavedQuery } from "./definitions"
 
 const KEY_ENTER = 13
 const MIN_ROWS = 5
@@ -61,6 +61,25 @@ export const Query = (props: {}) => {
   const [query, setQuery] = useState<string>("")
   const [rows, setRows] = useState<number>(rowCount(query))
   const [results, setResults] = useState<QueryResults | null>(null)
+  const [savedQueries, setSavedQueries] = useState<SavedQuery[]>([])
+
+  useEffect(() => {
+    fetchSavedQueries()
+  })
+
+  const fetchSavedQueries = () => {
+    cachedGetSavedQueries().then(setSavedQueries)
+  }
+
+  const saveQuery = () => {
+    let label = prompt("Query label")
+    if (!label) {
+      return
+    }
+
+    createSavedQuery({ label, content: query })
+      .then(fetchSavedQueries)
+  }
 
   const executeQuery = () => {
     setMessage(null)
@@ -109,6 +128,7 @@ export const Query = (props: {}) => {
       placeholder="Execute query"
     />
     <input type="button" value="Execute" onClick={executeQuery} />
+    <input type="button" value="Save" onClick={saveQuery} />
     {message && <div className={messageClass}>{message.message}</div>}
     {results && resultsTable(results)}
   </div>

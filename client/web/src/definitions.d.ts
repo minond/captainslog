@@ -56,3 +56,15 @@ export type QueryResult = {
   String?: string
   Valid: boolean
 }
+
+export type SavedQuery = {
+  guid: string
+  label: string
+  content: string
+}
+
+export type SavedQueriesRetrieveResponse = {
+  queries: SavedQuery[]
+}
+
+export type SavedQueryRequest = Pick<SavedQuery, "label" | "content">

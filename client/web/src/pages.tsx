@@ -17,7 +17,6 @@ const Page = (props: PageProps) => {
   useEffect(() => {
     document.title = `Captain's Log`
   })
-  console.log("props.active", props.active)
 
   return <>
     <div className="page-wrapper">

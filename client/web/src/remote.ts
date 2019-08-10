@@ -11,12 +11,16 @@ import {
   EntryCreateResponse,
   QueryExecuteRequest,
   QueryResults,
+  SavedQuery,
+  SavedQueryRequest,
+  SavedQueriesRetrieveResponse,
 } from "./definitions"
 
 enum uris {
-  books   = "/api/books",
-  entries = "/api/entries",
-  query   = "/api/query",
+  books      = "/api/books",
+  entries    = "/api/entries",
+  query      = "/api/query",
+  savedQuery = "/api/saved_query",
 }
 
 export const getBook = (guid: string): Promise<Book | null> =>
@@ -25,7 +29,7 @@ export const getBook = (guid: string): Promise<Book | null> =>
 
 export const getBooks = (): Promise<Book[]> =>
   axios.get<BooksRetrieveResponse>(uris.books)
-    .then((res) => res.data.books)
+    .then((res) => res.data.books || [])
 
 export const getEntriesForBook = (bookGuid: string, at: Date): Promise<Entry[]> =>
   axios.get<EntriesRetrieveResponse>(`${uris.entries}?book=${bookGuid}&at=${Math.floor(+at / 1000)}&offset=${at.getTimezoneOffset()}`)
@@ -46,11 +50,20 @@ export const executeQuery = (query: string): Promise<QueryResults> =>
   axios.post<QueryResults>(uris.query, { query } as QueryExecuteRequest)
     .then((res) => res.data)
 
+export const createSavedQuery = (entry: SavedQueryRequest): Promise<SavedQuery> =>
+  axios.post<SavedQuery>(uris.savedQuery, entry)
+    .then((res) => res.data)
+
+export const getSavedQueries = (): Promise<SavedQuery[]> =>
+  axios.get<SavedQueriesRetrieveResponse>(uris.savedQuery)
+    .then((res) => res.data.queries || [])
+
 const ttls = {
   [executeQuery.toString()]: 100,
   [getBook.toString()]: 5000,
   [getBooks.toString()]: 5000,
   [getEntriesForBook.toString()]: 500,
+  [getSavedQueries.toString()]: 1000,
 }
 
 const ttlFor = <T extends Function>(fn: T) =>
@@ -98,3 +111,4 @@ export const cachedExecuteQuery = cached(executeQuery)
 export const cachedGetBook = cached(getBook)
 export const cachedGetBooks = cached(getBooks)
 export const cachedGetEntriesForBook = cached(getEntriesForBook)
+export const cachedGetSavedQueries = cached(getSavedQueries)
