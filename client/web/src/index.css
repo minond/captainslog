@@ -47,6 +47,10 @@ textarea {
   margin-right: 5px;
 }
 
+a.active {
+  font-weight: bold;
+}
+
 .entries-action-header {
   margin-bottom: 10px;
 }

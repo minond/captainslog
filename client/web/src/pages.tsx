@@ -7,7 +7,8 @@ import { Entries } from "./entries"
 import { Query } from "./query"
 
 type PageProps = {
-  children?: ReactNode | ReactNode[]
+  active?: string
+  children?: ReactNode
 }
 
 const Page = (props: PageProps) =>
@@ -16,7 +17,7 @@ const Page = (props: PageProps) =>
       <span className="logo">Captain's log</span>
       <Link to="/">Home</Link>
       <Link to="/query">Query</Link>
-      <Books />
+      <Books active={props.active} />
     </div>
     <div className="page-content">
       {props.children}
@@ -37,6 +38,6 @@ type BookPageProps = {
 }
 
 export const BookPage = (props: BookPageProps) =>
-  <Page>
+  <Page active={props.guid}>
     <Entries bookGuid={props.guid} date={props.date} />
   </Page>
