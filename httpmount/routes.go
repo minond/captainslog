@@ -72,6 +72,9 @@ type EntryServiceContract interface {
 // provided as input to this generator, and it is a combination of the handler,
 // the request, and the response.
 type QueryServiceContract interface {
+	// Schema runs when a GET /api/query request comes in.
+	Schema(ctx context.Context, req url.Values) (*service.Schema, error)
+
 	// Query runs when a POST /api/query request comes in.
 	Query(ctx context.Context, req *service.QueryExecuteRequest) (*service.QueryResults, error)
 }
@@ -435,6 +438,30 @@ func MountQueryService(router *mux.Router, serv QueryServiceContract) {
 		}
 
 		switch r.Method {
+
+		case "GET":
+			req := r.URL.Query()
+
+			ctx := context.Background()
+			for key, val := range session.Values {
+				ctx = context.WithValue(ctx, key, val)
+			}
+
+			res, err := serv.Schema(ctx, req)
+			if err != nil {
+				http.Error(w, "unable to handle request", http.StatusInternalServerError)
+				log.Printf("[ERROR] error handling request: %v", err)
+				return
+			}
+
+			out, err := json.Marshal(res)
+			if err != nil {
+				http.Error(w, "unable to encode response", http.StatusInternalServerError)
+				log.Printf("[ERROR] error marshaling response: %v", err)
+				return
+			}
+
+			w.Write(out)
 
 		case "POST":
 			defer r.Body.Close()

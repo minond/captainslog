@@ -74,6 +74,11 @@
       "service": "service.QueryService",
       "methods": [
         {
+          "method": "GET",
+          "handler": "Schema",
+          "response": "service.Schema"
+        },
+        {
           "method": "POST",
           "handler": "Query",
           "request": "service.QueryExecuteRequest",
