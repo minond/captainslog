@@ -66,62 +66,14 @@ type Schema struct {
 	Books []BookSchema `json:"books"`
 }
 
-func (s QueryService) Schema(ctx context.Context, req url.Values) (*Schema, error) {
-	userGUID, err := getUserGUID(ctx)
-	if err != nil {
-		return nil, err
-	}
+type SchemaIR struct {
+	book       *model.Book
+	extractors []*model.Extractor
+}
 
-	booksQuery := model.NewBookQuery().
-		Select(model.Schema.Book.GUID,
-			model.Schema.Book.Name).
-		Where(kallax.Eq(model.Schema.Book.UserFK, userGUID)).
-		Order(kallax.Asc(model.Schema.Book.Name))
-	books, err := s.bookStore.FindAll(booksQuery)
-	if err != nil {
-		return nil, err
-	}
+type SchemaT map[kallax.ULID]*SchemaIR
 
-	bookGUIDs := make([]interface{}, len(books))
-	for i, book := range books {
-		bookGUIDs[i] = book.GUID
-	}
-
-	extractorsQuery := model.NewExtractorQuery().
-		Select(model.Schema.Extractor.BookFK,
-			model.Schema.Extractor.Label,
-			model.Schema.Extractor.Type).
-		Where(kallax.In(model.Schema.Extractor.BookFK, bookGUIDs...))
-	extractors, err := s.extractorStore.FindAll(extractorsQuery)
-	if err != nil {
-		return nil, err
-	}
-
-	type schemaIR struct {
-		book       *model.Book
-		extractors []*model.Extractor
-	}
-
-	ir := make(map[kallax.ULID]*schemaIR)
-	for _, book := range books {
-		ir[book.GUID] = &schemaIR{book: book}
-	}
-	for _, extractor := range extractors {
-		bookGUIDinterface, err := extractor.Value("book_guid")
-		if err != nil {
-			return nil, err
-		}
-		bookGUIDid, ok := bookGUIDinterface.(kallax.Identifier)
-		if !ok {
-			return nil, errors.New("invalid identifier")
-		}
-		bookGUID, ok := bookGUIDid.Raw().(kallax.ULID)
-		if !ok {
-			return nil, errors.New("invalid identifier")
-		}
-		ir[bookGUID].extractors = append(ir[bookGUID].extractors, extractor)
-	}
-
+func generateSchema(ir SchemaT) *Schema {
 	schema := &Schema{}
 	for _, item := range ir {
 		fields := make([]FieldSchema, len(item.extractors))
@@ -136,6 +88,80 @@ func (s QueryService) Schema(ctx context.Context, req url.Values) (*Schema, erro
 			Fields: fields,
 		})
 	}
+	return schema
+}
 
-	return schema, nil
+func generateSchemaIR(books []*model.Book, extractors []*model.Extractor) (SchemaT, error) {
+	ir := make(SchemaT)
+	for _, book := range books {
+		ir[book.GUID] = &SchemaIR{book: book}
+	}
+	for _, extractor := range extractors {
+		bookGUIDinterface, err := extractor.Value("book_guid")
+		if err != nil {
+			return nil, errors.New("missing identifer")
+		}
+		bookGUIDid, ok := bookGUIDinterface.(kallax.Identifier)
+		if !ok {
+			return nil, errors.New("invalid identifier")
+		}
+		bookGUID, ok := bookGUIDid.Raw().(kallax.ULID)
+		if !ok {
+			return nil, errors.New("invalid identifier")
+		}
+		ir[bookGUID].extractors = append(ir[bookGUID].extractors, extractor)
+	}
+	return ir, nil
+}
+
+func getExtractorsForSchema(bookGUIDs []interface{}, extractorStore *model.ExtractorStore) ([]*model.Extractor, error) {
+	extractorsQuery := model.NewExtractorQuery().
+		Select(model.Schema.Extractor.BookFK,
+			model.Schema.Extractor.Label,
+			model.Schema.Extractor.Type).
+		Where(kallax.In(model.Schema.Extractor.BookFK, bookGUIDs...))
+	return extractorStore.FindAll(extractorsQuery)
+}
+
+func getBooksForSchema(userGUID string, bookStore *model.BookStore) ([]*model.Book, []interface{}, error) {
+	booksQuery := model.NewBookQuery().
+		Select(model.Schema.Book.GUID,
+			model.Schema.Book.Name).
+		Where(kallax.Eq(model.Schema.Book.UserFK, userGUID)).
+		Order(kallax.Asc(model.Schema.Book.Name))
+	books, err := bookStore.FindAll(booksQuery)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	bookGUIDs := make([]interface{}, len(books))
+	for i, book := range books {
+		bookGUIDs[i] = book.GUID
+	}
+
+	return books, bookGUIDs, nil
+}
+
+func (s QueryService) Schema(ctx context.Context, req url.Values) (*Schema, error) {
+	userGUID, err := getUserGUID(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	books, bookGUIDs, err := getBooksForSchema(userGUID, s.bookStore)
+	if err != nil {
+		return nil, err
+	}
+
+	extractors, err := getExtractorsForSchema(bookGUIDs, s.extractorStore)
+	if err != nil {
+		return nil, err
+	}
+
+	ir, err := generateSchemaIR(books, extractors)
+	if err != nil {
+		return nil, err
+	}
+
+	return generateSchema(ir), nil
 }
