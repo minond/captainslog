@@ -12,11 +12,17 @@ import (
 
 // clientTime should be used when accepting time values from a user and when a
 // standard, never-zero time value is required.
-func clientTime(t time.Time) time.Time {
+func clientTime(t time.Time, offset int) time.Time {
 	if t.IsZero() {
 		t = time.Now()
 	}
-	return t.In(time.UTC)
+
+	// NOTE Let's see how this works out for me. In order to show logs for the
+	// actual date/time that the _client_ is on, the time zone offset is
+	// optionally passed into this request along with the timestamp. The
+	// combination of the two are then used to generate a UTC date/time value,
+	// which is what is stored in the database.
+	return t.In(time.UTC).Add(time.Duration(offset) * time.Minute)
 }
 
 func getUserGUID(ctx context.Context) (string, error) {

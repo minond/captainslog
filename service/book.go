@@ -46,7 +46,7 @@ func (s BookService) Create(ctx context.Context, req *BookCreateRequest) (*model
 		return nil, err
 	}
 
-	at := clientTime(req.CreateCollectionAt)
+	at := clientTime(req.CreateCollectionAt, 0)
 	if _, err = book.Collection(s.collectionStore, at, true); err != nil {
 		return book, err
 	}

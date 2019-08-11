@@ -38,6 +38,7 @@ type EntryCreateRequest struct {
 	GUID      string    `json:"guid"`
 	Text      string    `json:"text"`
 	CreatedAt time.Time `json:"createdAt"`
+	Offset    int       `json:"offset"`
 	BookGUID  string    `json:"bookGuid"`
 }
 
@@ -47,7 +48,7 @@ type EntryCreateResponse struct {
 }
 
 func (s EntryService) Create(ctx context.Context, req *EntryCreateRequest) (*EntryCreateResponse, error) {
-	at := clientTime(req.CreatedAt)
+	at := clientTime(req.CreatedAt, req.Offset)
 	user, err := getUser(ctx, s.userStore)
 	if err != nil {
 		return nil, err
@@ -140,12 +141,7 @@ func (s EntryService) Retrieve(ctx context.Context, req url.Values) (*EntryRetri
 		at = time.Now()
 	}
 
-	// NOTE Let's see how this works out for me. In order to show logs for the
-	// actual date/time that the _client_ is on, the time zone offset is
-	// optionally passed into this request along with the timestamp. The
-	// combination of the two are then used to generate a UTC date/time value,
-	// which is what is stored in the database.
-	at = at.In(time.UTC).Add(time.Duration(offsetMin) * time.Minute)
+	at = clientTime(at, int(offsetMin))
 
 	book, err := s.bookStore.FindOne(model.NewBookQuery().
 		Where(kallax.Eq(model.Schema.Book.GUID, bookGUID)).

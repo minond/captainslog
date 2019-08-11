@@ -43,7 +43,7 @@ export const createEntries = (req: EntriesCreateRequest): Promise<EntriesCreateR
     .then(() => ({ ok: true }))
 
 export const createEntry = (entry: EntryCreateRequest): Promise<EntryCreateResponse> =>
-  axios.post<EntryCreateResponse>(uris.entries, entry)
+  axios.post<EntryCreateResponse>(uris.entries, Object.assign({ offset: new Date().getTimezoneOffset() * -1 }, entry))
     .then((res) => res.data)
 
 export const executeQuery = (query: string): Promise<QueryResults> =>
