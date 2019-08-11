@@ -66,6 +66,7 @@
         {
           "method": "GET",
           "handler": "Retrieve",
+          "request": "service.EntryRetrieveRequest",
           "response": "service.EntryRetrieveResponse"
         }
       ]

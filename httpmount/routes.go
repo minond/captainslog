@@ -66,7 +66,7 @@ type EntryServiceContract interface {
 	Create(ctx context.Context, req *service.EntryCreateRequest) (*service.EntryCreateResponse, error)
 
 	// Retrieve runs when a GET /api/entries request comes in.
-	Retrieve(ctx context.Context, req url.Values) (*service.EntryRetrieveResponse, error)
+	Retrieve(ctx context.Context, req *service.EntryRetrieveRequest) (*service.EntryRetrieveResponse, error)
 }
 
 // QueryServiceContract defines what an implementation of service.QueryService
@@ -404,7 +404,13 @@ func MountEntryService(router *mux.Router, serv EntryServiceContract) {
 			w.Write(out)
 
 		case "GET":
-			req := r.URL.Query()
+			req := &service.EntryRetrieveRequest{}
+			dec := schema.NewDecoder()
+			if err = dec.Decode(req, r.URL.Query()); err != nil {
+				http.Error(w, "unable to decode request", http.StatusBadRequest)
+				log.Printf("[ERROR] error unmarshaling request: %v", err)
+				return
+			}
 
 			ctx := context.Background()
 			for key, val := range session.Values {

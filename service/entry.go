@@ -3,9 +3,6 @@ package service
 import (
 	"context"
 	"database/sql"
-	"errors"
-	"net/url"
-	"strconv"
 	"time"
 
 	"gopkg.in/src-d/go-kallax.v1"
@@ -94,57 +91,29 @@ func (s EntryService) Create(ctx context.Context, req *EntryCreateRequest) (*Ent
 	return &EntryCreateResponse{GUID: req.GUID, Entry: entry}, nil
 }
 
+type EntryRetrieveRequest struct {
+	BookGUID string `schema:"book"`
+	At       int    `schema:"at"`
+	Offset   int    `schema:"offset"`
+}
+
 type EntryRetrieveResponse struct {
 	Entries []*model.Entry `json:"entries"`
 }
 
-func (s EntryService) Retrieve(ctx context.Context, req url.Values) (*EntryRetrieveResponse, error) {
-	var bookGUID string
-	var at time.Time
-
-	if bookGUIDs, ok := req["book"]; ok && len(bookGUIDs) == 1 {
-		bookGUID = bookGUIDs[0]
-	} else {
-		return nil, errors.New("missing required book_guid parameter")
-	}
-
+func (s EntryService) Retrieve(ctx context.Context, req *EntryRetrieveRequest) (*EntryRetrieveResponse, error) {
 	userGUID, err := getUserGUID(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	at = time.Now()
-	if atDate, ok := req["at"]; ok {
-		if len(atDate) == 1 {
-			i, err := strconv.ParseInt(atDate[0], 10, 64)
-			if err != nil {
-				return nil, errors.New("invalid date format, expecting a unix timestamp")
-			}
-			at = time.Unix(i, 0)
-		} else {
-			return nil, errors.New("multiple dates passed but only a single is allowed")
-		}
+	at := time.Now()
+	if req.At != 0 {
+		at = clientTime(time.Unix(int64(req.At), 0), req.Offset)
 	}
-
-	var offsetMin int64 = 0
-	if offset, ok := req["offset"]; ok {
-		if len(offset) == 1 {
-			i, err := strconv.ParseInt(offset[0], 10, 32)
-			if err != nil {
-				return nil, errors.New("invalid offset value, expecting an integer")
-			}
-			offsetMin = i
-		} else {
-			return nil, errors.New("multiple offsets passed but only a single is allowed")
-		}
-	} else {
-		at = time.Now()
-	}
-
-	at = clientTime(at, int(offsetMin))
 
 	book, err := s.bookStore.FindOne(model.NewBookQuery().
-		Where(kallax.Eq(model.Schema.Book.GUID, bookGUID)).
+		Where(kallax.Eq(model.Schema.Book.GUID, req.BookGUID)).
 		Where(kallax.Eq(model.Schema.Book.UserFK, userGUID)))
 	if err != nil {
 		return nil, err
