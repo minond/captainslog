@@ -4,6 +4,7 @@ import { useEffect, useState, KeyboardEvent } from "react"
 import {
   cachedExecuteQuery,
   cachedGetSavedQueries,
+  cachedGetSchema,
   createSavedQuery,
   updateSavedQuery,
 } from "./remote"
@@ -13,6 +14,7 @@ import {
   QueryResult,
   QueryResults,
   SavedQuery,
+  Schema,
 } from "./definitions"
 
 const KEY_ENTER = 13
@@ -165,7 +167,7 @@ export const Query = (props: {}) => {
       {generateSavedQueryOptions(savedQueries)}
     </select>
 
-  return <div className="query">
+  const textarea =
     <textarea
       className="query-textarea"
       rows={rows}
@@ -174,10 +176,26 @@ export const Query = (props: {}) => {
       placeholder="Execute query"
       value={query}
     />
+
+  return <div className="query">
+    <SchemaView />
+    {textarea}
     <input type="button" value="Execute" onClick={() => executeQuery()} />
     <input type="button" value={saveBtnLabel} onClick={saveQuery} />
     {!!savedQueries.length && savedQuerySelect}
     {message && <div className={messageClass}>{message.message}</div>}
     {results && resultsTable(results)}
   </div>
+}
+
+const SchemaView = () => {
+  const [schema, setSchema] = useState<Schema | null>(null)
+
+  useEffect(() => {
+    cachedGetSchema().then(setSchema)
+  }, [])
+
+  console.log(schema)
+
+  return <div>schema</div>
 }

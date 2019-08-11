@@ -124,6 +124,7 @@ select + input {
 }
 
 .query .query-textarea {
+  box-sizing: border-box;
   outline: none;
   width: 100%;
 }

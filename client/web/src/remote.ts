@@ -11,9 +11,10 @@ import {
   EntryCreateResponse,
   QueryExecuteRequest,
   QueryResults,
+  SavedQueriesRetrieveResponse,
   SavedQuery,
   SavedQueryRequest,
-  SavedQueriesRetrieveResponse,
+  Schema,
 } from "./definitions"
 
 enum uris {
@@ -61,6 +62,10 @@ export const updateSavedQuery = (entry: SavedQuery): Promise<SavedQuery> =>
 export const getSavedQueries = (): Promise<SavedQuery[]> =>
   axios.get<SavedQueriesRetrieveResponse>(uris.savedQuery)
     .then((res) => res.data.queries || [])
+
+export const getSchema = (): Promise<Schema> =>
+  axios.get<Schema>(uris.query)
+    .then((res) => res.data)
 
 const ttls = {
   [executeQuery.toString()]: 100,
@@ -116,3 +121,4 @@ export const cachedGetBook = cached(getBook)
 export const cachedGetBooks = cached(getBooks)
 export const cachedGetEntriesForBook = cached(getEntriesForBook)
 export const cachedGetSavedQueries = cached(getSavedQueries)
+export const cachedGetSchema = cached(getSchema)
