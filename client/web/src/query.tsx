@@ -76,6 +76,21 @@ type Message = {
   message: string
 }
 
+const saveQuery = (query: string, savedQuery: SavedQuery | null) => {
+  // Update
+  if (savedQuery) {
+    return updateSavedQuery(Object.assign({}, savedQuery, { content: query }))
+  }
+
+  // Create
+  let label = prompt("Query label")
+  if (!label) {
+    return new Promise((_, rej) => rej())
+  }
+
+  return createSavedQuery({ label, content: query })
+}
+
 export const Query = (props: {}) => {
   const [message, setMessage] = useState<Message | null>(null)
   const [query, setQuery] = useState<string>("")
@@ -88,11 +103,13 @@ export const Query = (props: {}) => {
     fetchSavedQueries()
   }, [])
 
-  const fetchSavedQueries = () => {
+  const fetchSavedQueries = () =>
     cachedGetSavedQueries().then(setSavedQueries)
-  }
 
-  const loadSavedQuery = (guid: string) => {
+  const saveQueryClickHandler = () =>
+    saveQuery(query, savedQuery).then(fetchSavedQueries)
+
+  const loadSavedQueryHandler = (guid: string) => {
     let query = savedQueries.find((query) => query.guid === guid)
     if (!query) {
       setSavedQuery(null)
@@ -102,24 +119,6 @@ export const Query = (props: {}) => {
     setSavedQuery(query)
     updateQuery(query.content)
     executeQuery(query.content)
-  }
-
-  const saveQuery = () => {
-    // Update
-    if (savedQuery) {
-      let update = Object.assign({}, savedQuery, { content: query })
-      updateSavedQuery(update).then(fetchSavedQueries)
-      return
-    }
-
-    // Create
-    let label = prompt("Query label")
-    if (!label) {
-      return
-    }
-
-    createSavedQuery({ label, content: query })
-      .then(fetchSavedQueries)
   }
 
   const executeQuery = (queryToExecute = query) => {
@@ -151,7 +150,7 @@ export const Query = (props: {}) => {
     setRows(rowCount(query))
   }
 
-  const textareaKeyPress = (ev: KeyboardEvent<HTMLTextAreaElement>) => {
+  const textareaKeyPressHandler = (ev: KeyboardEvent<HTMLTextAreaElement>) => {
     if (ev.charCode === KEY_ENTER && ev.shiftKey) {
       executeQuery()
       ev.preventDefault()
@@ -163,7 +162,7 @@ export const Query = (props: {}) => {
   const messageClass = `query-message ${messageSublass}`
 
   const savedQuerySelect =
-    <select onChange={(ev) => loadSavedQuery(ev.target.value)}>
+    <select onChange={(ev) => loadSavedQueryHandler(ev.target.value)}>
       {generateSavedQueryOptions(savedQueries)}
     </select>
 
@@ -172,7 +171,7 @@ export const Query = (props: {}) => {
       className="query-textarea"
       rows={rows}
       onChange={(ev) => updateQuery(ev.target.value)}
-      onKeyPress={textareaKeyPress}
+      onKeyPress={textareaKeyPressHandler}
       placeholder="Execute query"
       value={query}
     />
@@ -181,7 +180,7 @@ export const Query = (props: {}) => {
     <SchemaView />
     {textarea}
     <input type="button" value="Execute" onClick={() => executeQuery()} />
-    <input type="button" value={saveBtnLabel} onClick={saveQuery} />
+    <input type="button" value={saveBtnLabel} onClick={saveQueryClickHandler} />
     {!!savedQueries.length && savedQuerySelect}
     {message && <div className={messageClass}>{message.message}</div>}
     {results && resultsTable(results)}
