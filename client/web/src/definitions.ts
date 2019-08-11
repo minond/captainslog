@@ -69,18 +69,22 @@ export type SavedQueriesRetrieveResponse = {
 
 export type SavedQueryRequest = Pick<SavedQuery, "label" | "content">
 
-export enum FieldType {
+export enum SchemaFieldType {
   String,
   Number,
   Boolean,
 }
 
+export type SchemaField = {
+  name: string
+  type: SchemaFieldType
+}
+
+export type SchemaBook = {
+  name: string
+  fields: SchemaField[]
+}
+
 export type Schema = {
-  books: {
-    name: string
-    fields: {
-      name: string
-      type: FieldType
-    }[]
-  }[]
+  books: SchemaBook[]
 }
