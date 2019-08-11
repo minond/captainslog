@@ -123,6 +123,14 @@ select + input {
   padding: 2px 8px;
 }
 
+.query {
+  display: flex;
+}
+
+.query .w100 {
+  width: 100%;
+}
+
 .query .query-textarea {
   box-sizing: border-box;
   outline: none;
@@ -163,12 +171,24 @@ select + input {
   border: 1px solid #ff8f8f;
 }
 
+.schema {
+  border-left: 1px solid #d6d6d6;
+  margin-left: 15px;
+  padding-left: 15px;
+}
+
+.schema-book + .schema-book {
+  margin-top: 20px;
+}
+
 .schema-book-name {
   font-weight: bold;
+  margin-bottom: 5px;
 }
 
 .schema-field {
   padding: 2px 0;
+  white-space: nowrap;
 }
 
 .schema-field-name {

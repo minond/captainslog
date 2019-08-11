@@ -180,13 +180,17 @@ export const Query = (props: {}) => {
     />
 
   return <div className="query">
-    <SchemaView />
-    {textarea}
-    <input type="button" value="Execute" onClick={() => executeQuery()} />
-    <input type="button" value={saveBtnLabel} onClick={saveQueryClickHandler} />
-    {!!savedQueries.length && savedQuerySelect}
-    {message && <div className={messageClass}>{message.message}</div>}
-    {results && resultsTable(results)}
+    <div className="w100">
+      {textarea}
+      <input type="button" value="Execute" onClick={() => executeQuery()} />
+      <input type="button" value={saveBtnLabel} onClick={saveQueryClickHandler} />
+      {!!savedQueries.length && savedQuerySelect}
+      {message && <div className={messageClass}>{message.message}</div>}
+      {results && resultsTable(results)}
+    </div>
+    <div>
+      <SchemaView />
+    </div>
   </div>
 }
 
@@ -208,7 +212,7 @@ const SchemaFieldView = (props: { field: SchemaField }) => {
 }
 
 const SchemaBookView = (props: { book: SchemaBook }) =>
-  <div>
+  <div className="schema-book">
     <div className="schema-book-name">{props.book.name}</div>
     {props.book.fields.map((field, j) =>
       <SchemaFieldView key={field.name + j} field={field} />)}
@@ -225,5 +229,5 @@ const SchemaView = () => {
     schema.books.map((book, i) =>
       <SchemaBookView key={book.name + i} book={book} />)
 
-  return <div>{byBook}</div>
+  return <div className="schema">{byBook}</div>
 }
