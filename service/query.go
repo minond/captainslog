@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"errors"
 	"log"
-	"net/url"
 
 	"gopkg.in/src-d/go-kallax.v1"
 
@@ -142,7 +141,7 @@ func getBooksForSchema(userGUID string, bookStore *model.BookStore) ([]*model.Bo
 	return books, bookGUIDs, nil
 }
 
-func (s QueryService) Schema(ctx context.Context, req url.Values) (*Schema, error) {
+func (s QueryService) Schema(ctx context.Context) (*Schema, error) {
 	userGUID, err := getUserGUID(ctx)
 	if err != nil {
 		return nil, err

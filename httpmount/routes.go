@@ -7,7 +7,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"net/url"
 	"os"
 
 	"github.com/gorilla/mux"
@@ -45,7 +44,7 @@ type SavedQueryServiceContract interface {
 	Update(ctx context.Context, req *model.SavedQuery) (*model.SavedQuery, error)
 
 	// Retrieve runs when a GET /api/saved_query request comes in.
-	Retrieve(ctx context.Context, req url.Values) (*service.SavedQueriesRetrieveResponse, error)
+	Retrieve(ctx context.Context) (*service.SavedQueriesRetrieveResponse, error)
 }
 
 // ExtractorServiceContract defines what an implementation of service.ExtractorService
@@ -75,7 +74,7 @@ type EntryServiceContract interface {
 // the request, and the response.
 type QueryServiceContract interface {
 	// Schema runs when a GET /api/query request comes in.
-	Schema(ctx context.Context, req url.Values) (*service.Schema, error)
+	Schema(ctx context.Context) (*service.Schema, error)
 
 	// Query runs when a POST /api/query request comes in.
 	Query(ctx context.Context, req *service.QueryExecuteRequest) (*service.QueryResults, error)
@@ -106,8 +105,8 @@ func MountBookService(router *mux.Router, serv BookServiceContract) {
 
 		case "POST":
 			req := &service.BookCreateRequest{}
-			defer r.Body.Close()
 			data, err := ioutil.ReadAll(r.Body)
+			defer r.Body.Close()
 			if err != nil {
 				http.Error(w, "unable to read request body", http.StatusBadRequest)
 				log.Printf("[ERROR] error reading request body: %v", err)
@@ -193,8 +192,8 @@ func MountSavedQueryService(router *mux.Router, serv SavedQueryServiceContract) 
 
 		case "POST":
 			req := &service.SavedQueryCreateRequest{}
-			defer r.Body.Close()
 			data, err := ioutil.ReadAll(r.Body)
+			defer r.Body.Close()
 			if err != nil {
 				http.Error(w, "unable to read request body", http.StatusBadRequest)
 				log.Printf("[ERROR] error reading request body: %v", err)
@@ -230,8 +229,8 @@ func MountSavedQueryService(router *mux.Router, serv SavedQueryServiceContract) 
 
 		case "PUT":
 			req := &model.SavedQuery{}
-			defer r.Body.Close()
 			data, err := ioutil.ReadAll(r.Body)
+			defer r.Body.Close()
 			if err != nil {
 				http.Error(w, "unable to read request body", http.StatusBadRequest)
 				log.Printf("[ERROR] error reading request body: %v", err)
@@ -266,14 +265,12 @@ func MountSavedQueryService(router *mux.Router, serv SavedQueryServiceContract) 
 			w.Write(out)
 
 		case "GET":
-			req := r.URL.Query()
-
 			ctx := context.Background()
 			for key, val := range session.Values {
 				ctx = context.WithValue(ctx, key, val)
 			}
 
-			res, err := serv.Retrieve(ctx, req)
+			res, err := serv.Retrieve(ctx)
 			if err != nil {
 				http.Error(w, "unable to handle request", http.StatusInternalServerError)
 				log.Printf("[ERROR] error handling request: %v", err)
@@ -311,8 +308,8 @@ func MountExtractorService(router *mux.Router, serv ExtractorServiceContract) {
 
 		case "POST":
 			req := &service.ExtractorCreateRequest{}
-			defer r.Body.Close()
 			data, err := ioutil.ReadAll(r.Body)
+			defer r.Body.Close()
 			if err != nil {
 				http.Error(w, "unable to read request body", http.StatusBadRequest)
 				log.Printf("[ERROR] error reading request body: %v", err)
@@ -368,8 +365,8 @@ func MountEntryService(router *mux.Router, serv EntryServiceContract) {
 
 		case "POST":
 			req := &service.EntryCreateRequest{}
-			defer r.Body.Close()
 			data, err := ioutil.ReadAll(r.Body)
+			defer r.Body.Close()
 			if err != nil {
 				http.Error(w, "unable to read request body", http.StatusBadRequest)
 				log.Printf("[ERROR] error reading request body: %v", err)
@@ -454,14 +451,12 @@ func MountQueryService(router *mux.Router, serv QueryServiceContract) {
 		switch r.Method {
 
 		case "GET":
-			req := r.URL.Query()
-
 			ctx := context.Background()
 			for key, val := range session.Values {
 				ctx = context.WithValue(ctx, key, val)
 			}
 
-			res, err := serv.Schema(ctx, req)
+			res, err := serv.Schema(ctx)
 			if err != nil {
 				http.Error(w, "unable to handle request", http.StatusInternalServerError)
 				log.Printf("[ERROR] error handling request: %v", err)
@@ -479,8 +474,8 @@ func MountQueryService(router *mux.Router, serv QueryServiceContract) {
 
 		case "POST":
 			req := &service.QueryExecuteRequest{}
-			defer r.Body.Close()
 			data, err := ioutil.ReadAll(r.Body)
+			defer r.Body.Close()
 			if err != nil {
 				http.Error(w, "unable to read request body", http.StatusBadRequest)
 				log.Printf("[ERROR] error reading request body: %v", err)
@@ -536,8 +531,8 @@ func MountShorthandService(router *mux.Router, serv ShorthandServiceContract) {
 
 		case "POST":
 			req := &service.ShorthandCreateRequest{}
-			defer r.Body.Close()
 			data, err := ioutil.ReadAll(r.Body)
+			defer r.Body.Close()
 			if err != nil {
 				http.Error(w, "unable to read request body", http.StatusBadRequest)
 				log.Printf("[ERROR] error reading request body: %v", err)

@@ -3,7 +3,6 @@ package service
 import (
 	"context"
 	"database/sql"
-	"net/url"
 
 	"gopkg.in/src-d/go-kallax.v1"
 
@@ -49,7 +48,7 @@ type SavedQueriesRetrieveResponse struct {
 	Queries []*model.SavedQuery `json:"queries"`
 }
 
-func (s SavedQueryService) Retrieve(ctx context.Context, req url.Values) (*SavedQueriesRetrieveResponse, error) {
+func (s SavedQueryService) Retrieve(ctx context.Context) (*SavedQueriesRetrieveResponse, error) {
 	userGUID, err := getUserGUID(ctx)
 	if err != nil {
 		return nil, err

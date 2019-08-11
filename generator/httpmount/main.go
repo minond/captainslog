@@ -78,13 +78,12 @@ func (m Method) JSON() bool {
 
 // Signature generates a string that is the method definition of this Method.
 func (m Method) Signature() string {
-	request := "url.Values"
 	if m.Request != "" {
-		request = "*" + m.Request
+		return fmt.Sprintf("%s(ctx context.Context, req *%s) (*%s, error)",
+			m.Handler, m.Request, m.Response)
 	}
-
-	return fmt.Sprintf("%s(ctx context.Context, req %s) (*%s, error)",
-		m.Handler, request, m.Response)
+	return fmt.Sprintf("%s(ctx context.Context) (*%s, error)",
+		m.Handler, m.Response)
 }
 
 var (
@@ -102,7 +101,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"net/url"
 	"os"
 
 	"github.com/gorilla/mux"
@@ -147,14 +145,12 @@ func {{.MountFunctionName}}(router *mux.Router, serv {{.ServiceContractName}}) {
 		switch r.Method {
 		{{range .Methods}}
 		case "{{.Method}}":
-			{{- if not .Request}}
-			req := r.URL.Query()
-			{{else}}
+			{{- if .Request}}
 			req := &{{.Request}}{}
 
 			{{- if .JSON}}
-			defer r.Body.Close()
 			data, err := ioutil.ReadAll(r.Body)
+			defer r.Body.Close()
 			if err != nil {
 				http.Error(w, "unable to read request body", http.StatusBadRequest)
 				log.Printf("[ERROR] error reading request body: %v", err)
@@ -174,14 +170,18 @@ func {{.MountFunctionName}}(router *mux.Router, serv {{.ServiceContractName}}) {
 				return
 			}
 			{{end}}
-			{{end}}
+			{{end -}}
 
 			ctx := context.Background()
 			for key, val := range session.Values {
 				ctx = context.WithValue(ctx, key, val)
 			}
 
+			{{if not .Request}}
+			res, err := serv.{{.Handler}}(ctx)
+			{{else}}
 			res, err := serv.{{.Handler}}(ctx, req)
+			{{end -}}
 			if err != nil {
 				http.Error(w, "unable to handle request", http.StatusInternalServerError)
 				log.Printf("[ERROR] error handling request: %v", err)
