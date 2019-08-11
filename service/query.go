@@ -118,7 +118,9 @@ func getExtractorsForSchema(bookGUIDs []interface{}, extractorStore *model.Extra
 		Select(model.Schema.Extractor.BookFK,
 			model.Schema.Extractor.Label,
 			model.Schema.Extractor.Type).
-		Where(kallax.In(model.Schema.Extractor.BookFK, bookGUIDs...))
+		Where(kallax.In(model.Schema.Extractor.BookFK, bookGUIDs...)).
+		Order(kallax.Asc(model.Schema.Extractor.Type),
+			kallax.Asc(model.Schema.Extractor.Label))
 	return extractorStore.FindAll(extractorsQuery)
 }
 
