@@ -174,7 +174,7 @@ export const Query = (props: {}) => {
       value={query}
     />
     <input type="button" value="Execute" onClick={executeQuery} />
-    <input type="button" value={saveBtnLabel} />
+    <input type="button" value={saveBtnLabel} onClick={saveQuery} />
     {savedQueries.length && savedQuerySelect}
     {message && <div className={messageClass}>{message.message}</div>}
     {results && resultsTable(results)}
