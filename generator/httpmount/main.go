@@ -8,6 +8,7 @@ import (
 	"go/format"
 	"io/ioutil"
 	"log"
+	"net/http"
 	"strings"
 	"text/template"
 )
@@ -69,6 +70,12 @@ type Method struct {
 	Response string `json:"response"`
 }
 
+func (m Method) JSON() bool {
+	return m.Method == http.MethodPost ||
+		m.Method == http.MethodPut ||
+		m.Method == http.MethodPatch
+}
+
 // Signature generates a string that is the method definition of this Method.
 func (m Method) Signature() string {
 	request := "url.Values"
@@ -100,11 +107,13 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
+	"github.com/gorilla/schema"
 
 	"github.com/minond/captainslog/model"
 	"github.com/minond/captainslog/service"
 )
 
+var _ = schema.NewDecoder
 var store = sessions.NewCookieStore([]byte(os.Getenv("SESSION_KEY")))
 
 {{range .Routes.Routes}}
@@ -141,6 +150,9 @@ func {{.MountFunctionName}}(router *mux.Router, serv {{.ServiceContractName}}) {
 			{{- if not .Request}}
 			req := r.URL.Query()
 			{{else}}
+			req := &{{.Request}}{}
+
+			{{- if .JSON}}
 			defer r.Body.Close()
 			data, err := ioutil.ReadAll(r.Body)
 			if err != nil {
@@ -149,12 +161,19 @@ func {{.MountFunctionName}}(router *mux.Router, serv {{.ServiceContractName}}) {
 				return
 			}
 
-			req := &{{.Request}}{}
 			if err = json.Unmarshal(data, req); err != nil {
 				http.Error(w, "unable to decode request", http.StatusBadRequest)
 				log.Printf("[ERROR] error unmarshaling request: %v", err)
 				return
 			}
+			{{else}}
+			dec := schema.NewDecoder()
+			if err = dec.Decode(req, r.URL.Query()); err != nil {
+				http.Error(w, "unable to decode request", http.StatusBadRequest)
+				log.Printf("[ERROR] error unmarshaling request: %v", err)
+				return
+			}
+			{{end}}
 			{{end}}
 
 			ctx := context.Background()

@@ -11,12 +11,14 @@ import (
 	"os"
 
 	"github.com/gorilla/mux"
+	"github.com/gorilla/schema"
 	"github.com/gorilla/sessions"
 
 	"github.com/minond/captainslog/model"
 	"github.com/minond/captainslog/service"
 )
 
+var _ = schema.NewDecoder
 var store = sessions.NewCookieStore([]byte(os.Getenv("SESSION_KEY")))
 
 // BookServiceContract defines what an implementation of service.BookService
@@ -28,7 +30,7 @@ type BookServiceContract interface {
 	Create(ctx context.Context, req *service.BookCreateRequest) (*model.Book, error)
 
 	// Retrieve runs when a GET /api/books request comes in.
-	Retrieve(ctx context.Context, req url.Values) (*service.BookRetrieveResponse, error)
+	Retrieve(ctx context.Context, req *service.BookRetrieveRequest) (*service.BookRetrieveResponse, error)
 }
 
 // SavedQueryServiceContract defines what an implementation of service.SavedQueryService
@@ -103,6 +105,7 @@ func MountBookService(router *mux.Router, serv BookServiceContract) {
 		switch r.Method {
 
 		case "POST":
+			req := &service.BookCreateRequest{}
 			defer r.Body.Close()
 			data, err := ioutil.ReadAll(r.Body)
 			if err != nil {
@@ -111,7 +114,6 @@ func MountBookService(router *mux.Router, serv BookServiceContract) {
 				return
 			}
 
-			req := &service.BookCreateRequest{}
 			if err = json.Unmarshal(data, req); err != nil {
 				http.Error(w, "unable to decode request", http.StatusBadRequest)
 				log.Printf("[ERROR] error unmarshaling request: %v", err)
@@ -140,7 +142,13 @@ func MountBookService(router *mux.Router, serv BookServiceContract) {
 			w.Write(out)
 
 		case "GET":
-			req := r.URL.Query()
+			req := &service.BookRetrieveRequest{}
+			dec := schema.NewDecoder()
+			if err = dec.Decode(req, r.URL.Query()); err != nil {
+				http.Error(w, "unable to decode request", http.StatusBadRequest)
+				log.Printf("[ERROR] error unmarshaling request: %v", err)
+				return
+			}
 
 			ctx := context.Background()
 			for key, val := range session.Values {
@@ -184,6 +192,7 @@ func MountSavedQueryService(router *mux.Router, serv SavedQueryServiceContract) 
 		switch r.Method {
 
 		case "POST":
+			req := &service.SavedQueryCreateRequest{}
 			defer r.Body.Close()
 			data, err := ioutil.ReadAll(r.Body)
 			if err != nil {
@@ -192,7 +201,6 @@ func MountSavedQueryService(router *mux.Router, serv SavedQueryServiceContract) 
 				return
 			}
 
-			req := &service.SavedQueryCreateRequest{}
 			if err = json.Unmarshal(data, req); err != nil {
 				http.Error(w, "unable to decode request", http.StatusBadRequest)
 				log.Printf("[ERROR] error unmarshaling request: %v", err)
@@ -221,6 +229,7 @@ func MountSavedQueryService(router *mux.Router, serv SavedQueryServiceContract) 
 			w.Write(out)
 
 		case "PUT":
+			req := &model.SavedQuery{}
 			defer r.Body.Close()
 			data, err := ioutil.ReadAll(r.Body)
 			if err != nil {
@@ -229,7 +238,6 @@ func MountSavedQueryService(router *mux.Router, serv SavedQueryServiceContract) 
 				return
 			}
 
-			req := &model.SavedQuery{}
 			if err = json.Unmarshal(data, req); err != nil {
 				http.Error(w, "unable to decode request", http.StatusBadRequest)
 				log.Printf("[ERROR] error unmarshaling request: %v", err)
@@ -302,6 +310,7 @@ func MountExtractorService(router *mux.Router, serv ExtractorServiceContract) {
 		switch r.Method {
 
 		case "POST":
+			req := &service.ExtractorCreateRequest{}
 			defer r.Body.Close()
 			data, err := ioutil.ReadAll(r.Body)
 			if err != nil {
@@ -310,7 +319,6 @@ func MountExtractorService(router *mux.Router, serv ExtractorServiceContract) {
 				return
 			}
 
-			req := &service.ExtractorCreateRequest{}
 			if err = json.Unmarshal(data, req); err != nil {
 				http.Error(w, "unable to decode request", http.StatusBadRequest)
 				log.Printf("[ERROR] error unmarshaling request: %v", err)
@@ -359,6 +367,7 @@ func MountEntryService(router *mux.Router, serv EntryServiceContract) {
 		switch r.Method {
 
 		case "POST":
+			req := &service.EntryCreateRequest{}
 			defer r.Body.Close()
 			data, err := ioutil.ReadAll(r.Body)
 			if err != nil {
@@ -367,7 +376,6 @@ func MountEntryService(router *mux.Router, serv EntryServiceContract) {
 				return
 			}
 
-			req := &service.EntryCreateRequest{}
 			if err = json.Unmarshal(data, req); err != nil {
 				http.Error(w, "unable to decode request", http.StatusBadRequest)
 				log.Printf("[ERROR] error unmarshaling request: %v", err)
@@ -464,6 +472,7 @@ func MountQueryService(router *mux.Router, serv QueryServiceContract) {
 			w.Write(out)
 
 		case "POST":
+			req := &service.QueryExecuteRequest{}
 			defer r.Body.Close()
 			data, err := ioutil.ReadAll(r.Body)
 			if err != nil {
@@ -472,7 +481,6 @@ func MountQueryService(router *mux.Router, serv QueryServiceContract) {
 				return
 			}
 
-			req := &service.QueryExecuteRequest{}
 			if err = json.Unmarshal(data, req); err != nil {
 				http.Error(w, "unable to decode request", http.StatusBadRequest)
 				log.Printf("[ERROR] error unmarshaling request: %v", err)
@@ -521,6 +529,7 @@ func MountShorthandService(router *mux.Router, serv ShorthandServiceContract) {
 		switch r.Method {
 
 		case "POST":
+			req := &service.ShorthandCreateRequest{}
 			defer r.Body.Close()
 			data, err := ioutil.ReadAll(r.Body)
 			if err != nil {
@@ -529,7 +538,6 @@ func MountShorthandService(router *mux.Router, serv ShorthandServiceContract) {
 				return
 			}
 
-			req := &service.ShorthandCreateRequest{}
 			if err = json.Unmarshal(data, req); err != nil {
 				http.Error(w, "unable to decode request", http.StatusBadRequest)
 				log.Printf("[ERROR] error unmarshaling request: %v", err)

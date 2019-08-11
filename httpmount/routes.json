@@ -13,6 +13,7 @@
         {
           "method": "GET",
           "handler": "Retrieve",
+          "request": "service.BookRetrieveRequest",
           "response": "service.BookRetrieveResponse"
         }
       ]

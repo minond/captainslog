@@ -3,7 +3,6 @@ package service
 import (
 	"context"
 	"database/sql"
-	"net/url"
 	"time"
 
 	"gopkg.in/src-d/go-kallax.v1"
@@ -54,11 +53,15 @@ func (s BookService) Create(ctx context.Context, req *BookCreateRequest) (*model
 	return book, nil
 }
 
+type BookRetrieveRequest struct {
+	GUID *string `schema:"guid"`
+}
+
 type BookRetrieveResponse struct {
 	Books []*model.Book `json:"books"`
 }
 
-func (s BookService) Retrieve(ctx context.Context, req url.Values) (*BookRetrieveResponse, error) {
+func (s BookService) Retrieve(ctx context.Context, req *BookRetrieveRequest) (*BookRetrieveResponse, error) {
 	userGUID, err := getUserGUID(ctx)
 	if err != nil {
 		return nil, err
@@ -68,8 +71,8 @@ func (s BookService) Retrieve(ctx context.Context, req url.Values) (*BookRetriev
 		Where(kallax.Eq(model.Schema.Book.UserFK, userGUID))
 
 	// Retrieve a single book
-	if guid, ok := req["guid"]; ok {
-		query.Where(kallax.Eq(model.Schema.Book.GUID, guid))
+	if req.GUID != nil {
+		query.Where(kallax.Eq(model.Schema.Book.GUID, req.GUID))
 	}
 
 	books, err := s.bookStore.FindAll(query)
