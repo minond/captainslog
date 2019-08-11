@@ -163,6 +163,35 @@ select + input {
   border: 1px solid #ff8f8f;
 }
 
+.schema-field {
+  padding: 2px 0;
+}
+
+.schema-field-name {
+  padding: 0 5px;
+}
+
+.schema-field-type {
+  background: whitesmoke;
+  border: 1px solid #d6d6d6;
+  display: inline-block;
+  font-size: .8rem;
+  padding: 2px 4px;
+  text-transform: lowercase;
+}
+
+.schema-field-type.number {
+  background-color: #ff6300;
+}
+
+.schema-field-type.string {
+  background-color: #9eebcf;
+}
+
+.schema-field-type.boolean {
+  background-color: #96ccff;
+}
+
 /* small */
 @media screen and (min-width: 45em) {
 }

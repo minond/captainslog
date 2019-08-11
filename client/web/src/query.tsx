@@ -15,6 +15,9 @@ import {
   QueryResults,
   SavedQuery,
   Schema,
+  SchemaBook,
+  SchemaField,
+  SchemaFieldType,
 } from "./definitions"
 
 const KEY_ENTER = 13
@@ -187,6 +190,23 @@ export const Query = (props: {}) => {
   </div>
 }
 
+const fieldTypeNames = {
+  [SchemaFieldType.String]: "String",
+  [SchemaFieldType.Number]: "Number",
+  [SchemaFieldType.Boolean]: "Boolean",
+}
+
+const fieldTypeName = (ty: SchemaFieldType) =>
+  fieldTypeNames[ty]
+
+const SchemaFieldView = (props: { field: SchemaField }) => {
+  let tyName = fieldTypeName(props.field.type)
+  return <div className="schema-field">
+    <span className={`schema-field-type ${tyName.toLowerCase()}`}>{tyName}</span>
+    <span className="schema-field-name">{props.field.name}</span>
+  </div>
+}
+
 const SchemaView = () => {
   const [schema, setSchema] = useState<Schema | null>(null)
 
@@ -194,7 +214,13 @@ const SchemaView = () => {
     cachedGetSchema().then(setSchema)
   }, [])
 
-  console.log(schema)
+  let byBook = !schema ? null :
+    schema.books.map((book, i) =>
+      <div key={book.name + i}>
+        <div>{book.name}</div>
+        {book.fields.map((field, j) =>
+          <SchemaFieldView key={field.name + j} field={field} />)}
+      </div>)
 
-  return <div>schema</div>
+  return <div>{byBook}</div>
 }
