@@ -145,7 +145,7 @@ func (s EntryService) Retrieve(ctx context.Context, req url.Values) (*EntryRetri
 	// optionally passed into this request along with the timestamp. The
 	// combination of the two are then used to generate a UTC date/time value,
 	// which is what is stored in the database.
-	at = at.In(time.UTC).Add(time.Duration(offsetMin) * time.Minute * -1)
+	at = at.In(time.UTC).Add(time.Duration(offsetMin) * time.Minute)
 
 	book, err := s.bookStore.FindOne(model.NewBookQuery().
 		Where(kallax.Eq(model.Schema.Book.GUID, bookGUID)).
