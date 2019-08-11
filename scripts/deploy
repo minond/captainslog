@@ -112,7 +112,7 @@ main() {
 
   if (( $run_migrations == 1 )); then
     info "running migrations..."
-    run_remote "git pull origin master && . env.sh && ./captainslog migrate up"
+    run_remote ". env.sh && ./captainslog migrate up"
   fi
 
   if (( $run_restart == 1 )); then
