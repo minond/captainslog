@@ -99,6 +99,7 @@ export const Query = (props: {}) => {
 
     setSavedQuery(query)
     updateQuery(query.content)
+    executeQuery(query.content)
   }
 
   const saveQuery = () => {
@@ -119,16 +120,16 @@ export const Query = (props: {}) => {
       .then(fetchSavedQueries)
   }
 
-  const executeQuery = () => {
+  const executeQuery = (queryToExecute = query) => {
     setMessage(null)
 
-    if (!query) {
+    if (!queryToExecute) {
       setResults(null)
       return
     }
 
     const startTime = Date.now()
-    cachedExecuteQuery(query)
+    cachedExecuteQuery(queryToExecute)
       .then((res) => {
         const elapsedTime = Date.now() - startTime
         setResults(res)
@@ -173,7 +174,7 @@ export const Query = (props: {}) => {
       placeholder="Execute query"
       value={query}
     />
-    <input type="button" value="Execute" onClick={executeQuery} />
+    <input type="button" value="Execute" onClick={() => executeQuery()} />
     <input type="button" value={saveBtnLabel} onClick={saveQuery} />
     {!!savedQueries.length && savedQuerySelect}
     {message && <div className={messageClass}>{message.message}</div>}
