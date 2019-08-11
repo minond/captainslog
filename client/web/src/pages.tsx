@@ -11,6 +11,7 @@ import { cachedGetBook } from "./remote"
 type PageProps = {
   active?: string
   children?: ReactNode
+  wide?: boolean
 }
 
 const Page = (props: PageProps) => {
@@ -18,27 +19,27 @@ const Page = (props: PageProps) => {
     document.title = `Captain's Log`
   })
 
-  return <>
-    <div className="page-wrapper">
-      <div className={"page-header " + (props.active ? "page-header-active" : "")}>
-        <div className="page-header-content">
-          <Link to="/">Captain's Log</Link>
-          <Link to="/query" className={props.active === "query" ? "active" : ""}>Query</Link>
-          <Books active={props.active} />
-        </div>
-      </div>
-      <div className="page-content">
-        {props.children}
+  const contentClass = props.wide && "wide"
+
+  return <div className="page-wrapper">
+    <div className={"page-header " + (props.active ? "page-header-active" : "")}>
+      <div className={`page-header-content ${contentClass}`}>
+        <Link to="/">Captain's Log</Link>
+        <Link to="/query" className={props.active === "query" ? "active" : ""}>Query</Link>
+        <Books active={props.active} />
       </div>
     </div>
-  </>
+    <div className={`page-content ${contentClass}`}>
+      {props.children}
+    </div>
+  </div>
 }
 
 export const IndexPage = (props: {}) =>
   <Page />
 
 export const QueryPage = (props: {}) =>
-  <Page active="query">
+  <Page active="query" wide={true}>
     <Query />
   </Page>
 
