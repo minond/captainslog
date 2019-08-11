@@ -28,6 +28,12 @@
           "response": "model.SavedQuery"
         },
         {
+          "method": "PUT",
+          "handler": "Update",
+          "request": "model.SavedQuery",
+          "response": "model.SavedQuery"
+        },
+        {
           "method": "GET",
           "handler": "Retrieve",
           "response": "service.SavedQueriesRetrieveResponse"

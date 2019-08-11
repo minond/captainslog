@@ -1,8 +1,19 @@
 import * as React from "react"
 import { useEffect, useState, KeyboardEvent } from "react"
 
-import { cachedExecuteQuery, cachedGetSavedQueries, createSavedQuery } from "./remote"
-import { QueryExecuteRequest, QueryResults, QueryResult, SavedQuery } from "./definitions"
+import {
+  cachedExecuteQuery,
+  cachedGetSavedQueries,
+  createSavedQuery,
+  updateSavedQuery,
+} from "./remote"
+
+import {
+  QueryExecuteRequest,
+  QueryResult,
+  QueryResults,
+  SavedQuery,
+} from "./definitions"
 
 const KEY_ENTER = 13
 const MIN_ROWS = 5
@@ -69,6 +80,7 @@ export const Query = (props: {}) => {
   const [rows, setRows] = useState<number>(rowCount(query))
   const [results, setResults] = useState<QueryResults | null>(null)
   const [savedQueries, setSavedQueries] = useState<SavedQuery[]>([])
+  const [savedQuery, setSavedQuery] = useState<SavedQuery | null>(null)
 
   useEffect(() => {
     fetchSavedQueries()
@@ -81,12 +93,23 @@ export const Query = (props: {}) => {
   const loadSavedQuery = (guid: string) => {
     let query = savedQueries.find((query) => query.guid === guid)
     if (!query) {
+      setSavedQuery(null)
       return
     }
+
+    setSavedQuery(query)
     updateQuery(query.content)
   }
 
   const saveQuery = () => {
+    // Update
+    if (savedQuery) {
+      let update = Object.assign({}, savedQuery, { content: query })
+      updateSavedQuery(update).then(fetchSavedQueries)
+      return
+    }
+
+    // Create
     let label = prompt("Query label")
     if (!label) {
       return
@@ -132,6 +155,7 @@ export const Query = (props: {}) => {
     }
   }
 
+  const saveBtnLabel = savedQuery ? "Update query" : "Save query"
   const messageSublass = message && message.ok ? "query-message-ok" : "query-message-error"
   const messageClass = `query-message ${messageSublass}`
 
@@ -150,7 +174,7 @@ export const Query = (props: {}) => {
       value={query}
     />
     <input type="button" value="Execute" onClick={executeQuery} />
-    <input type="button" value="Save" onClick={saveQuery} />
+    <input type="button" value={saveBtnLabel} />
     {savedQueries.length && savedQuerySelect}
     {message && <div className={messageClass}>{message.message}</div>}
     {results && resultsTable(results)}

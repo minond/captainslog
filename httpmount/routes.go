@@ -39,6 +39,9 @@ type SavedQueryServiceContract interface {
 	// Create runs when a POST /api/saved_query request comes in.
 	Create(ctx context.Context, req *service.SavedQueryCreateRequest) (*model.SavedQuery, error)
 
+	// Update runs when a PUT /api/saved_query request comes in.
+	Update(ctx context.Context, req *model.SavedQuery) (*model.SavedQuery, error)
+
 	// Retrieve runs when a GET /api/saved_query request comes in.
 	Retrieve(ctx context.Context, req url.Values) (*service.SavedQueriesRetrieveResponse, error)
 }
@@ -199,6 +202,43 @@ func MountSavedQueryService(router *mux.Router, serv SavedQueryServiceContract) 
 			}
 
 			res, err := serv.Create(ctx, req)
+			if err != nil {
+				http.Error(w, "unable to handle request", http.StatusInternalServerError)
+				log.Printf("[ERROR] error handling request: %v", err)
+				return
+			}
+
+			out, err := json.Marshal(res)
+			if err != nil {
+				http.Error(w, "unable to encode response", http.StatusInternalServerError)
+				log.Printf("[ERROR] error marshaling response: %v", err)
+				return
+			}
+
+			w.Write(out)
+
+		case "PUT":
+			defer r.Body.Close()
+			data, err := ioutil.ReadAll(r.Body)
+			if err != nil {
+				http.Error(w, "unable to read request body", http.StatusBadRequest)
+				log.Printf("[ERROR] error reading request body: %v", err)
+				return
+			}
+
+			req := &model.SavedQuery{}
+			if err = json.Unmarshal(data, req); err != nil {
+				http.Error(w, "unable to decode request", http.StatusBadRequest)
+				log.Printf("[ERROR] error unmarshaling request: %v", err)
+				return
+			}
+
+			ctx := context.Background()
+			for key, val := range session.Values {
+				ctx = context.WithValue(ctx, key, val)
+			}
+
+			res, err := serv.Update(ctx, req)
 			if err != nil {
 				http.Error(w, "unable to handle request", http.StatusInternalServerError)
 				log.Printf("[ERROR] error handling request: %v", err)

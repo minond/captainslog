@@ -54,6 +54,10 @@ export const createSavedQuery = (entry: SavedQueryRequest): Promise<SavedQuery> 
   axios.post<SavedQuery>(uris.savedQuery, entry)
     .then((res) => res.data)
 
+export const updateSavedQuery = (entry: SavedQuery): Promise<SavedQuery> =>
+  axios.put<SavedQuery>(uris.savedQuery, entry)
+    .then((res) => res.data)
+
 export const getSavedQueries = (): Promise<SavedQuery[]> =>
   axios.get<SavedQueriesRetrieveResponse>(uris.savedQuery)
     .then((res) => res.data.queries || [])
