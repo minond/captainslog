@@ -173,8 +173,15 @@ select + input {
 
 .schema {
   border-left: 1px solid #d6d6d6;
+  display: none;
   margin-left: 15px;
   padding-left: 15px;
+}
+
+@media screen and (min-width: 45em) {
+  .schema {
+    display: block;
+  }
 }
 
 .schema-book + .schema-book {
