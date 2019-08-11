@@ -96,6 +96,12 @@ select + input {
   width: 100%;
 }
 
+.entries-empty {
+  padding-bottom: 10px;
+  padding-top: 50px;
+  text-align: center;
+}
+
 .entry {
   border-top: 1px solid #f0f0f0;
   padding: 8px 0;

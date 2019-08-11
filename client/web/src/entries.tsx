@@ -32,6 +32,14 @@ const buildEntriesCreateRequest =
       return acc
     }, { entries: [], createdAt } as EntriesGenerationId)
 
+const noEntriesMessage = (date: Date, grouping: Grouping) => {
+  switch (grouping) {
+    case Grouping.NONE: return "No entries were found."
+    case Grouping.DAY: return `No entries were found on ${date.toDateString()}.`
+    default: return
+  }
+}
+
 const genDatePicker = (date: Date, book: Book | null) =>
   !book || book.grouping === Grouping.NONE ? null :
     <DatePicker
@@ -72,24 +80,37 @@ export const Entries = (props: EntriesProps) => {
     ev.preventDefault()
   }
 
-  return <div className="entries">
-    <h1>{book ? book.name : "\u00A0"}</h1>
+  const dateInput = genDatePicker(props.date, book)
+  const textInput =
+    <textarea
+      rows={1}
+      placeholder="Enter a new log!"
+      value={text}
+      onChange={(e) => setText(e.target.value)}
+      onKeyPress={handleKeyPress}
+      className="entries-textarea"
+    />
+
+  const title = book ? <h1>{book.name}</h1> : null
+  const header = !book ? null :
     <div className="entries-action-header">
-      <div className="entries-action-header-col">
-        <textarea
-          rows={1}
-          placeholder="Enter a new log!"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          onKeyPress={handleKeyPress}
-          className="entries-textarea"
-        />
-      </div>
-      <div className="entries-action-header-col">
-        {genDatePicker(props.date, book)}
-      </div>
+      <div className="entries-action-header-col">{textInput}</div>
+      <div className="entries-action-header-col">{dateInput}</div>
     </div>
-    <EntryList items={entries} />
+
+  let content
+  if (entries.length) {
+    content = <EntryList items={entries} />
+  } else if (book) {
+    content = <div className="entries-empty">{noEntriesMessage(props.date, book.grouping)}</div>
+  } else {
+    content = null
+  }
+
+  return <div className="entries">
+    {title}
+    {header}
+    {content}
   </div>
 }
 
