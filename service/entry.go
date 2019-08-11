@@ -47,6 +47,7 @@ type EntryCreateResponse struct {
 }
 
 func (s EntryService) Create(ctx context.Context, req *EntryCreateRequest) (*EntryCreateResponse, error) {
+	at := clientTime(req.CreatedAt)
 	user, err := getUser(ctx, s.userStore)
 	if err != nil {
 		return nil, err
@@ -57,7 +58,6 @@ func (s EntryService) Create(ctx context.Context, req *EntryCreateRequest) (*Ent
 		return nil, err
 	}
 
-	at := clientTime(req.CreatedAt)
 	collection, err := book.Collection(s.collectionStore, at, true)
 	if err != nil {
 		return nil, err
@@ -68,17 +68,12 @@ func (s EntryService) Create(ctx context.Context, req *EntryCreateRequest) (*Ent
 		return nil, err
 	}
 
-	text, err := processing.Expand(req.Text, shorthands)
-	if err != nil {
-		return nil, err
-	}
-
 	extractors, err := book.Extractors(s.extractorStore)
 	if err != nil {
 		return nil, err
 	}
 
-	data, err := processing.Extract(text, extractors)
+	text, data, err := processing.Process(req.Text, shorthands, extractors)
 	if err != nil {
 		return nil, err
 	}
