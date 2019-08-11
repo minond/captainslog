@@ -163,6 +163,10 @@ select + input {
   border: 1px solid #ff8f8f;
 }
 
+.schema-book-name {
+  font-weight: bold;
+}
+
 .schema-field {
   padding: 2px 0;
 }
@@ -181,15 +185,15 @@ select + input {
 }
 
 .schema-field-type.number {
-  background-color: #ff6300;
+  background-color: #ff630075
 }
 
 .schema-field-type.string {
-  background-color: #9eebcf;
+  background-color: #9eebcf63;
 }
 
 .schema-field-type.boolean {
-  background-color: #96ccff;
+  background-color: #96ccff6b;
 }
 
 /* small */

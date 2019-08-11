@@ -207,6 +207,13 @@ const SchemaFieldView = (props: { field: SchemaField }) => {
   </div>
 }
 
+const SchemaBookView = (props: { book: SchemaBook }) =>
+  <div>
+    <div className="schema-book-name">{props.book.name}</div>
+    {props.book.fields.map((field, j) =>
+      <SchemaFieldView key={field.name + j} field={field} />)}
+  </div>
+
 const SchemaView = () => {
   const [schema, setSchema] = useState<Schema | null>(null)
 
@@ -216,11 +223,7 @@ const SchemaView = () => {
 
   let byBook = !schema ? null :
     schema.books.map((book, i) =>
-      <div key={book.name + i}>
-        <div>{book.name}</div>
-        {book.fields.map((field, j) =>
-          <SchemaFieldView key={field.name + j} field={field} />)}
-      </div>)
+      <SchemaBookView key={book.name + i} book={book} />)
 
   return <div>{byBook}</div>
 }
