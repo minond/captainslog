@@ -51,6 +51,13 @@ const resultsTable = (res: QueryResults) =>
     </tbody>
   </table>
 
+const generateSavedQueryOptions = (queries: SavedQuery[]) =>
+  [
+    <option key="blank" value="" label="Select a saved query" />
+  ].concat(
+    queries.map((query) =>
+      <option key={query.guid} value={query.guid} label={query.label} />))
+
 type Message = {
   ok: boolean
   message: string
@@ -65,10 +72,18 @@ export const Query = (props: {}) => {
 
   useEffect(() => {
     fetchSavedQueries()
-  })
+  }, [])
 
   const fetchSavedQueries = () => {
     cachedGetSavedQueries().then(setSavedQueries)
+  }
+
+  const loadSavedQuery = (guid: string) => {
+    let query = savedQueries.find((query) => query.guid === guid)
+    if (!query) {
+      return
+    }
+    updateQuery(query.content)
   }
 
   const saveQuery = () => {
@@ -117,7 +132,13 @@ export const Query = (props: {}) => {
     }
   }
 
-  const messageClass = `query-message ${message && message.ok ? "query-message-ok" : "query-message-error"}`
+  const messageSublass = message && message.ok ? "query-message-ok" : "query-message-error"
+  const messageClass = `query-message ${messageSublass}`
+
+  const savedQuerySelect =
+    <select onChange={(ev) => loadSavedQuery(ev.target.value)}>
+      {generateSavedQueryOptions(savedQueries)}
+    </select>
 
   return <div className="query">
     <textarea
@@ -126,9 +147,11 @@ export const Query = (props: {}) => {
       onChange={(ev) => updateQuery(ev.target.value)}
       onKeyPress={textareaKeyPress}
       placeholder="Execute query"
+      value={query}
     />
     <input type="button" value="Execute" onClick={executeQuery} />
     <input type="button" value="Save" onClick={saveQuery} />
+    {savedQueries.length && savedQuerySelect}
     {message && <div className={messageClass}>{message.message}</div>}
     {results && resultsTable(results)}
   </div>
