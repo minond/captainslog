@@ -138,6 +138,35 @@ func (s EntryService) Update(ctx context.Context, req *EntryUpdateRequest) (*mod
 	return entry, nil
 }
 
+type EntryDeleteRequest struct {
+	GUID string `json:"guid"`
+}
+
+type EntryDeleteResponse struct {
+	Ok bool `json:"ok"`
+}
+
+func (s EntryService) Delete(ctx context.Context, req *EntryDeleteRequest) (*EntryDeleteResponse, error) {
+	userGUID, err := getUserGUID(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	query := model.NewEntryQuery().
+		Where(kallax.Eq(model.Schema.Book.GUID, req.GUID)).
+		Where(kallax.Eq(model.Schema.Book.UserFK, userGUID))
+	entry, err := s.entryStore.FindOne(query)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := s.entryStore.Delete(entry); err != nil {
+		return nil, err
+	}
+
+	return &EntryDeleteResponse{Ok: true}, nil
+}
+
 type EntryRetrieveRequest struct {
 	BookGUID string `schema:"book"`
 	At       int    `schema:"at"`

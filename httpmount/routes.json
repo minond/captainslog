@@ -70,6 +70,12 @@
           "response": "model.Entry"
         },
         {
+          "method": "DELETE",
+          "handler": "Delete",
+          "request": "service.EntryDeleteRequest",
+          "response": "service.EntryDeleteResponse"
+        },
+        {
           "method": "GET",
           "handler": "Retrieve",
           "request": "service.EntryRetrieveRequest",

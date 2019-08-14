@@ -67,6 +67,9 @@ type EntryServiceContract interface {
 	// Update runs when a PUT /api/entries request comes in.
 	Update(ctx context.Context, req *service.EntryUpdateRequest) (*model.Entry, error)
 
+	// Delete runs when a DELETE /api/entries request comes in.
+	Delete(ctx context.Context, req *service.EntryDeleteRequest) (*service.EntryDeleteResponse, error)
+
 	// Retrieve runs when a GET /api/entries request comes in.
 	Retrieve(ctx context.Context, req *service.EntryRetrieveRequest) (*service.EntryRetrieveResponse, error)
 }
@@ -425,6 +428,36 @@ func MountEntryService(router *mux.Router, serv EntryServiceContract) {
 			}
 
 			res, err := serv.Update(ctx, req)
+			if err != nil {
+				http.Error(w, "unable to handle request", http.StatusInternalServerError)
+				log.Printf("[ERROR] error handling request: %v", err)
+				return
+			}
+
+			out, err := json.Marshal(res)
+			if err != nil {
+				http.Error(w, "unable to encode response", http.StatusInternalServerError)
+				log.Printf("[ERROR] error marshaling response: %v", err)
+				return
+			}
+
+			w.Write(out)
+
+		case "DELETE":
+			req := &service.EntryDeleteRequest{}
+			dec := schema.NewDecoder()
+			if err = dec.Decode(req, r.URL.Query()); err != nil {
+				http.Error(w, "unable to decode request", http.StatusBadRequest)
+				log.Printf("[ERROR] error unmarshaling request: %v", err)
+				return
+			}
+
+			ctx := context.Background()
+			for key, val := range session.Values {
+				ctx = context.WithValue(ctx, key, val)
+			}
+
+			res, err := serv.Delete(ctx, req)
 			if err != nil {
 				http.Error(w, "unable to handle request", http.StatusInternalServerError)
 				log.Printf("[ERROR] error handling request: %v", err)
