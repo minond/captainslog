@@ -5,12 +5,20 @@ Web client:
 - No auto-zoom when selecting input field on mobile
 - Disable exec and save buttons when query is blank
 - Align query execution status with table and make smaller
-- Add support for editing log
+- Add support for editing entry
+- Add support for deleting entry
 
 
 Backend:
 
-- Add support for editing log
+- Integration tests
+- Add support for deleting entry
 
 
 Mobile client:
+
+- List books
+- Load entries
+- Add entry
+- Edit entry
+- Delete entry
