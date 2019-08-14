@@ -91,6 +91,53 @@ func (s EntryService) Create(ctx context.Context, req *EntryCreateRequest) (*Ent
 	return &EntryCreateResponse{GUID: req.GUID, Entry: entry}, nil
 }
 
+type EntryUpdateRequest struct {
+	GUID string `json:"guid"`
+	Text string `json:"text"`
+}
+
+func (s EntryService) Update(ctx context.Context, req *EntryUpdateRequest) (*model.Entry, error) {
+	userGUID, err := getUserGUID(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	query := model.NewEntryQuery().
+		WithBook().
+		Where(kallax.Eq(model.Schema.Book.GUID, req.GUID)).
+		Where(kallax.Eq(model.Schema.Book.UserFK, userGUID))
+	entry, err := s.entryStore.FindOne(query)
+	if err != nil {
+		return nil, err
+	}
+
+	shorthands, err := entry.Book.Shorthands(s.shorthandStore)
+	if err != nil {
+		return nil, err
+	}
+
+	extractors, err := entry.Book.Extractors(s.extractorStore)
+	if err != nil {
+		return nil, err
+	}
+
+	text, data, err := processing.Process(req.Text, shorthands, extractors)
+	if err != nil {
+		return nil, err
+	}
+
+	entry.Original = req.Text
+	entry.Text = text
+	entry.Data = data
+	entry.UpdatedAt = time.Now()
+
+	if _, err := s.entryStore.Update(entry); err != nil {
+		return nil, err
+	}
+
+	return entry, nil
+}
+
 type EntryRetrieveRequest struct {
 	BookGUID string `schema:"book"`
 	At       int    `schema:"at"`

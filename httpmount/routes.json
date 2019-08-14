@@ -64,6 +64,12 @@
           "response": "service.EntryCreateResponse"
         },
         {
+          "method": "PUT",
+          "handler": "Update",
+          "request": "service.EntryUpdateRequest",
+          "response": "model.Entry"
+        },
+        {
           "method": "GET",
           "handler": "Retrieve",
           "request": "service.EntryRetrieveRequest",

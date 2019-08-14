@@ -64,6 +64,9 @@ type EntryServiceContract interface {
 	// Create runs when a POST /api/entries request comes in.
 	Create(ctx context.Context, req *service.EntryCreateRequest) (*service.EntryCreateResponse, error)
 
+	// Update runs when a PUT /api/entries request comes in.
+	Update(ctx context.Context, req *service.EntryUpdateRequest) (*model.Entry, error)
+
 	// Retrieve runs when a GET /api/entries request comes in.
 	Retrieve(ctx context.Context, req *service.EntryRetrieveRequest) (*service.EntryRetrieveResponse, error)
 }
@@ -385,6 +388,43 @@ func MountEntryService(router *mux.Router, serv EntryServiceContract) {
 			}
 
 			res, err := serv.Create(ctx, req)
+			if err != nil {
+				http.Error(w, "unable to handle request", http.StatusInternalServerError)
+				log.Printf("[ERROR] error handling request: %v", err)
+				return
+			}
+
+			out, err := json.Marshal(res)
+			if err != nil {
+				http.Error(w, "unable to encode response", http.StatusInternalServerError)
+				log.Printf("[ERROR] error marshaling response: %v", err)
+				return
+			}
+
+			w.Write(out)
+
+		case "PUT":
+			req := &service.EntryUpdateRequest{}
+			data, err := ioutil.ReadAll(r.Body)
+			defer r.Body.Close()
+			if err != nil {
+				http.Error(w, "unable to read request body", http.StatusBadRequest)
+				log.Printf("[ERROR] error reading request body: %v", err)
+				return
+			}
+
+			if err = json.Unmarshal(data, req); err != nil {
+				http.Error(w, "unable to decode request", http.StatusBadRequest)
+				log.Printf("[ERROR] error unmarshaling request: %v", err)
+				return
+			}
+
+			ctx := context.Background()
+			for key, val := range session.Values {
+				ctx = context.WithValue(ctx, key, val)
+			}
+
+			res, err := serv.Update(ctx, req)
 			if err != nil {
 				http.Error(w, "unable to handle request", http.StatusInternalServerError)
 				log.Printf("[ERROR] error handling request: %v", err)
