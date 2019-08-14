@@ -133,7 +133,13 @@ type {{.ServiceContractName}} interface {
 // {{.MountFunctionName}} add a handler to a Gorilla Mux Router that will route
 // an incoming request through the {{.Service}} service.
 func {{.MountFunctionName}}(router *mux.Router, serv {{.ServiceContractName}}) {
-	log.Print("[INFO] mounting {{.Service}} on {{.Endpoint}} endpoint")
+	log.Print("[INFO] mounting {{.Service}} on {{.Endpoint}}")
+	{{with $route := .}}
+	{{- range .Methods -}}
+	log.Print("[INFO] handler {{.Method}} {{$route.Endpoint}} -> {{$route.Service}}.{{.Handler}}({{.Request}}) -> {{.Response}}")
+	{{end}}
+	{{end}}
+
 	router.HandleFunc("{{.Endpoint}}", func(w http.ResponseWriter, r *http.Request) {
 		session, err := store.Get(r, "main")
 		if err != nil {

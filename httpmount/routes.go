@@ -98,7 +98,10 @@ type ShorthandServiceContract interface {
 // MountBookService add a handler to a Gorilla Mux Router that will route
 // an incoming request through the service.BookService service.
 func MountBookService(router *mux.Router, serv BookServiceContract) {
-	log.Print("[INFO] mounting service.BookService on /api/books endpoint")
+	log.Print("[INFO] mounting service.BookService on /api/books")
+	log.Print("[INFO] handler POST /api/books -> service.BookService.Create(service.BookCreateRequest) -> model.Book")
+	log.Print("[INFO] handler GET /api/books -> service.BookService.Retrieve(service.BookRetrieveRequest) -> service.BookRetrieveResponse")
+
 	router.HandleFunc("/api/books", func(w http.ResponseWriter, r *http.Request) {
 		session, err := store.Get(r, "main")
 		if err != nil {
@@ -185,7 +188,11 @@ func MountBookService(router *mux.Router, serv BookServiceContract) {
 // MountSavedQueryService add a handler to a Gorilla Mux Router that will route
 // an incoming request through the service.SavedQueryService service.
 func MountSavedQueryService(router *mux.Router, serv SavedQueryServiceContract) {
-	log.Print("[INFO] mounting service.SavedQueryService on /api/saved_query endpoint")
+	log.Print("[INFO] mounting service.SavedQueryService on /api/saved_query")
+	log.Print("[INFO] handler POST /api/saved_query -> service.SavedQueryService.Create(service.SavedQueryCreateRequest) -> model.SavedQuery")
+	log.Print("[INFO] handler PUT /api/saved_query -> service.SavedQueryService.Update(model.SavedQuery) -> model.SavedQuery")
+	log.Print("[INFO] handler GET /api/saved_query -> service.SavedQueryService.Retrieve() -> service.SavedQueriesRetrieveResponse")
+
 	router.HandleFunc("/api/saved_query", func(w http.ResponseWriter, r *http.Request) {
 		session, err := store.Get(r, "main")
 		if err != nil {
@@ -301,7 +308,9 @@ func MountSavedQueryService(router *mux.Router, serv SavedQueryServiceContract) 
 // MountExtractorService add a handler to a Gorilla Mux Router that will route
 // an incoming request through the service.ExtractorService service.
 func MountExtractorService(router *mux.Router, serv ExtractorServiceContract) {
-	log.Print("[INFO] mounting service.ExtractorService on /api/extractors endpoint")
+	log.Print("[INFO] mounting service.ExtractorService on /api/extractors")
+	log.Print("[INFO] handler POST /api/extractors -> service.ExtractorService.Create(service.ExtractorCreateRequest) -> model.Extractor")
+
 	router.HandleFunc("/api/extractors", func(w http.ResponseWriter, r *http.Request) {
 		session, err := store.Get(r, "main")
 		if err != nil {
@@ -358,7 +367,12 @@ func MountExtractorService(router *mux.Router, serv ExtractorServiceContract) {
 // MountEntryService add a handler to a Gorilla Mux Router that will route
 // an incoming request through the service.EntryService service.
 func MountEntryService(router *mux.Router, serv EntryServiceContract) {
-	log.Print("[INFO] mounting service.EntryService on /api/entries endpoint")
+	log.Print("[INFO] mounting service.EntryService on /api/entries")
+	log.Print("[INFO] handler POST /api/entries -> service.EntryService.Create(service.EntryCreateRequest) -> service.EntryCreateResponse")
+	log.Print("[INFO] handler PUT /api/entries -> service.EntryService.Update(service.EntryUpdateRequest) -> model.Entry")
+	log.Print("[INFO] handler DELETE /api/entries -> service.EntryService.Delete(service.EntryDeleteRequest) -> service.EntryDeleteResponse")
+	log.Print("[INFO] handler GET /api/entries -> service.EntryService.Retrieve(service.EntryRetrieveRequest) -> service.EntryRetrieveResponse")
+
 	router.HandleFunc("/api/entries", func(w http.ResponseWriter, r *http.Request) {
 		session, err := store.Get(r, "main")
 		if err != nil {
@@ -512,7 +526,10 @@ func MountEntryService(router *mux.Router, serv EntryServiceContract) {
 // MountQueryService add a handler to a Gorilla Mux Router that will route
 // an incoming request through the service.QueryService service.
 func MountQueryService(router *mux.Router, serv QueryServiceContract) {
-	log.Print("[INFO] mounting service.QueryService on /api/query endpoint")
+	log.Print("[INFO] mounting service.QueryService on /api/query")
+	log.Print("[INFO] handler GET /api/query -> service.QueryService.Schema() -> service.Schema")
+	log.Print("[INFO] handler POST /api/query -> service.QueryService.Query(service.QueryExecuteRequest) -> service.QueryResults")
+
 	router.HandleFunc("/api/query", func(w http.ResponseWriter, r *http.Request) {
 		session, err := store.Get(r, "main")
 		if err != nil {
@@ -591,7 +608,9 @@ func MountQueryService(router *mux.Router, serv QueryServiceContract) {
 // MountShorthandService add a handler to a Gorilla Mux Router that will route
 // an incoming request through the service.ShorthandService service.
 func MountShorthandService(router *mux.Router, serv ShorthandServiceContract) {
-	log.Print("[INFO] mounting service.ShorthandService on /api/shorthands endpoint")
+	log.Print("[INFO] mounting service.ShorthandService on /api/shorthands")
+	log.Print("[INFO] handler POST /api/shorthands -> service.ShorthandService.Create(service.ShorthandCreateRequest) -> model.Shorthand")
+
 	router.HandleFunc("/api/shorthands", func(w http.ResponseWriter, r *http.Request) {
 		session, err := store.Get(r, "main")
 		if err != nil {
