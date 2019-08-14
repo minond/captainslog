@@ -1,0 +1,16 @@
+Web client:
+
+- Saved queries not showing up correctly on mobile
+- Don't hide header on modile
+- No auto-zoom when selecting input field on mobile
+- Disable exec and save buttons when query is blank
+- Align query execution status with table and make smaller
+- Add support for editing log
+
+
+Backend:
+
+- Add support for editing log
+
+
+Mobile client:
