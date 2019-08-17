@@ -1,5 +1,3 @@
-sudo: true
-
 language: go
 
 go:
@@ -24,9 +22,9 @@ env:
     - PGPORT=5433
 
 before_script:
-  - sudo -u postgres psql -c "create user testuser with password 'testpass'"
-  - sudo -u postgres psql -c "alter role testuser superuser"
-  - sudo -u postgres psql -c "create database testdb;" -U postgres
+  - psql -c "create user testuser with password 'testpass'" -U postgres
+  - psql -c "alter role testuser superuser" -U postgres
+  - psql -c "create database testdb;" -U postgres -U postgres
   - go build -o captainslog cmd/captainslog/*
   - ./captainslog migrate up
 
