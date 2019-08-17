@@ -16,6 +16,7 @@ go:
 env:
   global:
     - GO111MODULE=on
+    - GOPROXY=https://proxy.golang.org
     # - DATABASE_DRIVER=postgres
     # - DATABASE_CONN="host=127.0.0.1 port=5433 user=testuser dbname=testdb sslmode=disable password=testpass"
     # - DATABASE_URL="postgres://testuser:testpass@localhost:5433/testdb?sslmode=disable"
