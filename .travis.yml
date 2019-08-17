@@ -7,7 +7,7 @@ services:
   - postgresql
 
 addons:
-  postgresql: "10"
+  postgresql: "10.3"
   apt:
     packages:
       - postgresql-10
@@ -22,6 +22,7 @@ env:
     - PGPORT=5433
 
 before_script:
+  - psql --version
   - psql -c "create user testuser with password 'testpass'" -U postgres
   - psql -c "alter role testuser superuser" -U postgres
   - psql -c "create database testdb;" -U postgres -U postgres
