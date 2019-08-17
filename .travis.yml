@@ -3,11 +3,11 @@ language: go
 go:
   - 1.11.x
 
-services:
-  - postgresql
+# services:
+#   - postgresql
 
-addons:
-  postgresql: "10"
+# addons:
+#   postgresql: "10"
   # apt:
   #   packages:
   #     - postgresql-10
@@ -25,8 +25,8 @@ before_script:
   - sudo apt-get update
   - sudo apt-get --yes remove postgresql\*
   - sudo apt-get install -y postgresql-10 postgresql-client-10
-  - sudo cp /etc/postgresql/{9.6,10}/main/pg_hba.conf
-  - sudo service postgresql restart 10
+  # - sudo cp /etc/postgresql/{9.6,10}/main/pg_hba.conf
+  - sudo service postgresql start
   - psql --version
   - psql -c "create user testuser with password 'testpass'" -U postgres
   - psql -c "alter role testuser superuser" -U postgres
