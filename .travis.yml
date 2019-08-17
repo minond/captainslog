@@ -13,13 +13,12 @@ go:
 #       - postgresql-10
 #       - postgresql-client-10
 
-env:
-  global:
-    - GO111MODULE=on
-    # - DATABASE_DRIVER=postgres
-    # - DATABASE_CONN="host=127.0.0.1 port=5433 user=testuser dbname=testdb sslmode=disable password=testpass"
-    # - DATABASE_URL="postgres://testuser:testpass@localhost:5433/testdb?sslmode=disable"
-    # - PGPORT=5433
+# env:
+#   global:
+#     - DATABASE_DRIVER=postgres
+#     - DATABASE_CONN="host=127.0.0.1 port=5433 user=testuser dbname=testdb sslmode=disable password=testpass"
+#     - DATABASE_URL="postgres://testuser:testpass@localhost:5433/testdb?sslmode=disable"
+#     - PGPORT=5433
 
 # before_script:
 #   - sudo apt-get update
