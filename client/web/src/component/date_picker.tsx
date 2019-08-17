@@ -1,10 +1,6 @@
 import * as React from "react"
 import ReactDatePicker from "react-datepicker"
 
-/* tslint:disable:no-var-requires */
-require("./react-datepicker.css")
-/* tslint:enable:no-var-requires */
-
 // This should always mimic the Grouping type found in model/book.go.
 export enum Grouping {
   NONE,

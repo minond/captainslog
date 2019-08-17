@@ -2,8 +2,8 @@ import * as React from "react"
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 
-import { Book } from "./definitions"
-import { cachedGetBooks } from "./remote"
+import { Book } from "../definitions"
+import { cachedGetBooks } from "../remote"
 
 type BooksProps = {
   active?: string

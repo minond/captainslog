@@ -2,11 +2,14 @@ import * as React from "react"
 import * as ReactDOM from "react-dom"
 import { Router, Route, Switch } from "react-router-dom"
 
-import { BookPage, IndexPage, QueryPage } from "./pages"
+import { BookPage, IndexPage, QueryPage } from "./component/pages"
 
 import history from "./history"
 
+/* tslint:disable:no-var-requires */
 require("./index.css")
+require("./react-datepicker.css")
+/* tslint:enable:no-var-requires */
 
 export const Index = () => (
   <div>

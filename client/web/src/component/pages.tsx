@@ -6,7 +6,7 @@ import { Books } from "./books"
 import { Entries } from "./entries"
 import { Query } from "./query"
 
-import { cachedGetBook } from "./remote"
+import { cachedGetBook } from "../remote"
 
 type PageProps = {
   active?: string

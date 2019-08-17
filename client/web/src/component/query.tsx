@@ -7,7 +7,7 @@ import {
   cachedGetSchema,
   createSavedQuery,
   updateSavedQuery,
-} from "./remote"
+} from "../remote"
 
 import {
   QueryExecuteRequest,
@@ -18,7 +18,7 @@ import {
   SchemaBook,
   SchemaField,
   SchemaFieldType,
-} from "./definitions"
+} from "../definitions"
 
 const KEY_ENTER = 13
 const MIN_ROWS = 5
