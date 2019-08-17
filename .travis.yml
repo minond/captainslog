@@ -26,7 +26,9 @@ before_script:
   - sudo apt-get --yes remove postgresql\*
   - sudo apt-get install -y postgresql-10 postgresql-client-10
   # - sudo cp /etc/postgresql/{9.6,10}/main/pg_hba.conf
+  - sudo service postgresql info
   - sudo service postgresql start
+  - sudo service postgresql info
   - psql --version
   - psql -c "create user testuser with password 'testpass'" -U postgres
   - psql -c "alter role testuser superuser" -U postgres
