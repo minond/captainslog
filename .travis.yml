@@ -19,7 +19,7 @@ env:
     - DATABASE_DRIVER=postgres
     - DATABASE_CONN="host=127.0.0.1 port=5433 user=testuser dbname=testdb sslmode=disable password=testpass"
     - DATABASE_URL="postgres://testuser:testpass@localhost:5433/testdb?sslmode=disable"
-    - PGPORT=5433
+    # - PGPORT=5433
 
 before_script:
   - sudo apt-get update
@@ -27,7 +27,8 @@ before_script:
   - sudo apt-get install -y postgresql-10 postgresql-client-10
   # - sudo cp /etc/postgresql/{9.6,10}/main/pg_hba.conf
   - sudo service postgresql start
-  - sudo service postgresql status
+  - sudo service postgresql status -l
+  - cat /lib/systemd/system/postgresql.service
   - psql --version
   - psql -c "create user testuser with password 'testpass'" -U postgres
   - psql -c "alter role testuser superuser" -U postgres
