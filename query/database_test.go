@@ -40,6 +40,10 @@ func newUser(t *testing.T, db *sql.DB) *model.User {
 }
 
 func TestExec(t *testing.T) {
+	if testing.Short() {
+		t.Skip("skipping database test in short mode")
+	}
+
 	withDB(t, func(db *sql.DB) {
 		store := model.NewEntryStore(db)
 		user := newUser(t, db)

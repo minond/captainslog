@@ -5,37 +5,36 @@ go:
 
 # services:
 #   - postgresql
-
+#
 # addons:
 #   postgresql: "10"
-  # apt:
-  #   packages:
-  #     - postgresql-10
-  #     - postgresql-client-10
+#   apt:
+#     packages:
+#       - postgresql-10
+#       - postgresql-client-10
 
 env:
   global:
     - GO111MODULE=on
-    - DATABASE_DRIVER=postgres
-    - DATABASE_CONN="host=127.0.0.1 port=5433 user=testuser dbname=testdb sslmode=disable password=testpass"
-    - DATABASE_URL="postgres://testuser:testpass@localhost:5433/testdb?sslmode=disable"
+    # - DATABASE_DRIVER=postgres
+    # - DATABASE_CONN="host=127.0.0.1 port=5433 user=testuser dbname=testdb sslmode=disable password=testpass"
+    # - DATABASE_URL="postgres://testuser:testpass@localhost:5433/testdb?sslmode=disable"
     # - PGPORT=5433
 
-before_script:
-  - sudo apt-get update
-  - sudo apt-get --yes remove postgresql\*
-  - sudo apt-get install -y postgresql-10 postgresql-client-10
-  # - sudo cp /etc/postgresql/{9.6,10}/main/pg_hba.conf
-  - sudo service postgresql start
-  - sudo service postgresql status -l
-  - cat /lib/systemd/system/postgresql.service
-  - psql --version
-  - psql -c "create user testuser with password 'testpass'" -U postgres
-  - psql -c "alter role testuser superuser" -U postgres
-  - psql -c "create database testdb;" -U postgres -U postgres
-  - go build -o captainslog cmd/captainslog/*
-  - ./captainslog migrate up
+# before_script:
+#   - sudo apt-get update
+#   - sudo apt-get --yes remove postgresql\*
+#   - sudo apt-get install -y postgresql-10 postgresql-client-10
+#   - sudo service postgresql start
+#   - sudo service postgresql status -l
+#   - cat /lib/systemd/system/postgresql.service
+#   - psql --version
+#   - psql -c "create user testuser with password 'testpass'" -U postgres
+#   - psql -c "alter role testuser superuser" -U postgres
+#   - psql -c "create database testdb;" -U postgres -U postgres
+#   - go build -o captainslog cmd/captainslog/*
+#   - ./captainslog migrate up
 
 script:
   - go build ./...
-  - go test ./... -v
+  - go test ./... -v -test.short
