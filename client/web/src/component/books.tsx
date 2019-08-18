@@ -1,5 +1,5 @@
 import * as React from "react"
-import { useState, useEffect } from "react"
+import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 
 import { Book } from "../definitions"
@@ -21,7 +21,9 @@ export const Books = (props: BooksProps) => {
       key={book.guid}
       to={`/${book.guid}`}
       className={props.active === book.guid ? "active" : ""}
-    >{book.name}</Link>)
+    >
+      {book.name}
+    </Link>)
 
   return <>{links}</>
 }

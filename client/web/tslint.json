@@ -1,7 +1,11 @@
 {
   "extends": ["tslint-react"],
+  "linterOptions": {
+    "exclude": ["src/component/__snapshots__"]
+  },
   "rules": {
     "jsx-wrap-multiline": false,
+    "jsx-no-multiline-js": false,
     "jsx-no-lambda": false,
     "adjacent-overload-signatures": true,
     "align": {

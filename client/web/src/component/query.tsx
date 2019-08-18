@@ -1,5 +1,5 @@
 import * as React from "react"
-import { useEffect, useState, KeyboardEvent } from "react"
+import { KeyboardEvent, useEffect, useState } from "react"
 
 import {
   cachedExecuteQuery,
@@ -86,7 +86,7 @@ const saveQuery = (query: string, savedQuery: SavedQuery | null) => {
   }
 
   // Create
-  let label = prompt("Query label")
+  const label = prompt("Query label")
   if (!label) {
     return new Promise((_, rej) => rej())
   }
@@ -113,15 +113,15 @@ export const Query = (props: {}) => {
     saveQuery(query, savedQuery).then(fetchSavedQueries)
 
   const loadSavedQueryHandler = (guid: string) => {
-    let query = savedQueries.find((query) => query.guid === guid)
-    if (!query) {
+    const matchedQuery = savedQueries.find((q) => q.guid === guid)
+    if (!matchedQuery) {
       setSavedQuery(null)
       return
     }
 
-    setSavedQuery(query)
-    updateQuery(query.content)
-    executeQuery(query.content)
+    setSavedQuery(matchedQuery)
+    updateQuery(matchedQuery.content)
+    executeQuery(matchedQuery.content)
   }
 
   const executeQuery = (queryToExecute = query) => {
@@ -138,8 +138,8 @@ export const Query = (props: {}) => {
         const elapsedTime = Date.now() - startTime
         setResults(res)
         setMessage({
-          ok: true,
           message: `(${res.data ? res.data.length : 0} rows) (${elapsedTime}ms)`,
+          ok: true,
         })
       })
       .catch((err) => {
@@ -148,9 +148,9 @@ export const Query = (props: {}) => {
       })
   }
 
-  const updateQuery = (query: string) => {
-    setQuery(query)
-    setRows(rowCount(query))
+  const updateQuery = (newQuery: string) => {
+    setQuery(newQuery)
+    setRows(rowCount(newQuery))
   }
 
   const textareaKeyPressHandler = (ev: KeyboardEvent<HTMLTextAreaElement>) => {
@@ -204,7 +204,7 @@ const fieldTypeName = (ty: SchemaFieldType) =>
   fieldTypeNames[ty]
 
 const SchemaFieldView = (props: { field: SchemaField }) => {
-  let tyName = fieldTypeName(props.field.type)
+  const tyName = fieldTypeName(props.field.type)
   return <div className="schema-field">
     <span className={`schema-field-type ${tyName.toLowerCase()}`}>{tyName}</span>
     <span className="schema-field-name">{props.field.name}</span>
@@ -225,7 +225,7 @@ const SchemaView = () => {
     cachedGetSchema().then(setSchema)
   }, [])
 
-  let byBook = !schema ? null :
+  const byBook = !schema ? null :
     schema.books.map((book, i) =>
       <SchemaBookView key={book.name + i} book={book} />)
 

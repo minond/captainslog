@@ -1,6 +1,6 @@
+import { mount } from "enzyme"
 import * as React from "react"
 import { act } from "react-dom/test-utils"
-import { mount } from "enzyme"
 
 import "./testsetup"
 

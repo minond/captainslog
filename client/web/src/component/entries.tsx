@@ -4,7 +4,7 @@ import { KeyboardEvent } from "react"
 
 import history from "../history"
 
-import { Book, Entry, EntryUnsaved, EntriesCreateRequest } from "../definitions"
+import { Book, EntriesCreateRequest, Entry, EntryUnsaved } from "../definitions"
 import { cachedGetBook, createEntries, getEntriesForBook } from "../remote"
 
 import { DatePicker, Grouping } from "./date_picker"

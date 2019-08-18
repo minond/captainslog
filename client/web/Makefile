@@ -12,7 +12,7 @@ clean:
 	if [ -d dist ]; then rm -r dist; fi
 
 lint:
-	./node_modules/.bin/tslint src/*/* *.js
+	./node_modules/.bin/tslint src/**/*.ts* *.js
 
 test:
 	./node_modules/.bin/jest
