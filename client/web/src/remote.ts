@@ -7,8 +7,7 @@ import {
   EntriesCreateResponse,
   EntriesRetrieveResponse,
   Entry,
-  EntryCreateRequest,
-  EntryCreateResponse,
+  EntryUnsaved,
   QueryExecuteRequest,
   QueryResults,
   SavedQueriesRetrieveResponse,
@@ -24,6 +23,9 @@ enum uris {
   savedQuery = "/api/saved_query",
 }
 
+const offset = () =>
+  new Date().getTimezoneOffset() * -1
+
 export const getBook = (guid: string): Promise<Book | null> =>
   axios.get<BooksRetrieveResponse>(`${uris.books}?guid=${guid}`)
     .then((res) => (res.data.books || [])[0])
@@ -33,18 +35,11 @@ export const getBooks = (): Promise<Book[]> =>
     .then((res) => res.data.books || [])
 
 export const getEntriesForBook = (bookGuid: string, at: Date): Promise<Entry[]> =>
-  axios.get<EntriesRetrieveResponse>(`${uris.entries}?book=${bookGuid}&at=${Math.floor(+at / 1000)}&offset=${at.getTimezoneOffset() * -1}`)
+  axios.get<EntriesRetrieveResponse>(`${uris.entries}?book=${bookGuid}&at=${Math.floor(+at / 1000)}&offset=${offset()}`)
     .then((res) => res.data.entries || [])
 
-// FIXME This is a hack to get aroung the lack of a real "create entries"
-// endpoint. Once it's created make sure to use it here.
-export const createEntries = (req: EntriesCreateRequest): Promise<EntriesCreateResponse> =>
-  req.entries.splice(1).reduce((prev, curr) =>
-    prev.then(() => createEntry(curr)), createEntry(req.entries[0]))
-    .then(() => ({ ok: true }))
-
-export const createEntry = (entry: EntryCreateRequest): Promise<EntryCreateResponse> =>
-  axios.post<EntryCreateResponse>(uris.entries, Object.assign({ offset: new Date().getTimezoneOffset() * -1 }, entry))
+export const createEntries = (bookGuid: string, entries: EntryUnsaved[]): Promise<EntriesCreateResponse> =>
+  axios.post<EntriesCreateResponse>(uris.entries, { offset: offset(), bookGuid, entries })
     .then((res) => res.data)
 
 export const executeQuery = (query: string): Promise<QueryResults> =>

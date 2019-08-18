@@ -4,7 +4,7 @@ import { KeyboardEvent } from "react"
 
 import history from "../history"
 
-import { Book, Entry, EntryCreateRequest, EntriesCreateRequest } from "../definitions"
+import { Book, Entry, EntryUnsaved, EntriesCreateRequest } from "../definitions"
 import { cachedGetBook, createEntries, getEntriesForBook } from "../remote"
 
 import { DatePicker, Grouping } from "./date_picker"
@@ -12,25 +12,23 @@ import { DatePicker, Grouping } from "./date_picker"
 const KEY_ENTER = 13
 
 type EntriesGenerationId = {
-  entries: EntryCreateRequest[]
+  entries: EntryUnsaved[]
   createdAt: Date
 }
 
 const buildEntriesCreateRequest =
-  (book: Book, text: string, createdAt: Date): EntriesCreateRequest =>
+  (text: string, createdAt: Date): EntryUnsaved[] =>
     text.trim().split("\n").reduce((acc, line) => {
       if (line[0] === "#") {
         acc.createdAt = new Date(Date.parse(line.replace(/^#+/, "")))
       } else if (line) {
         acc.entries.push({
-          bookGuid: book.guid,
           createdAt: acc.createdAt.toISOString(),
-          guid: Math.random().toString(),
           text: line,
         })
       }
       return acc
-    }, { entries: [], createdAt } as EntriesGenerationId)
+    }, { entries: [], createdAt } as EntriesGenerationId).entries
 
 const noEntriesMessage = (date: Date, grouping: Grouping) => {
   switch (grouping) {
@@ -73,7 +71,7 @@ export const Entries = (props: EntriesProps) => {
       return
     }
 
-    createEntries(buildEntriesCreateRequest(book, text, props.date))
+    createEntries(book.guid, buildEntriesCreateRequest(text, props.date))
       .then(fetchEntries)
 
     setText("")

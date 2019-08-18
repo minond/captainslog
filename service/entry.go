@@ -31,32 +31,26 @@ func NewEntryService(db *sql.DB) *EntryService {
 	}
 }
 
-type EntryCreateRequest struct {
-	GUID      string    `json:"guid"`
-	Text      string    `json:"text"`
-	CreatedAt time.Time `json:"createdAt"`
-	Offset    int       `json:"offset"`
-	BookGUID  string    `json:"bookGuid"`
+type EntriesCreateRequest struct {
+	Entries []struct {
+		Text      string    `json:"text"`
+		CreatedAt time.Time `json:"createdAt"`
+	} `json:"entries"`
+	Offset   int    `json:"offset"`
+	BookGUID string `json:"bookGuid"`
 }
 
-type EntryCreateResponse struct {
-	GUID  string       `json:"guid"`
-	Entry *model.Entry `json:"entry"`
+type EntriesCreateResponse struct {
+	Entries []*model.Entry `json:"entries"`
 }
 
-func (s EntryService) Create(ctx context.Context, req *EntryCreateRequest) (*EntryCreateResponse, error) {
-	at := clientTime(req.CreatedAt, req.Offset)
+func (s EntryService) Create(ctx context.Context, req *EntriesCreateRequest) (*EntriesCreateResponse, error) {
 	user, err := getUser(ctx, s.userStore)
 	if err != nil {
 		return nil, err
 	}
 
 	book, err := model.FindBook(s.bookStore, user, req.BookGUID)
-	if err != nil {
-		return nil, err
-	}
-
-	collection, err := book.Collection(s.collectionStore, at, true)
 	if err != nil {
 		return nil, err
 	}
@@ -71,24 +65,35 @@ func (s EntryService) Create(ctx context.Context, req *EntryCreateRequest) (*Ent
 		return nil, err
 	}
 
-	text, data, err := processing.Process(req.Text, shorthands, extractors)
-	if err != nil {
-		return nil, err
+	entries := make([]*model.Entry, len(req.Entries))
+	for i, entry := range req.Entries {
+		text, data, err := processing.Process(entry.Text, shorthands, extractors)
+		if err != nil {
+			return nil, err
+		}
+
+		at := clientTime(entry.CreatedAt, req.Offset)
+		collection, err := book.Collection(s.collectionStore, at, true)
+		if err != nil {
+			return nil, err
+		}
+
+		entry, err := model.NewEntry(entry.Text, text, data, collection)
+		if err != nil {
+			return nil, err
+		}
+
+		entry.CreatedAt = at
+		entry.UpdatedAt = at
+
+		if err = s.entryStore.Insert(entry); err != nil {
+			return nil, err
+		}
+
+		entries[i] = entry
 	}
 
-	entry, err := model.NewEntry(req.Text, text, data, collection)
-	if err != nil {
-		return nil, err
-	}
-
-	entry.CreatedAt = at
-	entry.UpdatedAt = at
-
-	if err = s.entryStore.Insert(entry); err != nil {
-		return nil, err
-	}
-
-	return &EntryCreateResponse{GUID: req.GUID, Entry: entry}, nil
+	return &EntriesCreateResponse{Entries: entries}, nil
 }
 
 type EntryUpdateRequest struct {

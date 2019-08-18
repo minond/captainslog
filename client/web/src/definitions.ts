@@ -20,24 +20,19 @@ export type EntriesRetrieveResponse = {
   entries: Entry[]
 }
 
+export type EntryUnsaved = {
+  text: string
+  createdAt: string
+}
+
 export type EntriesCreateRequest = {
-  entries: EntryCreateRequest[]
+  bookGuid: string
+  offset: number
+  entries: EntryUnsaved[]
 }
 
 export type EntriesCreateResponse = {
-  ok: boolean
-}
-
-export type EntryCreateRequest = {
-  guid: string
-  text: string
-  createdAt: string
-  bookGuid: string
-}
-
-export type EntryCreateResponse = {
-  guid: string
-  entry: Entry
+  entries: Entry[]
 }
 
 export type QueryExecuteRequest = {

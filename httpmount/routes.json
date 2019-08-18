@@ -60,8 +60,8 @@
         {
           "method": "POST",
           "handler": "Create",
-          "request": "service.EntryCreateRequest",
-          "response": "service.EntryCreateResponse"
+          "request": "service.EntriesCreateRequest",
+          "response": "service.EntriesCreateResponse"
         },
         {
           "method": "PUT",

@@ -62,7 +62,7 @@ type ExtractorServiceContract interface {
 // the request, and the response.
 type EntryServiceContract interface {
 	// Create runs when a POST /api/entries request comes in.
-	Create(ctx context.Context, req *service.EntryCreateRequest) (*service.EntryCreateResponse, error)
+	Create(ctx context.Context, req *service.EntriesCreateRequest) (*service.EntriesCreateResponse, error)
 
 	// Update runs when a PUT /api/entries request comes in.
 	Update(ctx context.Context, req *service.EntryUpdateRequest) (*model.Entry, error)
@@ -368,7 +368,7 @@ func MountExtractorService(router *mux.Router, serv ExtractorServiceContract) {
 // an incoming request through the service.EntryService service.
 func MountEntryService(router *mux.Router, serv EntryServiceContract) {
 	log.Print("[INFO] mounting service.EntryService on /api/entries")
-	log.Print("[INFO] handler POST /api/entries -> service.EntryService.Create(service.EntryCreateRequest) -> service.EntryCreateResponse")
+	log.Print("[INFO] handler POST /api/entries -> service.EntryService.Create(service.EntriesCreateRequest) -> service.EntriesCreateResponse")
 	log.Print("[INFO] handler PUT /api/entries -> service.EntryService.Update(service.EntryUpdateRequest) -> model.Entry")
 	log.Print("[INFO] handler DELETE /api/entries -> service.EntryService.Delete(service.EntryDeleteRequest) -> service.EntryDeleteResponse")
 	log.Print("[INFO] handler GET /api/entries -> service.EntryService.Retrieve(service.EntryRetrieveRequest) -> service.EntryRetrieveResponse")
@@ -384,7 +384,7 @@ func MountEntryService(router *mux.Router, serv EntryServiceContract) {
 		switch r.Method {
 
 		case "POST":
-			req := &service.EntryCreateRequest{}
+			req := &service.EntriesCreateRequest{}
 			data, err := ioutil.ReadAll(r.Body)
 			defer r.Body.Close()
 			if err != nil {
