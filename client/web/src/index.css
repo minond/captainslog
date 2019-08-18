@@ -56,7 +56,6 @@ select + input {
 }
 
 .page-header-active {
-  opacity: 0;
   transition: opacity .2s;
 }
 
@@ -64,6 +63,12 @@ select + input {
 .page-header-active:focus,
 .page-header-active:hover {
   opacity: 1;
+}
+
+@media screen and (min-width: 45em) {
+  .page-header-active {
+    opacity: 0;
+  }
 }
 
 .entries-action-header {
