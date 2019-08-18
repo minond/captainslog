@@ -52,7 +52,7 @@ func file(dir, name string) (string, error) {
 	return strings.TrimSpace(fmt.Sprintf(tmplFile,
 		stat.Name(),
 		stat.Size(),
-		stat.Mode(),
+		os.ModePerm, // stat.Mode(),
 		stat.ModTime().Unix(),
 		contents)), nil
 }
