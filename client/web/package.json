@@ -8,7 +8,10 @@
   "devDependencies": {
     "@types/aphrodite": "^0.5.13",
     "@types/axios": "^0.14.0",
+    "@types/enzyme": "^3.10.3",
+    "@types/enzyme-adapter-react-16": "^1.0.5",
     "@types/history": "^4.7.2",
+    "@types/jest": "^24.0.17",
     "@types/node": "^11.13.8",
     "@types/react": "^16.8.8",
     "@types/react-datepicker": "^2.3.0",
@@ -16,6 +19,11 @@
     "@types/react-router-dom": "^4.3.2",
     "browserify": "^16.2.3",
     "browserify-css": "^0.15.0",
+    "enzyme": "^3.10.0",
+    "enzyme-adapter-react-16": "^1.14.0",
+    "jest": "^24.9.0",
+    "jest-enzyme": "^7.1.0",
+    "ts-jest": "^24.0.2",
     "tslint": "^5.14.0",
     "tslint-react": "^3.6.0",
     "typescript": "^3.4.2"
@@ -28,5 +36,16 @@
     "react-datepicker": "2.3.0",
     "react-dom": "^16.8.4",
     "react-router-dom": "^5.0.0"
+  },
+  "jest": {
+    "setupFilesAfterEnv": [
+      "./node_modules/jest-enzyme/lib/index.js"
+    ],
+    "roots": [
+      "<rootDir>/src"
+    ],
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    }
   }
 }

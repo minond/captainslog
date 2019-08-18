@@ -1,4 +1,4 @@
-default: build
+default: clean build
 
 build:
 	if [ ! -d dist ]; then mkdir dist; fi
@@ -13,3 +13,9 @@ clean:
 
 lint:
 	./node_modules/.bin/tslint src/*/* *.js
+
+test:
+	./node_modules/.bin/jest
+
+snapshot:
+	./node_modules/.bin/jest --updateSnapshot
