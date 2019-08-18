@@ -1,7 +1,6 @@
 Web client:
 
 - Don't hide header on mobile
-- No auto-zoom when selecting input field on mobile
 - Disable exec and save buttons when query is blank
 - Add support for editing entry
 - Add support for deleting entry
