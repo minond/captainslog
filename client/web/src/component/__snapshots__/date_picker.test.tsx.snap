@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`DatePicker (daily grouping) 1`] = `
+exports[`snapshot DatePicker (daily grouping) 1`] = `
 <Component
   date={2019-08-18T02:51:07.888Z}
   grouping={1}
@@ -137,7 +137,7 @@ exports[`DatePicker (daily grouping) 1`] = `
 </Component>
 `;
 
-exports[`DatePicker (no grouping) 1`] = `
+exports[`snapshot DatePicker (no grouping) 1`] = `
 <Component
   date={2019-08-18T02:51:07.888Z}
   grouping={0}

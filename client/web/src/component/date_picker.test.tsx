@@ -6,7 +6,7 @@ import "./testsetup"
 
 import { DatePicker, Grouping } from "./date_picker"
 
-test("DatePicker (no grouping)", () => {
+test("snapshot DatePicker (no grouping)", () => {
   const date = new Date(1566096667888)
   const onChange = (_: Date) => {}
   const grouping = Grouping.NONE
@@ -14,7 +14,7 @@ test("DatePicker (no grouping)", () => {
   expect(component).toMatchSnapshot()
 })
 
-test("DatePicker (daily grouping)", () => {
+test("snapshot DatePicker (daily grouping)", () => {
   const date = new Date(1566096667888)
   const onChange = (_: Date) => {}
   const grouping = Grouping.DAY
