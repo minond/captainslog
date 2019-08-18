@@ -160,10 +160,9 @@ select + input {
 .query-res-type-unknown {}
 
 .query-message {
-  display: inline;
+  font-size: .85rem;
   font-weight: bold;
-  margin: 5px;
-  padding: 2px 5px;
+  padding: 5px;
 }
 
 .query-message-error {

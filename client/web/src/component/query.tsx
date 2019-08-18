@@ -138,7 +138,7 @@ export const Query = (props: {}) => {
         const elapsedTime = Date.now() - startTime
         setResults(res)
         setMessage({
-          message: `(${res.data ? res.data.length : 0} rows) (${elapsedTime}ms)`,
+          message: `${res.data ? res.data.length : 0} row(s) (${elapsedTime}ms)`,
           ok: true,
         })
       })
@@ -185,8 +185,8 @@ export const Query = (props: {}) => {
       <input type="button" value="Execute" onClick={() => executeQuery()} />
       <input type="button" value={saveBtnLabel} onClick={saveQueryClickHandler} />
       {!!savedQueries.length && savedQuerySelect}
-      {message && <div className={messageClass}>{message.message}</div>}
       {results && resultsTable(results)}
+      {message && <div className={messageClass}>{message.message}</div>}
     </div>
     <div>
       <SchemaView />
