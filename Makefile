@@ -16,6 +16,10 @@ build-server-prod: build-web
 	make build-server GOOS=linux GOARCH=amd64
 	rm ./cmd/captainslog/tmp-assets.go
 
+test:
+	$(IN_WEB_CLIENT) make test
+	go test ./...
+
 lint:
 	$(IN_MOBILE_CLIENT) dartanalyzer ./lib
 	$(IN_WEB_CLIENT) make lint
