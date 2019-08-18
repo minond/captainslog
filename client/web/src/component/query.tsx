@@ -72,7 +72,7 @@ const generateSavedQueryOptions = (queries: SavedQuery[]) =>
     <option key="blank" value="" label="Select a saved query" />
   ].concat(
     queries.map((query) =>
-      <option key={query.guid} value={query.guid} label={query.label} />))
+      <option key={query.guid} value={query.guid} label={query.label}>{query.label}</option>))
 
 type Message = {
   ok: boolean
