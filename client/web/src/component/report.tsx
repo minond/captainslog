@@ -140,10 +140,26 @@ const addInput: HandleInputReducer = (inputs, input) => {
   return newInputs
 }
 
-export const Report = (props: {}) => {
-  // TODO Figure out how array state variables are supposed to be updated.
-  const [variables, setVariables] = useState<Variable[]>(dummy.variables.slice(0))
+type VariableReducerAction = { type: "setOptions", variable: Variable, options?: string[] }
+type VariableReducer = (variables: Variable[], action: VariableReducerAction) => Variable[]
+const variableReducer: VariableReducer = (variables, action) => {
+  switch (action.type) {
+    case "setOptions":
+      return variables.map((v) => {
+        if (v.label !== action.variable.label) {
+          return v
+        }
 
+        return { ...v, options: action.options }
+      })
+  }
+
+  return variables
+}
+
+export const Report = (props: {}) => {
+  const [variables, dispatchVariable] =
+    useReducer<VariableReducer, Variable[]>(variableReducer, dummy.variables.slice(0), (i) => i)
   const [inputs, dispatchInput] =
     useReducer<HandleInputReducer, Input[]>(addInput, [], (i) => i)
 
@@ -151,8 +167,8 @@ export const Report = (props: {}) => {
     // TODO There's gotta be a better way of loading the options into memory.
     variables.map((variable) =>
       cachedExecuteQuery(variable.query).then((res) => {
-        variable.options = valuesOf(res)
-        setVariables(variables.slice(0))
+        const options = valuesOf(res)
+        dispatchVariable({ type: "setOptions", variable, options })
       }))
   }, [])
 
