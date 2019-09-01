@@ -5,6 +5,7 @@ import { Link } from "react-router-dom"
 import { Books } from "./books"
 import { Entries } from "./entries"
 import { Query } from "./query"
+import { Report } from "./report"
 
 import { cachedGetBook } from "../remote"
 
@@ -25,6 +26,7 @@ const Page = (props: PageProps) => {
     <div className={"page-header " + (props.active ? "page-header-active" : "")}>
       <div className={`page-header-content ${contentClass}`}>
         <Link to="/">Captain's Log</Link>
+        <Link to="/report" className={props.active === "report" ? "active" : ""}>Report</Link>
         <Link to="/query" className={props.active === "query" ? "active" : ""}>Query</Link>
         <Books active={props.active} />
       </div>
@@ -37,6 +39,11 @@ const Page = (props: PageProps) => {
 
 export const IndexPage = (props: {}) =>
   <Page />
+
+export const ReportPage = (props: {}) =>
+  <Page active="report" wide={true}>
+    <Report />
+  </Page>
 
 export const QueryPage = (props: {}) =>
   <Page active="query" wide={true}>

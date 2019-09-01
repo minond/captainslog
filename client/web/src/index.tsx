@@ -2,7 +2,7 @@ import * as React from "react"
 import * as ReactDOM from "react-dom"
 import { Router, Route, Switch } from "react-router-dom"
 
-import { BookPage, IndexPage, QueryPage } from "./component/pages"
+import { BookPage, IndexPage, ReportPage, QueryPage } from "./component/pages"
 
 import history from "./history"
 
@@ -16,6 +16,7 @@ export const Index = () => (
     <Router history={history}>
       <Switch>
         <Route exact={true} path="/" component={IndexPage} />
+        <Route exact={true} path="/report" component={ReportPage} />
         <Route exact={true} path="/query" component={QueryPage} />
         <Route exact={true} path="/:guid/:at?" render={(prop) => {
           let guid = prop.match.params["guid"]
