@@ -48,6 +48,7 @@ type Output = {
   label: string
   type: OutputType
   query: string
+  results?: QueryResults
 }
 
 type Input = {
@@ -138,6 +139,23 @@ const VariableInputs = (props: VariableInputsProps) => {
   </div>
 }
 
+type OutputReducerSetOutputsAction = { kind: "setOutputs", outputs: Output[] }
+type OutputReducerSetResultsAction = { kind: "setResults", output: Output, results: QueryResults }
+type OutputReducerAction = OutputReducerSetOutputsAction | OutputReducerSetResultsAction
+type OutputReducer = (outputs: Output[], action: OutputReducerAction) => Output[]
+const outputReducer: OutputReducer = (outputs, action) => {
+  switch (action.kind) {
+    case "setOutputs":
+      return action.outputs
+
+    case "setResults":
+      const { output, results } = action
+      return outputs.map((o) =>
+        o.label !== output.label ? o : { ...o, results })
+      return outputs
+  }
+}
+
 type InputReducerSetInputAction = { kind: "setInput", input: Input }
 type InputReducerAction = InputReducerSetInputAction
 type InputReducer = (inputs: Input[], action: InputReducerAction) => Input[]
@@ -167,7 +185,16 @@ const variableReducer: VariableReducer = (variables, action) => {
   }
 }
 
-const reportLoader = (report: Report, dispatchVariable: (_: VariableReducerAction) => void) => {
+const reportLoader = (
+  report: Report,
+  dispatchVariable: (_: VariableReducerAction) => void,
+  dispatchOutput: (_: OutputReducerAction) => void,
+) => {
+  dispatchOutput({
+    kind: "setOutputs",
+    outputs: report.outputs,
+  })
+
   dispatchVariable({
     kind: "setVariables",
     variables: report.variables
@@ -191,9 +218,12 @@ export const Report = (props: {}) => {
   const [inputs, dispatchInput] =
     useReducer<InputReducer, Input[]>(inputReducer, [], (i) => i)
 
+  const [outputs, dispatchOutput] =
+    useReducer<OutputReducer, Output[]>(outputReducer, [], (i) => i)
+
   useEffect(() => {
     if (report) {
-      reportLoader(report, dispatchVariable)
+      reportLoader(report, dispatchVariable, dispatchOutput)
     }
   }, [report])
 
