@@ -186,7 +186,7 @@ export const Report = (props: {}) => {
   const [report, setReport] = useState<Report | null>(dummy)
 
   const [variables, dispatchVariable] =
-    useReducer<VariableReducer, Variable[]>(variableReducer, dummy.variables.slice(0), (i) => i)
+    useReducer<VariableReducer, Variable[]>(variableReducer, [], (i) => i)
 
   const [inputs, dispatchInput] =
     useReducer<InputReducer, Input[]>(inputReducer, [], (i) => i)
