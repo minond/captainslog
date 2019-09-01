@@ -33,10 +33,10 @@ select + input {
   padding: 10px;
 }
 
-.page-header-content.wide,
-.page-content.wide {
-  max-width: 1000px;
-}
+/* .page-header-content.wide, */
+/* .page-content.wide { */
+/*   max-width: 1000px; */
+/* } */
 
 .page-header a {
   color: black;
@@ -65,7 +65,7 @@ select + input {
   opacity: 1;
 }
 
-@media screen and (min-width: 45em) {
+@media screen and (max-width: 45em) {
   .page-header-active {
     opacity: 0;
   }
