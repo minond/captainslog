@@ -4,6 +4,8 @@ import { useEffect, useState } from "react"
 import { QueryResult, QueryResults } from "../definitions"
 import { cachedExecuteQuery } from "../remote"
 
+import { Output, OutputType } from "./outputs/output"
+
 const dummy = {
   label: "Weight Trends",
   outputs: [
@@ -15,7 +17,7 @@ const dummy = {
         "where exercise ilike '{{Exercise}}' " +
         "and weight is not null " +
         "order by created_at desc",
-      type: 2,
+      type: OutputType.TableOutput,
     }
   ],
   variables: [
@@ -34,11 +36,6 @@ type Variable = {
   label: string
   query: string
   options?: string[]
-}
-
-enum OutputType {
-  InvalidOutput,
-  LineGraphOutput,
 }
 
 type Output = {
