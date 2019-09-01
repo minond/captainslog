@@ -9,11 +9,16 @@ type BooksProps = {
   active?: string
 }
 
+let memBooks: Book[] = []
+
 export const Books = (props: BooksProps) => {
-  const [books, setBooks] = useState<Book[]>([])
+  const [books, setBooks] = useState<Book[]>(memBooks)
 
   useEffect(() => {
-    cachedGetBooks().then(setBooks)
+    cachedGetBooks().then((allBooks) => {
+      memBooks = allBooks
+      setBooks(allBooks)
+    })
   }, [])
 
   const links = books.map((book) =>
