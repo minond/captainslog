@@ -167,6 +167,21 @@ const variableReducer: VariableReducer = (variables, action) => {
   }
 }
 
+const reportLoader = (report: Report, dispatchVariable: (_: VariableReducerAction) => void) => {
+  dispatchVariable({
+    kind: "setVariables",
+    variables: report.variables
+  })
+
+  report.variables.map((variable) =>
+    cachedExecuteQuery(variable.query).then((res) =>
+      dispatchVariable({
+        kind: "setOptions",
+        options: valuesOf(res),
+        variable,
+      })))
+}
+
 export const Report = (props: {}) => {
   const [report, setReport] = useState<Report | null>(dummy)
 
@@ -177,22 +192,9 @@ export const Report = (props: {}) => {
     useReducer<InputReducer, Input[]>(inputReducer, [], (i) => i)
 
   useEffect(() => {
-    if (!report) {
-      return
+    if (report) {
+      reportLoader(report, dispatchVariable)
     }
-
-    dispatchVariable({
-      kind: "setVariables",
-      variables: report.variables
-    })
-
-    report.variables.map((variable) =>
-      cachedExecuteQuery(variable.query).then((res) =>
-        dispatchVariable({
-          kind: "setOptions",
-          options: valuesOf(res),
-          variable,
-        })))
   }, [report])
 
   return <div>
