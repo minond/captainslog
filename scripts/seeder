@@ -74,6 +74,7 @@ create_workouts() {
   (log "new extractor" $(new_extractor "time_unit" '\\d+\\s{0,}(sec|seconds|min|minutes|hour|hours)' 0 "$workouts")) &
   (log "new extractor" $(new_extractor "distance"      '(\\d+(\\.\\d+)?)\\s{0,}(mile|miles|k|kilometers)' 1 "$workouts")) &
   (log "new extractor" $(new_extractor "distance_unit" '\\d+\\s{0,}(mile|miles|k|kilometers)' 0 "$workouts")) &
+  (log "new extractor" $(new_extractor "created_at" '' 1 "$workouts")) &
 
   (log "new shorthand" $(new_shorthand 1 "xx @ " 'xx \\d' "xx " "$workouts")) &
   (log "new shorthand" $(new_shorthand 0 "3x10" "" "xxx" "$workouts")) &
@@ -97,6 +98,7 @@ create_blood_pressure() {
   (log "new extractor" $(new_extractor "a" '^(\\d+)\\s{0,}/' 1 "$blood_pressure")) &
   (log "new extractor" $(new_extractor "b" '/\\s{0,}(\\d+)' 1 "$blood_pressure")) &
   (log "new extractor" $(new_extractor "pulse" '\\(pulse (\\d+)\\)' 1 "$blood_pressure")) &
+  (log "new extractor" $(new_extractor "created_at" '' 1 "$blood_pressure")) &
 
   wait
 

@@ -3,6 +3,7 @@ package processing
 import (
 	"reflect"
 	"testing"
+	"time"
 
 	"github.com/minond/captainslog/model"
 )
@@ -35,5 +36,29 @@ func TestProcess(t *testing.T) {
 		t.Errorf("unexpected text: got `%s` but expected `%s`", text, expectedText)
 	} else if !reflect.DeepEqual(data, expectedData) {
 		t.Errorf("unexpected data: got `%s` but expected `%s`", data, expectedData)
+	}
+}
+
+func TestSystem_HappyPath(t *testing.T) {
+	extractors := []*model.Extractor{
+		{Label: "exercise", Match: `^(.+),`, Type: model.StringData},
+		{Label: "created_at", Match: "", Type: model.NumberData},
+		{Label: "updated_at", Match: "", Type: model.NumberData},
+	}
+
+	entry := &model.Entry{
+		Data:      make(map[string]interface{}),
+		CreatedAt: time.Now().Add(-time.Minute),
+		UpdatedAt: time.Now(),
+	}
+
+	System(entry, extractors)
+
+	if entry.Data["created_at"] != entry.CreatedAt.Unix() {
+		t.Errorf("unexpected extracted value for created_at")
+	}
+
+	if entry.Data["updated_at"] != entry.UpdatedAt.Unix() {
+		t.Errorf("unexpected extracted value for updated_at")
 	}
 }

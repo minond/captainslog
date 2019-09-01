@@ -86,6 +86,8 @@ func (s EntryService) Create(ctx context.Context, req *EntriesCreateRequest) (*E
 		entry.CreatedAt = at
 		entry.UpdatedAt = at
 
+		processing.System(entry, extractors)
+
 		if err = s.entryStore.Insert(entry); err != nil {
 			return nil, err
 		}

@@ -22,6 +22,12 @@ type Extractor struct {
 
 	GUID  kallax.ULID `json:"guid"`
 	Label string
+
+	// Match is a regular expression string which is used to extract data from
+	// a log. If match is an empty string (?) the extractor may be treated as a
+	// system extract if the label + type combination are recognized.
+	//
+	// See processing package for more details.
 	Match string
 	Type  DataType
 

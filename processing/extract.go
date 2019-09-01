@@ -12,6 +12,10 @@ func Extract(text string, extractors []*model.Extractor) (map[string]interface{}
 	data := make(map[string]interface{})
 
 	for _, extractor := range extractors {
+		if extractor.Match == "" {
+			continue
+		}
+
 		reg, err := regexp.Compile(extractor.Match)
 		if err != nil {
 			return nil, err
