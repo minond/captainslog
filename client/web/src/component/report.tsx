@@ -149,14 +149,15 @@ export const Report = (props: {}) => {
       }))
   }, [])
 
-  // TODO Remove old selections
-  const addSelection = (selection: string, variable: Variable) => {
-    selections.push({ selection, variable })
-    setSelections(selections.slice(0))
+  const select = (selection: string, variable: Variable) => {
+    const newSelections = selections
+      .filter((sel) => sel.variable.label !== variable.label)
+    newSelections.push({ selection, variable })
+    setSelections(newSelections)
   }
 
   return <div>
-    <VariableInputs variables={variables} onSelect={addSelection} />
+    <VariableInputs variables={variables} onSelect={select} />
 
     {isReadyToExecute(dummy.outputs[0].query, selections) ? mergeFields(dummy.outputs[0].query, selections) : "..."}
   </div>
