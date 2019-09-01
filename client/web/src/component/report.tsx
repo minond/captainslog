@@ -197,12 +197,11 @@ export const Report = (props: {}) => {
     }
   }, [report])
 
+  const setInput = (input: string, variable: Variable) =>
+    dispatchInput({ kind: "setInput", input: { input, variable } })
+
   return <div>
-    <VariableInputs
-      variables={variables}
-      onSelect={(input, variable) =>
-        dispatchInput({ kind: "setInput", input: { input, variable } })}
-    />
+    <VariableInputs variables={variables} onSelect={setInput} />
 
     {isReadyToExecute(dummy.outputs[0].query, inputs) ? mergeFields(dummy.outputs[0].query, inputs) : "..."}
   </div>
