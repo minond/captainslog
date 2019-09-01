@@ -132,8 +132,8 @@ const VariableInputs = (props: VariableInputsProps) => {
   </div>
 }
 
-type HandleInputReducer = (inputs: Input[], input: Input) => Input[]
-const addInput: HandleInputReducer = (inputs, input) => {
+type InputReducer = (inputs: Input[], input: Input) => Input[]
+const inputReducer: InputReducer = (inputs, input) => {
   const newInputs = inputs
     .filter((i) => i.variable.label !== input.variable.label)
   newInputs.push(input)
@@ -161,7 +161,7 @@ export const Report = (props: {}) => {
   const [variables, dispatchVariable] =
     useReducer<VariableReducer, Variable[]>(variableReducer, dummy.variables.slice(0), (i) => i)
   const [inputs, dispatchInput] =
-    useReducer<HandleInputReducer, Input[]>(addInput, [], (i) => i)
+    useReducer<InputReducer, Input[]>(inputReducer, [], (i) => i)
 
   useEffect(() => {
     // TODO There's gotta be a better way of loading the options into memory.
