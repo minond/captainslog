@@ -121,7 +121,7 @@ type VariableInputsProps = {
   onSelect: (val: string, v: Variable) => void
 }
 
-const VariableInputs = (props: VariableInputsProps) => {
+const VariablesForm = (props: VariableInputsProps) => {
   const variableFields = props.variables.map((variable) =>
     <div title={variable.query} key={variable.label} className="report-variable-field">
       <label>
@@ -211,15 +211,9 @@ const reportLoader = (
 
 export const Report = (props: {}) => {
   const [report, setReport] = useState<Report | null>(dummy)
-
-  const [variables, dispatchVariable] =
-    useReducer<VariableReducer, Variable[]>(variableReducer, [], (i) => i)
-
-  const [inputs, dispatchInput] =
-    useReducer<InputReducer, Input[]>(inputReducer, [], (i) => i)
-
-  const [outputs, dispatchOutput] =
-    useReducer<OutputReducer, Output[]>(outputReducer, [], (i) => i)
+  const [variables, dispatchVariable] = useReducer(variableReducer, [], (i) => i)
+  const [inputs, dispatchInput] = useReducer(inputReducer, [], (i) => i)
+  const [outputs, dispatchOutput] = useReducer(outputReducer, [], (i) => i)
 
   useEffect(() => {
     if (report) {
@@ -231,7 +225,7 @@ export const Report = (props: {}) => {
     dispatchInput({ kind: "setInput", input: { input, variable } })
 
   return <div>
-    <VariableInputs variables={variables} onSelect={setInput} />
+    <VariablesForm variables={variables} onSelect={setInput} />
 
     {isReadyToExecute(dummy.outputs[0].query, inputs) ? mergeFields(dummy.outputs[0].query, inputs) : "..."}
   </div>
