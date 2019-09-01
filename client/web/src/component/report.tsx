@@ -15,7 +15,7 @@ const dummy = {
         "where exercise ilike '{{Exercise}}' " +
         "and weight is not null " +
         "order by created_at desc",
-      type: 1,
+      type: 2,
     }
   ],
   variables: [
@@ -112,6 +112,29 @@ const isReadyToExecute = (query: string, selections: Selection[]): boolean => {
   return true
 }
 
+type VariableInputsProps = {
+  variables: Variable[]
+  onSelect: (val: string, v: Variable) => void
+}
+
+const VariableInputs = (props: VariableInputsProps) => {
+  const variableFields = props.variables.map((variable) =>
+    <div title={variable.query} key={variable.label} className="report-variable-field">
+      <label>
+        <span>{variable.label}</span>
+        <select onChange={(ev) => props.onSelect(ev.target.value, variable)}>
+          <option key="blank" value="" label="Select a value" />
+          {!variable.options ? null : variable.options.map((option, i) =>
+            <option key={i + option} value={option} label={option}>{option}</option>)}
+        </select>
+      </label>
+    </div>)
+
+  return <div className="report-variable-fields">
+    {variableFields}
+  </div>
+}
+
 export const Report = (props: {}) => {
   // TODO Figure out how array state variables are supposed to be updated.
   const [variables, setVariables] = useState<Variable[]>(dummy.variables.slice(0))
@@ -132,23 +155,8 @@ export const Report = (props: {}) => {
     setSelections(selections.slice(0))
   }
 
-  // TODO Make this a separate component
-  const variableFields = variables.map((variable) =>
-    <div title={variable.query} key={variable.label} className="report-variable-field">
-      <label>
-        <span>{variable.label}</span>
-        <select onChange={(ev) => addSelection(ev.target.value, variable)}>
-          <option key="blank" value="" label="Select a value" />
-          {!variable.options ? null : variable.options.map((option, i) =>
-            <option key={i + option} value={option} label={option}>{option}</option>)}
-        </select>
-      </label>
-    </div>)
-
   return <div>
-    <div className="report-variable-fields">
-      {variableFields}
-    </div>
+    <VariableInputs variables={variables} onSelect={addSelection} />
 
     {isReadyToExecute(dummy.outputs[0].query, selections) ? mergeFields(dummy.outputs[0].query, selections) : "..."}
   </div>
