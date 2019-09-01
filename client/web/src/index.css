@@ -142,28 +142,6 @@ select + input {
   width: 100%;
 }
 
-.query-results {
-  margin-top: 10px;
-}
-
-.query-results, .query-results tr, .query-results td {
-  border-collapse: collapse;
-}
-
-.query-results td {
-  border: 1px solid #e1e1e1;
-  padding: 2px 5px;
-}
-
-.query-res-type-number {
-  text-align: right;
-}
-
-.query-res-type-boolean {}
-.query-res-type-null {}
-.query-res-type-string {}
-.query-res-type-unknown {}
-
 .query-message {
   font-size: .85rem;
   font-weight: bold;
@@ -226,6 +204,28 @@ select + input {
 .schema-field-type.boolean {
   background-color: #96ccff6b;
 }
+
+.table-output {
+  margin-top: 10px;
+}
+
+.table-output, .table-output tr, .table-output td {
+  border-collapse: collapse;
+}
+
+.table-output td {
+  border: 1px solid #e1e1e1;
+  padding: 2px 5px;
+}
+
+.table-output-type-number {
+  text-align: right;
+}
+
+.table-output-type-boolean {}
+.table-output-type-null {}
+.table-output-type-string {}
+.table-output-type-unknown {}
 
 /* small */
 @media screen and (min-width: 45em) {

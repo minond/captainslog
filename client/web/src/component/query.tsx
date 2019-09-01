@@ -10,8 +10,6 @@ import {
 } from "../remote"
 
 import {
-  QueryExecuteRequest,
-  QueryResult,
   QueryResults,
   SavedQuery,
   Schema,
@@ -19,6 +17,8 @@ import {
   SchemaField,
   SchemaFieldType,
 } from "../definitions"
+
+import { TableOutput } from "./outputs/table"
 
 const KEY_ENTER = 13
 const MIN_ROWS = 5
@@ -28,44 +28,6 @@ const { max, min } = Math
 
 const rowCount = (val: string): number =>
   min(MAX_ROWS, max(MIN_ROWS, val.split("\n").length + 1))
-
-const isBool = (val: QueryResult): boolean => "Bool" in val
-const isString = (val: QueryResult): boolean => "String" in val
-const isFloat64 = (val: QueryResult): boolean => "Float64" in val
-const isInt64 = (val: QueryResult): boolean => "Int64" in val
-const isNumber = (val: QueryResult): boolean => isFloat64(val) || isInt64(val)
-
-const valueOf = (val: QueryResult): string | number | boolean | undefined =>
-  !val.Valid ? undefined :
-    isString(val) ? val.String :
-    isFloat64(val) ? val.Float64 :
-    isInt64(val) ? val.Int64 :
-    isBool(val) ? val.Bool :
-    undefined
-
-const classOf = (val: QueryResult): string =>
-  !val.Valid ? "query-res-type-null" :
-    isString(val) ? "query-res-type-string" :
-    isNumber(val) ? "query-res-type-number" :
-    isBool(val) ? "query-res-type-boolean" :
-    "query-res-type-unknown"
-
-const resultsTable = (res: QueryResults) =>
-  <table className="query-results">
-    <thead>
-      <tr>
-        {res.cols.map((col, i) =>
-          <td key={col + i}>{col}</td>)}
-      </tr>
-    </thead>
-    <tbody>
-      {res.data && res.data.map((row, ridx) =>
-        <tr key={ridx}>
-          {row.map((val, vidx) =>
-            <td key={vidx} className={classOf(val)}>{valueOf(val)}</td>)}
-        </tr>)}
-    </tbody>
-  </table>
 
 const generateSavedQueryOptions = (queries: SavedQuery[]) =>
   [
@@ -185,7 +147,7 @@ export const Query = (props: {}) => {
       <input type="button" value="Execute" onClick={() => executeQuery()} />
       <input type="button" value={saveBtnLabel} onClick={saveQueryClickHandler} />
       {!!savedQueries.length && savedQuerySelect}
-      {results && resultsTable(results)}
+      {results && <TableOutput results={results} />}
       {message && <div className={messageClass}>{message.message}</div>}
     </div>
     <div>
