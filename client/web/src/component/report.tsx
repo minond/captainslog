@@ -114,7 +114,7 @@ const isReadyToExecute = (query: string, selections: Selection[]): boolean => {
 
 export const Report = (props: {}) => {
   // TODO Figure out how array state variables are supposed to be updated.
-  const [variables, setVariables] = useState<Variable[]>(dummy.variables)
+  const [variables, setVariables] = useState<Variable[]>(dummy.variables.slice(0))
   const [selections, setSelections] = useState<Selection[]>([])
 
   useEffect(() => {
@@ -122,14 +122,14 @@ export const Report = (props: {}) => {
     variables.map((variable) =>
       cachedExecuteQuery(variable.query).then((res) => {
         variable.options = valuesOf(res)
-        setVariables(variables.splice(0))
+        setVariables(variables.slice(0))
       }))
   }, [])
 
   // TODO Remove old selections
   const addSelection = (selection: string, variable: Variable) => {
     selections.push({ selection, variable })
-    setSelections(selections.splice(0))
+    setSelections(selections.slice(0))
   }
 
   // TODO Make this a separate component
