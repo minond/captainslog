@@ -132,12 +132,18 @@ const VariableInputs = (props: VariableInputsProps) => {
   </div>
 }
 
-type InputReducer = (inputs: Input[], input: Input) => Input[]
-const inputReducer: InputReducer = (inputs, input) => {
-  const newInputs = inputs
-    .filter((i) => i.variable.label !== input.variable.label)
-  newInputs.push(input)
-  return newInputs
+type InputReducerAction = { type: "setInput", input: Input }
+type InputReducer = (inputs: Input[], action: InputReducerAction) => Input[]
+const inputReducer: InputReducer = (inputs, action) => {
+  switch (action.type) {
+    case "setInput":
+      const newInputs = inputs
+        .filter((i) => i.variable.label !== action.input.variable.label)
+      newInputs.push(action.input)
+      return newInputs
+  }
+
+  return inputs
 }
 
 type VariableReducerAction = { type: "setOptions", variable: Variable, options?: string[] }
@@ -176,7 +182,7 @@ export const Report = (props: {}) => {
     <VariableInputs
       variables={variables}
       onSelect={(input, variable) =>
-        dispatchInput({ input, variable })}
+        dispatchInput({ type: "setInput", input: { input, variable } })}
     />
 
     {isReadyToExecute(dummy.outputs[0].query, inputs) ? mergeFields(dummy.outputs[0].query, inputs) : "..."}
