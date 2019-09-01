@@ -1,5 +1,5 @@
 import * as React from "react"
-import { useEffect, useState } from "react"
+import { useEffect, useReducer, useState } from "react"
 
 import { QueryResult, QueryResults } from "../definitions"
 import { cachedExecuteQuery } from "../remote"
@@ -44,9 +44,9 @@ type Output = {
   query: string
 }
 
-type Selection = {
+type Input = {
   variable: Variable
-  selection: string
+  input: string
 }
 
 const isBool = (val: QueryResult): boolean => "Bool" in val
@@ -78,10 +78,10 @@ const getMergeFields = (query: string): string[] =>
 const getCleanMergeFields = (query: string): string[] =>
   getMergeFields(query).map(cleanMergeField)
 
-const mergeFields = (query: string, selections: Selection[]): string => {
+const mergeFields = (query: string, inputs: Input[]): string => {
   const fields = getMergeFields(query)
-  const selected = selections.reduce((acc, selection) => {
-    acc[selection.variable.label] = selection.selection
+  const selected = inputs.reduce((acc, input) => {
+    acc[input.variable.label] = input.input
     return acc
   }, {} as { [index: string]: string })
 
@@ -93,10 +93,10 @@ const mergeFields = (query: string, selections: Selection[]): string => {
   return query
 }
 
-const isReadyToExecute = (query: string, selections: Selection[]): boolean => {
+const isReadyToExecute = (query: string, inputs: Input[]): boolean => {
   const fields = getCleanMergeFields(query)
-  const selected = selections.reduce((acc, selection) => {
-    acc[selection.variable.label] = true
+  const selected = inputs.reduce((acc, input) => {
+    acc[input.variable.label] = true
     return acc
   }, {} as { [index: string]: boolean })
 
@@ -132,10 +132,20 @@ const VariableInputs = (props: VariableInputsProps) => {
   </div>
 }
 
+type HandleInputReducer = (inputs: Input[], input: Input) => Input[]
+const addInput: HandleInputReducer = (inputs, input) => {
+  const newInputs = inputs
+    .filter((i) => i.variable.label !== input.variable.label)
+  newInputs.push(input)
+  return newInputs
+}
+
 export const Report = (props: {}) => {
   // TODO Figure out how array state variables are supposed to be updated.
   const [variables, setVariables] = useState<Variable[]>(dummy.variables.slice(0))
-  const [selections, setSelections] = useState<Selection[]>([])
+
+  const [inputs, dispatchInput] =
+    useReducer<HandleInputReducer, Input[]>(addInput, [], (i) => i)
 
   useEffect(() => {
     // TODO There's gotta be a better way of loading the options into memory.
@@ -146,16 +156,13 @@ export const Report = (props: {}) => {
       }))
   }, [])
 
-  const select = (selection: string, variable: Variable) => {
-    const newSelections = selections
-      .filter((sel) => sel.variable.label !== variable.label)
-    newSelections.push({ selection, variable })
-    setSelections(newSelections)
-  }
-
   return <div>
-    <VariableInputs variables={variables} onSelect={select} />
+    <VariableInputs
+      variables={variables}
+      onSelect={(input, variable) =>
+        dispatchInput({ input, variable })}
+    />
 
-    {isReadyToExecute(dummy.outputs[0].query, selections) ? mergeFields(dummy.outputs[0].query, selections) : "..."}
+    {isReadyToExecute(dummy.outputs[0].query, inputs) ? mergeFields(dummy.outputs[0].query, inputs) : "..."}
   </div>
 }
