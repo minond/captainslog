@@ -32,6 +32,12 @@ const dummy = {
   ],
 }
 
+type Report = {
+  label: string
+  outputs: Output[]
+  variables: Variable[]
+}
+
 type Variable = {
   label: string
   query: string
@@ -132,57 +138,68 @@ const VariableInputs = (props: VariableInputsProps) => {
   </div>
 }
 
-type InputReducerAction = { type: "setInput", input: Input }
+type InputReducerSetInputAction = { kind: "setInput", input: Input }
+type InputReducerAction = InputReducerSetInputAction
 type InputReducer = (inputs: Input[], action: InputReducerAction) => Input[]
 const inputReducer: InputReducer = (inputs, action) => {
-  switch (action.type) {
+  switch (action.kind) {
     case "setInput":
       const newInputs = inputs
         .filter((i) => i.variable.label !== action.input.variable.label)
       newInputs.push(action.input)
       return newInputs
   }
-
-  return inputs
 }
 
-type VariableReducerAction = { type: "setOptions", variable: Variable, options?: string[] }
+type VariableReducerSetVariablesAction = { kind: "setVariables", variables: Variable[] }
+type VariableReducerSetOptionsAction = { kind: "setOptions", variable: Variable, options: string[] }
+type VariableReducerAction = VariableReducerSetVariablesAction | VariableReducerSetOptionsAction
 type VariableReducer = (variables: Variable[], action: VariableReducerAction) => Variable[]
 const variableReducer: VariableReducer = (variables, action) => {
-  switch (action.type) {
+  switch (action.kind) {
+    case "setVariables":
+      return action.variables
+
     case "setOptions":
-      return variables.map((v) => {
-        if (v.label !== action.variable.label) {
-          return v
-        }
-
-        return { ...v, options: action.options }
-      })
+      const { variable, options } = action
+      return variables.map((v) =>
+        v.label !== variable.label ? v : { ...v, options })
   }
-
-  return variables
 }
 
 export const Report = (props: {}) => {
+  const [report, setReport] = useState<Report | null>(dummy)
+
   const [variables, dispatchVariable] =
     useReducer<VariableReducer, Variable[]>(variableReducer, dummy.variables.slice(0), (i) => i)
+
   const [inputs, dispatchInput] =
     useReducer<InputReducer, Input[]>(inputReducer, [], (i) => i)
 
   useEffect(() => {
-    // TODO There's gotta be a better way of loading the options into memory.
-    variables.map((variable) =>
-      cachedExecuteQuery(variable.query).then((res) => {
-        const options = valuesOf(res)
-        dispatchVariable({ type: "setOptions", variable, options })
-      }))
-  }, [])
+    if (!report) {
+      return
+    }
+
+    dispatchVariable({
+      kind: "setVariables",
+      variables: report.variables
+    })
+
+    report.variables.map((variable) =>
+      cachedExecuteQuery(variable.query).then((res) =>
+        dispatchVariable({
+          kind: "setOptions",
+          options: valuesOf(res),
+          variable,
+        })))
+  }, [report])
 
   return <div>
     <VariableInputs
       variables={variables}
       onSelect={(input, variable) =>
-        dispatchInput({ type: "setInput", input: { input, variable } })}
+        dispatchInput({ kind: "setInput", input: { input, variable } })}
     />
 
     {isReadyToExecute(dummy.outputs[0].query, inputs) ? mergeFields(dummy.outputs[0].query, inputs) : "..."}
