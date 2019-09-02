@@ -23,7 +23,7 @@ export const ChartOutput = (props: ChartOutputProps) =>
     <div className="output-label" title={props.definition.query}>{props.definition.label}</div>
     <LineChart
       data={flattenResultsHash(props.results)}
-      width={740}
+      width={680}
       height={200}
       margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
     >

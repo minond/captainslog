@@ -237,6 +237,10 @@ select + input {
   font-size: 2rem;
 }
 
+.report-output + .report-output .table-output .output-label {
+  margin-top: 20px;
+}
+
 .table-output {
   min-width: 50%;
 }
@@ -268,6 +272,8 @@ select + input {
 
 .chart-output {
   margin-top: 15px;
+  padding: 10px;
+  border: 1px solid #f2f2f2e6;
 }
 
 /* small */
