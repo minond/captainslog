@@ -16,7 +16,7 @@ const getValue = (res: QueryResults) =>
 export const ValueOutput = (props: ValueOutputProps) =>
   <div className="output value-output">
     <div className="value-output-wrapper">
-      <div className="output-label">{props.definition.label}</div>
+      <div className="output-label" title={props.definition.query}>{props.definition.label}</div>
       <span className="value-output-value">{getValue(props.results)}</span>
     </div>
   </div>

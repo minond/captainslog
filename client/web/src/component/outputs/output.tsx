@@ -15,6 +15,7 @@ export enum OutputType {
 
 export type Definition = {
   label: string
+  query: string
 }
 
 type OutputProps = {

@@ -20,7 +20,7 @@ type ChartOutputProps = {
 
 export const ChartOutput = (props: ChartOutputProps) =>
   <div className="output chart-output">
-    <div className="output-label">{props.definition.label}</div>
+    <div className="output-label" title={props.definition.query}>{props.definition.label}</div>
     <LineChart
       data={flattenResultsHash(props.results)}
       width={740}

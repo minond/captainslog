@@ -281,6 +281,7 @@ const loadReportData = (
 
 const outputDefinition = (output: Output): Definition => ({
   label: output.label,
+  query: output.query,
 })
 
 type OutputsProps = { inputs: Input[], outputs: Output[] }
