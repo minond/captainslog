@@ -9,6 +9,17 @@ import (
 	"gopkg.in/src-d/go-kallax.v1"
 )
 
+type NullTime struct {
+	Valid bool      `json:"Valid"`
+	Time  time.Time `json:"Time"`
+}
+
+func (nt *NullTime) Scan(value interface{}) error {
+	nt.Time = value.(time.Time)
+	nt.Valid = true
+	return nil
+}
+
 type querier interface {
 	RawQuery(sql string, params ...interface{}) (kallax.ResultSet, error)
 }
@@ -88,8 +99,7 @@ func rowContainer(typs []*sql.ColumnType) ([]interface{}, error) {
 		case isBool(typ):
 			row[i] = &sql.NullBool{}
 		case isTimestampt(typ):
-			var val time.Time
-			row[i] = &val
+			row[i] = &NullTime{}
 		default:
 			return nil, fmt.Errorf("bad type: %v", typ)
 		}

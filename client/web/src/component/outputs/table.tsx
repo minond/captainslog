@@ -3,7 +3,7 @@ import * as React from "react"
 import { QueryResult, QueryResults } from "../../definitions"
 import { Definition } from "./output"
 
-import { isBool, isString, isFloat64, isInt64, isNumber, valueOf } from "./utils"
+import { isBool, isString, isFloat64, isInt64, isNumber, stringValueOf } from "./utils"
 
 const classOf = (val: QueryResult): string =>
   !val.Valid ? "table-output-type-null" :
@@ -29,7 +29,7 @@ export const TableOutput = (props: TableOutputProps) =>
       {props.results.data && props.results.data.map((row, ridx) =>
         <tr key={ridx}>
           {row.map((val, vidx) =>
-            <td key={vidx} className={classOf(val)}>{valueOf(val)}</td>)}
+            <td key={vidx} className={classOf(val)}>{stringValueOf(val)}</td>)}
         </tr>)}
     </tbody>
   </table>

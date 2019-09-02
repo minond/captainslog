@@ -174,6 +174,12 @@ func (r *repl) printData(cols []string, rows [][]interface{}) {
 				} else {
 					ss[i] = "f"
 				}
+			case *query.NullTime:
+				if v.Valid {
+					ss[i] = fmt.Sprintf("%s", v.Time)
+				} else {
+					ss[i] = ""
+				}
 			default:
 				ss[i] = fmt.Sprintf("%v", col)
 			}

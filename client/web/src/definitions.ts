@@ -49,6 +49,7 @@ export type QueryResult = {
   Float64?: number
   Int64?: number
   String?: string
+  Time?: Date
   Valid: boolean
 }
 

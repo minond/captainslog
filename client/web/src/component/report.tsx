@@ -5,6 +5,7 @@ import { QueryResult, QueryResults } from "../definitions"
 import { cachedExecuteQuery } from "../remote"
 
 import { Definition, Output, OutputType } from "./outputs/output"
+import { valueOf } from "./outputs/utils"
 
 const dummy = {
   label: "Weight Trends",
@@ -91,20 +92,6 @@ type Input = {
   input: string
   changeHandled?: boolean
 }
-
-const isBool = (val: QueryResult): boolean => "Bool" in val
-const isString = (val: QueryResult): boolean => "String" in val
-const isFloat64 = (val: QueryResult): boolean => "Float64" in val
-const isInt64 = (val: QueryResult): boolean => "Int64" in val
-const isNumber = (val: QueryResult): boolean => isFloat64(val) || isInt64(val)
-
-const valueOf = (val: QueryResult): string | number | boolean | undefined =>
-  !val.Valid ? undefined :
-    isString(val) ? val.String :
-    isFloat64(val) ? val.Float64 :
-    isInt64(val) ? val.Int64 :
-    isBool(val) ? val.Bool :
-    undefined
 
 const valuesOf = (res: QueryResults): string[] =>
   !res.data ? [] : res.data.map((row) => {
