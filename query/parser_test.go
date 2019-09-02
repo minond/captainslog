@@ -50,6 +50,7 @@ func TestParse_PossibleQueries(t *testing.T) {
 		{"select with limit", `select id limit 10`},
 		{"select with from and then limit", `select id from users limit 10`},
 		{"select with from, group, and then limit", `select id from users group by status limit 10`},
+		{"select function call", `select now()`},
 
 		{"sample workouts query (1)", `select sets, reps, sets * reps as total from workouts where exercise like 'bench press'`},
 		{"sample workouts query (2)", `select exercise, min(weight) as min_weight, max(weight) as max_weight from workouts group by exercise`},

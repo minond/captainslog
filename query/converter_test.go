@@ -123,6 +123,11 @@ func TestConvert_Convert(t *testing.T) {
 			`select exercise, count(1) as count from workouts group by exercise order by count`,
 			`select data #>> '{exercise}' as exercise, count(1) as count from entries where book_guid = (select guid from books where name ilike 'workouts') and (user_guid = 'e26e269c-0587-4094-bf01-108c61b0fa8a') group by data #>> '{exercise}' order by count asc`,
 		},
+		{
+			"select with just a function call",
+			`select now()`,
+			`select now() as now from entries where user_guid = 'e26e269c-0587-4094-bf01-108c61b0fa8a'`,
+		},
 	}
 
 	for _, test := range tests {

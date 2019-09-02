@@ -387,6 +387,9 @@ func (p *parser) parseExprs() ([]expr, error) {
 		if err != nil {
 			return nil, err
 		}
+		if expr == nil {
+			break
+		}
 		exprs = append(exprs, expr)
 		if !p.nextToks(tokComma) {
 			break
