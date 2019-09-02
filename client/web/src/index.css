@@ -273,6 +273,10 @@ select + input {
   padding: 2px 5px;
 }
 
+.table-output-table thead td {
+  text-align: center;
+}
+
 .table-output-type-number {
   text-align: right;
 }
