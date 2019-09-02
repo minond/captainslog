@@ -12,12 +12,12 @@ const dummy = {
     {
       label: "Weight Trends",
       query:
-        "select weight " +
+        "select created_at as x, weight as y " +
         "from workouts " +
         "where exercise ilike '{{Exercise}}' " +
         "and weight is not null " +
-        "order by created_at desc",
-      type: OutputType.TableOutput,
+        "order by created_at asc",
+      type: OutputType.ChartOutput,
     }
   ],
   variables: [

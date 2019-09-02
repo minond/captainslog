@@ -17,6 +17,7 @@
     "@types/react-datepicker": "^2.3.0",
     "@types/react-dom": "^16.8.2",
     "@types/react-router-dom": "^4.3.2",
+    "@types/recharts": "^1.1.21",
     "browserify": "^16.2.3",
     "browserify-css": "^0.15.0",
     "enzyme": "^3.10.0",
@@ -35,7 +36,8 @@
     "react": "^16.8.4",
     "react-datepicker": "2.3.0",
     "react-dom": "^16.8.4",
-    "react-router-dom": "^5.0.0"
+    "react-router-dom": "^5.0.0",
+    "recharts": "^1.7.1"
   },
   "jest": {
     "setupFilesAfterEnv": [
