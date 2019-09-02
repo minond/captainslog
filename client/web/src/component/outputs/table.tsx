@@ -18,18 +18,23 @@ type TableOutputProps = {
 }
 
 export const TableOutput = (props: TableOutputProps) =>
-  <table className="output table-output">
-    <thead>
-      <tr>
-        {props.results.cols.map((col, i) =>
-          <td key={col + i}>{col}</td>)}
-      </tr>
-    </thead>
-    <tbody>
-      {props.results.data && props.results.data.map((row, ridx) =>
-        <tr key={ridx}>
-          {row.map((val, vidx) =>
-            <td key={vidx} className={classOf(val)}>{stringValueOf(val)}</td>)}
-        </tr>)}
-    </tbody>
-  </table>
+  <div className="output table-output">
+    {props.definition ?
+      <div className="output-label" title={props.definition.query}>{props.definition.label}</div> :
+      null}
+    <table className="table-output-table">
+      <thead>
+        <tr>
+          {props.results.cols.map((col, i) =>
+            <td key={col + i}>{col}</td>)}
+        </tr>
+      </thead>
+      <tbody>
+        {props.results.data && props.results.data.map((row, ridx) =>
+          <tr key={ridx}>
+            {row.map((val, vidx) =>
+              <td key={vidx} className={classOf(val)}>{stringValueOf(val)}</td>)}
+          </tr>)}
+      </tbody>
+    </table>
+  </div>

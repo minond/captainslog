@@ -214,10 +214,6 @@ select + input {
   top: -1px;
 }
 
-.report-output {
-  display: inline-block;
-}
-
 .output .output-label {
   font-family: baskerville, serif;
   font-weight: 500;
@@ -226,6 +222,7 @@ select + input {
 }
 
 .value-output {
+  display: inline-block;
   padding: 15px 15px 15px 0;
 }
 
@@ -241,14 +238,21 @@ select + input {
 }
 
 .table-output {
+  min-width: 50%;
+}
+
+.table-output-table {
+  width: 100%;
   margin-top: 10px;
 }
 
-.table-output, .table-output tr, .table-output td {
+.table-output-table,
+.table-output-table tr,
+.table-output-table td {
   border-collapse: collapse;
 }
 
-.table-output td {
+.table-output-table td {
   border: 1px solid #e1e1e1;
   padding: 2px 5px;
 }

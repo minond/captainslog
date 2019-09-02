@@ -51,6 +51,17 @@ const dummy = {
         "order by created_at asc",
       type: OutputType.ChartOutput,
     },
+    {
+      id: Math.random().toString(),
+      label: "Entries",
+      query:
+        "select exercise, weight, created_at " +
+        "from workouts " +
+        "where exercise ilike '{{Exercise}}' " +
+        "and weight is not null " +
+        "order by created_at desc",
+      type: OutputType.TableOutput,
+    },
   ],
   variables: [
     {
@@ -293,7 +304,7 @@ const Outputs = (props: OutputsProps) =>
   {props.outputs.map((output, i) => {
     const elem = !output.results ? null :
       <Output type={output.type} definition={outputDefinition(output)} results={output.results} />
-    return <div key={i} className="report-output">{elem}</div>
+    return <span key={i} className="report-output">{elem}</span>
   })}
   </>
 
