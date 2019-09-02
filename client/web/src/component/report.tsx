@@ -10,6 +10,7 @@ const dummy = {
   label: "Weight Trends",
   outputs: [
     {
+      id: Math.random().toString(),
       label: "Min",
       query:
         "select min(cast(weight as float)) " +
@@ -19,6 +20,7 @@ const dummy = {
       type: OutputType.ValueOutput,
     },
     {
+      id: Math.random().toString(),
       label: "Max",
       query:
         "select max(cast(weight as float)) " +
@@ -28,6 +30,7 @@ const dummy = {
       type: OutputType.ValueOutput,
     },
     {
+      id: Math.random().toString(),
       label: "Weight Trends",
       query:
         "select cast(created_at as integer) as x, cast(weight as float) as y " +
@@ -40,6 +43,7 @@ const dummy = {
   ],
   variables: [
     {
+      id: Math.random().toString(),
       label: "Exercise",
       query:
         "select distinct exercise " +
@@ -58,12 +62,14 @@ type Report = {
 }
 
 type Variable = {
+  id: string
   label: string
   query: string
   options?: string[]
 }
 
 type Output = {
+  id: string
   label: string
   type: OutputType
   query: string
@@ -180,7 +186,7 @@ const outputReducer: OutputReducer = (outputs, action) => {
     case "setResults":
       const { output, results } = action
       return outputs.map((o) =>
-        o.label !== output.label ? o : { ...o, results })
+        o.id !== output.id ? o : { ...o, results })
       return outputs
   }
 }
@@ -193,12 +199,12 @@ const inputReducer: InputReducer = (inputs, action) => {
   switch (action.kind) {
     case "changeHandled":
       return inputs.map((i) =>
-        i.variable.label !== action.input.variable.label ? i :
+        i.variable.id !== action.input.variable.id ? i :
           { ...i, changeHandled: true })
 
     case "setInput":
       const newInputs = inputs
-        .filter((i) => i.variable.label !== action.input.variable.label)
+        .filter((i) => i.variable.id !== action.input.variable.id)
       newInputs.push(action.input)
       return newInputs
   }
@@ -216,7 +222,7 @@ const variableReducer: VariableReducer = (variables, action) => {
     case "setOptions":
       const { variable, options } = action
       return variables.map((v) =>
-        v.label !== variable.label ? v : { ...v, options })
+        v.id !== variable.id ? v : { ...v, options })
   }
 }
 
