@@ -26,7 +26,7 @@ export const ChartOutput = (props: ChartOutputProps) =>
     >
       <Tooltip />
       <XAxis dataKey="x" />
-      <YAxis dataKey="y" />
+      <YAxis dataKey="y" width={40} />
       <Line type="monotone" dataKey="y" stroke="#82ca9d" isAnimationActive={false} />
     </LineChart>
   </div>
