@@ -54,6 +54,7 @@ type Output = {
 type Input = {
   variable: Variable
   input: string
+  changeHandled?: boolean
 }
 
 const isBool = (val: QueryResult): boolean => "Bool" in val
@@ -75,6 +76,15 @@ const valuesOf = (res: QueryResults): string[] =>
     const val = valueOf(row[0])
     return val !== undefined ? val.toString() : "undefined"
   })
+
+const getInputForMergeField = (field: string, inputs: Input[]): Input | null => {
+  for (let i = 0, len = inputs.length; i < len; i++) {
+    if (inputs[i].variable.label === field) {
+      return inputs[i]
+    }
+  }
+  return null
+}
 
 const cleanMergeField = (field: string): string =>
   field.replace(/^{{/, "").replace(/}}$/, "")
@@ -156,11 +166,17 @@ const outputReducer: OutputReducer = (outputs, action) => {
   }
 }
 
+type InputReducerChangeHandledAction = { kind: "changeHandled", input: Input }
 type InputReducerSetInputAction = { kind: "setInput", input: Input }
-type InputReducerAction = InputReducerSetInputAction
+type InputReducerAction = InputReducerChangeHandledAction | InputReducerSetInputAction
 type InputReducer = (inputs: Input[], action: InputReducerAction) => Input[]
 const inputReducer: InputReducer = (inputs, action) => {
   switch (action.kind) {
+    case "changeHandled":
+      return inputs.map((i) =>
+        i.variable.label !== action.input.variable.label ? i :
+          { ...i, changeHandled: true })
+
     case "setInput":
       const newInputs = inputs
         .filter((i) => i.variable.label !== action.input.variable.label)
@@ -212,25 +228,35 @@ const loadReportSettings = (
 const loadReportData = (
   inputs: Input[],
   outputs: Output[],
+  dispatchInput: (_: InputReducerAction) => void,
   dispatchOutput: (_: OutputReducerAction) => void,
-  force: boolean = false
 ) => {
   outputs.map((output) => {
-    if (output.results && !force) {
-      return
-    }
-
     if (!isReadyToExecute(output.query, inputs)) {
       return
     }
 
-    const query = mergeFields(output.query, inputs)
-    cachedExecuteQuery(query).then((results) =>
-      dispatchOutput({
-        kind: "setResults",
-        output,
-        results,
-      }))
+    const queryInputs = getCleanMergeFields(output.query)
+      .reduce((acc, field) => {
+        const input = getInputForMergeField(field, inputs)
+        if (input) {
+          acc.push(input)
+        }
+        return acc
+      }, [] as Input[])
+
+    const shouldLoad = queryInputs.reduce((doIt, input) =>
+      !input.changeHandled || doIt, false)
+
+    if (!shouldLoad) {
+      return
+    }
+
+    queryInputs.map((input) =>
+      dispatchInput({ kind: "changeHandled", input }))
+
+    cachedExecuteQuery(mergeFields(output.query, inputs)).then((results) =>
+      dispatchOutput({ kind: "setResults", output, results }))
   })
 }
 
@@ -258,7 +284,7 @@ export const Report = (props: {}) => {
     }
   }, [report])
 
-  loadReportData(inputs, outputs, dispatchOutput)
+  loadReportData(inputs, outputs, dispatchInput, dispatchOutput)
 
   return <div>
     <VariablesForm variables={variables} onSelect={setInput} />
