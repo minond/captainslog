@@ -10,6 +10,24 @@ const dummy = {
   label: "Weight Trends",
   outputs: [
     {
+      label: "Min",
+      query:
+        "select min(cast(weight as float)) " +
+        "from workouts " +
+        "where exercise ilike '{{Exercise}}' " +
+        "and weight is not null",
+      type: OutputType.ValueOutput,
+    },
+    {
+      label: "Max",
+      query:
+        "select max(cast(weight as float)) " +
+        "from workouts " +
+        "where exercise ilike '{{Exercise}}' " +
+        "and weight is not null",
+      type: OutputType.ValueOutput,
+    },
+    {
       label: "Weight Trends",
       query:
         "select cast(created_at as integer) as x, cast(weight as float) as y " +
@@ -18,7 +36,7 @@ const dummy = {
         "and weight is not null " +
         "order by created_at asc",
       type: OutputType.ChartOutput,
-    }
+    },
   ],
   variables: [
     {
@@ -265,7 +283,7 @@ type OutputsProps = { inputs: Input[], outputs: Output[] }
 const Outputs = (props: OutputsProps) =>
   <>
   {props.outputs.map((output, i) =>
-    <div key={i}>
+    <div key={i} className="report-output">
       {output.results ? <Output type={output.type} results={output.results} /> : null}
     </div>)}
   </>

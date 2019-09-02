@@ -214,6 +214,15 @@ select + input {
   top: -1px;
 }
 
+.report-output {
+  display: inline-block;
+}
+
+.value-output {
+  padding: 25px;
+  font-size: 2rem;
+}
+
 .table-output {
   margin-top: 10px;
 }

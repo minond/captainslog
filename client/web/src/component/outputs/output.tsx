@@ -4,11 +4,13 @@ import { QueryResult, QueryResults } from "../../definitions"
 
 import { ChartOutput } from "./chart"
 import { TableOutput } from "./table"
+import { ValueOutput } from "./value"
 
 export enum OutputType {
   InvalidOutput,
   TableOutput,
   ChartOutput,
+  ValueOutput,
 }
 
 type OutputProps = {
@@ -23,6 +25,9 @@ export const Output = (props: OutputProps) => {
 
     case OutputType.ChartOutput:
       return <ChartOutput results={props.results} />
+
+    case OutputType.ValueOutput:
+      return <ValueOutput results={props.results} />
 
     case OutputType.InvalidOutput:
     default:
