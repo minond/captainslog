@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"time"
 
 	"gopkg.in/src-d/go-kallax.v1"
 )
@@ -86,6 +87,9 @@ func rowContainer(typs []*sql.ColumnType) ([]interface{}, error) {
 			row[i] = &sql.NullInt64{}
 		case isBool(typ):
 			row[i] = &sql.NullBool{}
+		case isTimestampt(typ):
+			var val time.Time
+			row[i] = &val
 		default:
 			return nil, fmt.Errorf("bad type: %v", typ)
 		}
@@ -94,12 +98,13 @@ func rowContainer(typs []*sql.ColumnType) ([]interface{}, error) {
 }
 
 const (
-	pgBool    = "BOOL"
-	pgFloat8  = "FLOAT8"
-	pgInt4    = "INT4"
-	pgInt8    = "INT8"
-	pgNumeric = "NUMERIC"
-	pgText    = "TEXT"
+	pgBool       = "BOOL"
+	pgFloat8     = "FLOAT8"
+	pgInt4       = "INT4"
+	pgInt8       = "INT8"
+	pgNumeric    = "NUMERIC"
+	pgText       = "TEXT"
+	pgTimestampt = "TIMESTAMPTZ"
 )
 
 func isString(typ *sql.ColumnType) bool {
@@ -118,4 +123,8 @@ func isInt(typ *sql.ColumnType) bool {
 
 func isBool(typ *sql.ColumnType) bool {
 	return typ.DatabaseTypeName() == pgBool
+}
+
+func isTimestampt(typ *sql.ColumnType) bool {
+	return typ.DatabaseTypeName() == pgTimestampt
 }
