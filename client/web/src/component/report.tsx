@@ -27,6 +27,7 @@ const dummy = {
         "select distinct exercise " +
         "from workouts " +
         "where exercise is not null " +
+        "and weight is not null " +
         "order by exercise",
     }
   ],
