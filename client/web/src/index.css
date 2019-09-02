@@ -238,7 +238,19 @@ select + input {
 }
 
 .report-output + .report-output .table-output .output-label {
-  margin-top: 20px;
+  margin-top: 15px;
+}
+
+.table-output .output-label {
+  border-left: 1px solid #f2f2f2e6;
+  border-right: 1px solid #f2f2f2e6;
+  border-top: 1px solid #f2f2f2e6;
+  margin-bottom: 0;
+  padding: 5px 0;
+}
+
+.table-output .output-label + .table-output-table {
+  margin-top: 0;
 }
 
 .table-output {
@@ -271,7 +283,6 @@ select + input {
 .table-output-type-unknown {}
 
 .chart-output {
-  margin-top: 15px;
   padding: 10px;
   border: 1px solid #f2f2f2e6;
 }
