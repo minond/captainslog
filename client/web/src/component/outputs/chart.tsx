@@ -17,14 +17,16 @@ type ChartOutputProps = {
 }
 
 export const ChartOutput = (props: ChartOutputProps) =>
-  <LineChart
-    data={flattenResultsHash(props.results)}
-    width={500}
-    height={300}
-    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-  >
-    <XAxis dataKey="x" />
-    <YAxis />
-    <Tooltip />
-    <Line type="monotone" dataKey="y" stroke="#82ca9d" />
-  </LineChart>
+  <div className="chart-output">
+    <LineChart
+      data={flattenResultsHash(props.results)}
+      width={740}
+      height={200}
+      margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
+    >
+      <Tooltip />
+      <XAxis dataKey="x" />
+      <YAxis dataKey="y" />
+      <Line type="monotone" dataKey="y" stroke="#82ca9d" isAnimationActive={false} />
+    </LineChart>
+  </div>

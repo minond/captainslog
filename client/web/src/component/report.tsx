@@ -12,7 +12,7 @@ const dummy = {
     {
       label: "Weight Trends",
       query:
-        "select created_at as x, weight as y " +
+        "select cast(created_at as integer) as x, cast(weight as float) as y " +
         "from workouts " +
         "where exercise ilike '{{Exercise}}' " +
         "and weight is not null " +

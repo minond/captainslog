@@ -227,6 +227,10 @@ select + input {
 .table-output-type-string {}
 .table-output-type-unknown {}
 
+.chart-output {
+  margin-top: 30px;
+}
+
 /* small */
 @media screen and (min-width: 45em) {
 }
