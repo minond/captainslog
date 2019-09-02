@@ -205,6 +205,15 @@ select + input {
   background-color: #96ccff6b;
 }
 
+.report-variable-fields label span {
+  padding-right: 5px;
+}
+
+.report-variable-fields label select {
+  position: relative;
+  top: -1px;
+}
+
 .table-output {
   margin-top: 10px;
 }
