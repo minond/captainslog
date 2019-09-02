@@ -55,7 +55,7 @@ const dummy = {
       id: Math.random().toString(),
       label: "Entries",
       query:
-        "select exercise, weight, created_at " +
+        "select exercise, weight, to_timestamp(cast(created_at as integer)) as date " +
         "from workouts " +
         "where exercise ilike '{{Exercise}}' " +
         "and weight is not null " +
