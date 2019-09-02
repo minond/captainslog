@@ -18,7 +18,7 @@ type TableOutputProps = {
 }
 
 export const TableOutput = (props: TableOutputProps) =>
-  <table className="table-output">
+  <table className="output table-output">
     <thead>
       <tr>
         {props.results.cols.map((col, i) =>
