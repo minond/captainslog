@@ -4,7 +4,7 @@ import { useEffect, useReducer, useState } from "react"
 import { QueryResult, QueryResults } from "../definitions"
 import { cachedExecuteQuery } from "../remote"
 
-import { Output, OutputType } from "./outputs/output"
+import { Definition, Output, OutputType } from "./outputs/output"
 
 const dummy = {
   label: "Weight Trends",
@@ -279,13 +279,18 @@ const loadReportData = (
   })
 }
 
+const outputDefinition = (output: Output): Definition => ({
+  label: output.label,
+})
+
 type OutputsProps = { inputs: Input[], outputs: Output[] }
 const Outputs = (props: OutputsProps) =>
   <>
-  {props.outputs.map((output, i) =>
-    <div key={i} className="report-output">
-      {output.results ? <Output type={output.type} results={output.results} /> : null}
-    </div>)}
+  {props.outputs.map((output, i) => {
+    const elem = !output.results ? null :
+      <Output type={output.type} definition={outputDefinition(output)} results={output.results} />
+    return <div key={i} className="report-output">{elem}</div>
+  })}
   </>
 
 export const Report = (props: {}) => {

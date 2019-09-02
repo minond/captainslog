@@ -1,6 +1,7 @@
 import * as React from "react"
 
 import { QueryResult, QueryResults } from "../../definitions"
+import { Definition } from "./output"
 
 import { isBool, isString, isFloat64, isInt64, isNumber, valueOf } from "./utils"
 
@@ -13,6 +14,7 @@ const classOf = (val: QueryResult): string =>
 
 type TableOutputProps = {
   results: QueryResults
+  definition?: Definition
 }
 
 export const TableOutput = (props: TableOutputProps) =>

@@ -9,11 +9,13 @@ import {
 } from 'recharts';
 
 import { QueryResults } from "../../definitions"
+import { Definition } from "./output"
 
 import { flattenResultsHash } from "./utils"
 
 type ChartOutputProps = {
   results: QueryResults
+  definition: Definition
 }
 
 export const ChartOutput = (props: ChartOutputProps) =>

@@ -1,11 +1,13 @@
 import * as React from "react"
 
 import { QueryResults } from "../../definitions"
+import { Definition } from "./output"
 
 import { valueOf } from "./utils"
 
 type ValueOutputProps = {
   results: QueryResults
+  definition: Definition
 }
 
 const getValue = (res: QueryResults) =>

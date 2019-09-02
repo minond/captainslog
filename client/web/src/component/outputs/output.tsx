@@ -13,21 +13,26 @@ export enum OutputType {
   ValueOutput,
 }
 
+export type Definition = {
+  label: string
+}
+
 type OutputProps = {
   type: OutputType
   results: QueryResults
+  definition: Definition
 }
 
 export const Output = (props: OutputProps) => {
   switch (props.type) {
     case OutputType.TableOutput:
-      return <TableOutput results={props.results} />
+      return <TableOutput definition={props.definition} results={props.results} />
 
     case OutputType.ChartOutput:
-      return <ChartOutput results={props.results} />
+      return <ChartOutput definition={props.definition} results={props.results} />
 
     case OutputType.ValueOutput:
-      return <ValueOutput results={props.results} />
+      return <ValueOutput definition={props.definition} results={props.results} />
 
     case OutputType.InvalidOutput:
     default:
