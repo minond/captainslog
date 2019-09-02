@@ -31,6 +31,16 @@ const dummy = {
     },
     {
       id: Math.random().toString(),
+      label: "Count",
+      query:
+        "select count(1) " +
+        "from workouts " +
+        "where exercise ilike '{{Exercise}}' " +
+        "and weight is not null",
+      type: OutputType.ValueOutput,
+    },
+    {
+      id: Math.random().toString(),
       label: "Weight Trends",
       query:
         "select cast(created_at as integer) as x, cast(weight as float) as y " +
