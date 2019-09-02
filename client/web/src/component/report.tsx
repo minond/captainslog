@@ -53,13 +53,14 @@ const dummy = {
     },
     {
       id: Math.random().toString(),
-      label: "Entries",
+      label: "Last 20 Entries",
       query:
         "select exercise, cast(weight as float) as weight, to_timestamp(cast(created_at as integer)) as date " +
         "from workouts " +
         "where exercise ilike '{{Exercise}}' " +
         "and weight is not null " +
-        "order by created_at desc",
+        "order by created_at desc " +
+        "limit 20",
       type: OutputType.TableOutput,
     },
   ],

@@ -3,6 +3,8 @@ Web client:
 - Disable exec and save buttons when query is blank
 - Add support for editing entry
 - Add support for deleting entry
+- Loading report output
+- Missing inputs report output
 
 
 Backend:
