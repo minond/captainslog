@@ -185,7 +185,7 @@ const variableReducer: VariableReducer = (variables, action) => {
   }
 }
 
-const reportLoader = (
+const loadReportSettings = (
   report: Report,
   dispatchVariable: (_: VariableReducerAction) => void,
   dispatchOutput: (_: OutputReducerAction) => void,
@@ -209,24 +209,59 @@ const reportLoader = (
       })))
 }
 
+const loadReportData = (
+  inputs: Input[],
+  outputs: Output[],
+  dispatchOutput: (_: OutputReducerAction) => void,
+  force: boolean = false
+) => {
+  outputs.map((output) => {
+    if (output.results && !force) {
+      return
+    }
+
+    if (!isReadyToExecute(output.query, inputs)) {
+      return
+    }
+
+    const query = mergeFields(output.query, inputs)
+    cachedExecuteQuery(query).then((results) =>
+      dispatchOutput({
+        kind: "setResults",
+        output,
+        results,
+      }))
+  })
+}
+
+type OutputsProps = { inputs: Input[], outputs: Output[] }
+const Outputs = (props: OutputsProps) =>
+  <>
+  {props.outputs.map((output, i) =>
+    <div key={i}>
+      {output.results ? <Output type={output.type} results={output.results} /> : null}
+    </div>)}
+  </>
+
 export const Report = (props: {}) => {
   const [report, setReport] = useState<Report | null>(dummy)
   const [variables, dispatchVariable] = useReducer(variableReducer, [], (i) => i)
   const [inputs, dispatchInput] = useReducer(inputReducer, [], (i) => i)
   const [outputs, dispatchOutput] = useReducer(outputReducer, [], (i) => i)
 
-  useEffect(() => {
-    if (report) {
-      reportLoader(report, dispatchVariable, dispatchOutput)
-    }
-  }, [report])
-
   const setInput = (input: string, variable: Variable) =>
     dispatchInput({ kind: "setInput", input: { input, variable } })
 
+  useEffect(() => {
+    if (report) {
+      loadReportSettings(report, dispatchVariable, dispatchOutput)
+    }
+  }, [report])
+
+  loadReportData(inputs, outputs, dispatchOutput)
+
   return <div>
     <VariablesForm variables={variables} onSelect={setInput} />
-
-    {isReadyToExecute(dummy.outputs[0].query, inputs) ? mergeFields(dummy.outputs[0].query, inputs) : "..."}
+    <Outputs inputs={inputs} outputs={outputs} />
   </div>
 }
