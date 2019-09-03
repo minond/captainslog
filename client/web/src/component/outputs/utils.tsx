@@ -7,7 +7,7 @@ export const isFloat64 = (val: QueryResult): boolean => "Float64" in val
 export const isInt64 = (val: QueryResult): boolean => "Int64" in val
 export const isNumber = (val: QueryResult): boolean => isFloat64(val) || isInt64(val)
 
-type scalar = string | number | boolean | Date | undefined
+export type scalar = string | number | boolean | Date | undefined
 export const valueOf = (val: QueryResult): scalar =>
   !val.Valid ? undefined :
     isString(val) ? val.String :
