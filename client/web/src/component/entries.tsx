@@ -47,38 +47,38 @@ const genDatePicker = (date: Date, book: Book | null) =>
     />
 
 type EntriesProps = {
-  date: Date
   bookGuid: string
+  date: Date
 }
 
-export const Entries = (props: EntriesProps) => {
+export const Entries = ({ bookGuid, date }: EntriesProps) => {
   const [text, setText] = useState("")
   const [book, setBook] = useState<Book | null>(null)
   const [entries, setEntries] = useState<Entry[]>([])
 
   const fetchEntries = () =>
-    getEntriesForBook(props.bookGuid, props.date).then(setEntries)
+    getEntriesForBook(bookGuid, date).then(setEntries)
 
   useEffect(() => {
     setEntries([])
-    cachedGetBook(props.bookGuid)
+    cachedGetBook(bookGuid)
       .then(setBook)
       .then(fetchEntries)
-  }, [props.bookGuid, props.date])
+  }, [bookGuid, date])
 
   const handleKeyPress = (ev: KeyboardEvent<HTMLTextAreaElement>) => {
     if (ev.charCode !== KEY_ENTER || !book || !text.trim()) {
       return
     }
 
-    createEntries(book.guid, buildEntriesCreateRequest(text, props.date))
+    createEntries(book.guid, buildEntriesCreateRequest(text, date))
       .then(fetchEntries)
 
     setText("")
     ev.preventDefault()
   }
 
-  const dateInput = genDatePicker(props.date, book)
+  const dateInput = genDatePicker(date, book)
   const textInput =
     <textarea
       rows={1}
@@ -100,7 +100,7 @@ export const Entries = (props: EntriesProps) => {
   if (entries.length) {
     content = <EntryList items={entries} />
   } else if (book) {
-    content = <div className="entries-empty">{noEntriesMessage(props.date, book.grouping)}</div>
+    content = <div className="entries-empty">{noEntriesMessage(date, book.grouping)}</div>
   } else {
     content = null
   }

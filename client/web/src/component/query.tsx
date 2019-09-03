@@ -165,18 +165,18 @@ const fieldTypeNames = {
 const fieldTypeName = (ty: SchemaFieldType) =>
   fieldTypeNames[ty]
 
-const SchemaFieldView = (props: { field: SchemaField }) => {
-  const tyName = fieldTypeName(props.field.type)
+const SchemaFieldView = ({ field }: { field: SchemaField }) => {
+  const tyName = fieldTypeName(field.type)
   return <div className="schema-field">
     <span className={`schema-field-type ${tyName.toLowerCase()}`}>{tyName}</span>
-    <span className="schema-field-name">{props.field.name}</span>
+    <span className="schema-field-name">{field.name}</span>
   </div>
 }
 
-const SchemaBookView = (props: { book: SchemaBook }) =>
+const SchemaBookView = ({ book }: { book: SchemaBook }) =>
   <div className="schema-book">
-    <div className="schema-book-name">{props.book.name}</div>
-    {props.book.fields.map((field, j) =>
+    <div className="schema-book-name">{book.name}</div>
+    {book.fields.map((field, j) =>
       <SchemaFieldView key={field.name + j} field={field} />)}
   </div>
 

@@ -5,13 +5,13 @@ import { Link } from "react-router-dom"
 import { Book } from "../definitions"
 import { cachedGetBooks } from "../remote"
 
+let memBooks: Book[] = []
+
 type BooksProps = {
   active?: string
 }
 
-let memBooks: Book[] = []
-
-export const Books = (props: BooksProps) => {
+export const Books = ({ active }: BooksProps) => {
   const [books, setBooks] = useState<Book[]>(memBooks)
 
   useEffect(() => {
@@ -25,7 +25,7 @@ export const Books = (props: BooksProps) => {
     <Link
       key={book.guid}
       to={`/${book.guid}`}
-      className={props.active === book.guid ? "active" : ""}
+      className={active === book.guid ? "active" : ""}
     >
       {book.name}
     </Link>)

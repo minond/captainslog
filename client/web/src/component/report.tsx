@@ -67,7 +67,7 @@ const dummy = {
   ],
   variables: [
     {
-      // defaultInput: "Squats",
+      defaultInput: "Squats",
       id: Math.random().toString(),
       label: "Exercise",
       query:
@@ -168,12 +168,12 @@ type VariableInputsProps = {
   onSelect: (val: string, v: Variable) => void
 }
 
-const VariablesForm = (props: VariableInputsProps) => {
-  const variableFields = props.variables.map((variable) =>
+const VariablesForm = ({ variables, onSelect }: VariableInputsProps) => {
+  const variableFields = variables.map((variable) =>
     <div title={variable.query} key={variable.label} className="report-variable-field">
       <label>
         <span>{variable.label}</span>
-        <select onChange={(ev) => props.onSelect(ev.target.value, variable)}>
+        <select onChange={(ev) => onSelect(ev.target.value, variable)}>
           <option key="blank" value="" label="Select a value" />
           {!variable.options ? null : variable.options.map((option, i) =>
             <option
@@ -317,9 +317,9 @@ const outputDefinition = (output: Output): Definition => ({
 })
 
 type OutputsProps = { inputs: Input[], outputs: Output[] }
-const Outputs = (props: OutputsProps) =>
+const Outputs = ({ inputs, outputs }: OutputsProps) =>
   <>
-  {props.outputs.map((output, i) => {
+  {outputs.map((output, i) => {
     const definition = outputDefinition(output)
     const results = output.results
     const elem = !results ?

@@ -15,24 +15,24 @@ type PageProps = {
   wide?: boolean
 }
 
-const Page = (props: PageProps) => {
+const Page = ({ active, wide, children }: PageProps) => {
   useEffect(() => {
     document.title = `Captain's Log`
   })
 
-  const contentClass = props.wide && "wide"
+  const contentClass = wide && "wide"
 
   return <div className="page-wrapper">
-    <div className={"page-header " + (props.active ? "page-header-active" : "")}>
+    <div className={"page-header " + (active ? "page-header-active" : "")}>
       <div className={`page-header-content ${contentClass}`}>
         <Link to="/">Captain's Log</Link>
-        <Link to="/report" className={props.active === "report" ? "active" : ""}>Report</Link>
-        <Link to="/query" className={props.active === "query" ? "active" : ""}>Query</Link>
-        <Books active={props.active} />
+        <Link to="/report" className={active === "report" ? "active" : ""}>Report</Link>
+        <Link to="/query" className={active === "query" ? "active" : ""}>Query</Link>
+        <Books active={active} />
       </div>
     </div>
     <div className={`page-content ${contentClass}`}>
-      {props.children}
+      {children}
     </div>
   </div>
 }
@@ -55,10 +55,10 @@ type BookPageProps = {
   date: Date
 }
 
-export const BookPage = (props: BookPageProps) => {
+export const BookPage = ({ guid, date }: BookPageProps) => {
   useEffect(() => {
     document.title = "Captain's Log"
-    cachedGetBook(props.guid).then((book) => {
+    cachedGetBook(guid).then((book) => {
       if (book) {
         document.title = `${book.name} - Captain's Log`
       }
@@ -66,8 +66,8 @@ export const BookPage = (props: BookPageProps) => {
   })
 
   return <>
-    <Page active={props.guid}>
-      <Entries bookGuid={props.guid} date={props.date} />
+    <Page active={guid}>
+      <Entries bookGuid={guid} date={date} />
     </Page>
   </>
 }
