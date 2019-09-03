@@ -3,9 +3,15 @@ import * as React from "react"
 import { QueryResult, QueryResults } from "../../definitions"
 import { Definition } from "./output"
 
-import { isBool, isString, isFloat64, isInt64, isNumber, stringValueOf } from "./utils"
-
-const DEFAULT_VALUE = "No Results"
+import {
+  NO_RESULTS,
+  isBool,
+  isFloat64,
+  isInt64,
+  isNumber,
+  isString,
+  stringValueOf,
+} from "./utils"
 
 const classOf = (val: QueryResult): string =>
   !val.Valid ? "table-output-type-null" :
@@ -48,5 +54,5 @@ export const TableRawOutput = ({ definition, results }: TableRawOutputProps) =>
             </tr>)}
         </tbody>
       </table> :
-      <div className="table-output-no-data">{DEFAULT_VALUE}</div>}
+      <div className="output-no-data">{NO_RESULTS}</div>}
   </div>

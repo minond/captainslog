@@ -2,6 +2,7 @@ import * as React from "react"
 
 import { Definition, OutputType } from "./output"
 
+import { ChartRawOutput } from "./chart"
 import { TableRawOutput } from "./table"
 import { ValueRawOutput } from "./value"
 
@@ -15,7 +16,7 @@ export const IncompleteOutput = ({ definition }: IncompleteOutputProps) => {
       return <TableRawOutput definition={definition} />
 
     case OutputType.ChartOutput:
-      return <div>chart</div>
+      return <ChartRawOutput definition={definition} />
 
     case OutputType.ValueOutput:
       return <ValueRawOutput definition={definition} />

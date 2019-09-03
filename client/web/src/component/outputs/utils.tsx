@@ -1,5 +1,7 @@
 import { QueryResult, QueryResults } from "../../definitions"
 
+export const NO_RESULTS = "No Results"
+
 export const isBool = (val: QueryResult): boolean => "Bool" in val
 export const isTime = (val: QueryResult): boolean => "Time" in val
 export const isString = (val: QueryResult): boolean => "String" in val
