@@ -316,8 +316,8 @@ const outputDefinition = (output: Output): Definition => ({
   query: output.query,
 })
 
-type OutputsProps = { inputs: Input[], outputs: Output[] }
-const Outputs = ({ inputs, outputs }: OutputsProps) =>
+type OutputsProps = { outputs: Output[] }
+const Outputs = ({ outputs }: OutputsProps) =>
   <>
   {outputs.map((output, i) => {
     const definition = outputDefinition(output)
@@ -349,6 +349,6 @@ export const Report = (props: {}) => {
 
   return <div>
     <VariablesForm variables={variables} onSelect={setInput} />
-    <Outputs inputs={inputs} outputs={outputs} />
+    <Outputs outputs={outputs} />
   </div>
 }
