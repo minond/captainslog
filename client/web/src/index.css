@@ -249,6 +249,12 @@ select + input {
   padding: 5px 0;
 }
 
+.table-output-no-data {
+  border: 1px solid #f2f2f2e6;
+  padding: 25px;
+  text-align: center;
+}
+
 .table-output .output-label + .table-output-table {
   margin-top: 0;
 }
