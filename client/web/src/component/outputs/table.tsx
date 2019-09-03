@@ -38,7 +38,7 @@ export const TableRawOutput = ({ definition, results }: TableRawOutputProps) =>
     {definition ?
       <div className="output-label" title={definition.query}>{definition.label}</div> :
       null}
-    {results ?
+    {results && results.data && results.data.length ?
       <table className="table-output-table">
         <thead>
           <tr>

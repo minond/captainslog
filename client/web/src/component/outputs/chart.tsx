@@ -29,7 +29,7 @@ type ChartRawOutputProps = {
 export const ChartRawOutput = ({ definition, results }: ChartRawOutputProps) =>
   <div className="output chart-output">
     <div className="output-label" title={definition.query}>{definition.label}</div>
-    {results ?
+    {results && results.data && results.data.length ?
       <LineChart
         data={flattenResultsHash(results)}
         width={680}

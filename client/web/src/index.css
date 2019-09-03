@@ -255,17 +255,13 @@ select + input {
   padding: 5px 0;
 }
 
-.table-output .output-label + .table-output-table {
-  margin-top: 0;
-}
-
 .table-output {
+  margin-top: 10px;
   min-width: 50%;
 }
 
 .table-output-table {
   width: 100%;
-  margin-top: 10px;
 }
 
 .table-output-table,
