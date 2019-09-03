@@ -5,7 +5,7 @@ import { QueryResult, QueryResults } from "../definitions"
 import { cachedExecuteQuery } from "../remote"
 
 import { IncompleteOutput } from "./outputs/incomplete"
-import { Definition, Output, OutputType } from "./outputs/output"
+import { Definition, LookupOutput, OutputType } from "./outputs/output"
 import { valueOf } from "./outputs/utils"
 
 const dummy = {
@@ -311,6 +311,7 @@ const loadReportData = (
 }
 
 const outputDefinition = (output: Output): Definition => ({
+  type: output.type,
   label: output.label,
   query: output.query,
 })
@@ -323,7 +324,7 @@ const Outputs = (props: OutputsProps) =>
     const results = output.results
     const elem = !results ?
       <IncompleteOutput definition={definition} /> :
-      <Output type={output.type} definition={definition} results={results} />
+      <LookupOutput definition={definition} results={results} />
 
     return <span key={i} className="report-output">{elem}</span>
   })}

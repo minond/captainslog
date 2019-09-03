@@ -122,7 +122,7 @@
       "options": "as-needed"
     },
     "object-literal-shorthand": true,
-    "object-literal-sort-keys": true,
+    "object-literal-sort-keys": false,
     "one-line": {
       "options": [
         "check-catch",
@@ -269,7 +269,7 @@
     "no-trailing-whitespace": true,
     "no-unused-expression": true,
     "no-use-before-declare": false,
-    "object-literal-sort-keys": true,
+    "object-literal-sort-keys": false,
     "one-line": {
       "options": [
         "check-catch",

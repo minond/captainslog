@@ -14,18 +14,18 @@ export enum OutputType {
 }
 
 export type Definition = {
+  type: OutputType
   label: string
   query: string
 }
 
 type OutputProps = {
-  type: OutputType
   results: QueryResults
   definition: Definition
 }
 
-export const Output = (props: OutputProps) => {
-  switch (props.type) {
+export const LookupOutput = (props: OutputProps) => {
+  switch (props.definition.type) {
     case OutputType.TableOutput:
       return <TableOutput definition={props.definition} results={props.results} />
 
