@@ -67,7 +67,7 @@ const dummy = {
   ],
   variables: [
     {
-      defaultInput: "Squats",
+      // defaultInput: "Squats",
       id: Math.random().toString(),
       label: "Exercise",
       query:

@@ -20,20 +20,20 @@ export type Definition = {
 }
 
 type OutputProps = {
-  results: QueryResults
   definition: Definition
+  results: QueryResults
 }
 
-export const LookupOutput = (props: OutputProps) => {
-  switch (props.definition.type) {
+export const LookupOutput = ({ definition, results }: OutputProps) => {
+  switch (definition.type) {
     case OutputType.TableOutput:
-      return <TableOutput definition={props.definition} results={props.results} />
+      return <TableOutput definition={definition} results={results} />
 
     case OutputType.ChartOutput:
-      return <ChartOutput definition={props.definition} results={props.results} />
+      return <ChartOutput definition={definition} results={results} />
 
     case OutputType.ValueOutput:
-      return <ValueOutput definition={props.definition} results={props.results} />
+      return <ValueOutput definition={definition} results={results} />
 
     case OutputType.InvalidOutput:
     default:

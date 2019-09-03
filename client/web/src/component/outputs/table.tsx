@@ -15,16 +15,16 @@ const classOf = (val: QueryResult): string =>
     "table-output-type-unknown"
 
 type TableOutputProps = {
-  results: QueryResults
   definition?: Definition
+  results: QueryResults
 }
 
 export const TableOutput = ({ definition, results }: TableOutputProps) =>
   <TableRawOutput definition={definition} results={results} />
 
 type TableRawOutputProps = {
-  results?: QueryResults
   definition?: Definition
+  results?: QueryResults
 }
 
 export const TableRawOutput = ({ definition, results }: TableRawOutputProps) =>

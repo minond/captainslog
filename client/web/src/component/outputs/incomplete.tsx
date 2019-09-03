@@ -9,16 +9,16 @@ type IncompleteOutputProps = {
   definition: Definition
 }
 
-export const IncompleteOutput = (props: IncompleteOutputProps) => {
-  switch (props.definition.type) {
+export const IncompleteOutput = ({ definition }: IncompleteOutputProps) => {
+  switch (definition.type) {
     case OutputType.TableOutput:
-      return <TableRawOutput definition={props.definition} />
+      return <TableRawOutput definition={definition} />
 
     case OutputType.ChartOutput:
       return <div>chart</div>
 
     case OutputType.ValueOutput:
-      return <ValueRawOutput definition={props.definition} />
+      return <ValueRawOutput definition={definition} />
 
     case OutputType.InvalidOutput:
     default:

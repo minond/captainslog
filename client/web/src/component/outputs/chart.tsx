@@ -14,15 +14,15 @@ import { Definition } from "./output"
 import { flattenResultsHash } from "./utils"
 
 type ChartOutputProps = {
-  results: QueryResults
   definition: Definition
+  results: QueryResults
 }
 
-export const ChartOutput = (props: ChartOutputProps) =>
+export const ChartOutput = ({ definition, results }: ChartOutputProps) =>
   <div className="output chart-output">
-    <div className="output-label" title={props.definition.query}>{props.definition.label}</div>
+    <div className="output-label" title={definition.query}>{definition.label}</div>
     <LineChart
-      data={flattenResultsHash(props.results)}
+      data={flattenResultsHash(results)}
       width={680}
       height={200}
       margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
