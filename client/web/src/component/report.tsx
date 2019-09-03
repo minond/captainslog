@@ -4,6 +4,7 @@ import { useEffect, useReducer, useState } from "react"
 import { QueryResult, QueryResults } from "../definitions"
 import { cachedExecuteQuery } from "../remote"
 
+import { IncompleteOutput } from "./outputs/incomplete"
 import { Definition, Output, OutputType } from "./outputs/output"
 import { valueOf } from "./outputs/utils"
 
@@ -318,8 +319,12 @@ type OutputsProps = { inputs: Input[], outputs: Output[] }
 const Outputs = (props: OutputsProps) =>
   <>
   {props.outputs.map((output, i) => {
-    const elem = !output.results ? null :
-      <Output type={output.type} definition={outputDefinition(output)} results={output.results} />
+    const definition = outputDefinition(output)
+    const results = output.results
+    const elem = !results ?
+      <IncompleteOutput definition={definition} /> :
+      <Output type={output.type} definition={definition} results={results} />
+
     return <span key={i} className="report-output">{elem}</span>
   })}
   </>
