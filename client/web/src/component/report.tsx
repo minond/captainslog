@@ -103,7 +103,7 @@ type Output = {
 
 type Input = {
   variable: Variable
-  input: string
+  value: string
   changeHandled?: boolean
 }
 
@@ -134,7 +134,7 @@ const getCleanMergeFields = (query: string): string[] =>
 const mergeFields = (query: string, inputs: Input[]): string => {
   const fields = getMergeFields(query)
   const selected = inputs.reduce((acc, input) => {
-    acc[input.variable.label] = input.input
+    acc[input.variable.label] = input.value
     return acc
   }, {} as { [index: string]: string })
 
@@ -267,7 +267,8 @@ const loadReportSettings = (
       dispatchVariable({ kind: "setOptions", options, variable })
 
       if (!!variable.defaultInput && options.indexOf(variable.defaultInput) !== -1) {
-        const input = { variable, input: variable.defaultInput }
+        const value = variable.defaultInput
+        const input = { variable, value }
         dispatchInput({ kind: "setInput", input })
       }
     }))
@@ -329,8 +330,8 @@ export const Report = (props: {}) => {
   const [inputs, dispatchInput] = useReducer(inputReducer, [], (i) => i)
   const [outputs, dispatchOutput] = useReducer(outputReducer, [], (i) => i)
 
-  const setInput = (input: string, variable: Variable) =>
-    dispatchInput({ kind: "setInput", input: { input, variable } })
+  const setInput = (value: string, variable: Variable) =>
+    dispatchInput({ kind: "setInput", input: { value, variable } })
 
   useEffect(() => {
     if (report) {
