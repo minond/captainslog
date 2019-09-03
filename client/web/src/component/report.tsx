@@ -66,6 +66,7 @@ const dummy = {
   ],
   variables: [
     {
+      defaultInput: "Squats",
       id: Math.random().toString(),
       label: "Exercise",
       query:
@@ -88,6 +89,7 @@ type Variable = {
   id: string
   label: string
   query: string
+  defaultInput?: string
   options?: string[]
 }
 
@@ -173,7 +175,15 @@ const VariablesForm = (props: VariableInputsProps) => {
         <select onChange={(ev) => props.onSelect(ev.target.value, variable)}>
           <option key="blank" value="" label="Select a value" />
           {!variable.options ? null : variable.options.map((option, i) =>
-            <option key={i + option} value={option} label={option}>{option}</option>)}
+            <option
+              key={i + option}
+              selected={!!variable.defaultInput && option === variable.defaultInput}
+              value={option}
+              label={option}
+            >
+              {option}
+            </option>
+          )}
         </select>
       </label>
     </div>)
@@ -238,6 +248,7 @@ const variableReducer: VariableReducer = (variables, action) => {
 const loadReportSettings = (
   report: Report,
   dispatchVariable: (_: VariableReducerAction) => void,
+  dispatchInput: (_: InputReducerAction) => void,
   dispatchOutput: (_: OutputReducerAction) => void,
 ) => {
   dispatchOutput({
@@ -251,12 +262,15 @@ const loadReportSettings = (
   })
 
   report.variables.map((variable) =>
-    cachedExecuteQuery(variable.query).then((res) =>
-      dispatchVariable({
-        kind: "setOptions",
-        options: valuesOf(res),
-        variable,
-      })))
+    cachedExecuteQuery(variable.query).then((res) => {
+      const options = valuesOf(res)
+      dispatchVariable({ kind: "setOptions", options, variable })
+
+      if (!!variable.defaultInput && options.indexOf(variable.defaultInput) !== -1) {
+        const input = { variable, input: variable.defaultInput }
+        dispatchInput({ kind: "setInput", input })
+      }
+    }))
 }
 
 const loadReportData = (
@@ -320,7 +334,7 @@ export const Report = (props: {}) => {
 
   useEffect(() => {
     if (report) {
-      loadReportSettings(report, dispatchVariable, dispatchOutput)
+      loadReportSettings(report, dispatchVariable, dispatchInput, dispatchOutput)
     }
   }, [report])
 
