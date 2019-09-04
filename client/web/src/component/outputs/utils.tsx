@@ -21,7 +21,12 @@ export const valueOf = (val: QueryResult): scalar =>
 
 export const stringValueOf = (val: QueryResult): scalar => {
   const inner = valueOf(val)
-  return inner === undefined ? "" : inner.toString()
+  if (inner === undefined) {
+    return ""
+  } else if (inner instanceof Date) {
+    return inner.toDateString()
+  }
+  return inner.toString()
 }
 
 type dict = { [index: string]: scalar }

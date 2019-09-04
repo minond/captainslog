@@ -10,6 +10,7 @@ import {
   isInt64,
   isNumber,
   isString,
+  isTime,
   stringValueOf,
 } from "./utils"
 
@@ -18,6 +19,7 @@ const classOf = (val: QueryResult): string =>
     isString(val) ? "table-output-type-string" :
     isNumber(val) ? "table-output-type-number" :
     isBool(val) ? "table-output-type-boolean" :
+    isTime(val) ? "table-output-type-timestamp" :
     "table-output-type-unknown"
 
 type TableOutputProps = {
