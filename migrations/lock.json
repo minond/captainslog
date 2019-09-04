@@ -215,6 +215,54 @@
       ]
     },
     {
+      "Name": "reports",
+      "Columns": [
+        {
+          "Name": "guid",
+          "Type": "uuid",
+          "PrimaryKey": true,
+          "Reference": null,
+          "NotNull": true,
+          "Unique": false
+        },
+        {
+          "Name": "label",
+          "Type": "text",
+          "PrimaryKey": false,
+          "Reference": null,
+          "NotNull": true,
+          "Unique": false
+        },
+        {
+          "Name": "variables",
+          "Type": "jsonb",
+          "PrimaryKey": false,
+          "Reference": null,
+          "NotNull": true,
+          "Unique": false
+        },
+        {
+          "Name": "outputs",
+          "Type": "jsonb",
+          "PrimaryKey": false,
+          "Reference": null,
+          "NotNull": true,
+          "Unique": false
+        },
+        {
+          "Name": "user_guid",
+          "Type": "uuid",
+          "PrimaryKey": false,
+          "Reference": {
+            "Table": "users",
+            "Column": "guid"
+          },
+          "NotNull": false,
+          "Unique": false
+        }
+      ]
+    },
+    {
       "Name": "saved_queries",
       "Columns": [
         {

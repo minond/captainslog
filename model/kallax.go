@@ -2224,6 +2224,525 @@ func (rs *ExtractorResultSet) Close() error {
 	return rs.ResultSet.Close()
 }
 
+// NewReport returns a new instance of Report.
+func NewReport() (record *Report) {
+	return new(Report)
+}
+
+// GetID returns the primary key of the model.
+func (r *Report) GetID() kallax.Identifier {
+	return (*kallax.ULID)(&r.GUID)
+}
+
+// ColumnAddress returns the pointer to the value of the given column.
+func (r *Report) ColumnAddress(col string) (interface{}, error) {
+	switch col {
+	case "guid":
+		return (*kallax.ULID)(&r.GUID), nil
+	case "label":
+		return &r.Label, nil
+	case "variables":
+		return types.JSON(&r.Variables), nil
+	case "outputs":
+		return types.JSON(&r.Outputs), nil
+	case "user_guid":
+		return types.Nullable(kallax.VirtualColumn("user_guid", r, new(kallax.ULID))), nil
+
+	default:
+		return nil, fmt.Errorf("kallax: invalid column in Report: %s", col)
+	}
+}
+
+// Value returns the value of the given column.
+func (r *Report) Value(col string) (interface{}, error) {
+	switch col {
+	case "guid":
+		return r.GUID, nil
+	case "label":
+		return r.Label, nil
+	case "variables":
+		return types.JSON(r.Variables), nil
+	case "outputs":
+		return types.JSON(r.Outputs), nil
+	case "user_guid":
+		v := r.Model.VirtualColumn(col)
+		if v == nil {
+			return nil, kallax.ErrEmptyVirtualColumn
+		}
+		return v, nil
+
+	default:
+		return nil, fmt.Errorf("kallax: invalid column in Report: %s", col)
+	}
+}
+
+// NewRelationshipRecord returns a new record for the relatiobship in the given
+// field.
+func (r *Report) NewRelationshipRecord(field string) (kallax.Record, error) {
+	switch field {
+	case "User":
+		return new(User), nil
+
+	}
+	return nil, fmt.Errorf("kallax: model Report has no relationship %s", field)
+}
+
+// SetRelationship sets the given relationship in the given field.
+func (r *Report) SetRelationship(field string, rel interface{}) error {
+	switch field {
+	case "User":
+		val, ok := rel.(*User)
+		if !ok {
+			return fmt.Errorf("kallax: record of type %t can't be assigned to relationship User", rel)
+		}
+		if !val.GetID().IsEmpty() {
+			r.User = val
+		}
+
+		return nil
+
+	}
+	return fmt.Errorf("kallax: model Report has no relationship %s", field)
+}
+
+// ReportStore is the entity to access the records of the type Report
+// in the database.
+type ReportStore struct {
+	*kallax.Store
+}
+
+// NewReportStore creates a new instance of ReportStore
+// using a SQL database.
+func NewReportStore(db *sql.DB) *ReportStore {
+	return &ReportStore{kallax.NewStore(db)}
+}
+
+// GenericStore returns the generic store of this store.
+func (s *ReportStore) GenericStore() *kallax.Store {
+	return s.Store
+}
+
+// SetGenericStore changes the generic store of this store.
+func (s *ReportStore) SetGenericStore(store *kallax.Store) {
+	s.Store = store
+}
+
+// Debug returns a new store that will print all SQL statements to stdout using
+// the log.Printf function.
+func (s *ReportStore) Debug() *ReportStore {
+	return &ReportStore{s.Store.Debug()}
+}
+
+// DebugWith returns a new store that will print all SQL statements using the
+// given logger function.
+func (s *ReportStore) DebugWith(logger kallax.LoggerFunc) *ReportStore {
+	return &ReportStore{s.Store.DebugWith(logger)}
+}
+
+// DisableCacher turns off prepared statements, which can be useful in some scenarios.
+func (s *ReportStore) DisableCacher() *ReportStore {
+	return &ReportStore{s.Store.DisableCacher()}
+}
+
+func (s *ReportStore) inverseRecords(record *Report) []modelSaveFunc {
+	var result []modelSaveFunc
+
+	if record.User != nil && !record.User.IsSaving() {
+		record.AddVirtualColumn("user_guid", record.User.GetID())
+		result = append(result, func(store *kallax.Store) error {
+			_, err := (&UserStore{store}).Save(record.User)
+			return err
+		})
+	}
+
+	return result
+}
+
+// Insert inserts a Report in the database. A non-persisted object is
+// required for this operation.
+func (s *ReportStore) Insert(record *Report) error {
+	record.SetSaving(true)
+	defer record.SetSaving(false)
+
+	inverseRecords := s.inverseRecords(record)
+
+	if len(inverseRecords) > 0 {
+		return s.Store.Transaction(func(s *kallax.Store) error {
+			for _, r := range inverseRecords {
+				if err := r(s); err != nil {
+					return err
+				}
+			}
+
+			if err := s.Insert(Schema.Report.BaseSchema, record); err != nil {
+				return err
+			}
+
+			return nil
+		})
+	}
+
+	return s.Store.Insert(Schema.Report.BaseSchema, record)
+}
+
+// Update updates the given record on the database. If the columns are given,
+// only these columns will be updated. Otherwise all of them will be.
+// Be very careful with this, as you will have a potentially different object
+// in memory but not on the database.
+// Only writable records can be updated. Writable objects are those that have
+// been just inserted or retrieved using a query with no custom select fields.
+func (s *ReportStore) Update(record *Report, cols ...kallax.SchemaField) (updated int64, err error) {
+	record.SetSaving(true)
+	defer record.SetSaving(false)
+
+	inverseRecords := s.inverseRecords(record)
+
+	if len(inverseRecords) > 0 {
+		err = s.Store.Transaction(func(s *kallax.Store) error {
+			for _, r := range inverseRecords {
+				if err := r(s); err != nil {
+					return err
+				}
+			}
+
+			updated, err = s.Update(Schema.Report.BaseSchema, record, cols...)
+			if err != nil {
+				return err
+			}
+
+			return nil
+		})
+		if err != nil {
+			return 0, err
+		}
+
+		return updated, nil
+	}
+
+	return s.Store.Update(Schema.Report.BaseSchema, record, cols...)
+}
+
+// Save inserts the object if the record is not persisted, otherwise it updates
+// it. Same rules of Update and Insert apply depending on the case.
+func (s *ReportStore) Save(record *Report) (updated bool, err error) {
+	if !record.IsPersisted() {
+		return false, s.Insert(record)
+	}
+
+	rowsUpdated, err := s.Update(record)
+	if err != nil {
+		return false, err
+	}
+
+	return rowsUpdated > 0, nil
+}
+
+// Delete removes the given record from the database.
+func (s *ReportStore) Delete(record *Report) error {
+	return s.Store.Delete(Schema.Report.BaseSchema, record)
+}
+
+// Find returns the set of results for the given query.
+func (s *ReportStore) Find(q *ReportQuery) (*ReportResultSet, error) {
+	rs, err := s.Store.Find(q)
+	if err != nil {
+		return nil, err
+	}
+
+	return NewReportResultSet(rs), nil
+}
+
+// MustFind returns the set of results for the given query, but panics if there
+// is any error.
+func (s *ReportStore) MustFind(q *ReportQuery) *ReportResultSet {
+	return NewReportResultSet(s.Store.MustFind(q))
+}
+
+// Count returns the number of rows that would be retrieved with the given
+// query.
+func (s *ReportStore) Count(q *ReportQuery) (int64, error) {
+	return s.Store.Count(q)
+}
+
+// MustCount returns the number of rows that would be retrieved with the given
+// query, but panics if there is an error.
+func (s *ReportStore) MustCount(q *ReportQuery) int64 {
+	return s.Store.MustCount(q)
+}
+
+// FindOne returns the first row returned by the given query.
+// `ErrNotFound` is returned if there are no results.
+func (s *ReportStore) FindOne(q *ReportQuery) (*Report, error) {
+	q.Limit(1)
+	q.Offset(0)
+	rs, err := s.Find(q)
+	if err != nil {
+		return nil, err
+	}
+
+	if !rs.Next() {
+		return nil, kallax.ErrNotFound
+	}
+
+	record, err := rs.Get()
+	if err != nil {
+		return nil, err
+	}
+
+	if err := rs.Close(); err != nil {
+		return nil, err
+	}
+
+	return record, nil
+}
+
+// FindAll returns a list of all the rows returned by the given query.
+func (s *ReportStore) FindAll(q *ReportQuery) ([]*Report, error) {
+	rs, err := s.Find(q)
+	if err != nil {
+		return nil, err
+	}
+
+	return rs.All()
+}
+
+// MustFindOne returns the first row retrieved by the given query. It panics
+// if there is an error or if there are no rows.
+func (s *ReportStore) MustFindOne(q *ReportQuery) *Report {
+	record, err := s.FindOne(q)
+	if err != nil {
+		panic(err)
+	}
+	return record
+}
+
+// Reload refreshes the Report with the data in the database and
+// makes it writable.
+func (s *ReportStore) Reload(record *Report) error {
+	return s.Store.Reload(Schema.Report.BaseSchema, record)
+}
+
+// Transaction executes the given callback in a transaction and rollbacks if
+// an error is returned.
+// The transaction is only open in the store passed as a parameter to the
+// callback.
+func (s *ReportStore) Transaction(callback func(*ReportStore) error) error {
+	if callback == nil {
+		return kallax.ErrInvalidTxCallback
+	}
+
+	return s.Store.Transaction(func(store *kallax.Store) error {
+		return callback(&ReportStore{store})
+	})
+}
+
+// ReportQuery is the object used to create queries for the Report
+// entity.
+type ReportQuery struct {
+	*kallax.BaseQuery
+}
+
+// NewReportQuery returns a new instance of ReportQuery.
+func NewReportQuery() *ReportQuery {
+	return &ReportQuery{
+		BaseQuery: kallax.NewBaseQuery(Schema.Report.BaseSchema),
+	}
+}
+
+// Select adds columns to select in the query.
+func (q *ReportQuery) Select(columns ...kallax.SchemaField) *ReportQuery {
+	if len(columns) == 0 {
+		return q
+	}
+	q.BaseQuery.Select(columns...)
+	return q
+}
+
+// SelectNot excludes columns from being selected in the query.
+func (q *ReportQuery) SelectNot(columns ...kallax.SchemaField) *ReportQuery {
+	q.BaseQuery.SelectNot(columns...)
+	return q
+}
+
+// Copy returns a new identical copy of the query. Remember queries are mutable
+// so make a copy any time you need to reuse them.
+func (q *ReportQuery) Copy() *ReportQuery {
+	return &ReportQuery{
+		BaseQuery: q.BaseQuery.Copy(),
+	}
+}
+
+// Order adds order clauses to the query for the given columns.
+func (q *ReportQuery) Order(cols ...kallax.ColumnOrder) *ReportQuery {
+	q.BaseQuery.Order(cols...)
+	return q
+}
+
+// BatchSize sets the number of items to fetch per batch when there are 1:N
+// relationships selected in the query.
+func (q *ReportQuery) BatchSize(size uint64) *ReportQuery {
+	q.BaseQuery.BatchSize(size)
+	return q
+}
+
+// Limit sets the max number of items to retrieve.
+func (q *ReportQuery) Limit(n uint64) *ReportQuery {
+	q.BaseQuery.Limit(n)
+	return q
+}
+
+// Offset sets the number of items to skip from the result set of items.
+func (q *ReportQuery) Offset(n uint64) *ReportQuery {
+	q.BaseQuery.Offset(n)
+	return q
+}
+
+// Where adds a condition to the query. All conditions added are concatenated
+// using a logical AND.
+func (q *ReportQuery) Where(cond kallax.Condition) *ReportQuery {
+	q.BaseQuery.Where(cond)
+	return q
+}
+
+func (q *ReportQuery) WithUser() *ReportQuery {
+	q.AddRelation(Schema.User.BaseSchema, "User", kallax.OneToOne, nil)
+	return q
+}
+
+// FindByGUID adds a new filter to the query that will require that
+// the GUID property is equal to one of the passed values; if no passed values,
+// it will do nothing.
+func (q *ReportQuery) FindByGUID(v ...kallax.ULID) *ReportQuery {
+	if len(v) == 0 {
+		return q
+	}
+	values := make([]interface{}, len(v))
+	for i, val := range v {
+		values[i] = val
+	}
+	return q.Where(kallax.In(Schema.Report.GUID, values...))
+}
+
+// FindByLabel adds a new filter to the query that will require that
+// the Label property is equal to the passed value.
+func (q *ReportQuery) FindByLabel(v string) *ReportQuery {
+	return q.Where(kallax.Eq(Schema.Report.Label, v))
+}
+
+// FindByUser adds a new filter to the query that will require that
+// the foreign key of User is equal to the passed value.
+func (q *ReportQuery) FindByUser(v kallax.ULID) *ReportQuery {
+	return q.Where(kallax.Eq(Schema.Report.UserFK, v))
+}
+
+// ReportResultSet is the set of results returned by a query to the
+// database.
+type ReportResultSet struct {
+	ResultSet kallax.ResultSet
+	last      *Report
+	lastErr   error
+}
+
+// NewReportResultSet creates a new result set for rows of the type
+// Report.
+func NewReportResultSet(rs kallax.ResultSet) *ReportResultSet {
+	return &ReportResultSet{ResultSet: rs}
+}
+
+// Next fetches the next item in the result set and returns true if there is
+// a next item.
+// The result set is closed automatically when there are no more items.
+func (rs *ReportResultSet) Next() bool {
+	if !rs.ResultSet.Next() {
+		rs.lastErr = rs.ResultSet.Close()
+		rs.last = nil
+		return false
+	}
+
+	var record kallax.Record
+	record, rs.lastErr = rs.ResultSet.Get(Schema.Report.BaseSchema)
+	if rs.lastErr != nil {
+		rs.last = nil
+	} else {
+		var ok bool
+		rs.last, ok = record.(*Report)
+		if !ok {
+			rs.lastErr = fmt.Errorf("kallax: unable to convert record to *Report")
+			rs.last = nil
+		}
+	}
+
+	return true
+}
+
+// Get retrieves the last fetched item from the result set and the last error.
+func (rs *ReportResultSet) Get() (*Report, error) {
+	return rs.last, rs.lastErr
+}
+
+// ForEach iterates over the complete result set passing every record found to
+// the given callback. It is possible to stop the iteration by returning
+// `kallax.ErrStop` in the callback.
+// Result set is always closed at the end.
+func (rs *ReportResultSet) ForEach(fn func(*Report) error) error {
+	for rs.Next() {
+		record, err := rs.Get()
+		if err != nil {
+			return err
+		}
+
+		if err := fn(record); err != nil {
+			if err == kallax.ErrStop {
+				return rs.Close()
+			}
+
+			return err
+		}
+	}
+	return nil
+}
+
+// All returns all records on the result set and closes the result set.
+func (rs *ReportResultSet) All() ([]*Report, error) {
+	var result []*Report
+	for rs.Next() {
+		record, err := rs.Get()
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, record)
+	}
+	return result, nil
+}
+
+// One returns the first record on the result set and closes the result set.
+func (rs *ReportResultSet) One() (*Report, error) {
+	if !rs.Next() {
+		return nil, kallax.ErrNotFound
+	}
+
+	record, err := rs.Get()
+	if err != nil {
+		return nil, err
+	}
+
+	if err := rs.Close(); err != nil {
+		return nil, err
+	}
+
+	return record, nil
+}
+
+// Err returns the last error occurred.
+func (rs *ReportResultSet) Err() error {
+	return rs.lastErr
+}
+
+// Close closes the result set.
+func (rs *ReportResultSet) Close() error {
+	return rs.ResultSet.Close()
+}
+
 // NewSavedQuery returns a new instance of SavedQuery.
 func NewSavedQuery(label string, content string, user *User) (record *SavedQuery, err error) {
 	return newSavedQuery(label, content, user)
@@ -3711,6 +4230,7 @@ type schema struct {
 	Collection *schemaCollection
 	Entry      *schemaEntry
 	Extractor  *schemaExtractor
+	Report     *schemaReport
 	SavedQuery *schemaSavedQuery
 	Shorthand  *schemaShorthand
 	User       *schemaUser
@@ -3754,6 +4274,15 @@ type schemaExtractor struct {
 	BookFK kallax.SchemaField
 }
 
+type schemaReport struct {
+	*kallax.BaseSchema
+	GUID      kallax.SchemaField
+	Label     kallax.SchemaField
+	Variables *schemaReportVariables
+	Outputs   *schemaReportOutputs
+	UserFK    kallax.SchemaField
+}
+
 type schemaSavedQuery struct {
 	*kallax.BaseSchema
 	GUID    kallax.SchemaField
@@ -3775,6 +4304,42 @@ type schemaShorthand struct {
 type schemaUser struct {
 	*kallax.BaseSchema
 	GUID kallax.SchemaField
+}
+
+type schemaReportOutputs struct {
+	*kallax.BaseSchemaField
+	ID    kallax.SchemaField
+	Label kallax.SchemaField
+	Type  kallax.SchemaField
+	Query kallax.SchemaField
+}
+
+func (s *schemaReportOutputs) At(n int) *schemaReportOutputs {
+	return &schemaReportOutputs{
+		BaseSchemaField: kallax.NewSchemaField("outputs").(*kallax.BaseSchemaField),
+		ID:              kallax.NewJSONSchemaKey(kallax.JSONText, "outputs", fmt.Sprint(n), "id"),
+		Label:           kallax.NewJSONSchemaKey(kallax.JSONText, "outputs", fmt.Sprint(n), "label"),
+		Type:            kallax.NewJSONSchemaKey(kallax.JSONInt, "outputs", fmt.Sprint(n), "type"),
+		Query:           kallax.NewJSONSchemaKey(kallax.JSONText, "outputs", fmt.Sprint(n), "query"),
+	}
+}
+
+type schemaReportVariables struct {
+	*kallax.BaseSchemaField
+	ID           kallax.SchemaField
+	Label        kallax.SchemaField
+	Query        kallax.SchemaField
+	DefaultValue kallax.SchemaField
+}
+
+func (s *schemaReportVariables) At(n int) *schemaReportVariables {
+	return &schemaReportVariables{
+		BaseSchemaField: kallax.NewSchemaField("variables").(*kallax.BaseSchemaField),
+		ID:              kallax.NewJSONSchemaKey(kallax.JSONText, "variables", fmt.Sprint(n), "id"),
+		Label:           kallax.NewJSONSchemaKey(kallax.JSONText, "variables", fmt.Sprint(n), "label"),
+		Query:           kallax.NewJSONSchemaKey(kallax.JSONText, "variables", fmt.Sprint(n), "query"),
+		DefaultValue:    kallax.NewJSONSchemaKey(kallax.JSONText, "variables", fmt.Sprint(n), "defaultValue"),
+	}
 }
 
 var Schema = &schema{
@@ -3879,6 +4444,42 @@ var Schema = &schema{
 		Match:  kallax.NewSchemaField("match"),
 		Type:   kallax.NewSchemaField("type"),
 		BookFK: kallax.NewSchemaField("book_guid"),
+	},
+	Report: &schemaReport{
+		BaseSchema: kallax.NewBaseSchema(
+			"reports",
+			"__report",
+			kallax.NewSchemaField("guid"),
+			kallax.ForeignKeys{
+				"User": kallax.NewForeignKey("user_guid", true),
+			},
+			func() kallax.Record {
+				return new(Report)
+			},
+			false,
+			kallax.NewSchemaField("guid"),
+			kallax.NewSchemaField("label"),
+			kallax.NewSchemaField("variables"),
+			kallax.NewSchemaField("outputs"),
+			kallax.NewSchemaField("user_guid"),
+		),
+		GUID:  kallax.NewSchemaField("guid"),
+		Label: kallax.NewSchemaField("label"),
+		Variables: &schemaReportVariables{
+			BaseSchemaField: kallax.NewSchemaField("variables").(*kallax.BaseSchemaField),
+			ID:              kallax.NewJSONSchemaKey(kallax.JSONText, "variables", "id"),
+			Label:           kallax.NewJSONSchemaKey(kallax.JSONText, "variables", "label"),
+			Query:           kallax.NewJSONSchemaKey(kallax.JSONText, "variables", "query"),
+			DefaultValue:    kallax.NewJSONSchemaKey(kallax.JSONText, "variables", "defaultValue"),
+		},
+		Outputs: &schemaReportOutputs{
+			BaseSchemaField: kallax.NewSchemaField("outputs").(*kallax.BaseSchemaField),
+			ID:              kallax.NewJSONSchemaKey(kallax.JSONText, "outputs", "id"),
+			Label:           kallax.NewJSONSchemaKey(kallax.JSONText, "outputs", "label"),
+			Type:            kallax.NewJSONSchemaKey(kallax.JSONInt, "outputs", "type"),
+			Query:           kallax.NewJSONSchemaKey(kallax.JSONText, "outputs", "query"),
+		},
+		UserFK: kallax.NewSchemaField("user_guid"),
 	},
 	SavedQuery: &schemaSavedQuery{
 		BaseSchema: kallax.NewBaseSchema(
