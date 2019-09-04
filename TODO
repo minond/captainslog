@@ -1,8 +1,15 @@
 Web client:
 
 - Disable exec and save buttons when query is blank
+
+- Edit book extractors and shorthands
+
 - Add support for editing entry
 - Add support for deleting entry
+
+- List reports
+- Add report
+- Edit report
 - Loading report output
 - Missing inputs report output
 
