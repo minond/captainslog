@@ -23,7 +23,7 @@ select + input {
 }
 
 .page-header {
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid #c2c2c2;
 }
 
 .page-header-content,
@@ -205,6 +205,16 @@ select + input {
   background-color: #96ccff6b;
 }
 
+.report-label {
+  border-bottom: 1px solid #cfcfcf;
+  display: inline-block;
+  margin-bottom: 30px;
+}
+
+.report-variable-fields {
+  margin-bottom: 30px;
+}
+
 .report-variable-fields label span {
   padding-right: 5px;
 }
@@ -212,6 +222,10 @@ select + input {
 .report-variable-fields label select {
   position: relative;
   top: -1px;
+}
+
+.report-output + .report-output .table-output .output-label {
+  margin-top: 15px;
 }
 
 .output .output-label {
@@ -241,10 +255,6 @@ select + input {
 
 .value-output .value-output-value {
   font-size: 2rem;
-}
-
-.report-output + .report-output .table-output .output-label {
-  margin-top: 15px;
 }
 
 .table-output .output-label {

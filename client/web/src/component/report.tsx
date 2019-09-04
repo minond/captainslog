@@ -348,7 +348,7 @@ export const Report = (props: {}) => {
   loadReportData(inputs, outputs, dispatchInput, dispatchOutput)
 
   return <div>
-    <h2>{report ? report.label : " "}</h2>
+    <h2 className="report-label">{report ? report.label : " "}</h2>
     <VariablesForm variables={variables} onSelect={setInput} />
     <Outputs outputs={outputs} />
   </div>
