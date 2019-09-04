@@ -2225,8 +2225,8 @@ func (rs *ExtractorResultSet) Close() error {
 }
 
 // NewReport returns a new instance of Report.
-func NewReport() (record *Report) {
-	return new(Report)
+func NewReport(label string, variables []Variable, outputs []Output, user *User) (record *Report, err error) {
+	return newReport(label, variables, outputs, user)
 }
 
 // GetID returns the primary key of the model.

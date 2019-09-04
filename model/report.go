@@ -35,3 +35,15 @@ type Output struct {
 	Type  OutputType `json:"type"`
 	Query string     `json:"query"`
 }
+
+func newReport(label string, variables []Variable, outputs []Output, user *User) (*Report, error) {
+	report := &Report{
+		GUID:      kallax.NewULID(),
+		Label:     label,
+		Variables: variables,
+		Outputs:   outputs,
+		User:      user,
+	}
+
+	return report, nil
+}
