@@ -33,11 +33,6 @@ select + input {
   padding: 10px;
 }
 
-/* .page-header-content.wide, */
-/* .page-content.wide { */
-/*   max-width: 1000px; */
-/* } */
-
 .page-header a {
   color: black;
   text-decoration: none;
