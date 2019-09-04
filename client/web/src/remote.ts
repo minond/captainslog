@@ -65,6 +65,10 @@ export const getSchema = (): Promise<Schema> =>
   axios.get<Schema>(uris.query)
     .then((res) => res.data)
 
+export const getReport = (guid: string): Promise<Report | null> =>
+  axios.get<ReportsRetrieveResponse>(`${uris.reports}?guid=${guid}`)
+    .then((res) => (res.data.reports || [])[0])
+
 export const getReports = (): Promise<Report[]> =>
   axios.get<ReportsRetrieveResponse>(uris.reports)
     .then((res) => res.data.reports || [])
@@ -74,6 +78,7 @@ const ttls = {
   [getBook.toString()]: 5000,
   [getBooks.toString()]: 5000,
   [getEntriesForBook.toString()]: 500,
+  [getReport.toString()]: 60000,
   [getReports.toString()]: 60000,
   [getSavedQueries.toString()]: 1000,
 }
@@ -123,6 +128,7 @@ export const cachedExecuteQuery = cached(executeQuery)
 export const cachedGetBook = cached(getBook)
 export const cachedGetBooks = cached(getBooks)
 export const cachedGetEntriesForBook = cached(getEntriesForBook)
+export const cachedGetReport = cached(getReport)
 export const cachedGetReports = cached(getReports)
 export const cachedGetSavedQueries = cached(getSavedQueries)
 export const cachedGetSchema = cached(getSchema)
