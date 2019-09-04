@@ -1,17 +1,10 @@
 import * as React from "react"
 
-import { QueryResult, QueryResults } from "../../definitions"
+import { OutputType, QueryResult, QueryResults } from "../../definitions"
 
 import { ChartOutput } from "./chart"
 import { TableOutput } from "./table"
 import { ValueOutput } from "./value"
-
-export enum OutputType {
-  InvalidOutput,
-  TableOutput,
-  ChartOutput,
-  ValueOutput,
-}
 
 export type Definition = {
   type: OutputType

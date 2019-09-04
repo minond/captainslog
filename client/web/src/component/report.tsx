@@ -1,11 +1,20 @@
 import * as React from "react"
 import { useEffect, useReducer, useState } from "react"
 
-import { QueryResult, QueryResults } from "../definitions"
 import { cachedExecuteQuery } from "../remote"
 
+import {
+  Input,
+  Output,
+  OutputType,
+  QueryResult,
+  QueryResults,
+  Report,
+  Variable,
+} from "../definitions"
+
 import { IncompleteOutput } from "./outputs/incomplete"
-import { Definition, LookupOutput, OutputType } from "./outputs/output"
+import { Definition, LookupOutput } from "./outputs/output"
 import { valueOf } from "./outputs/utils"
 
 const dummy = {
@@ -78,34 +87,6 @@ const dummy = {
         "order by exercise",
     }
   ],
-}
-
-type Report = {
-  label: string
-  outputs: Output[]
-  variables: Variable[]
-}
-
-type Variable = {
-  id: string
-  label: string
-  query: string
-  defaultValue?: string
-  options?: string[]
-}
-
-type Output = {
-  id: string
-  label: string
-  type: OutputType
-  query: string
-  results?: QueryResults
-}
-
-type Input = {
-  variable: Variable
-  value: string
-  changeHandled?: boolean
 }
 
 const valuesOf = (res: QueryResults): string[] =>
@@ -327,7 +308,7 @@ const Outputs = ({ outputs }: OutputsProps) =>
   })}
   </>
 
-export const Report = (props: {}) => {
+export const ReportView = (props: {}) => {
   const [report, setReport] = useState<Report | null>(dummy)
   const [variables, dispatchVariable] = useReducer(variableReducer, [], (i) => i)
   const [inputs, dispatchInput] = useReducer(inputReducer, [], (i) => i)

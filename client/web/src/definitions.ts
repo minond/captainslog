@@ -84,3 +84,38 @@ export type SchemaBook = {
 export type Schema = {
   books: SchemaBook[]
 }
+
+export type Report = {
+  label: string
+  outputs: Output[]
+  variables: Variable[]
+}
+
+export type Variable = {
+  id: string
+  label: string
+  query: string
+  defaultValue?: string
+  options?: string[]
+}
+
+export enum OutputType {
+  InvalidOutput,
+  TableOutput,
+  ChartOutput,
+  ValueOutput,
+}
+
+export type Output = {
+  id: string
+  label: string
+  type: OutputType
+  query: string
+  results?: QueryResults
+}
+
+export type Input = {
+  variable: Variable
+  value: string
+  changeHandled?: boolean
+}

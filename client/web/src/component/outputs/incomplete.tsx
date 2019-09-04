@@ -1,6 +1,7 @@
 import * as React from "react"
 
-import { Definition, OutputType } from "./output"
+import { Definition } from "./output"
+import { OutputType } from "../../definitions"
 
 import { ChartRawOutput } from "./chart"
 import { TableRawOutput } from "./table"
