@@ -20,6 +20,15 @@ import (
 var _ = schema.NewDecoder
 var store = sessions.NewCookieStore([]byte(os.Getenv("SESSION_KEY")))
 
+// ReportServiceContract defines what an implementation of service.ReportService
+// should look like. This interface is derived from the routes.json file
+// provided as input to this generator, and it is a combination of the handler,
+// the request, and the response.
+type ReportServiceContract interface {
+	// Retrieve runs when a GET /api/reports request comes in.
+	Retrieve(ctx context.Context, req *service.ReportRetrieveRequest) (*service.ReportRetrieveResponse, error)
+}
+
 // BookServiceContract defines what an implementation of service.BookService
 // should look like. This interface is derived from the routes.json file
 // provided as input to this generator, and it is a combination of the handler,
@@ -93,6 +102,58 @@ type QueryServiceContract interface {
 type ShorthandServiceContract interface {
 	// Create runs when a POST /api/shorthands request comes in.
 	Create(ctx context.Context, req *service.ShorthandCreateRequest) (*model.Shorthand, error)
+}
+
+// MountReportService add a handler to a Gorilla Mux Router that will route
+// an incoming request through the service.ReportService service.
+func MountReportService(router *mux.Router, serv ReportServiceContract) {
+	log.Print("[INFO] mounting service.ReportService on /api/reports")
+	log.Print("[INFO] handler GET /api/reports -> service.ReportService.Retrieve(service.ReportRetrieveRequest) -> service.ReportRetrieveResponse")
+
+	router.HandleFunc("/api/reports", func(w http.ResponseWriter, r *http.Request) {
+		session, err := store.Get(r, "main")
+		if err != nil {
+			http.Error(w, "unable to read request data", http.StatusInternalServerError)
+			log.Printf("[ERROR] error getting session: %v", err)
+			return
+		}
+
+		switch r.Method {
+
+		case "GET":
+			req := &service.ReportRetrieveRequest{}
+			dec := schema.NewDecoder()
+			if err = dec.Decode(req, r.URL.Query()); err != nil {
+				http.Error(w, "unable to decode request", http.StatusBadRequest)
+				log.Printf("[ERROR] error unmarshaling request: %v", err)
+				return
+			}
+
+			ctx := context.Background()
+			for key, val := range session.Values {
+				ctx = context.WithValue(ctx, key, val)
+			}
+
+			res, err := serv.Retrieve(ctx, req)
+			if err != nil {
+				http.Error(w, "unable to handle request", http.StatusInternalServerError)
+				log.Printf("[ERROR] error handling request: %v", err)
+				return
+			}
+
+			out, err := json.Marshal(res)
+			if err != nil {
+				http.Error(w, "unable to encode response", http.StatusInternalServerError)
+				log.Printf("[ERROR] error marshaling response: %v", err)
+				return
+			}
+
+			w.Write(out)
+
+		default:
+			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+		}
+	})
 }
 
 // MountBookService add a handler to a Gorilla Mux Router that will route

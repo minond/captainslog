@@ -1,6 +1,18 @@
 {
   "routes": [
     {
+      "endpoint": "/api/reports",
+      "service": "service.ReportService",
+      "methods": [
+        {
+          "method": "GET",
+          "handler": "Retrieve",
+          "request": "service.ReportRetrieveRequest",
+          "response": "service.ReportRetrieveResponse"
+        }
+      ]
+    },
+    {
       "endpoint": "/api/books",
       "service": "service.BookService",
       "methods": [

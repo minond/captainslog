@@ -34,6 +34,7 @@ var cmdServer = &cobra.Command{
 		entryService := service.NewEntryService(db)
 		extractorService := service.NewExtractorService(db)
 		queryService := service.NewQueryService(db)
+		reportService := service.NewReportService(db)
 		savedQueryService := service.NewSavedQueryService(db)
 		shorthandService := service.NewShorthandService(db)
 
@@ -55,6 +56,7 @@ var cmdServer = &cobra.Command{
 		httpmount.MountEntryService(router, entryService)
 		httpmount.MountExtractorService(router, extractorService)
 		httpmount.MountQueryService(router, queryService)
+		httpmount.MountReportService(router, reportService)
 		httpmount.MountSavedQueryService(router, savedQueryService)
 		httpmount.MountShorthandService(router, shorthandService)
 
