@@ -205,6 +205,10 @@ select + input {
   background-color: #96ccff6b;
 }
 
+.report {
+  padding-bottom: 50px;
+}
+
 .report-label {
   border-bottom: 1px solid #cfcfcf;
   display: inline-block;
