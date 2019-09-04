@@ -165,29 +165,26 @@ const isReadyToExecute = (query: string, inputs: Input[]): boolean => {
 
 type VariableInputsProps = {
   variables: Variable[]
+  inputs: Input[]
   onSelect: (val: string, v: Variable) => void
 }
 
-const VariablesForm = ({ variables, onSelect }: VariableInputsProps) => {
-  const variableFields = variables.map((variable) =>
-    <div title={variable.query} key={variable.label} className="report-variable-field">
+const VariablesForm = ({ variables, inputs, onSelect }: VariableInputsProps) => {
+  const variableFields = variables.map((variable) => {
+    const val = inputs.reduce((def, input) =>
+      input.variable.id === variable.id ? input.value : def, variable.defaultInput)
+
+    return <div title={variable.query} key={variable.label} className="report-variable-field">
       <label>
         <span>{variable.label}</span>
-        <select onChange={(ev) => onSelect(ev.target.value, variable)}>
+        <select value={val} onChange={(ev) => onSelect(ev.target.value, variable)}>
           <option key="blank" value="" label="Select a value" />
           {!variable.options ? null : variable.options.map((option, i) =>
-            <option
-              key={i + option}
-              selected={!!variable.defaultInput && option === variable.defaultInput}
-              value={option}
-              label={option}
-            >
-              {option}
-            </option>
-          )}
+            <option key={i + option} value={option} label={option}>{option}</option>)}
         </select>
       </label>
-    </div>)
+    </div>
+  })
 
   return <div className="report-variable-fields">
     {variableFields}
@@ -349,7 +346,7 @@ export const Report = (props: {}) => {
 
   return <div>
     <h2 className="report-label">{report ? report.label : " "}</h2>
-    <VariablesForm variables={variables} onSelect={setInput} />
+    <VariablesForm variables={variables} inputs={inputs} onSelect={setInput} />
     <Outputs outputs={outputs} />
   </div>
 }
