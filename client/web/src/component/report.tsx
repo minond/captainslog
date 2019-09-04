@@ -67,7 +67,7 @@ const dummy = {
   ],
   variables: [
     {
-      defaultInput: "Squats",
+      defaultValue: "Squats",
       id: Math.random().toString(),
       label: "Exercise",
       query:
@@ -90,7 +90,7 @@ type Variable = {
   id: string
   label: string
   query: string
-  defaultInput?: string
+  defaultValue?: string
   options?: string[]
 }
 
@@ -172,7 +172,7 @@ type VariableInputsProps = {
 const VariablesForm = ({ variables, inputs, onSelect }: VariableInputsProps) => {
   const variableFields = variables.map((variable) => {
     const val = inputs.reduce((def, input) =>
-      input.variable.id === variable.id ? input.value : def, variable.defaultInput)
+      input.variable.id === variable.id ? input.value : def, variable.defaultValue)
 
     return <div title={variable.query} key={variable.label} className="report-variable-field">
       <label>
@@ -264,8 +264,8 @@ const loadReportSettings = (
       const options = valuesOf(res)
       dispatchVariable({ kind: "setOptions", options, variable })
 
-      if (!!variable.defaultInput && options.indexOf(variable.defaultInput) !== -1) {
-        const value = variable.defaultInput
+      if (!!variable.defaultValue && options.indexOf(variable.defaultValue) !== -1) {
+        const value = variable.defaultValue
         const input = { variable, value }
         dispatchInput({ kind: "setInput", input })
       }
