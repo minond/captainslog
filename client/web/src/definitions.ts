@@ -85,6 +85,10 @@ export type Schema = {
   books: SchemaBook[]
 }
 
+export type ReportsRetrieveResponse = {
+  reports: Report[]
+}
+
 export type Report = {
   label: string
   outputs: Output[]

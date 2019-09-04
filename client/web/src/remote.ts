@@ -10,6 +10,8 @@ import {
   EntryUnsaved,
   QueryExecuteRequest,
   QueryResults,
+  Report,
+  ReportsRetrieveResponse,
   SavedQueriesRetrieveResponse,
   SavedQuery,
   SavedQueryRequest,
@@ -20,6 +22,7 @@ enum uris {
   books      = "/api/books",
   entries    = "/api/entries",
   query      = "/api/query",
+  reports    = "/api/reports",
   savedQuery = "/api/saved_query",
 }
 
@@ -62,11 +65,16 @@ export const getSchema = (): Promise<Schema> =>
   axios.get<Schema>(uris.query)
     .then((res) => res.data)
 
+export const getReports = (): Promise<Report[]> =>
+  axios.get<ReportsRetrieveResponse>(uris.reports)
+    .then((res) => res.data.reports || [])
+
 const ttls = {
   [executeQuery.toString()]: 100,
   [getBook.toString()]: 5000,
   [getBooks.toString()]: 5000,
   [getEntriesForBook.toString()]: 500,
+  [getReports.toString()]: 60000,
   [getSavedQueries.toString()]: 1000,
 }
 
@@ -115,5 +123,6 @@ export const cachedExecuteQuery = cached(executeQuery)
 export const cachedGetBook = cached(getBook)
 export const cachedGetBooks = cached(getBooks)
 export const cachedGetEntriesForBook = cached(getEntriesForBook)
+export const cachedGetReports = cached(getReports)
 export const cachedGetSavedQueries = cached(getSavedQueries)
 export const cachedGetSchema = cached(getSchema)
