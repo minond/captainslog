@@ -181,30 +181,32 @@ type EditFormProps = {
 const EditForm = ({ definition, onSave, onCancel }: EditFormProps) =>
   <div className="report-edit-form">
     <table>
-      <tr>
-        <td>
-          <label className="report-edit-form-label">
-            <span>Label</span>
-            <input value={definition.label} />
-          </label>
-          <label className="report-edit-form-label">
-            <span>Type</span>
-            <OutputTypeSelect value={definition.type} />
-          </label>
-        </td>
-        <td>
-          <label className="report-edit-form-label">
-            <span>Query</span>
-            <textarea value={definition.query} />
-          </label>
-        </td>
-      </tr>
-      <tr>
-        <td colSpan={2} className="report-edit-form-actions">
-          <button onClick={onCancel}>Cancel</button>
-          <button onClick={() => onSave(definition)}>Save</button>
-        </td>
-      </tr>
+      <tbody>
+        <tr>
+          <td>
+            <label className="report-edit-form-label">
+              <span>Label</span>
+              <input value={definition.label} />
+            </label>
+            <label className="report-edit-form-label">
+              <span>Type</span>
+              <OutputTypeSelect value={definition.type} />
+            </label>
+          </td>
+          <td>
+            <label className="report-edit-form-label">
+              <span>Query</span>
+              <textarea value={definition.query} />
+            </label>
+          </td>
+        </tr>
+        <tr>
+          <td colSpan={2} className="report-edit-form-actions">
+            <button onClick={onCancel}>Cancel</button>
+            <button onClick={() => onSave(definition)}>Save</button>
+          </td>
+        </tr>
+      </tbody>
     </table>
   </div>
 
