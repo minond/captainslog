@@ -16,19 +16,21 @@ import { NO_RESULTS, flattenResultsHash } from "./utils"
 type ChartOutputProps = {
   definition: Definition
   results: QueryResults
+  onEdit?: (def: Definition) => void
 }
 
-export const ChartOutput = ({ definition, results }: ChartOutputProps) =>
-  <ChartRawOutput definition={definition} results={results} />
+export const ChartOutput = (props: ChartOutputProps) =>
+  <ChartRawOutput {...props} />
 
 type ChartRawOutputProps = {
   definition: Definition
   results?: QueryResults
+  onEdit?: (def: Definition) => void
 }
 
-export const ChartRawOutput = ({ definition, results }: ChartRawOutputProps) =>
+export const ChartRawOutput = ({ definition, results, onEdit }: ChartRawOutputProps) =>
   <div className="output chart-output">
-    <Header definition={definition} />
+    <Header definition={definition} onEdit={onEdit} />
     {results && results.data && results.data.length ?
       <div className="chart-output-wrapper">
         <LineChart

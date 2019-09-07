@@ -25,20 +25,22 @@ const classOf = (val: QueryResult): string =>
 type TableOutputProps = {
   definition?: Definition
   results: QueryResults
+  onEdit?: (def: Definition) => void
 }
 
-export const TableOutput = ({ definition, results }: TableOutputProps) =>
-  <TableRawOutput definition={definition} results={results} />
+export const TableOutput = (props: TableOutputProps) =>
+  <TableRawOutput {...props} />
 
 type TableRawOutputProps = {
   definition?: Definition
   results?: QueryResults
+  onEdit?: (def: Definition) => void
 }
 
-export const TableRawOutput = ({ definition, results }: TableRawOutputProps) =>
+export const TableRawOutput = ({ definition, results, onEdit }: TableRawOutputProps) =>
   <div className="output table-output">
     {definition ?
-      <Header definition={definition} /> :
+      <Header definition={definition} onEdit={onEdit} /> :
       null}
     {results && results.data && results.data.length ?
       <table className="table-output-table">

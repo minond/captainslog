@@ -12,21 +12,22 @@ export type Definition = {
   query: string
 }
 
-type OutputProps = {
+type LookupOutputProps = {
   definition: Definition
   results: QueryResults
+  onEdit?: (def: Definition) => void
 }
 
-export const LookupOutput = ({ definition, results }: OutputProps) => {
-  switch (definition.type) {
+export const LookupOutput = (props: LookupOutputProps) => {
+  switch (props.definition.type) {
     case OutputType.TableOutput:
-      return <TableOutput definition={definition} results={results} />
+      return <TableOutput {...props} />
 
     case OutputType.ChartOutput:
-      return <ChartOutput definition={definition} results={results} />
+      return <ChartOutput {...props} />
 
     case OutputType.ValueOutput:
-      return <ValueOutput definition={definition} results={results} />
+      return <ValueOutput {...props} />
 
     case OutputType.InvalidOutput:
     default:
@@ -36,9 +37,17 @@ export const LookupOutput = ({ definition, results }: OutputProps) => {
 
 type HeaderProps = {
   definition: Definition
+  onEdit?: (def: Definition) => void
 }
 
-export const Header = ({ definition }: HeaderProps) =>
-  <div className="output-label" title={definition.query}>
-    {definition.label}
+export const Header = ({ definition, onEdit }: HeaderProps) =>
+  <div className="output-header">
+    <div className="output-label" title={definition.query}>
+      {definition.label}
+    </div>
+    {onEdit ?
+      <div className="output-edit" onClick={() => onEdit(definition)}>
+        [edit]
+      </div> :
+      null}
   </div>

@@ -14,22 +14,21 @@ const getValue = (res: QueryResults) =>
 type ValueOutputProps = {
   definition: Definition
   results: QueryResults
+  onEdit?: (def: Definition) => void
 }
 
-export const ValueOutput = ({ definition, results }: ValueOutputProps) =>
-  <ValueRawOutput
-    definition={definition}
-    raw={getValue(results)}
-  />
+export const ValueOutput = (props: ValueOutputProps) =>
+  <ValueRawOutput {...props} raw={getValue(props.results)} />
 
-type ValueProps = {
+type ValueRawOutputProps = {
   definition: Definition
   raw?: scalar
+  onEdit?: (def: Definition) => void
 }
 
-export const ValueRawOutput = ({ definition, raw }: ValueProps) =>
+export const ValueRawOutput = ({ definition, raw, onEdit }: ValueRawOutputProps) =>
   <div className="output value-output">
-    <Header definition={definition} />
+    <Header definition={definition} onEdit={onEdit} />
     <div className="value-output-wrapper">
       <span className="value-output-value">{raw || DEFAULT_VALUE}</span>
     </div>

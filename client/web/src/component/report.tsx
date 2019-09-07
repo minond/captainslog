@@ -294,15 +294,20 @@ const outputDefinition = (output: Output): Definition => ({
   query: output.query,
 })
 
-type OutputsProps = { outputs: Output[] }
-const Outputs = ({ outputs }: OutputsProps) =>
+type OutputsProps = {
+  outputs: Output[]
+  onEdit: (def: Definition) => void
+}
+
+const Outputs = ({ outputs, onEdit }: OutputsProps) =>
   <>
   {outputs.map((output, i) => {
     const definition = outputDefinition(output)
     const results = output.results
+    const props = { definition, onEdit }
     const elem = !results ?
       <IncompleteOutput definition={definition} /> :
-      <LookupOutput definition={definition} results={results} />
+      <LookupOutput {...props} results={results} />
 
     return <span key={i} className="report-output">{elem}</span>
   })}
@@ -328,6 +333,6 @@ export const ReportView = (props: {}) => {
   return <div className="report">
     <h2 className="report-label">{report ? report.label : " "}</h2>
     <VariablesForm variables={variables} inputs={inputs} onSelect={setInput} />
-    <Outputs outputs={outputs} />
+    <Outputs outputs={outputs} onEdit={(def) => void 0} />
   </div>
 }
