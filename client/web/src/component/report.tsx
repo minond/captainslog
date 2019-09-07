@@ -174,10 +174,11 @@ const VariablesForm = ({ variables, inputs, onSelect }: VariableInputsProps) => 
 
 type EditFormProps = {
   definition: Definition
+  onSave: (def: Definition) => void
   onCancel: () => void
 }
 
-const EditForm = ({ definition, onCancel }: EditFormProps) =>
+const EditForm = ({ definition, onSave, onCancel }: EditFormProps) =>
   <div className="report-edit-form">
     <table>
       <tr>
@@ -201,6 +202,7 @@ const EditForm = ({ definition, onCancel }: EditFormProps) =>
       <tr>
         <td colSpan={2} className="report-edit-form-actions">
           <button onClick={onCancel}>Cancel</button>
+          <button onClick={() => onSave(definition)}>Save</button>
         </td>
       </tr>
     </table>
@@ -368,6 +370,7 @@ export const ReportView = (props: {}) => {
   const editForm = editing &&
     <EditForm
       definition={editing}
+      onSave={(definition) => console.log(definition)}
       onCancel={() => setEditing(null)}
     />
 
