@@ -173,12 +173,12 @@ const VariablesForm = ({ variables, inputs, onSelect }: VariableInputsProps) => 
 }
 
 type EditFormProps = {
-  definition: Definition
-  onSave: (def: Definition) => void
+  output: Output,
+  onSave: (output: Output) => void
   onCancel: () => void
 }
 
-const EditForm = ({ definition, onSave, onCancel }: EditFormProps) =>
+const EditForm = ({ output, onSave, onCancel }: EditFormProps) =>
   <div className="report-edit-form">
     <table>
       <tbody>
@@ -186,24 +186,24 @@ const EditForm = ({ definition, onSave, onCancel }: EditFormProps) =>
           <td>
             <label className="report-edit-form-label">
               <span>Label</span>
-              <input value={definition.label} />
+              <input value={output.label} />
             </label>
             <label className="report-edit-form-label">
               <span>Type</span>
-              <OutputTypeSelect value={definition.type} />
+              <OutputTypeSelect value={output.type} />
             </label>
           </td>
           <td>
             <label className="report-edit-form-label">
               <span>Query</span>
-              <textarea value={definition.query} />
+              <textarea value={output.query} />
             </label>
           </td>
         </tr>
         <tr>
           <td colSpan={2} className="report-edit-form-actions">
             <button onClick={onCancel}>Cancel</button>
-            <button onClick={() => onSave(definition)}>Save</button>
+            <button onClick={() => onSave(output)}>Save</button>
           </td>
         </tr>
       </tbody>
@@ -219,18 +219,33 @@ const OutputTypeSelect = ({ value }: { value: OutputType }) =>
 
 type OutputReducerSetOutputsAction = { kind: "setOutputs", outputs: Output[] }
 type OutputReducerSetResultsAction = { kind: "setResults", output: Output, results: QueryResults }
-type OutputReducerAction = OutputReducerSetOutputsAction | OutputReducerSetResultsAction
+type OutputReducerSetDefinitionAction = { kind: "updateDefinition", output: Output }
+type OutputReducerAction
+  = OutputReducerSetOutputsAction
+  | OutputReducerSetResultsAction
+  | OutputReducerSetDefinitionAction
 type OutputReducer = (outputs: Output[], action: OutputReducerAction) => Output[]
 const outputReducer: OutputReducer = (outputs, action) => {
   switch (action.kind) {
     case "setOutputs":
       return action.outputs
 
-    case "setResults":
+    case "setResults": {
       const { output, results } = action
       return outputs.map((o) =>
         o.id !== output.id ? o : { ...o, results })
-      return outputs
+    }
+
+    case "updateDefinition": {
+      const { output } = action
+      return outputs.map((o) =>
+        o.id !== output.id ? o : {
+          ...o,
+          type: output.type,
+          label: output.label,
+          query: output.query,
+        })
+    }
   }
 }
 
@@ -341,14 +356,15 @@ const outputDefinition = (output: Output): Definition => ({
 
 type OutputsProps = {
   outputs: Output[]
-  onEdit: (def: Definition) => void
+  onEdit: (output: Output) => void
 }
 
-const Outputs = ({ outputs, onEdit }: OutputsProps) =>
+const Outputs = ({ outputs, onEdit: onEditOutput }: OutputsProps) =>
   <>
   {outputs.map((output, i) => {
     const definition = outputDefinition(output)
     const results = output.results
+    const onEdit = (_: Definition) => onEditOutput(output)
     const props = { definition, onEdit }
     const elem = !results ?
       <IncompleteOutput definition={definition} /> :
@@ -364,15 +380,20 @@ export const ReportView = (props: {}) => {
   const [inputs, dispatchInput] = useReducer(inputReducer, [], (i) => i)
   const [outputs, dispatchOutput] = useReducer(outputReducer, [], (i) => i)
 
-  const [editing, setEditing] = useState<Definition | null>(null)
+  const [editing, setEditing] = useState<Output | null>(null)
 
   const setInput = (value: string, variable: Variable) =>
     dispatchInput({ kind: "setInput", input: { value, variable } })
 
+  const saveOutputDefinition = (output: Output) => {
+    setEditing(null)
+    dispatchOutput({ kind: "updateDefinition", output })
+  }
+
   const editForm = editing &&
     <EditForm
-      definition={editing}
-      onSave={(definition) => console.log(definition)}
+      output={editing}
+      onSave={saveOutputDefinition}
       onCancel={() => setEditing(null)}
     />
 
@@ -388,6 +409,6 @@ export const ReportView = (props: {}) => {
     <h2 className="report-label">{report ? report.label : " "}</h2>
     {editForm}
     <VariablesForm variables={variables} inputs={inputs} onSelect={setInput} />
-    <Outputs outputs={outputs} onEdit={(def) => setEditing(def)} />
+    <Outputs outputs={outputs} onEdit={(output) => setEditing(output)} />
   </div>
 }
