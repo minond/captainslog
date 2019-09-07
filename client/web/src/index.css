@@ -248,12 +248,12 @@ select + input {
   vertical-align: top;
 }
 
-.report-edit-form td:first-child {
+.report-edit-form tr:first-child td:first-child {
   width: 30%;
   padding-right: 20px;
 }
 
-.report-edit-form td + td {
+.report-edit-form tr:first-child td + td {
   width: 70%;
 }
 
@@ -270,6 +270,11 @@ select + input {
 
 .report-edit-form-label + .report-edit-form-label {
   margin-top: 15px;
+}
+
+.report-edit-form-actions {
+  padding-top: 10px;
+  text-align: right;
 }
 
 .output {

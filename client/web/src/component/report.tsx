@@ -174,9 +174,10 @@ const VariablesForm = ({ variables, inputs, onSelect }: VariableInputsProps) => 
 
 type EditFormProps = {
   definition: Definition
+  onCancel: () => void
 }
 
-const EditForm = ({ definition }: EditFormProps) =>
+const EditForm = ({ definition, onCancel }: EditFormProps) =>
   <div className="report-edit-form">
     <table>
       <tr>
@@ -195,6 +196,11 @@ const EditForm = ({ definition }: EditFormProps) =>
             <span>Query</span>
             <textarea value={definition.query} />
           </label>
+        </td>
+      </tr>
+      <tr>
+        <td colSpan={2} className="report-edit-form-actions">
+          <button onClick={onCancel}>Cancel</button>
         </td>
       </tr>
     </table>
@@ -369,7 +375,7 @@ export const ReportView = (props: {}) => {
 
   return <div className="report">
     <h2 className="report-label">{report ? report.label : " "}</h2>
-    {editing && <EditForm definition={editing} />}
+    {editing && <EditForm definition={editing} onCancel={() => setEditing(null)} />}
     <VariablesForm variables={variables} inputs={inputs} onSelect={setInput} />
     <Outputs outputs={outputs} onEdit={(def) => setEditing(def)} />
   </div>
