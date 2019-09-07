@@ -14,7 +14,7 @@ import {
 } from "../definitions"
 
 import { IncompleteOutput } from "./outputs/incomplete"
-import { Definition, LookupOutput } from "./outputs/output"
+import { Definition, LookupOutput, parseOutputType } from "./outputs/output"
 import { valueOf } from "./outputs/utils"
 
 const dummy = {
@@ -178,44 +178,48 @@ type EditFormProps = {
   onCancel: () => void
 }
 
-const EditForm = ({ output, onSave, onCancel }: EditFormProps) =>
-  <div className="report-edit-form">
+const EditForm = ({ output, onSave, onCancel }: EditFormProps) => {
+  const [type, setType] = useState<OutputType>(output.type)
+  const [label, setLabel] = useState<string>(output.label)
+  const [query, setQuery] = useState<string>(output.query)
+
+  const updated = { ...output, type, label, query }
+
+  return <div className="report-edit-form">
     <table>
       <tbody>
         <tr>
           <td>
             <label className="report-edit-form-label">
               <span>Label</span>
-              <input value={output.label} />
+              <input value={label} onChange={(ev) => setLabel(ev.target.value)} />
             </label>
             <label className="report-edit-form-label">
               <span>Type</span>
-              <OutputTypeSelect value={output.type} />
+              <select value={type} onChange={(ev) => setType(parseOutputType(ev.target.value))}>
+                <option value={OutputType.TableOutput} label="Table" />
+                <option value={OutputType.ChartOutput} label="Chart" />
+                <option value={OutputType.ValueOutput} label="Value" />
+              </select>
             </label>
           </td>
           <td>
             <label className="report-edit-form-label">
               <span>Query</span>
-              <textarea value={output.query} />
+              <textarea value={query} onChange={(ev) => setQuery(ev.target.value)} />
             </label>
           </td>
         </tr>
         <tr>
           <td colSpan={2} className="report-edit-form-actions">
             <button onClick={onCancel}>Cancel</button>
-            <button onClick={() => onSave(output)}>Save</button>
+            <button onClick={() => onSave(updated)}>Save</button>
           </td>
         </tr>
       </tbody>
     </table>
   </div>
-
-const OutputTypeSelect = ({ value }: { value: OutputType }) =>
-  <select value={value}>
-    <option value={OutputType.TableOutput} label="Table" />
-    <option value={OutputType.ChartOutput} label="Chart" />
-    <option value={OutputType.ValueOutput} label="Value" />
-  </select>
+}
 
 type OutputReducerSetOutputsAction = { kind: "setOutputs", outputs: Output[] }
 type OutputReducerSetResultsAction = { kind: "setResults", output: Output, results: QueryResults }

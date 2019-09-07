@@ -6,6 +6,15 @@ import { ChartOutput } from "./chart"
 import { TableOutput } from "./table"
 import { ValueOutput } from "./value"
 
+export const parseOutputType = (x: string) => {
+  switch (x) {
+    case "1": return OutputType.TableOutput
+    case "2": return OutputType.ChartOutput
+    case "3": return OutputType.ValueOutput
+    default:  return OutputType.InvalidOutput
+  }
+}
+
 export type Definition = {
   type: OutputType
   label: string
