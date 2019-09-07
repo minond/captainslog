@@ -24,9 +24,9 @@ const dummy = {
       id: Math.random().toString(),
       label: "Min",
       query:
-        "select min(cast(weight as float)) " +
-        "from workouts " +
-        "where exercise ilike '{{Exercise}}' " +
+        "select min(cast(weight as float))\n" +
+        "from workouts\n" +
+        "where exercise ilike '{{Exercise}}'\n" +
         "and weight is not null",
       type: OutputType.ValueOutput,
     },
@@ -34,9 +34,9 @@ const dummy = {
       id: Math.random().toString(),
       label: "Max",
       query:
-        "select max(cast(weight as float)) " +
-        "from workouts " +
-        "where exercise ilike '{{Exercise}}' " +
+        "select max(cast(weight as float))\n" +
+        "from workouts\n" +
+        "where exercise ilike '{{Exercise}}'\n" +
         "and weight is not null",
       type: OutputType.ValueOutput,
     },
@@ -44,9 +44,9 @@ const dummy = {
       id: Math.random().toString(),
       label: "Count",
       query:
-        "select count(1) " +
-        "from workouts " +
-        "where exercise ilike '{{Exercise}}' " +
+        "select count(1)\n" +
+        "from workouts\n" +
+        "where exercise ilike '{{Exercise}}'\n" +
         "and weight is not null",
       type: OutputType.ValueOutput,
     },
@@ -54,10 +54,10 @@ const dummy = {
       id: Math.random().toString(),
       label: "Weight Trends",
       query:
-        "select cast(created_at as integer) as x, cast(weight as float) as y " +
-        "from workouts " +
-        "where exercise ilike '{{Exercise}}' " +
-        "and weight is not null " +
+        "select cast(created_at as integer) as x,\n  cast(weight as float) as y\n" +
+        "from workouts\n" +
+        "where exercise ilike '{{Exercise}}'\n" +
+        "and weight is not null\n" +
         "order by created_at asc",
       type: OutputType.ChartOutput,
     },
@@ -65,11 +65,11 @@ const dummy = {
       id: Math.random().toString(),
       label: "Last 20 Entries",
       query:
-        "select exercise, cast(weight as float) as weight, to_timestamp(cast(created_at as integer)) as date " +
-        "from workouts " +
-        "where exercise ilike '{{Exercise}}' " +
-        "and weight is not null " +
-        "order by created_at desc " +
+        "select exercise, cast(weight as float) as weight,\n  to_timestamp(cast(created_at as integer)) as date\n" +
+        "from workouts\n" +
+        "where exercise ilike '{{Exercise}}'\n" +
+        "and weight is not null\n" +
+        "order by created_at desc\n" +
         "limit 20",
       type: OutputType.TableOutput,
     },
@@ -80,10 +80,10 @@ const dummy = {
       id: Math.random().toString(),
       label: "Exercise",
       query:
-        "select distinct exercise " +
-        "from workouts " +
-        "where exercise is not null " +
-        "and weight is not null " +
+        "select distinct exercise\n" +
+        "from workouts\n" +
+        "where exercise is not null\n" +
+        "and weight is not null\n" +
         "order by exercise",
     }
   ],
