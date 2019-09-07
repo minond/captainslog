@@ -10,6 +10,10 @@ html, body, textarea {
   line-height: 1.4;
 }
 
+textarea {
+  box-sizing: border-box;
+}
+
 h1, h2, h3 {
   font-family: baskerville, serif;
   font-weight: 500;
@@ -95,7 +99,6 @@ select + input {
 .entries-textarea {
   border-bottom: 1px solid #acacac;
   border: none;
-  outline: none;
   padding: 2px 0;
   resize: none;
   width: 100%;
@@ -132,8 +135,6 @@ select + input {
 }
 
 .query .query-textarea {
-  box-sizing: border-box;
-  outline: none;
   width: 100%;
 }
 
@@ -263,8 +264,7 @@ select + input {
 }
 
 .report-edit-form textarea {
-  height: 100px;
-  box-sizing: border-box;
+  height: 200px;
   width: 100%;
 }
 
