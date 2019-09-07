@@ -172,6 +172,41 @@ const VariablesForm = ({ variables, inputs, onSelect }: VariableInputsProps) => 
   </div>
 }
 
+type EditFormProps = {
+  definition: Definition
+}
+
+const EditForm = ({ definition }: EditFormProps) =>
+  <div className="report-edit-form">
+    <table>
+      <tr>
+        <td>
+          <label className="report-edit-form-label">
+            <span>Label</span>
+            <input value={definition.label} />
+          </label>
+          <label className="report-edit-form-label">
+            <span>Type</span>
+            <OutputTypeSelect value={definition.type} />
+          </label>
+        </td>
+        <td>
+          <label className="report-edit-form-label">
+            <span>Query</span>
+            <textarea value={definition.query} />
+          </label>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+const OutputTypeSelect = ({ value }: { value: OutputType }) =>
+  <select value={value}>
+    <option value={OutputType.TableOutput} label="Table" />
+    <option value={OutputType.ChartOutput} label="Chart" />
+    <option value={OutputType.ValueOutput} label="Value" />
+  </select>
+
 type OutputReducerSetOutputsAction = { kind: "setOutputs", outputs: Output[] }
 type OutputReducerSetResultsAction = { kind: "setResults", output: Output, results: QueryResults }
 type OutputReducerAction = OutputReducerSetOutputsAction | OutputReducerSetResultsAction
@@ -319,6 +354,8 @@ export const ReportView = (props: {}) => {
   const [inputs, dispatchInput] = useReducer(inputReducer, [], (i) => i)
   const [outputs, dispatchOutput] = useReducer(outputReducer, [], (i) => i)
 
+  const [editing, setEditing] = useState<Definition | null>(null)
+
   const setInput = (value: string, variable: Variable) =>
     dispatchInput({ kind: "setInput", input: { value, variable } })
 
@@ -332,7 +369,8 @@ export const ReportView = (props: {}) => {
 
   return <div className="report">
     <h2 className="report-label">{report ? report.label : " "}</h2>
+    {editing && <EditForm definition={editing} />}
     <VariablesForm variables={variables} inputs={inputs} onSelect={setInput} />
-    <Outputs outputs={outputs} onEdit={(def) => void 0} />
+    <Outputs outputs={outputs} onEdit={(def) => setEditing(def)} />
   </div>
 }

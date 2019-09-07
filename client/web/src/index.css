@@ -223,6 +223,55 @@ select + input {
   top: -1px;
 }
 
+.report-edit-form {
+  padding: 20px 0;
+  background: #fafafa40;
+  border-top: 1px solid #d9d9d9;
+  border-bottom: 1px solid #d9d9d9;
+  margin-bottom: 20px;
+}
+
+.report-edit-form .report-edit-form-label {
+  display: block;
+}
+
+.report-edit-form .report-edit-form-label span {
+  display: block;
+  margin-bottom: 2px;
+}
+
+.report-edit-form table {
+  width: 100%;
+}
+
+.report-edit-form td {
+  vertical-align: top;
+}
+
+.report-edit-form td:first-child {
+  width: 30%;
+  padding-right: 20px;
+}
+
+.report-edit-form td + td {
+  width: 70%;
+}
+
+.report-edit-form select,
+.report-edit-form input {
+  width: 100%;
+}
+
+.report-edit-form textarea {
+  height: 100px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.report-edit-form-label + .report-edit-form-label {
+  margin-top: 15px;
+}
+
 .output {
   margin-bottom: 20px;
 }
