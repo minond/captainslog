@@ -115,6 +115,7 @@ export type Output = {
   label: string
   type: OutputType
   query: string
+  reload?: boolean
   results?: QueryResults
 }
 

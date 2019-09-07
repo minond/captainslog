@@ -223,11 +223,13 @@ const EditForm = ({ output, onSave, onCancel }: EditFormProps) => {
 
 type OutputReducerSetOutputsAction = { kind: "setOutputs", outputs: Output[] }
 type OutputReducerSetResultsAction = { kind: "setResults", output: Output, results: QueryResults }
-type OutputReducerSetDefinitionAction = { kind: "updateDefinition", output: Output }
+type OutputReducerUpdateDefinitionAction = { kind: "updateDefinition", output: Output }
+type OutputReducerIsLoadingAction = { kind: "isLoading", output: Output }
 type OutputReducerAction
   = OutputReducerSetOutputsAction
   | OutputReducerSetResultsAction
-  | OutputReducerSetDefinitionAction
+  | OutputReducerUpdateDefinitionAction
+  | OutputReducerIsLoadingAction
 type OutputReducer = (outputs: Output[], action: OutputReducerAction) => Output[]
 const outputReducer: OutputReducer = (outputs, action) => {
   switch (action.kind) {
@@ -240,11 +242,18 @@ const outputReducer: OutputReducer = (outputs, action) => {
         o.id !== output.id ? o : { ...o, results })
     }
 
+    case "isLoading": {
+      const { output } = action
+      return outputs.map((o) =>
+        o.id !== output.id ? o : { ...o, reload: false })
+    }
+
     case "updateDefinition": {
       const { output } = action
       return outputs.map((o) =>
         o.id !== output.id ? o : {
           ...o,
+          reload: o.query !== output.query,
           type: output.type,
           label: output.label,
           query: output.query,
@@ -340,9 +349,11 @@ const loadReportData = (
     const shouldLoad = queryInputs.reduce((doIt, input) =>
       !input.changeHandled || doIt, false)
 
-    if (!shouldLoad) {
+    if (!shouldLoad && !output.reload) {
       return
     }
+
+    dispatchOutput({ kind: "isLoading", output })
 
     queryInputs.map((input) =>
       dispatchInput({ kind: "changeHandled", input }))
