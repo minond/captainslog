@@ -365,6 +365,12 @@ export const ReportView = (props: {}) => {
   const setInput = (value: string, variable: Variable) =>
     dispatchInput({ kind: "setInput", input: { value, variable } })
 
+  const editForm = editing &&
+    <EditForm
+      definition={editing}
+      onCancel={() => setEditing(null)}
+    />
+
   useEffect(() => {
     if (report) {
       loadReportSettings(report, dispatchVariable, dispatchInput, dispatchOutput)
@@ -375,7 +381,7 @@ export const ReportView = (props: {}) => {
 
   return <div className="report">
     <h2 className="report-label">{report ? report.label : " "}</h2>
-    {editing && <EditForm definition={editing} onCancel={() => setEditing(null)} />}
+    {editForm}
     <VariablesForm variables={variables} inputs={inputs} onSelect={setInput} />
     <Outputs outputs={outputs} onEdit={(def) => setEditing(def)} />
   </div>
