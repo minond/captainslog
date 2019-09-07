@@ -348,12 +348,6 @@ const loadReportData = (
   })
 }
 
-const outputDefinition = (output: Output): Definition => ({
-  type: output.type,
-  label: output.label,
-  query: output.query,
-})
-
 type OutputsProps = {
   outputs: Output[]
   onEdit: (output: Output) => void
@@ -362,7 +356,7 @@ type OutputsProps = {
 const Outputs = ({ outputs, onEdit: onEditOutput }: OutputsProps) =>
   <>
   {outputs.map((output, i) => {
-    const definition = outputDefinition(output)
+    const definition = output
     const results = output.results
     const onEdit = (_: Definition) => onEditOutput(output)
     const props = { definition, onEdit }
