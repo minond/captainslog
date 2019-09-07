@@ -29,8 +29,8 @@ type ValueProps = {
 
 export const ValueRawOutput = ({ definition, raw }: ValueProps) =>
   <div className="output value-output">
+    <Header definition={definition} />
     <div className="value-output-wrapper">
-      <Header definition={definition} />
       <span className="value-output-value">{raw || DEFAULT_VALUE}</span>
     </div>
   </div>

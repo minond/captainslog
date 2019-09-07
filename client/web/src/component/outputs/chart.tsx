@@ -30,16 +30,18 @@ export const ChartRawOutput = ({ definition, results }: ChartRawOutputProps) =>
   <div className="output chart-output">
     <Header definition={definition} />
     {results && results.data && results.data.length ?
-      <LineChart
-        data={flattenResultsHash(results)}
-        width={680}
-        height={200}
-        margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
-      >
-        <Tooltip />
-        <XAxis dataKey="x" />
-        <YAxis dataKey="y" width={40} />
-        <Line type="monotone" dataKey="y" stroke="#82ca9d" isAnimationActive={false} />
-      </LineChart> :
+      <div className="chart-output-wrapper">
+        <LineChart
+          data={flattenResultsHash(results)}
+          width={680}
+          height={200}
+          margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
+        >
+          <Tooltip />
+          <XAxis dataKey="x" />
+          <YAxis dataKey="y" width={40} />
+          <Line type="monotone" dataKey="y" stroke="#82ca9d" isAnimationActive={false} />
+        </LineChart>
+      </div> :
       <div className="output-no-data">{NO_RESULTS}</div>}
   </div>

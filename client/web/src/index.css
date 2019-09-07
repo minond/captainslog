@@ -223,14 +223,18 @@ select + input {
   top: -1px;
 }
 
-.report-output + .report-output .table-output .output-label {
-  margin-top: 15px;
+.output {
+  margin-bottom: 20px;
+}
+
+.output.value-output {
+  margin-right: 20px;
 }
 
 .output .output-label {
   font-family: baskerville, serif;
   font-weight: 500;
-  margin: 0 0 10px 0;
+  padding: 10px 0 10px 0;
   text-align: center;
 }
 
@@ -242,12 +246,11 @@ select + input {
 
 .value-output {
   display: inline-block;
-  padding: 15px 15px 15px 0;
+  border: 1px solid #f2f2f2e6;
 }
 
 .value-output-wrapper {
-  border: 1px solid #f2f2f2e6;
-  padding: 10px;
+  padding: 0px 0px 10px 0px;
   text-align: center;
   width: 150px;
 }
@@ -260,12 +263,9 @@ select + input {
   border-left: 1px solid #f2f2f2e6;
   border-right: 1px solid #f2f2f2e6;
   border-top: 1px solid #f2f2f2e6;
-  margin-bottom: 0;
-  padding: 5px 0;
 }
 
 .table-output {
-  margin-top: 10px;
   min-width: 50%;
 }
 
@@ -299,8 +299,11 @@ select + input {
 .table-output-type-unknown {}
 
 .chart-output {
-  padding: 10px;
   border: 1px solid #f2f2f2e6;
+}
+
+.chart-output-wrapper {
+  padding: 10px;
 }
 
 /* small */
