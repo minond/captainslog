@@ -1,7 +1,7 @@
 import * as React from "react"
 
 import { QueryResults } from "../../definitions"
-import { Definition } from "./output"
+import { Definition, Header } from "./output"
 import { scalar } from "./utils"
 
 import { valueOf } from "./utils"
@@ -30,9 +30,7 @@ type ValueProps = {
 export const ValueRawOutput = ({ definition, raw }: ValueProps) =>
   <div className="output value-output">
     <div className="value-output-wrapper">
-      <div className="output-label" title={definition.query}>
-        {definition.label}
-      </div>
+      <Header definition={definition} />
       <span className="value-output-value">{raw || DEFAULT_VALUE}</span>
     </div>
   </div>

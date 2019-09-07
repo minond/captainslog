@@ -33,3 +33,12 @@ export const LookupOutput = ({ definition, results }: OutputProps) => {
       return null
   }
 }
+
+type HeaderProps = {
+  definition: Definition
+}
+
+export const Header = ({ definition }: HeaderProps) =>
+  <div className="output-label" title={definition.query}>
+    {definition.label}
+  </div>

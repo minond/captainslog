@@ -1,7 +1,7 @@
 import * as React from "react"
 
 import { QueryResult, QueryResults } from "../../definitions"
-import { Definition } from "./output"
+import { Definition, Header } from "./output"
 
 import {
   NO_RESULTS,
@@ -38,7 +38,7 @@ type TableRawOutputProps = {
 export const TableRawOutput = ({ definition, results }: TableRawOutputProps) =>
   <div className="output table-output">
     {definition ?
-      <div className="output-label" title={definition.query}>{definition.label}</div> :
+      <Header definition={definition} /> :
       null}
     {results && results.data && results.data.length ?
       <table className="table-output-table">

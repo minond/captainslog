@@ -9,7 +9,7 @@ import {
 } from 'recharts';
 
 import { QueryResults } from "../../definitions"
-import { Definition } from "./output"
+import { Definition, Header } from "./output"
 
 import { NO_RESULTS, flattenResultsHash } from "./utils"
 
@@ -28,7 +28,7 @@ type ChartRawOutputProps = {
 
 export const ChartRawOutput = ({ definition, results }: ChartRawOutputProps) =>
   <div className="output chart-output">
-    <div className="output-label" title={definition.query}>{definition.label}</div>
+    <Header definition={definition} />
     {results && results.data && results.data.length ?
       <LineChart
         data={flattenResultsHash(results)}
