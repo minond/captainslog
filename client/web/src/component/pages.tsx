@@ -23,7 +23,7 @@ const Page = ({ active, children }: PageProps) => {
     <div className={"page-header " + (active ? "page-header-active" : "")}>
       <div className="page-header-content">
         <Link to="/">Captain's Log</Link>
-        <Link to="/report" className={active === "report" ? "active" : ""}>ReportView</Link>
+        <Link to="/report" className={active === "report" ? "active" : ""}>Report</Link>
         <Link to="/query" className={active === "query" ? "active" : ""}>Query</Link>
         <Books active={active} />
       </div>
