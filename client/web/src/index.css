@@ -298,6 +298,11 @@ select + input {
 .table-output-type-string {}
 .table-output-type-unknown {}
 
+.query .table-output {
+  margin-bottom: 0;
+  margin-top: 10px;
+}
+
 .chart-output {
   border: 1px solid #f2f2f2e6;
 }
