@@ -1,0 +1,9 @@
+BEGIN;
+
+ALTER TABLE users ADD COLUMN name text NOT NULL;
+
+ALTER TABLE users ADD COLUMN email text NOT NULL;
+
+ALTER TABLE users ADD COLUMN password text NOT NULL;
+
+COMMIT;
