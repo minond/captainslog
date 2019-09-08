@@ -18,7 +18,7 @@ export const Index = () => (
         <Route exact={true} path="/" component={IndexPage} />
         <Route exact={true} path="/report" component={ReportPage} />
         <Route exact={true} path="/query" component={QueryPage} />
-        <Route exact={true} path="/:guid/:at?" render={(prop) => {
+        <Route exact={true} path="/book/:guid/:at?" render={(prop) => {
           let guid = prop.match.params["guid"]
           let at = prop.match.params["at"] || Date.now()
           return <BookPage guid={guid} date={new Date(+at)} />

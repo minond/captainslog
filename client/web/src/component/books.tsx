@@ -24,7 +24,7 @@ export const Books = ({ active }: BooksProps) => {
   const links = books.map((book) =>
     <Link
       key={book.guid}
-      to={`/${book.guid}`}
+      to={`/book/${book.guid}`}
       className={active === book.guid ? "active" : ""}
     >
       {book.name}
