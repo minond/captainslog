@@ -283,6 +283,7 @@ select + input {
 
 .output.value-output {
   margin-right: 20px;
+  width: 150px;
 }
 
 .output-header {
@@ -323,7 +324,7 @@ select + input {
 .value-output-wrapper {
   padding: 0px 0px 10px 0px;
   text-align: center;
-  width: 150px;
+  width: 100%;
 }
 
 .value-output .value-output-value {
