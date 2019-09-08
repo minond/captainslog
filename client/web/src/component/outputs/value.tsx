@@ -27,7 +27,7 @@ type ValueRawOutputProps = {
 }
 
 export const ValueRawOutput = ({ definition, raw, onEdit }: ValueRawOutputProps) =>
-  <div className="output value-output">
+  <div className="output value-output" style={{width: definition.width}}>
     <Header definition={definition} onEdit={onEdit} />
     <div className="value-output-wrapper">
       <span className="value-output-value">{raw || DEFAULT_VALUE}</span>

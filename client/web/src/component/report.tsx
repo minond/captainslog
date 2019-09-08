@@ -23,6 +23,7 @@ const dummy = {
     {
       id: Math.random().toString(),
       label: "Min",
+      width: "150px",
       query:
         "select min(cast(weight as float))\n" +
         "from workouts\n" +
@@ -33,6 +34,7 @@ const dummy = {
     {
       id: Math.random().toString(),
       label: "Max",
+      width: "150px",
       query:
         "select max(cast(weight as float))\n" +
         "from workouts\n" +
@@ -43,6 +45,7 @@ const dummy = {
     {
       id: Math.random().toString(),
       label: "Count",
+      width: "150px",
       query:
         "select count(1)\n" +
         "from workouts\n" +
@@ -53,6 +56,7 @@ const dummy = {
     {
       id: Math.random().toString(),
       label: "Weight Trends",
+      width: "100%",
       query:
         "select cast(created_at as integer) as x,\n  cast(weight as float) as y\n" +
         "from workouts\n" +
@@ -64,6 +68,7 @@ const dummy = {
     {
       id: Math.random().toString(),
       label: "Last 20 Entries",
+      width: "100%",
       query:
         "select exercise, cast(weight as float) as weight,\n  to_timestamp(cast(created_at as integer)) as date\n" +
         "from workouts\n" +
@@ -182,8 +187,9 @@ const EditForm = ({ output, onSave, onCancel }: EditFormProps) => {
   const [type, setType] = useState<OutputType>(output.type)
   const [label, setLabel] = useState<string>(output.label)
   const [query, setQuery] = useState<string>(output.query)
+  const [width, setWidth] = useState<string>(output.width)
 
-  const updated = { ...output, type, label, query }
+  const updated = { ...output, type, label, query, width }
 
   return <div className="report-edit-form">
     <table>
@@ -193,6 +199,10 @@ const EditForm = ({ output, onSave, onCancel }: EditFormProps) => {
             <label className="report-edit-form-label">
               <span>Label</span>
               <input value={label} onChange={(ev) => setLabel(ev.target.value)} />
+            </label>
+            <label className="report-edit-form-label">
+              <span>Width</span>
+              <input value={width} onChange={(ev) => setWidth(ev.target.value)} />
             </label>
             <label className="report-edit-form-label">
               <span>Type</span>
@@ -257,6 +267,7 @@ const outputReducer: OutputReducer = (outputs, action) => {
           type: output.type,
           label: output.label,
           query: output.query,
+          width: output.width,
         })
     }
   }

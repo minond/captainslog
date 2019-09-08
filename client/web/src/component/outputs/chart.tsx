@@ -29,7 +29,7 @@ type ChartRawOutputProps = {
 }
 
 export const ChartRawOutput = ({ definition, results, onEdit }: ChartRawOutputProps) =>
-  <div className="output chart-output">
+  <div className="output chart-output" style={{width: definition.width}}>
     <Header definition={definition} onEdit={onEdit} />
     {results && results.data && results.data.length ?
       <div className="chart-output-wrapper">

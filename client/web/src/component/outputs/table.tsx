@@ -38,7 +38,7 @@ type TableRawOutputProps = {
 }
 
 export const TableRawOutput = ({ definition, results, onEdit }: TableRawOutputProps) =>
-  <div className="output table-output">
+  <div className="output table-output" style={{width: definition ? definition.width : "100%"}}>
     {definition ?
       <Header definition={definition} onEdit={onEdit} /> :
       null}

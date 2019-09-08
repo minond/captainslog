@@ -19,6 +19,7 @@ export type Definition = {
   type: OutputType
   label: string
   query: string
+  width: string
 }
 
 type LookupOutputProps = {
