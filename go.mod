@@ -12,5 +12,6 @@ require (
 	github.com/oklog/ulid v1.3.1 // indirect
 	github.com/olekukonko/tablewriter v0.0.1
 	github.com/spf13/cobra v0.0.4
+	golang.org/x/crypto v0.0.0-20190426145343-a29dc8fdc734
 	gopkg.in/src-d/go-kallax.v1 v1.3.5
 )

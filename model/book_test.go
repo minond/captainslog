@@ -44,7 +44,7 @@ func TestBook_timeRange_BadGrouping(t *testing.T) {
 
 func TestBook_activeCollectionQuery(t *testing.T) {
 	now := time.Now().In(time.UTC)
-	user, _ := NewUser()
+	user, _ := NewUser("name", "email", "fdafdsafjkdsalfjdsaklfds")
 	book, _ := NewBook("testing", int32(GroupingDay), user)
 
 	query, err := collectionQuery(book, now)
@@ -86,7 +86,7 @@ expected: %v`, sql, string(expectedSQL))
 
 func TestBook_activeCollectionQuery_BadGrouping(t *testing.T) {
 	now := time.Now().In(time.UTC)
-	user, _ := NewUser()
+	user, _ := NewUser("name", "email", "fdafdsafjkdsalfjdsaklfds")
 	book, _ := NewBook("testing", int32(GroupingDay), user)
 	book.Grouping = 77
 

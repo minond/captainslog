@@ -29,7 +29,7 @@ func withDB(t *testing.T, fn func(*sql.DB)) {
 }
 
 func newUser(t *testing.T, db *sql.DB) *model.User {
-	user, err := model.NewUser()
+	user, err := model.NewUser("user", "email", "fdsafewafjkelwjfkl")
 	if err != nil {
 		t.Fatalf("error saving test user: %v", err)
 	}

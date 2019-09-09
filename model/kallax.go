@@ -3818,8 +3818,8 @@ func (rs *ShorthandResultSet) Close() error {
 }
 
 // NewUser returns a new instance of User.
-func NewUser() (record *User, err error) {
-	return newUser()
+func NewUser(name string, email string, plainPassword string) (record *User, err error) {
+	return newUser(name, email, plainPassword)
 }
 
 // GetID returns the primary key of the model.
@@ -3832,6 +3832,12 @@ func (r *User) ColumnAddress(col string) (interface{}, error) {
 	switch col {
 	case "guid":
 		return (*kallax.ULID)(&r.GUID), nil
+	case "name":
+		return &r.Name, nil
+	case "email":
+		return &r.Email, nil
+	case "password":
+		return &r.Password, nil
 
 	default:
 		return nil, fmt.Errorf("kallax: invalid column in User: %s", col)
@@ -3843,6 +3849,12 @@ func (r *User) Value(col string) (interface{}, error) {
 	switch col {
 	case "guid":
 		return r.GUID, nil
+	case "name":
+		return r.Name, nil
+	case "email":
+		return r.Email, nil
+	case "password":
+		return r.Password, nil
 
 	default:
 		return nil, fmt.Errorf("kallax: invalid column in User: %s", col)
@@ -4117,6 +4129,24 @@ func (q *UserQuery) FindByGUID(v ...kallax.ULID) *UserQuery {
 	return q.Where(kallax.In(Schema.User.GUID, values...))
 }
 
+// FindByName adds a new filter to the query that will require that
+// the Name property is equal to the passed value.
+func (q *UserQuery) FindByName(v string) *UserQuery {
+	return q.Where(kallax.Eq(Schema.User.Name, v))
+}
+
+// FindByEmail adds a new filter to the query that will require that
+// the Email property is equal to the passed value.
+func (q *UserQuery) FindByEmail(v string) *UserQuery {
+	return q.Where(kallax.Eq(Schema.User.Email, v))
+}
+
+// FindByPassword adds a new filter to the query that will require that
+// the Password property is equal to the passed value.
+func (q *UserQuery) FindByPassword(v string) *UserQuery {
+	return q.Where(kallax.Eq(Schema.User.Password, v))
+}
+
 // UserResultSet is the set of results returned by a query to the
 // database.
 type UserResultSet struct {
@@ -4303,7 +4333,10 @@ type schemaShorthand struct {
 
 type schemaUser struct {
 	*kallax.BaseSchema
-	GUID kallax.SchemaField
+	GUID     kallax.SchemaField
+	Name     kallax.SchemaField
+	Email    kallax.SchemaField
+	Password kallax.SchemaField
 }
 
 type schemaReportOutputs struct {
@@ -4540,7 +4573,13 @@ var Schema = &schema{
 			},
 			false,
 			kallax.NewSchemaField("guid"),
+			kallax.NewSchemaField("name"),
+			kallax.NewSchemaField("email"),
+			kallax.NewSchemaField("password"),
 		),
-		GUID: kallax.NewSchemaField("guid"),
+		GUID:     kallax.NewSchemaField("guid"),
+		Name:     kallax.NewSchemaField("name"),
+		Email:    kallax.NewSchemaField("email"),
+		Password: kallax.NewSchemaField("password"),
 	},
 }
