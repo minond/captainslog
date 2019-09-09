@@ -19,13 +19,6 @@ h1, h2, h3 {
   font-weight: 500;
 }
 
-input + input,
-input + select,
-select + select,
-select + input {
-  margin-left: 5px;
-}
-
 .page-header {
   border-bottom: 1px solid #c2c2c2;
 }
@@ -70,9 +63,40 @@ select + input {
   }
 }
 
+.login-form {
+  text-align: center;
+}
+
+.login-form-wrapper {
+  padding: 10px;
+}
+
+@media screen and (min-width: 45em) {
+  .login-form-wrapper {
+    margin: 50px auto 0 auto;
+    border: 1px solid #f2f2f2e6;
+    padding: 50px;
+  }
+}
+
+.login-form input {
+  box-sizing: border-box;
+  display: block;
+  margin-bottom: 10px;
+  padding: 5px;
+  width: 100%;
+}
+
 .entries-action-header {
   margin-bottom: 10px;
   padding-top: 10px;
+}
+
+.entries input + input,
+.entries input + select,
+.entries select + select,
+.entries select + input {
+  margin-left: 5px;
 }
 
 /* medium+ */

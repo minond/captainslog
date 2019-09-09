@@ -35,7 +35,15 @@ const Page = ({ active, children }: PageProps) => {
 }
 
 export const IndexPage = (props: {}) =>
-  <Page />
+  <Page>
+    <form method="post" action="/login" className="login-form">
+      <div className="login-form-wrapper">
+        <input placeholder="Email" name="email" />
+        <input placeholder="Password" name="password" type="password" />
+        <button>Login</button>
+      </div>
+    </form>
+  </Page>
 
 export const ReportPage = (props: {}) =>
   <Page active="report">
