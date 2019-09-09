@@ -82,7 +82,7 @@ export type SchemaBook = {
 }
 
 export type Schema = {
-  books: SchemaBook[]
+  books: SchemaBook[] | null
 }
 
 export type ReportsRetrieveResponse = {

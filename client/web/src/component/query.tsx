@@ -187,7 +187,7 @@ const SchemaView = () => {
     cachedGetSchema().then(setSchema)
   }, [])
 
-  const byBook = !schema ? null :
+  const byBook = !schema || !schema.books ? null :
     schema.books.map((book, i) =>
       <SchemaBookView key={book.name + i} book={book} />)
 
