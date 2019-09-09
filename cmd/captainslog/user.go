@@ -5,23 +5,58 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"math/rand"
 	"os"
+	"strconv"
 	"strings"
 	"syscall"
 
 	"github.com/spf13/cobra"
 	"golang.org/x/crypto/ssh/terminal"
+	"gopkg.in/src-d/go-kallax.v1"
 
+	"github.com/minond/captainslog/model"
 	"github.com/minond/captainslog/service"
 )
 
 func init() {
-	cmdUser.AddCommand(cmdUserCreate)
+	cmdUser.AddCommand(cmdUserCreate, cmdUserDummy)
 }
 
 var cmdUser = &cobra.Command{
 	Use:   "user",
 	Short: "Manage users",
+}
+
+// TODO Once authentication is complete remove this
+var cmdUserDummy = &cobra.Command{
+	Use:   "dummy",
+	Short: "Create a dummy test user",
+	Run: func(cmd *cobra.Command, args []string) {
+		db, err := database()
+		if err != nil {
+			log.Fatalf("[ERROR] error opening database connection: %v", err)
+		}
+		defer db.Close()
+
+		guid, _ := kallax.NewULIDFromText("e26e269c-0587-4094-bf01-108c61b0fa8a")
+		name := "Test User"
+		email := "test@testing.co"
+		password := strconv.Itoa(rand.Int())
+
+		user, err := model.NewUser(name, email, password)
+		if err != nil {
+			log.Fatalf("error: %v", err)
+		}
+		user.GUID = guid
+
+		userStore := model.NewUserStore(db)
+		if err = userStore.Insert(user); err != nil {
+			log.Fatalf("error: %v", err)
+		} else {
+			fmt.Println("done")
+		}
+	},
 }
 
 var cmdUserCreate = &cobra.Command{
