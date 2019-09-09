@@ -6,6 +6,11 @@ import (
 
 func main() {
 	var app = &cobra.Command{Use: "captainslog"}
-	app.AddCommand(cmdServer, cmdRepl, cmdMigrate)
+	app.AddCommand(
+		cmdMigrate,
+		cmdRepl,
+		cmdServer,
+		cmdUser,
+	)
 	_ = app.Execute()
 }
