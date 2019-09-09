@@ -31,17 +31,3 @@ func newUser(name, email, plainPassword string) (*User, error) {
 		Password: string(hash),
 	}, nil
 }
-
-func Login(userStore *UserStore, email, plainPassword string) (*User, error) {
-	user, err := userStore.FindOne(NewUserQuery().
-		Where(kallax.Eq(Schema.User.Email, email)))
-	if err != nil {
-		return nil, err
-	}
-
-	if user.Authenticate(plainPassword) {
-		return user, nil
-	}
-
-	return nil, nil
-}

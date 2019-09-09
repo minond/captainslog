@@ -9,7 +9,6 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	"github.com/gorilla/sessions"
 	"github.com/spf13/cobra"
 
 	"github.com/minond/captainslog/assets"
@@ -37,19 +36,29 @@ var cmdServer = &cobra.Command{
 		reportService := service.NewReportService(db)
 		savedQueryService := service.NewSavedQueryService(db)
 		shorthandService := service.NewShorthandService(db)
-
-		// TODO add real sessions with real auth
-		store := sessions.NewCookieStore([]byte(os.Getenv("SESSION_KEY")))
+		userService := service.NewUserService(db)
 
 		router := mux.NewRouter()
-		router.Use(func(next http.Handler) http.Handler {
-			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-				log.Printf("[INFO] %s %s", r.Method, r.URL.String())
-				session, _ := store.Get(r, "main")
-				session.Values["userguid"] = "e26e269c-0587-4094-bf01-108c61b0fa8a"
-				_ = session.Save(r, w)
-				next.ServeHTTP(w, r)
-			})
+		router.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
+			if r.Method != http.MethodPost {
+				return
+			}
+
+			log.Printf("[INFO] %s %s", r.Method, r.URL.String())
+
+			email := r.FormValue("email")
+			password := r.FormValue("password")
+			req := &service.UserLoginRequest{
+				Email:         email,
+				PlainPassword: password,
+			}
+
+			if req.Valid() {
+				user, err := userService.Login(context.Background(), req)
+				if err == nil && user != nil {
+					println("ok!")
+				}
+			}
 		})
 
 		httpmount.MountBookService(router, bookService)
