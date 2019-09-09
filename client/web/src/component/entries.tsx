@@ -43,7 +43,7 @@ const genDatePicker = (date: Date, book: Book | null) =>
     <DatePicker
       grouping={book.grouping}
       date={date}
-      onChange={(d) => history.replace(`/${book.guid}/${+d}`)}
+      onChange={(d) => history.replace(`/book/${book.guid}/${+d}`)}
     />
 
 type EntriesProps = {
