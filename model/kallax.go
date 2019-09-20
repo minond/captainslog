@@ -3836,6 +3836,8 @@ func (r *User) ColumnAddress(col string) (interface{}, error) {
 		return &r.Name, nil
 	case "email":
 		return &r.Email, nil
+	case "salt":
+		return &r.Salt, nil
 	case "password":
 		return &r.Password, nil
 
@@ -3853,6 +3855,8 @@ func (r *User) Value(col string) (interface{}, error) {
 		return r.Name, nil
 	case "email":
 		return r.Email, nil
+	case "salt":
+		return r.Salt, nil
 	case "password":
 		return r.Password, nil
 
@@ -4141,6 +4145,12 @@ func (q *UserQuery) FindByEmail(v string) *UserQuery {
 	return q.Where(kallax.Eq(Schema.User.Email, v))
 }
 
+// FindBySalt adds a new filter to the query that will require that
+// the Salt property is equal to the passed value.
+func (q *UserQuery) FindBySalt(v string) *UserQuery {
+	return q.Where(kallax.Eq(Schema.User.Salt, v))
+}
+
 // FindByPassword adds a new filter to the query that will require that
 // the Password property is equal to the passed value.
 func (q *UserQuery) FindByPassword(v string) *UserQuery {
@@ -4336,6 +4346,7 @@ type schemaUser struct {
 	GUID     kallax.SchemaField
 	Name     kallax.SchemaField
 	Email    kallax.SchemaField
+	Salt     kallax.SchemaField
 	Password kallax.SchemaField
 }
 
@@ -4575,11 +4586,13 @@ var Schema = &schema{
 			kallax.NewSchemaField("guid"),
 			kallax.NewSchemaField("name"),
 			kallax.NewSchemaField("email"),
+			kallax.NewSchemaField("salt"),
 			kallax.NewSchemaField("password"),
 		),
 		GUID:     kallax.NewSchemaField("guid"),
 		Name:     kallax.NewSchemaField("name"),
 		Email:    kallax.NewSchemaField("email"),
+		Salt:     kallax.NewSchemaField("salt"),
 		Password: kallax.NewSchemaField("password"),
 	},
 }
