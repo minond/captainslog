@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -22,13 +23,17 @@ import (
 var dist = assets.Dir("./client/web/dist/")
 
 func serve(w http.ResponseWriter, r *http.Request, page string) {
-	index, err := dist.Open(page)
-	if err != nil || index == nil {
+	content, err := dist.Open(page)
+	if err != nil || content == nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
-	stat, _ := index.Stat()
-	http.ServeContent(w, r, page, stat.ModTime(), index)
+
+	stat, _ := content.Stat()
+	w.Header().Set("Content-Type", "text/html")
+	w.Header().Set("Last-Modified", stat.ModTime().UTC().Format(http.TimeFormat))
+	w.WriteHeader(http.StatusOK)
+	io.CopyN(w, content, stat.Size())
 }
 
 func loginHandler(sessionTokenSecret []byte, userService *service.UserService) func(http.ResponseWriter, *http.Request) {
