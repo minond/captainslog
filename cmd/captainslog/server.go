@@ -8,21 +8,89 @@ import (
 	"os/signal"
 	"time"
 
+	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
 	"github.com/spf13/cobra"
 
 	"github.com/minond/captainslog/assets"
 	"github.com/minond/captainslog/httpmount"
+	"github.com/minond/captainslog/model"
 	"github.com/minond/captainslog/service"
 )
 
 var dist = assets.Dir("./client/web/dist/")
 
+func serve(w http.ResponseWriter, r *http.Request, page string) {
+	index, err := dist.Open(page)
+	if err != nil || index == nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+	stat, _ := index.Stat()
+	http.ServeContent(w, r, page, stat.ModTime(), index)
+}
+
+func loginHandler(sessionTokenSecret []byte, userService *service.UserService) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			return
+		}
+
+		log.Printf("[INFO] %s %s", r.Method, r.URL.String())
+
+		buildSessionCookie := func(user *model.User) (*http.Cookie, error) {
+			claims := jwt.MapClaims{"uid": user.GUID}
+			token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+			signed, err := token.SignedString(sessionTokenSecret)
+			if err != nil {
+				return nil, err
+			}
+			return &http.Cookie{
+				Name:     "sess",
+				Value:    signed,
+				HttpOnly: true,
+			}, nil
+		}
+
+		email := r.FormValue("email")
+		password := r.FormValue("password")
+		req := &service.UserLoginRequest{
+			Email:         email,
+			PlainPassword: password,
+		}
+
+		if !req.Valid() {
+			http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+			return
+		}
+
+		user, err := userService.Login(context.Background(), req)
+		if err != nil || user == nil {
+			http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+			return
+		}
+
+		_, err = buildSessionCookie(user)
+		if err != nil {
+			http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+			return
+		}
+
+		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+		serve(w, r, "index.html")
+	}
+}
+
 var cmdServer = &cobra.Command{
 	Use:   "server",
 	Short: "Run application server",
 	Run: func(cmd *cobra.Command, args []string) {
+		sessionTokenSecret := []byte(os.Getenv("SESSION_TOKEN_SECRET"))
+		if len(sessionTokenSecret) == 0 {
+			panic("SESSION_TOKEN_SECRET is required")
+		}
+
 		log.Print("[INFO] initializing server")
 		db, err := database()
 		if err != nil {
@@ -53,28 +121,6 @@ var cmdServer = &cobra.Command{
 			})
 		})
 
-		router.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
-			if r.Method != http.MethodPost {
-				return
-			}
-
-			log.Printf("[INFO] %s %s", r.Method, r.URL.String())
-
-			email := r.FormValue("email")
-			password := r.FormValue("password")
-			req := &service.UserLoginRequest{
-				Email:         email,
-				PlainPassword: password,
-			}
-
-			if req.Valid() {
-				user, err := userService.Login(context.Background(), req)
-				if err == nil && user != nil {
-					println("ok!")
-				}
-			}
-		})
-
 		httpmount.MountBookService(router, bookService)
 		httpmount.MountEntryService(router, entryService)
 		httpmount.MountExtractorService(router, extractorService)
@@ -83,15 +129,10 @@ var cmdServer = &cobra.Command{
 		httpmount.MountSavedQueryService(router, savedQueryService)
 		httpmount.MountShorthandService(router, shorthandService)
 
+		router.HandleFunc("/login", loginHandler(sessionTokenSecret, userService))
 		router.PathPrefix("/static").Handler(http.StripPrefix("/static/", http.FileServer(dist)))
 		router.PathPrefix("/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			index, err := dist.Open("index.html")
-			if err != nil || index == nil {
-				w.WriteHeader(http.StatusNotFound)
-				return
-			}
-			stat, _ := index.Stat()
-			http.ServeContent(w, r, "index.html", stat.ModTime(), index)
+			serve(w, r, "index.html")
 		})
 
 		listen := os.Getenv("LISTEN")

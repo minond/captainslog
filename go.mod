@@ -3,6 +3,7 @@ module github.com/minond/captainslog
 require (
 	github.com/DATA-DOG/go-txdb v0.1.2
 	github.com/Masterminds/squirrel v1.1.0 // indirect
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/golang-migrate/migrate/v4 v4.3.1
 	github.com/gorilla/mux v1.7.1
 	github.com/gorilla/schema v1.1.0
