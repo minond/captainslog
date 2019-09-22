@@ -29,48 +29,54 @@ enum uris {
 const offset = () =>
   new Date().getTimezoneOffset() * -1
 
+declare var config: { token: string }
+const authenticated = axios.create({ baseURL: '/' })
+if ('config' in window) {
+  authenticated.defaults.headers.common['Authorization'] = `Bearer ${config.token}`
+}
+
 export const getBook = (guid: string): Promise<Book | null> =>
-  axios.get<BooksRetrieveResponse>(`${uris.books}?guid=${guid}`)
+  authenticated.get<BooksRetrieveResponse>(`${uris.books}?guid=${guid}`)
     .then((res) => (res.data.books || [])[0])
 
 export const getBooks = (): Promise<Book[]> =>
-  axios.get<BooksRetrieveResponse>(uris.books)
+  authenticated.get<BooksRetrieveResponse>(uris.books)
     .then((res) => res.data.books || [])
 
 export const getEntriesForBook = (bookGuid: string, at: Date): Promise<Entry[]> =>
-  axios.get<EntriesRetrieveResponse>(`${uris.entries}?book=${bookGuid}&at=${Math.floor(+at / 1000)}&offset=${offset()}`)
+  authenticated.get<EntriesRetrieveResponse>(`${uris.entries}?book=${bookGuid}&at=${Math.floor(+at / 1000)}&offset=${offset()}`)
     .then((res) => res.data.entries || [])
 
 export const createEntries = (bookGuid: string, entries: EntryUnsaved[]): Promise<EntriesCreateResponse> =>
-  axios.post<EntriesCreateResponse>(uris.entries, { offset: offset(), bookGuid, entries })
+  authenticated.post<EntriesCreateResponse>(uris.entries, { offset: offset(), bookGuid, entries })
     .then((res) => res.data)
 
 export const executeQuery = (query: string): Promise<QueryResults> =>
-  axios.post<QueryResults>(uris.query, { query } as QueryExecuteRequest)
+  authenticated.post<QueryResults>(uris.query, { query } as QueryExecuteRequest)
     .then((res) => res.data)
 
 export const createSavedQuery = (entry: SavedQueryRequest): Promise<SavedQuery> =>
-  axios.post<SavedQuery>(uris.savedQuery, entry)
+  authenticated.post<SavedQuery>(uris.savedQuery, entry)
     .then((res) => res.data)
 
 export const updateSavedQuery = (entry: SavedQuery): Promise<SavedQuery> =>
-  axios.put<SavedQuery>(uris.savedQuery, entry)
+  authenticated.put<SavedQuery>(uris.savedQuery, entry)
     .then((res) => res.data)
 
 export const getSavedQueries = (): Promise<SavedQuery[]> =>
-  axios.get<SavedQueriesRetrieveResponse>(uris.savedQuery)
+  authenticated.get<SavedQueriesRetrieveResponse>(uris.savedQuery)
     .then((res) => res.data.queries || [])
 
 export const getSchema = (): Promise<Schema> =>
-  axios.get<Schema>(uris.query)
+  authenticated.get<Schema>(uris.query)
     .then((res) => res.data)
 
 export const getReport = (guid: string): Promise<Report | null> =>
-  axios.get<ReportsRetrieveResponse>(`${uris.reports}?guid=${guid}`)
+  authenticated.get<ReportsRetrieveResponse>(`${uris.reports}?guid=${guid}`)
     .then((res) => (res.data.reports || [])[0])
 
 export const getReports = (): Promise<Report[]> =>
-  axios.get<ReportsRetrieveResponse>(uris.reports)
+  authenticated.get<ReportsRetrieveResponse>(uris.reports)
     .then((res) => res.data.reports || [])
 
 const ttls = {
