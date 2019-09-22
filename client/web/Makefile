@@ -2,7 +2,7 @@ default: clean build
 
 build:
 	if [ ! -d dist ]; then mkdir dist; fi
-	cp src/index.html dist/
+	cp src/index.tmpl dist/
 	cp src/index.css dist/
 	cp assets/* dist/
 	cp node_modules/react-datepicker/dist/react-datepicker.css dist/

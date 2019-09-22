@@ -36,7 +36,7 @@ const Page = ({ active, children }: PageProps) => {
 
 export const IndexPage = (props: {}) =>
   <Page>
-    <form method="post" action="/login" className="login-form">
+    <form method="post" action="/" className="login-form">
       <div className="login-form-wrapper">
         <input placeholder="Email" name="email" />
         <input placeholder="Password" name="password" type="password" />

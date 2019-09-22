@@ -1,12 +1,16 @@
 package main
 
 import (
+	"bytes"
 	"context"
+	"html/template"
 	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
+	"strings"
 	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
@@ -22,18 +26,35 @@ import (
 
 var dist = assets.Dir("./client/web/dist/")
 
-func serve(w http.ResponseWriter, r *http.Request, page string) {
-	content, err := dist.Open(page)
-	if err != nil || content == nil {
+type PageConfig struct {
+	Token string
+}
+
+func serve(w http.ResponseWriter, r *http.Request, page string, config PageConfig) {
+	handle, err := dist.Open(page)
+	if err != nil || handle == nil {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
 
-	stat, _ := content.Stat()
+	stat, _ := handle.Stat()
 	w.Header().Set("Content-Type", "text/html")
 	w.Header().Set("Last-Modified", stat.ModTime().UTC().Format(http.TimeFormat))
 	w.WriteHeader(http.StatusOK)
-	io.CopyN(w, content, stat.Size())
+
+	if strings.HasSuffix(page, ".tmpl") {
+		buff := &bytes.Buffer{}
+		content, _ := ioutil.ReadAll(handle)
+		tmpl, _ := template.New(page).Parse(string(content))
+		tmpl.Execute(buff, config)
+		w.Write(buff.Bytes())
+	} else {
+		io.CopyN(w, handle, stat.Size())
+	}
+}
+
+func indexHandler(w http.ResponseWriter, r *http.Request) {
+	serve(w, r, "index.tmpl", PageConfig{})
 }
 
 func loginHandler(sessionTokenSecret []byte, userService *service.UserService) func(http.ResponseWriter, *http.Request) {
@@ -44,18 +65,10 @@ func loginHandler(sessionTokenSecret []byte, userService *service.UserService) f
 
 		log.Printf("[INFO] %s %s", r.Method, r.URL.String())
 
-		buildSessionCookie := func(user *model.User) (*http.Cookie, error) {
+		buildSessionToken := func(user *model.User) (string, error) {
 			claims := jwt.MapClaims{"uid": user.GUID}
 			token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-			signed, err := token.SignedString(sessionTokenSecret)
-			if err != nil {
-				return nil, err
-			}
-			return &http.Cookie{
-				Name:     "sess",
-				Value:    signed,
-				HttpOnly: true,
-			}, nil
+			return token.SignedString(sessionTokenSecret)
 		}
 
 		email := r.FormValue("email")
@@ -76,14 +89,13 @@ func loginHandler(sessionTokenSecret []byte, userService *service.UserService) f
 			return
 		}
 
-		_, err = buildSessionCookie(user)
+		sessionToken, err := buildSessionToken(user)
 		if err != nil {
 			http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 			return
 		}
 
-		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
-		serve(w, r, "index.html")
+		serve(w, r, "index.tmpl", PageConfig{Token: sessionToken})
 	}
 }
 
@@ -134,11 +146,15 @@ var cmdServer = &cobra.Command{
 		httpmount.MountSavedQueryService(router, savedQueryService)
 		httpmount.MountShorthandService(router, shorthandService)
 
-		router.HandleFunc("/login", loginHandler(sessionTokenSecret, userService))
-		router.PathPrefix("/static").Handler(http.StripPrefix("/static/", http.FileServer(dist)))
-		router.PathPrefix("/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			serve(w, r, "index.html")
-		})
+		router.PathPrefix("/static").
+			Methods(http.MethodGet).
+			Handler(http.StripPrefix("/static/", http.FileServer(dist)))
+		router.PathPrefix("/").
+			Methods(http.MethodPost).
+			HandlerFunc(loginHandler(sessionTokenSecret, userService))
+		router.PathPrefix("/").
+			Methods(http.MethodGet).
+			HandlerFunc(indexHandler)
 
 		listen := os.Getenv("LISTEN")
 		server := http.Server{
