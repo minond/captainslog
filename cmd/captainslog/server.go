@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"context"
+	"errors"
 	"html/template"
 	"io"
 	"io/ioutil"
@@ -20,7 +21,6 @@ import (
 
 	"github.com/minond/captainslog/assets"
 	"github.com/minond/captainslog/httpmount"
-	"github.com/minond/captainslog/model"
 	"github.com/minond/captainslog/service"
 )
 
@@ -53,6 +53,28 @@ func serve(w http.ResponseWriter, r *http.Request, page string, config PageConfi
 	}
 }
 
+func tokenFromRequest(sessionTokenSecret []byte, userService *service.UserService, r *http.Request) (string, error) {
+	email := r.FormValue("email")
+	password := r.FormValue("password")
+	req := &service.UserLoginRequest{
+		Email:         email,
+		PlainPassword: password,
+	}
+
+	if !req.Valid() {
+		return "", errors.New("invalid login request")
+	}
+
+	user, err := userService.Login(context.Background(), req)
+	if err != nil {
+		return "", err
+	}
+
+	claims := jwt.MapClaims{"uid": user.GUID}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	return token.SignedString(sessionTokenSecret)
+}
+
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	serve(w, r, "index.tmpl", PageConfig{})
 }
@@ -63,39 +85,13 @@ func loginHandler(sessionTokenSecret []byte, userService *service.UserService) f
 			return
 		}
 
-		log.Printf("[INFO] %s %s", r.Method, r.URL.String())
-
-		buildSessionToken := func(user *model.User) (string, error) {
-			claims := jwt.MapClaims{"uid": user.GUID}
-			token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-			return token.SignedString(sessionTokenSecret)
-		}
-
-		email := r.FormValue("email")
-		password := r.FormValue("password")
-		req := &service.UserLoginRequest{
-			Email:         email,
-			PlainPassword: password,
-		}
-
-		if !req.Valid() {
-			http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
-			return
-		}
-
-		user, err := userService.Login(context.Background(), req)
-		if err != nil || user == nil {
-			http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
-			return
-		}
-
-		sessionToken, err := buildSessionToken(user)
+		token, err := tokenFromRequest(sessionTokenSecret, userService, r)
 		if err != nil {
 			http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 			return
 		}
 
-		serve(w, r, "index.tmpl", PageConfig{Token: sessionToken})
+		serve(w, r, "index.tmpl", PageConfig{Token: token})
 	}
 }
 
