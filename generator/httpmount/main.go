@@ -101,10 +101,8 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/gorilla/mux"
-	"github.com/gorilla/sessions"
 	"github.com/gorilla/schema"
 
 	"github.com/minond/captainslog/model"
@@ -112,7 +110,6 @@ import (
 )
 
 var _ = schema.NewDecoder
-var store = sessions.NewCookieStore([]byte(os.Getenv("SESSION_KEY")))
 
 {{range .Routes.Routes}}
 {{with $route := .}}
@@ -141,15 +138,8 @@ func {{.MountFunctionName}}(router *mux.Router, serv {{.ServiceContractName}}) {
 	{{end}}
 
 	router.HandleFunc("{{.Endpoint}}", func(w http.ResponseWriter, r *http.Request) {
-		session, err := store.Get(r, "main")
-		if err != nil {
-			http.Error(w, "unable to read request data", http.StatusInternalServerError)
-			log.Printf("[ERROR] error getting session: %v", err)
-			return
-		}
-
 		switch r.Method {
-		{{range .Methods}}
+		{{- range .Methods}}
 		case "{{.Method}}":
 			{{- if .Request}}
 			req := &{{.Request}}{}
@@ -163,14 +153,14 @@ func {{.MountFunctionName}}(router *mux.Router, serv {{.ServiceContractName}}) {
 				return
 			}
 
-			if err = json.Unmarshal(data, req); err != nil {
+			if err := json.Unmarshal(data, req); err != nil {
 				http.Error(w, "unable to decode request", http.StatusBadRequest)
 				log.Printf("[ERROR] error unmarshaling request: %v", err)
 				return
 			}
 			{{else}}
 			dec := schema.NewDecoder()
-			if err = dec.Decode(req, r.URL.Query()); err != nil {
+			if err := dec.Decode(req, r.URL.Query()); err != nil {
 				http.Error(w, "unable to decode request", http.StatusBadRequest)
 				log.Printf("[ERROR] error unmarshaling request: %v", err)
 				return
@@ -178,15 +168,10 @@ func {{.MountFunctionName}}(router *mux.Router, serv {{.ServiceContractName}}) {
 			{{end}}
 			{{end -}}
 
-			ctx := context.Background()
-			for key, val := range session.Values {
-				ctx = context.WithValue(ctx, key, val)
-			}
-
 			{{if not .Request}}
-			res, err := serv.{{.Handler}}(ctx)
+			res, err := serv.{{.Handler}}(r.Context())
 			{{else}}
-			res, err := serv.{{.Handler}}(ctx, req)
+			res, err := serv.{{.Handler}}(r.Context(), req)
 			{{end -}}
 			if err != nil {
 				http.Error(w, "unable to handle request", http.StatusInternalServerError)

@@ -16,7 +16,6 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/dgrijalva/jwt-go/request"
 	"github.com/gorilla/mux"
-	"github.com/gorilla/sessions"
 	"github.com/spf13/cobra"
 
 	"github.com/minond/captainslog/assets"
@@ -125,14 +124,37 @@ var cmdServer = &cobra.Command{
 		shorthandService := service.NewShorthandService(db)
 		userService := service.NewUserService(db)
 
-		store := sessions.NewCookieStore([]byte(os.Getenv("SESSION_KEY")))
 		router := mux.NewRouter()
 		router.Use(func(next http.Handler) http.Handler {
 			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				log.Printf("[INFO] %s %s", r.Method, r.URL.String())
+
+				token, err := request.ParseFromRequest(
+					r,
+					request.AuthorizationHeaderExtractor,
+					func(t *jwt.Token) (interface{}, error) {
+						return sessionTokenSecret, nil
+					})
+				if err == nil && token != nil {
+					claims, ok := token.Claims.(jwt.MapClaims)
+					if ok && claims["uid"] != "" {
+						uid := context.WithValue(r.Context(), "uid", claims["uid"])
+						next.ServeHTTP(w, r.WithContext(uid))
+						return
+					}
+				}
+
 				next.ServeHTTP(w, r)
 			})
 		})
+
+		httpmount.MountBookService(router, bookService)
+		httpmount.MountEntryService(router, entryService)
+		httpmount.MountExtractorService(router, extractorService)
+		httpmount.MountQueryService(router, queryService)
+		httpmount.MountReportService(router, reportService)
+		httpmount.MountSavedQueryService(router, savedQueryService)
+		httpmount.MountShorthandService(router, shorthandService)
 
 		router.PathPrefix("/static").
 			Methods(http.MethodGet).
@@ -143,36 +165,6 @@ var cmdServer = &cobra.Command{
 		router.PathPrefix("/").
 			Methods(http.MethodGet).
 			HandlerFunc(indexHandler)
-
-		authenticated := router.NewRoute().Subrouter()
-		authenticated.Use(func(next http.Handler) http.Handler {
-			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-				token, err := request.ParseFromRequest(
-					r,
-					request.AuthorizationHeaderExtractor,
-					func(t *jwt.Token) (interface{}, error) {
-						return sessionTokenSecret, nil
-					})
-				if err == nil && token != nil {
-					claims, ok := token.Claims.(jwt.MapClaims)
-					if ok {
-						session, _ := store.Get(r, "main")
-						session.Values["uid"] = claims["uid"]
-						_ = session.Save(r, w)
-					}
-				}
-
-				next.ServeHTTP(w, r)
-			})
-		})
-
-		httpmount.MountBookService(authenticated, bookService)
-		httpmount.MountEntryService(authenticated, entryService)
-		httpmount.MountExtractorService(authenticated, extractorService)
-		httpmount.MountQueryService(authenticated, queryService)
-		httpmount.MountReportService(authenticated, reportService)
-		httpmount.MountSavedQueryService(authenticated, savedQueryService)
-		httpmount.MountShorthandService(authenticated, shorthandService)
 
 		listen := os.Getenv("LISTEN")
 		server := http.Server{

@@ -7,18 +7,15 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/schema"
-	"github.com/gorilla/sessions"
 
 	"github.com/minond/captainslog/model"
 	"github.com/minond/captainslog/service"
 )
 
 var _ = schema.NewDecoder
-var store = sessions.NewCookieStore([]byte(os.Getenv("SESSION_KEY")))
 
 // ReportServiceContract defines what an implementation of service.ReportService
 // should look like. This interface is derived from the routes.json file
@@ -111,30 +108,17 @@ func MountReportService(router *mux.Router, serv ReportServiceContract) {
 	log.Print("[INFO] handler GET /api/reports -> service.ReportService.Retrieve(service.ReportRetrieveRequest) -> service.ReportRetrieveResponse")
 
 	router.HandleFunc("/api/reports", func(w http.ResponseWriter, r *http.Request) {
-		session, err := store.Get(r, "main")
-		if err != nil {
-			http.Error(w, "unable to read request data", http.StatusInternalServerError)
-			log.Printf("[ERROR] error getting session: %v", err)
-			return
-		}
-
 		switch r.Method {
-
 		case "GET":
 			req := &service.ReportRetrieveRequest{}
 			dec := schema.NewDecoder()
-			if err = dec.Decode(req, r.URL.Query()); err != nil {
+			if err := dec.Decode(req, r.URL.Query()); err != nil {
 				http.Error(w, "unable to decode request", http.StatusBadRequest)
 				log.Printf("[ERROR] error unmarshaling request: %v", err)
 				return
 			}
 
-			ctx := context.Background()
-			for key, val := range session.Values {
-				ctx = context.WithValue(ctx, key, val)
-			}
-
-			res, err := serv.Retrieve(ctx, req)
+			res, err := serv.Retrieve(r.Context(), req)
 			if err != nil {
 				http.Error(w, "unable to handle request", http.StatusInternalServerError)
 				log.Printf("[ERROR] error handling request: %v", err)
@@ -164,15 +148,7 @@ func MountBookService(router *mux.Router, serv BookServiceContract) {
 	log.Print("[INFO] handler GET /api/books -> service.BookService.Retrieve(service.BookRetrieveRequest) -> service.BookRetrieveResponse")
 
 	router.HandleFunc("/api/books", func(w http.ResponseWriter, r *http.Request) {
-		session, err := store.Get(r, "main")
-		if err != nil {
-			http.Error(w, "unable to read request data", http.StatusInternalServerError)
-			log.Printf("[ERROR] error getting session: %v", err)
-			return
-		}
-
 		switch r.Method {
-
 		case "POST":
 			req := &service.BookCreateRequest{}
 			data, err := ioutil.ReadAll(r.Body)
@@ -183,18 +159,13 @@ func MountBookService(router *mux.Router, serv BookServiceContract) {
 				return
 			}
 
-			if err = json.Unmarshal(data, req); err != nil {
+			if err := json.Unmarshal(data, req); err != nil {
 				http.Error(w, "unable to decode request", http.StatusBadRequest)
 				log.Printf("[ERROR] error unmarshaling request: %v", err)
 				return
 			}
 
-			ctx := context.Background()
-			for key, val := range session.Values {
-				ctx = context.WithValue(ctx, key, val)
-			}
-
-			res, err := serv.Create(ctx, req)
+			res, err := serv.Create(r.Context(), req)
 			if err != nil {
 				http.Error(w, "unable to handle request", http.StatusInternalServerError)
 				log.Printf("[ERROR] error handling request: %v", err)
@@ -213,18 +184,13 @@ func MountBookService(router *mux.Router, serv BookServiceContract) {
 		case "GET":
 			req := &service.BookRetrieveRequest{}
 			dec := schema.NewDecoder()
-			if err = dec.Decode(req, r.URL.Query()); err != nil {
+			if err := dec.Decode(req, r.URL.Query()); err != nil {
 				http.Error(w, "unable to decode request", http.StatusBadRequest)
 				log.Printf("[ERROR] error unmarshaling request: %v", err)
 				return
 			}
 
-			ctx := context.Background()
-			for key, val := range session.Values {
-				ctx = context.WithValue(ctx, key, val)
-			}
-
-			res, err := serv.Retrieve(ctx, req)
+			res, err := serv.Retrieve(r.Context(), req)
 			if err != nil {
 				http.Error(w, "unable to handle request", http.StatusInternalServerError)
 				log.Printf("[ERROR] error handling request: %v", err)
@@ -255,15 +221,7 @@ func MountSavedQueryService(router *mux.Router, serv SavedQueryServiceContract) 
 	log.Print("[INFO] handler GET /api/saved_query -> service.SavedQueryService.Retrieve() -> service.SavedQueriesRetrieveResponse")
 
 	router.HandleFunc("/api/saved_query", func(w http.ResponseWriter, r *http.Request) {
-		session, err := store.Get(r, "main")
-		if err != nil {
-			http.Error(w, "unable to read request data", http.StatusInternalServerError)
-			log.Printf("[ERROR] error getting session: %v", err)
-			return
-		}
-
 		switch r.Method {
-
 		case "POST":
 			req := &service.SavedQueryCreateRequest{}
 			data, err := ioutil.ReadAll(r.Body)
@@ -274,18 +232,13 @@ func MountSavedQueryService(router *mux.Router, serv SavedQueryServiceContract) 
 				return
 			}
 
-			if err = json.Unmarshal(data, req); err != nil {
+			if err := json.Unmarshal(data, req); err != nil {
 				http.Error(w, "unable to decode request", http.StatusBadRequest)
 				log.Printf("[ERROR] error unmarshaling request: %v", err)
 				return
 			}
 
-			ctx := context.Background()
-			for key, val := range session.Values {
-				ctx = context.WithValue(ctx, key, val)
-			}
-
-			res, err := serv.Create(ctx, req)
+			res, err := serv.Create(r.Context(), req)
 			if err != nil {
 				http.Error(w, "unable to handle request", http.StatusInternalServerError)
 				log.Printf("[ERROR] error handling request: %v", err)
@@ -311,18 +264,13 @@ func MountSavedQueryService(router *mux.Router, serv SavedQueryServiceContract) 
 				return
 			}
 
-			if err = json.Unmarshal(data, req); err != nil {
+			if err := json.Unmarshal(data, req); err != nil {
 				http.Error(w, "unable to decode request", http.StatusBadRequest)
 				log.Printf("[ERROR] error unmarshaling request: %v", err)
 				return
 			}
 
-			ctx := context.Background()
-			for key, val := range session.Values {
-				ctx = context.WithValue(ctx, key, val)
-			}
-
-			res, err := serv.Update(ctx, req)
+			res, err := serv.Update(r.Context(), req)
 			if err != nil {
 				http.Error(w, "unable to handle request", http.StatusInternalServerError)
 				log.Printf("[ERROR] error handling request: %v", err)
@@ -339,12 +287,7 @@ func MountSavedQueryService(router *mux.Router, serv SavedQueryServiceContract) 
 			w.Write(out)
 
 		case "GET":
-			ctx := context.Background()
-			for key, val := range session.Values {
-				ctx = context.WithValue(ctx, key, val)
-			}
-
-			res, err := serv.Retrieve(ctx)
+			res, err := serv.Retrieve(r.Context())
 			if err != nil {
 				http.Error(w, "unable to handle request", http.StatusInternalServerError)
 				log.Printf("[ERROR] error handling request: %v", err)
@@ -373,15 +316,7 @@ func MountExtractorService(router *mux.Router, serv ExtractorServiceContract) {
 	log.Print("[INFO] handler POST /api/extractors -> service.ExtractorService.Create(service.ExtractorCreateRequest) -> model.Extractor")
 
 	router.HandleFunc("/api/extractors", func(w http.ResponseWriter, r *http.Request) {
-		session, err := store.Get(r, "main")
-		if err != nil {
-			http.Error(w, "unable to read request data", http.StatusInternalServerError)
-			log.Printf("[ERROR] error getting session: %v", err)
-			return
-		}
-
 		switch r.Method {
-
 		case "POST":
 			req := &service.ExtractorCreateRequest{}
 			data, err := ioutil.ReadAll(r.Body)
@@ -392,18 +327,13 @@ func MountExtractorService(router *mux.Router, serv ExtractorServiceContract) {
 				return
 			}
 
-			if err = json.Unmarshal(data, req); err != nil {
+			if err := json.Unmarshal(data, req); err != nil {
 				http.Error(w, "unable to decode request", http.StatusBadRequest)
 				log.Printf("[ERROR] error unmarshaling request: %v", err)
 				return
 			}
 
-			ctx := context.Background()
-			for key, val := range session.Values {
-				ctx = context.WithValue(ctx, key, val)
-			}
-
-			res, err := serv.Create(ctx, req)
+			res, err := serv.Create(r.Context(), req)
 			if err != nil {
 				http.Error(w, "unable to handle request", http.StatusInternalServerError)
 				log.Printf("[ERROR] error handling request: %v", err)
@@ -435,15 +365,7 @@ func MountEntryService(router *mux.Router, serv EntryServiceContract) {
 	log.Print("[INFO] handler GET /api/entries -> service.EntryService.Retrieve(service.EntryRetrieveRequest) -> service.EntryRetrieveResponse")
 
 	router.HandleFunc("/api/entries", func(w http.ResponseWriter, r *http.Request) {
-		session, err := store.Get(r, "main")
-		if err != nil {
-			http.Error(w, "unable to read request data", http.StatusInternalServerError)
-			log.Printf("[ERROR] error getting session: %v", err)
-			return
-		}
-
 		switch r.Method {
-
 		case "POST":
 			req := &service.EntriesCreateRequest{}
 			data, err := ioutil.ReadAll(r.Body)
@@ -454,18 +376,13 @@ func MountEntryService(router *mux.Router, serv EntryServiceContract) {
 				return
 			}
 
-			if err = json.Unmarshal(data, req); err != nil {
+			if err := json.Unmarshal(data, req); err != nil {
 				http.Error(w, "unable to decode request", http.StatusBadRequest)
 				log.Printf("[ERROR] error unmarshaling request: %v", err)
 				return
 			}
 
-			ctx := context.Background()
-			for key, val := range session.Values {
-				ctx = context.WithValue(ctx, key, val)
-			}
-
-			res, err := serv.Create(ctx, req)
+			res, err := serv.Create(r.Context(), req)
 			if err != nil {
 				http.Error(w, "unable to handle request", http.StatusInternalServerError)
 				log.Printf("[ERROR] error handling request: %v", err)
@@ -491,18 +408,13 @@ func MountEntryService(router *mux.Router, serv EntryServiceContract) {
 				return
 			}
 
-			if err = json.Unmarshal(data, req); err != nil {
+			if err := json.Unmarshal(data, req); err != nil {
 				http.Error(w, "unable to decode request", http.StatusBadRequest)
 				log.Printf("[ERROR] error unmarshaling request: %v", err)
 				return
 			}
 
-			ctx := context.Background()
-			for key, val := range session.Values {
-				ctx = context.WithValue(ctx, key, val)
-			}
-
-			res, err := serv.Update(ctx, req)
+			res, err := serv.Update(r.Context(), req)
 			if err != nil {
 				http.Error(w, "unable to handle request", http.StatusInternalServerError)
 				log.Printf("[ERROR] error handling request: %v", err)
@@ -521,18 +433,13 @@ func MountEntryService(router *mux.Router, serv EntryServiceContract) {
 		case "DELETE":
 			req := &service.EntryDeleteRequest{}
 			dec := schema.NewDecoder()
-			if err = dec.Decode(req, r.URL.Query()); err != nil {
+			if err := dec.Decode(req, r.URL.Query()); err != nil {
 				http.Error(w, "unable to decode request", http.StatusBadRequest)
 				log.Printf("[ERROR] error unmarshaling request: %v", err)
 				return
 			}
 
-			ctx := context.Background()
-			for key, val := range session.Values {
-				ctx = context.WithValue(ctx, key, val)
-			}
-
-			res, err := serv.Delete(ctx, req)
+			res, err := serv.Delete(r.Context(), req)
 			if err != nil {
 				http.Error(w, "unable to handle request", http.StatusInternalServerError)
 				log.Printf("[ERROR] error handling request: %v", err)
@@ -551,18 +458,13 @@ func MountEntryService(router *mux.Router, serv EntryServiceContract) {
 		case "GET":
 			req := &service.EntryRetrieveRequest{}
 			dec := schema.NewDecoder()
-			if err = dec.Decode(req, r.URL.Query()); err != nil {
+			if err := dec.Decode(req, r.URL.Query()); err != nil {
 				http.Error(w, "unable to decode request", http.StatusBadRequest)
 				log.Printf("[ERROR] error unmarshaling request: %v", err)
 				return
 			}
 
-			ctx := context.Background()
-			for key, val := range session.Values {
-				ctx = context.WithValue(ctx, key, val)
-			}
-
-			res, err := serv.Retrieve(ctx, req)
+			res, err := serv.Retrieve(r.Context(), req)
 			if err != nil {
 				http.Error(w, "unable to handle request", http.StatusInternalServerError)
 				log.Printf("[ERROR] error handling request: %v", err)
@@ -592,22 +494,9 @@ func MountQueryService(router *mux.Router, serv QueryServiceContract) {
 	log.Print("[INFO] handler POST /api/query -> service.QueryService.Query(service.QueryExecuteRequest) -> service.QueryResults")
 
 	router.HandleFunc("/api/query", func(w http.ResponseWriter, r *http.Request) {
-		session, err := store.Get(r, "main")
-		if err != nil {
-			http.Error(w, "unable to read request data", http.StatusInternalServerError)
-			log.Printf("[ERROR] error getting session: %v", err)
-			return
-		}
-
 		switch r.Method {
-
 		case "GET":
-			ctx := context.Background()
-			for key, val := range session.Values {
-				ctx = context.WithValue(ctx, key, val)
-			}
-
-			res, err := serv.Schema(ctx)
+			res, err := serv.Schema(r.Context())
 			if err != nil {
 				http.Error(w, "unable to handle request", http.StatusInternalServerError)
 				log.Printf("[ERROR] error handling request: %v", err)
@@ -633,18 +522,13 @@ func MountQueryService(router *mux.Router, serv QueryServiceContract) {
 				return
 			}
 
-			if err = json.Unmarshal(data, req); err != nil {
+			if err := json.Unmarshal(data, req); err != nil {
 				http.Error(w, "unable to decode request", http.StatusBadRequest)
 				log.Printf("[ERROR] error unmarshaling request: %v", err)
 				return
 			}
 
-			ctx := context.Background()
-			for key, val := range session.Values {
-				ctx = context.WithValue(ctx, key, val)
-			}
-
-			res, err := serv.Query(ctx, req)
+			res, err := serv.Query(r.Context(), req)
 			if err != nil {
 				http.Error(w, "unable to handle request", http.StatusInternalServerError)
 				log.Printf("[ERROR] error handling request: %v", err)
@@ -673,15 +557,7 @@ func MountShorthandService(router *mux.Router, serv ShorthandServiceContract) {
 	log.Print("[INFO] handler POST /api/shorthands -> service.ShorthandService.Create(service.ShorthandCreateRequest) -> model.Shorthand")
 
 	router.HandleFunc("/api/shorthands", func(w http.ResponseWriter, r *http.Request) {
-		session, err := store.Get(r, "main")
-		if err != nil {
-			http.Error(w, "unable to read request data", http.StatusInternalServerError)
-			log.Printf("[ERROR] error getting session: %v", err)
-			return
-		}
-
 		switch r.Method {
-
 		case "POST":
 			req := &service.ShorthandCreateRequest{}
 			data, err := ioutil.ReadAll(r.Body)
@@ -692,18 +568,13 @@ func MountShorthandService(router *mux.Router, serv ShorthandServiceContract) {
 				return
 			}
 
-			if err = json.Unmarshal(data, req); err != nil {
+			if err := json.Unmarshal(data, req); err != nil {
 				http.Error(w, "unable to decode request", http.StatusBadRequest)
 				log.Printf("[ERROR] error unmarshaling request: %v", err)
 				return
 			}
 
-			ctx := context.Background()
-			for key, val := range session.Values {
-				ctx = context.WithValue(ctx, key, val)
-			}
-
-			res, err := serv.Create(ctx, req)
+			res, err := serv.Create(r.Context(), req)
 			if err != nil {
 				http.Error(w, "unable to handle request", http.StatusInternalServerError)
 				log.Printf("[ERROR] error handling request: %v", err)
