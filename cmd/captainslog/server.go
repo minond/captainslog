@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"context"
-	"errors"
 	"html/template"
 	"io"
 	"io/ioutil"
@@ -14,8 +13,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/dgrijalva/jwt-go"
-	"github.com/dgrijalva/jwt-go/request"
 	"github.com/gorilla/mux"
 	"github.com/spf13/cobra"
 
@@ -61,18 +58,11 @@ func tokenFromRequest(sessionTokenSecret []byte, userService *service.UserServic
 		PlainPassword: password,
 	}
 
-	if !req.Valid() {
-		return "", errors.New("invalid login request")
-	}
-
-	user, err := userService.Login(context.Background(), req)
+	session, err := userService.GenerateToken(context.Background(), req)
 	if err != nil {
 		return "", err
 	}
-
-	claims := jwt.MapClaims{"uid": user.GUID}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString(sessionTokenSecret)
+	return session.Token, nil
 }
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
@@ -125,19 +115,11 @@ var cmdServer = &cobra.Command{
 			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				log.Printf("[INFO] %s %s", r.Method, r.URL.String())
 
-				token, err := request.ParseFromRequest(
-					r,
-					request.AuthorizationHeaderExtractor,
-					func(t *jwt.Token) (interface{}, error) {
-						return sessionTokenSecret, nil
-					})
-				if err == nil && token != nil {
-					claims, ok := token.Claims.(jwt.MapClaims)
-					if ok && claims["uid"] != "" {
-						uid := context.WithValue(r.Context(), "uid", claims["uid"])
-						next.ServeHTTP(w, r.WithContext(uid))
-						return
-					}
+				session, err := userService.ExtractSessionFromRequest(r)
+				if err == nil {
+					uid := context.WithValue(r.Context(), "uid", session.UID)
+					next.ServeHTTP(w, r.WithContext(uid))
+					return
 				}
 
 				next.ServeHTTP(w, r)

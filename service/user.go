@@ -4,8 +4,13 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"net/http"
+	"os"
 
 	"gopkg.in/src-d/go-kallax.v1"
+
+	"github.com/dgrijalva/jwt-go"
+	"github.com/dgrijalva/jwt-go/request"
 
 	"github.com/minond/captainslog/model"
 )
@@ -62,4 +67,61 @@ func (s UserService) Login(ctx context.Context, req *UserLoginRequest) (*model.U
 	}
 
 	return nil, CouldNotAuthenticateUserErr
+}
+
+type UserToken struct {
+	Token string `json:"token"`
+}
+
+func (s UserService) GenerateToken(ctx context.Context, req *UserLoginRequest) (*UserToken, error) {
+	sessionTokenSecret := []byte(os.Getenv("SESSION_TOKEN_SECRET"))
+	if len(sessionTokenSecret) == 0 {
+		return nil, errors.New("unable to load session environment information")
+	}
+
+	if !req.Valid() {
+		return nil, errors.New("invalid request")
+	}
+
+	user, err := s.Login(context.Background(), req)
+	if err != nil {
+		return nil, err
+	}
+
+	claims := jwt.MapClaims{"uid": user.GUID}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	signed, err := token.SignedString(sessionTokenSecret)
+	if err != nil {
+		return nil, err
+	}
+
+	return &UserToken{Token: signed}, nil
+}
+
+type UserSession struct {
+	UID string
+}
+
+func (s UserService) ExtractSessionFromRequest(r *http.Request) (*UserSession, error) {
+	sessionTokenSecret := []byte(os.Getenv("SESSION_TOKEN_SECRET"))
+	if len(sessionTokenSecret) == 0 {
+		return nil, errors.New("unable to load session environment information")
+	}
+
+	token, err := request.ParseFromRequest(
+		r,
+		request.AuthorizationHeaderExtractor,
+		func(t *jwt.Token) (interface{}, error) {
+			return sessionTokenSecret, nil
+		})
+	if err != nil {
+		return nil, err
+	}
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok || claims["uid"] == "" {
+		return nil, errors.New("unable to extract token data")
+	}
+
+	return &UserSession{UID: claims["uid"].(string)}, nil
 }
