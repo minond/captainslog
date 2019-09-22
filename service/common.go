@@ -26,7 +26,7 @@ func clientTime(t time.Time, offset int) time.Time {
 }
 
 func getUserGUID(ctx context.Context) (string, error) {
-	val := ctx.Value("userguid")
+	val := ctx.Value("uid")
 	if val == nil {
 		return "", errors.New("noguid")
 	}
