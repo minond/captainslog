@@ -50,7 +50,7 @@ func serve(w http.ResponseWriter, r *http.Request, page string, config PageConfi
 	}
 }
 
-func tokenFromRequest(sessionTokenSecret []byte, userService *service.UserService, r *http.Request) (string, error) {
+func tokenFromRequest(userService *service.UserService, r *http.Request) (string, error) {
 	email := r.FormValue("email")
 	password := r.FormValue("password")
 	req := &service.UserLoginRequest{
@@ -69,13 +69,13 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	serve(w, r, "index.tmpl", PageConfig{})
 }
 
-func loginHandler(sessionTokenSecret []byte, userService *service.UserService) func(http.ResponseWriter, *http.Request) {
+func loginHandler(userService *service.UserService) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			return
 		}
 
-		token, err := tokenFromRequest(sessionTokenSecret, userService, r)
+		token, err := tokenFromRequest(userService, r)
 		if err != nil {
 			http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 			return
@@ -89,11 +89,6 @@ var cmdServer = &cobra.Command{
 	Use:   "server",
 	Short: "Run application server",
 	Run: func(cmd *cobra.Command, args []string) {
-		sessionTokenSecret := []byte(os.Getenv("SESSION_TOKEN_SECRET"))
-		if len(sessionTokenSecret) == 0 {
-			panic("SESSION_TOKEN_SECRET is required")
-		}
-
 		log.Print("[INFO] initializing server")
 		db, err := database()
 		if err != nil {
@@ -139,7 +134,7 @@ var cmdServer = &cobra.Command{
 			Handler(http.StripPrefix("/static/", http.FileServer(dist)))
 		router.PathPrefix("/").
 			Methods(http.MethodPost).
-			HandlerFunc(loginHandler(sessionTokenSecret, userService))
+			HandlerFunc(loginHandler(userService))
 		router.PathPrefix("/").
 			Methods(http.MethodGet).
 			HandlerFunc(indexHandler)
