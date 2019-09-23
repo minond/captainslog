@@ -28,7 +28,7 @@ func Convert(ast Ast, userGUID string) (Ast, error) {
 		if err != nil {
 			return nil, err
 		}
-		return withBookFilter(withUserFilter(rewritten.(*selectStmt), userGUID)), nil
+		return withBookFilter(withUserFilter(rewritten.(*selectStmt), userGUID), userGUID), nil
 	}
 	return nil, fmt.Errorf("invalid query type: %v", ast.queryType())
 }
@@ -57,7 +57,7 @@ func withUserFilter(stmt *selectStmt, userGUID string) *selectStmt {
 	})
 }
 
-func withBookFilter(stmt *selectStmt) *selectStmt {
+func withBookFilter(stmt *selectStmt, userGUID string) *selectStmt {
 	from := &table{name: "entries"}
 	if stmt.from != nil {
 		tableMatcher := binaryExpr{
@@ -68,11 +68,22 @@ func withBookFilter(stmt *selectStmt) *selectStmt {
 					columns: []expr{identifier{name: "guid"}},
 					from:    &table{name: "books"},
 					where: binaryExpr{
-						left: identifier{name: "name"},
-						op:   opIlike,
-						right: value{
-							ty:  tyString,
-							tok: token{lexeme: stmt.from.name},
+						left: binaryExpr{
+							left: identifier{name: "name"},
+							op:   opIlike,
+							right: value{
+								ty:  tyString,
+								tok: token{lexeme: stmt.from.name},
+							},
+						},
+						op: opAnd,
+						right: binaryExpr{
+							left: identifier{name: "user_guid"},
+							op:   opEq,
+							right: value{
+								ty:  tyString,
+								tok: token{lexeme: userGUID},
+							},
 						},
 					},
 				},

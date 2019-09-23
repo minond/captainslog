@@ -78,12 +78,12 @@ func TestConvert_withBookFilter(t *testing.T) {
 		{
 			"a subquery filter is added",
 			`select exercise from workouts`,
-			`select exercise from entries where book_guid = (select guid from books where name ilike 'workouts')`,
+			`select exercise from entries where book_guid = (select guid from books where name ilike 'workouts' and user_guid = 'ABC')`,
 		},
 		{
 			"previous filters are kept",
 			`select exercise from workouts where true and false and 1`,
-			`select exercise from entries where book_guid = (select guid from books where name ilike 'workouts') and (true and false and 1)`,
+			`select exercise from entries where book_guid = (select guid from books where name ilike 'workouts' and user_guid = 'ABC') and (true and false and 1)`,
 		},
 	}
 
@@ -93,7 +93,7 @@ func TestConvert_withBookFilter(t *testing.T) {
 			if err != nil {
 				t.Errorf("unexpected error parsing query: %v", err)
 			}
-			query := withBookFilter(ast.(*selectStmt))
+			query := withBookFilter(ast.(*selectStmt), "ABC")
 			if query.String() != test.expected {
 				t.Errorf(compstrmsg("bad conversion in "+test.label,
 					test.expected, query.String()))
@@ -111,22 +111,22 @@ func TestConvert_Convert(t *testing.T) {
 		{
 			"sample query 1",
 			`select exercise as exercise, max(cast(weight as float)) as max from workouts where weight is not null group by exercise`,
-			`select data #>> '{exercise}' as exercise, max(cast(data #>> '{weight}' as float)) as max from entries where book_guid = (select guid from books where name ilike 'workouts') and (user_guid = 'e26e269c-0587-4094-bf01-108c61b0fa8a' and (data #>> '{weight}' is not null)) group by exercise`,
+			`select data #>> '{exercise}' as exercise, max(cast(data #>> '{weight}' as float)) as max from entries where book_guid = (select guid from books where name ilike 'workouts' and user_guid = 'xyz') and (user_guid = 'xyz' and (data #>> '{weight}' is not null)) group by exercise`,
 		},
 		{
 			"sample query 2",
 			`select distinct exercise as name from workouts where exercise ilike '%bicep%'`,
-			`select distinct data #>> '{exercise}' as name from entries where book_guid = (select guid from books where name ilike 'workouts') and (user_guid = 'e26e269c-0587-4094-bf01-108c61b0fa8a' and (data #>> '{exercise}' ilike '%bicep%'))`,
+			`select distinct data #>> '{exercise}' as name from entries where book_guid = (select guid from books where name ilike 'workouts' and user_guid = 'xyz') and (user_guid = 'xyz' and (data #>> '{exercise}' ilike '%bicep%'))`,
 		},
 		{
 			"alias is respected in order clause",
 			`select exercise, count(1) as count from workouts group by exercise order by count`,
-			`select data #>> '{exercise}' as exercise, count(1) as count from entries where book_guid = (select guid from books where name ilike 'workouts') and (user_guid = 'e26e269c-0587-4094-bf01-108c61b0fa8a') group by data #>> '{exercise}' order by count asc`,
+			`select data #>> '{exercise}' as exercise, count(1) as count from entries where book_guid = (select guid from books where name ilike 'workouts' and user_guid = 'xyz') and (user_guid = 'xyz') group by data #>> '{exercise}' order by count asc`,
 		},
 		{
 			"select with just a function call",
 			`select now()`,
-			`select now() as now from entries where user_guid = 'e26e269c-0587-4094-bf01-108c61b0fa8a'`,
+			`select now() as now from entries where user_guid = 'xyz'`,
 		},
 	}
 
@@ -136,7 +136,7 @@ func TestConvert_Convert(t *testing.T) {
 			if err != nil {
 				t.Errorf("unexpected error parsing query: %v", err)
 			}
-			query, err := Convert(ast, "e26e269c-0587-4094-bf01-108c61b0fa8a")
+			query, err := Convert(ast, "xyz")
 			if err != nil {
 				t.Errorf("unexpected error converting query: %v", err)
 			}
