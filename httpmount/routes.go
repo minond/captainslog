@@ -17,6 +17,15 @@ import (
 
 var _ = schema.NewDecoder
 
+// UserServiceContract defines what an implementation of service.UserService
+// should look like. This interface is derived from the routes.json file
+// provided as input to this generator, and it is a combination of the handler,
+// the request, and the response.
+type UserServiceContract interface {
+	// GenerateToken runs when a POST /sso request comes in.
+	GenerateToken(ctx context.Context, req *service.UserLoginRequest) (*service.UserToken, error)
+}
+
 // ReportServiceContract defines what an implementation of service.ReportService
 // should look like. This interface is derived from the routes.json file
 // provided as input to this generator, and it is a combination of the handler,
@@ -99,6 +108,52 @@ type QueryServiceContract interface {
 type ShorthandServiceContract interface {
 	// Create runs when a POST /api/shorthands request comes in.
 	Create(ctx context.Context, req *service.ShorthandCreateRequest) (*model.Shorthand, error)
+}
+
+// MountUserService add a handler to a Gorilla Mux Router that will route
+// an incoming request through the service.UserService service.
+func MountUserService(router *mux.Router, serv UserServiceContract) {
+	log.Print("[INFO] mounting service.UserService on /sso")
+	log.Print("[INFO] handler POST /sso -> service.UserService.GenerateToken(service.UserLoginRequest) -> service.UserToken")
+
+	router.HandleFunc("/sso", func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case "POST":
+			req := &service.UserLoginRequest{}
+			data, err := ioutil.ReadAll(r.Body)
+			defer r.Body.Close()
+			if err != nil {
+				http.Error(w, "unable to read request body", http.StatusBadRequest)
+				log.Printf("[ERROR] error reading request body: %v", err)
+				return
+			}
+
+			if err := json.Unmarshal(data, req); err != nil {
+				http.Error(w, "unable to decode request", http.StatusBadRequest)
+				log.Printf("[ERROR] error unmarshaling request: %v", err)
+				return
+			}
+
+			res, err := serv.GenerateToken(r.Context(), req)
+			if err != nil {
+				http.Error(w, "unable to handle request", http.StatusInternalServerError)
+				log.Printf("[ERROR] error handling request: %v", err)
+				return
+			}
+
+			out, err := json.Marshal(res)
+			if err != nil {
+				http.Error(w, "unable to encode response", http.StatusInternalServerError)
+				log.Printf("[ERROR] error marshaling response: %v", err)
+				return
+			}
+
+			w.Write(out)
+
+		default:
+			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+		}
+	})
 }
 
 // MountReportService add a handler to a Gorilla Mux Router that will route

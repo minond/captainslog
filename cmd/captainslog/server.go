@@ -128,6 +128,7 @@ var cmdServer = &cobra.Command{
 		httpmount.MountReportService(router, reportService)
 		httpmount.MountSavedQueryService(router, savedQueryService)
 		httpmount.MountShorthandService(router, shorthandService)
+		httpmount.MountUserService(router, userService)
 
 		router.PathPrefix("/static").
 			Methods(http.MethodGet).

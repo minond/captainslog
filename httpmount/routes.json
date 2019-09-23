@@ -1,6 +1,18 @@
 {
   "routes": [
     {
+      "endpoint": "/sso",
+      "service": "service.UserService",
+      "methods": [
+        {
+          "method": "POST",
+          "handler": "GenerateToken",
+          "request": "service.UserLoginRequest",
+          "response": "service.UserToken"
+        }
+      ]
+    },
+    {
       "endpoint": "/api/reports",
       "service": "service.ReportService",
       "methods": [
