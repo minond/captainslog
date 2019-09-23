@@ -218,3 +218,28 @@ func (s EntryService) Retrieve(ctx context.Context, req *EntryRetrieveRequest) (
 
 	return &EntryRetrieveResponse{Entries: entries}, nil
 }
+
+type EntrySearchRequest struct {
+	Text string `schema:"text"`
+}
+
+type EntrySearchResponse struct {
+	Entries []*model.Entry `json:"entries"`
+}
+
+func (s EntryService) Search(ctx context.Context, req *EntrySearchRequest) (*EntrySearchResponse, error) {
+	userGUID, err := getUserGUID(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	entries, err := s.entryStore.FindAll(model.NewEntryQuery().
+		Select(model.Schema.Entry.GUID, model.Schema.Entry.Original).
+		Where(kallax.Eq(model.Schema.Entry.UserFK, userGUID)).
+		Order(kallax.Desc(model.Schema.Entry.CreatedAt)))
+	if err != nil {
+		return nil, err
+	}
+
+	return &EntrySearchResponse{entries}, nil
+}
