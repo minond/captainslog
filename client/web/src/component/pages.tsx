@@ -7,7 +7,7 @@ import { Entries } from "./entries"
 import { Query } from "./query"
 import { ReportView } from "./report"
 
-import { cachedGetBook } from "../remote"
+import { cachedGetBook, isLoggedIn } from "../remote"
 
 type PageProps = {
   active?: string
@@ -19,13 +19,21 @@ const Page = ({ active, children }: PageProps) => {
     document.title = `Captain's Log`
   })
 
+  let links
+  if (isLoggedIn()) {
+    links =
+      <>
+        <Link to="/report" className={active === "report" ? "active" : ""}>Report</Link>
+        <Link to="/query" className={active === "query" ? "active" : ""}>Query</Link>
+        <Books active={active} />
+      </>
+  }
+
   return <div className="page-wrapper">
     <div className={"page-header " + (active ? "page-header-active" : "")}>
       <div className="page-header-content">
         <Link to="/">Captain's Log</Link>
-        <Link to="/report" className={active === "report" ? "active" : ""}>Report</Link>
-        <Link to="/query" className={active === "query" ? "active" : ""}>Query</Link>
-        <Books active={active} />
+        {links}
       </div>
     </div>
     <div className="page-content">
@@ -34,8 +42,7 @@ const Page = ({ active, children }: PageProps) => {
   </div>
 }
 
-export const IndexPage = (props: {}) =>
-  <Page>
+const LoginForm = () =>
     <form method="post" action="/" className="login-form">
       <div className="login-form-wrapper">
         <input placeholder="Email" name="email" />
@@ -43,6 +50,10 @@ export const IndexPage = (props: {}) =>
         <button>Login</button>
       </div>
     </form>
+
+export const IndexPage = (props: {}) =>
+  <Page>
+    {isLoggedIn() ? null : <LoginForm />}
   </Page>
 
 export const ReportPage = (props: {}) =>

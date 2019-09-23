@@ -26,12 +26,15 @@ enum uris {
   savedQuery = "/api/saved_query",
 }
 
+declare var config: { token: string }
+export const isLoggedIn = () =>
+  'config' in window && config && !!config.token
+
 const offset = () =>
   new Date().getTimezoneOffset() * -1
 
-declare var config: { token: string }
 const authenticated = axios.create({ baseURL: '/' })
-if ('config' in window) {
+if (isLoggedIn()) {
   authenticated.defaults.headers.common['Authorization'] = `Bearer ${config.token}`
 }
 
