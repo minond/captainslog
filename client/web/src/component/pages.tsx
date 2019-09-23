@@ -7,7 +7,8 @@ import { Entries } from "./entries"
 import { Query } from "./query"
 import { ReportView } from "./report"
 
-import { cachedGetBook, isLoggedIn } from "../remote"
+import { isLoggedIn } from "../auth"
+import { cachedGetBook } from "../remote"
 
 type PageProps = {
   active?: string
