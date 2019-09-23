@@ -10,12 +10,27 @@ log() {
   echo "$label: $message"
 }
 
+login() {
+  local email=
+  local password=
+
+  echo -n "email: "
+  read email
+  echo -n "password: "
+  read -s password
+
+  echo
+  echo "logging in as $email..."
+  local resp=$(curl -s -X POST "$url/sso" -d "{\"email\":\"$email\", \"plainPassword\": \"$password\"}")
+  TOKEN=$(echo "$resp" | jq '.token' -r)
+}
+
 new_book() {
   local name="$1"
   local grouping="$2"
 
   data="{\"name\": \"$name\", \"grouping\": $grouping}"
-  resp=$(curl -s -X POST "$url/api/books" -d "$data")
+  resp=$(curl -s -X POST "$url/api/books" -d "$data" -H "Authorization: Bearer $TOKEN")
 
   echo "$resp" | jq '.guid' -r
 }
@@ -27,7 +42,7 @@ new_extractor() {
   local book_guid="$4"
 
   data="{\"bookGuid\": \"$book_guid\", \"label\": \"$label\", \"match\": \"$match\", \"type\": $typ}"
-  resp=$(curl -s -X POST "$url/api/extractors" -d "$data")
+  resp=$(curl -s -X POST "$url/api/extractors" -d "$data" -H "Authorization: Bearer $TOKEN")
 
   echo "$resp" | jq '.guid' -r
 }
@@ -40,7 +55,7 @@ new_shorthand() {
   local book_guid="$5"
 
   data="{\"bookGuid\": \"$book_guid\", \"priority\": $priority, \"expansion\": \"$expansion\", \"match\": \"$match\", \"text\": \"$text\"}"
-  resp=$(curl -s -X POST "$url/api/shorthands" -d "$data")
+  resp=$(curl -s -X POST "$url/api/shorthands" -d "$data" -H "Authorization: Bearer $TOKEN")
 
   echo "$resp" | jq '.guid' -r
 }
@@ -51,7 +66,7 @@ new_entry() {
   local created_at=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
   data="{\"guid\": \"$RANDOM\", \"bookGuid\": \"$book_guid\", \"text\": \"$text\", \"createdAt\": \"$created_at\"}"
-  resp=$(curl -s -X POST "$url/api/entries" -d "$data")
+  resp=$(curl -s -X POST "$url/api/entries" -d "$data" -H "Authorization: Bearer $TOKEN")
 
   echo "$resp" | jq '.entry.guid' -r
 }
@@ -82,11 +97,11 @@ create_workouts() {
 
   wait
 
-  (log "new entry" $(new_entry "Bench press, xxx@65" "$workouts")) &
-  (log "new entry" $(new_entry "Squats 1, 2min" "$workouts")) &
-  (log "new entry" $(new_entry "Squats 2, xxx@45" "$workouts")) &
-  (log "new entry" $(new_entry "Squats 3, xxx 45" "$workouts")) &
-  (log "new entry" $(new_entry "Running, 30min" "$workouts")) &
+  # (log "new entry" $(new_entry "Bench press, xxx@65" "$workouts")) &
+  # (log "new entry" $(new_entry "Squats 1, 2min" "$workouts")) &
+  # (log "new entry" $(new_entry "Squats 2, xxx@45" "$workouts")) &
+  # (log "new entry" $(new_entry "Squats 3, xxx 45" "$workouts")) &
+  # (log "new entry" $(new_entry "Running, 30min" "$workouts")) &
 
   wait
 }
@@ -102,20 +117,21 @@ create_blood_pressure() {
 
   wait
 
-  (log "new entry" $(new_entry "121 / 73 (pulse 67)" "$blood_pressure")) &
-  (log "new entry" $(new_entry "122 / 88 (pulse 80)" "$blood_pressure")) &
-  (log "new entry" $(new_entry "126 / 84 (pulse 101)" "$blood_pressure")) &
-  (log "new entry" $(new_entry "127 / 81 (pulse 85)" "$blood_pressure")) &
-  (log "new entry" $(new_entry "129 / 81 (pulse 89)" "$blood_pressure")) &
-  (log "new entry" $(new_entry "132 / 87 (pulse 74)" "$blood_pressure")) &
-  (log "new entry" $(new_entry "133 / 84 (pulse 80)" "$blood_pressure")) &
-  (log "new entry" $(new_entry "133 / 90 (pulse 83)" "$blood_pressure")) &
-  (log "new entry" $(new_entry "136 / 84 (pulse 76)" "$blood_pressure")) &
+  # (log "new entry" $(new_entry "121 / 73 (pulse 67)" "$blood_pressure")) &
+  # (log "new entry" $(new_entry "122 / 88 (pulse 80)" "$blood_pressure")) &
+  # (log "new entry" $(new_entry "126 / 84 (pulse 101)" "$blood_pressure")) &
+  # (log "new entry" $(new_entry "127 / 81 (pulse 85)" "$blood_pressure")) &
+  # (log "new entry" $(new_entry "129 / 81 (pulse 89)" "$blood_pressure")) &
+  # (log "new entry" $(new_entry "132 / 87 (pulse 74)" "$blood_pressure")) &
+  # (log "new entry" $(new_entry "133 / 84 (pulse 80)" "$blood_pressure")) &
+  # (log "new entry" $(new_entry "133 / 90 (pulse 83)" "$blood_pressure")) &
+  # (log "new entry" $(new_entry "136 / 84 (pulse 76)" "$blood_pressure")) &
 
   wait
 }
 
-reset_db
+# reset_db
+login
 create_workouts &
 create_blood_pressure &
 
