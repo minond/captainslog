@@ -77,7 +77,7 @@ func loginHandler(userService *service.UserService) func(http.ResponseWriter, *h
 
 		token, err := tokenFromRequest(userService, r)
 		if err != nil {
-			http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+			serve(w, r, "index.tmpl", PageConfig{})
 			return
 		}
 
