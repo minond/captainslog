@@ -13,77 +13,82 @@ import (
 	"text/template"
 )
 
-// Data hold all of the information required to generate the main template.
 type Data struct {
-	Package string
-	Routes
+	Package  string
+	Services []Service
 }
 
-// Routes represents the schema for a routes.json file. It has many routes.
-type Routes struct {
-	Routes []Route `json:"routes"`
+type Service struct {
+	Name      string
+	Endpoints []Endpoint
 }
 
-// Route is a single instance of a route in a routes.json file. It has
-// informatino about the endpoint and the service that handles each type of
-// request.
-type Route struct {
-	Endpoint string   `json:"endpoint"`
-	Service  string   `json:"service"`
-	Methods  []Method `json:"methods"`
+func (s Service) ServiceContractName() string {
+	return s.ShortServiceName() + "Contract"
 }
 
-func (r Route) String() string {
-	methods := []string{}
-	for _, method := range r.Methods {
-		methods = append(methods, method.Method)
-	}
-	return fmt.Sprintf("%s (%s)", r.Endpoint, strings.Join(methods, ", "))
+func (s Service) ShortServiceName() string {
+	parts := strings.SplitN(s.Name, ".", 2)
+	return parts[1]
 }
 
 // MountFunctionName generates the name of the "mount" function used to add the
 // handler to a mux routes.
-func (r Route) MountFunctionName() string {
-	return "Mount" + r.ShortServiceName()
+func (s Service) MountFunctionName() string {
+	return "Mount" + s.ShortServiceName()
 }
 
-// ServiceContractName generates the name of the interface that defines all of
-// the methods that a service is required to have in order to meet the
-// requirements defined in the routes.json file.
-func (r Route) ServiceContractName() string {
-	return r.ShortServiceName() + "Contract"
+type Endpoint struct {
+	URL      string
+	Method   string
+	Handler  string
+	Request  string
+	Response string
 }
 
-func (r Route) ShortServiceName() string {
-	parts := strings.SplitN(r.Service, ".", 2)
-	return parts[1]
+func (e Endpoint) Signature() string {
+	if e.Request != "" {
+		return fmt.Sprintf("%s(ctx context.Context, req *%s) (*%s, error)",
+			e.Handler, e.Request, e.Response)
+	}
+	return fmt.Sprintf("%s(ctx context.Context) (*%s, error)",
+		e.Handler, e.Response)
 }
 
-// Method is a badly named data structure that hold information that is unique
-// to an http method for a given route. This includes the method itself (GET,
-// POST, etc.), the name of the handlers, and types for the input and the
-// output of the handler.
-type Method struct {
-	Method   string `json:"method"`
+func (e Endpoint) JSON() bool {
+	return e.Method == http.MethodPost ||
+		e.Method == http.MethodPut ||
+		e.Method == http.MethodPatch
+}
+
+type Routes map[string]map[string]map[string]Route
+
+func (r Routes) Services() (services []Service) {
+	for service, urls := range r {
+		var endpoints []Endpoint
+		for url, methods := range urls {
+			for method, info := range methods {
+				endpoints = append(endpoints, Endpoint{
+					URL:      url,
+					Method:   method,
+					Handler:  info.Handler,
+					Request:  info.Request,
+					Response: info.Response,
+				})
+			}
+		}
+		services = append(services, Service{
+			Name:      service,
+			Endpoints: endpoints,
+		})
+	}
+	return
+}
+
+type Route struct {
 	Handler  string `json:"handler"`
 	Request  string `json:"request"`
 	Response string `json:"response"`
-}
-
-func (m Method) JSON() bool {
-	return m.Method == http.MethodPost ||
-		m.Method == http.MethodPut ||
-		m.Method == http.MethodPatch
-}
-
-// Signature generates a string that is the method definition of this Method.
-func (m Method) Signature() string {
-	if m.Request != "" {
-		return fmt.Sprintf("%s(ctx context.Context, req *%s) (*%s, error)",
-			m.Handler, m.Request, m.Response)
-	}
-	return fmt.Sprintf("%s(ctx context.Context) (*%s, error)",
-		m.Handler, m.Response)
 }
 
 var (
@@ -111,88 +116,78 @@ import (
 
 var _ = schema.NewDecoder
 
-{{range .Routes.Routes}}
-{{with $route := .}}
-// {{.ServiceContractName}} defines what an implementation of {{.Service}}
+{{range .Services}}
+// {{.ServiceContractName}} defines what an implementation of {{.Name}}
 // should look like. This interface is derived from the routes.json file
 // provided as input to this generator, and it is a combination of the handler,
 // the request, and the response.
 type {{.ServiceContractName}} interface {
-{{- range .Methods}}
-	// {{.Handler}} runs when a {{.Method}} {{$route.Endpoint}} request comes in.
+{{- range .Endpoints}}
+	// {{.Handler}} runs when a {{.Method}} {{.URL}} request comes in.
 	{{.Signature}}
 {{end}}
 }
 {{end}}
-{{end}}
 
-{{range .Routes.Routes}}
+{{range .Services}}
 // {{.MountFunctionName}} add a handler to a Gorilla Mux Router that will route
-// an incoming request through the {{.Service}} service.
+// an incoming request through the {{.Name}} service.
 func {{.MountFunctionName}}(router *mux.Router, serv {{.ServiceContractName}}) {
-	log.Print("[INFO] mounting {{.Service}} on {{.Endpoint}}")
-	{{with $route := .}}
-	{{- range .Methods -}}
-	log.Print("[INFO] handler {{.Method}} {{$route.Endpoint}} -> {{$route.Service}}.{{.Handler}}({{.Request}}) -> {{.Response}}")
-	{{end}}
+	log.Print("[INFO] mounting {{.Name}}")
+	{{range .Endpoints -}}
+	log.Print("[INFO] handler {{.Method}} {{.URL}} -> {{.Handler}}({{.Request}}) -> {{.Response}}")
 	{{end}}
 
-	router.HandleFunc("{{.Endpoint}}", func(w http.ResponseWriter, r *http.Request) {
-		switch r.Method {
-		{{- range .Methods}}
-		case "{{.Method}}":
-			{{- if .Request}}
-			req := &{{.Request}}{}
+	{{- range .Endpoints -}}
+	router.PathPrefix("{{.URL}}").Methods("{{.Method}}").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		{{- if .Request}}
+		req := &{{.Request}}{}
 
-			{{- if .JSON}}
-			data, err := ioutil.ReadAll(r.Body)
-			defer r.Body.Close()
-			if err != nil {
-				http.Error(w, "unable to read request body", http.StatusBadRequest)
-				log.Printf("[ERROR] error reading request body: %v", err)
-				return
-			}
-
-			if err := json.Unmarshal(data, req); err != nil {
-				http.Error(w, "unable to decode request", http.StatusBadRequest)
-				log.Printf("[ERROR] error unmarshaling request: %v", err)
-				return
-			}
-			{{else}}
-			dec := schema.NewDecoder()
-			if err := dec.Decode(req, r.URL.Query()); err != nil {
-				http.Error(w, "unable to decode request", http.StatusBadRequest)
-				log.Printf("[ERROR] error unmarshaling request: %v", err)
-				return
-			}
-			{{end}}
-			{{end -}}
-
-			{{if not .Request}}
-			res, err := serv.{{.Handler}}(r.Context())
-			{{else}}
-			res, err := serv.{{.Handler}}(r.Context(), req)
-			{{end -}}
-			if err != nil {
-				http.Error(w, "unable to handle request", http.StatusInternalServerError)
-				log.Printf("[ERROR] error handling request: %v", err)
-				return
-			}
-
-			out, err := json.Marshal(res)
-			if err != nil {
-				http.Error(w, "unable to encode response", http.StatusInternalServerError)
-				log.Printf("[ERROR] error marshaling response: %v", err)
-				return
-			}
-
-			w.Write(out)
-		{{end}}
-
-		default:
-			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+		{{- if .JSON}}
+		data, err := ioutil.ReadAll(r.Body)
+		defer r.Body.Close()
+		if err != nil {
+			http.Error(w, "unable to read request body", http.StatusBadRequest)
+			log.Printf("[ERROR] error reading request body: %v", err)
+			return
 		}
+
+		if err := json.Unmarshal(data, req); err != nil {
+			http.Error(w, "unable to decode request", http.StatusBadRequest)
+			log.Printf("[ERROR] error unmarshaling request: %v", err)
+			return
+		}
+		{{else}}
+		dec := schema.NewDecoder()
+		if err := dec.Decode(req, r.URL.Query()); err != nil {
+			http.Error(w, "unable to decode request", http.StatusBadRequest)
+			log.Printf("[ERROR] error unmarshaling request: %v", err)
+			return
+		}
+		{{end}}
+		{{end -}}
+
+		{{if not .Request}}
+		res, err := serv.{{.Handler}}(r.Context())
+		{{else}}
+		res, err := serv.{{.Handler}}(r.Context(), req)
+		{{end -}}
+		if err != nil {
+			http.Error(w, "unable to handle request", http.StatusInternalServerError)
+			log.Printf("[ERROR] error handling request: %v", err)
+			return
+		}
+
+		out, err := json.Marshal(res)
+		if err != nil {
+			http.Error(w, "unable to encode response", http.StatusInternalServerError)
+			log.Printf("[ERROR] error marshaling response: %v", err)
+			return
+		}
+
+		w.Write(out)
 	})
+	{{end}}
 }
 {{end}}
 `))
@@ -217,16 +212,20 @@ func main() {
 
 	buff := &bytes.Buffer{}
 	data := &Data{
-		Package: *packageName,
-		Routes:  routes,
+		Package:  *packageName,
+		Services: routes.Services(),
 	}
 
 	if err = handlerTmpl.Execute(buff, data); err != nil {
 		log.Fatalf("error generating template: %v", err)
 	}
 
-	for _, route := range routes.Routes {
-		log.Printf("generating %s", route.String())
+	for _, service := range data.Services {
+		log.Printf("%s:", service.ShortServiceName())
+		for _, endpoint := range service.Endpoints {
+			log.Printf("  %s %s: %s.%s(%s) %s", endpoint.Method, endpoint.URL,
+				service.Name, endpoint.Handler, endpoint.Request, endpoint.Response)
+		}
 	}
 
 	unformatted := buff.Bytes()

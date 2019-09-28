@@ -17,6 +17,60 @@ import (
 
 var _ = schema.NewDecoder
 
+// SavedQueryServiceContract defines what an implementation of service.SavedQueryService
+// should look like. This interface is derived from the routes.json file
+// provided as input to this generator, and it is a combination of the handler,
+// the request, and the response.
+type SavedQueryServiceContract interface {
+	// Create runs when a POST /api/saved_query request comes in.
+	Create(ctx context.Context, req *service.SavedQueryCreateRequest) (*model.SavedQuery, error)
+
+	// Update runs when a PUT /api/saved_query request comes in.
+	Update(ctx context.Context, req *model.SavedQuery) (*model.SavedQuery, error)
+
+	// Retrieve runs when a GET /api/saved_query request comes in.
+	Retrieve(ctx context.Context) (*service.SavedQueriesRetrieveResponse, error)
+}
+
+// ExtractorServiceContract defines what an implementation of service.ExtractorService
+// should look like. This interface is derived from the routes.json file
+// provided as input to this generator, and it is a combination of the handler,
+// the request, and the response.
+type ExtractorServiceContract interface {
+	// Create runs when a POST /api/extractors request comes in.
+	Create(ctx context.Context, req *service.ExtractorCreateRequest) (*model.Extractor, error)
+}
+
+// EntryServiceContract defines what an implementation of service.EntryService
+// should look like. This interface is derived from the routes.json file
+// provided as input to this generator, and it is a combination of the handler,
+// the request, and the response.
+type EntryServiceContract interface {
+	// Search runs when a GET /api/entries/search request comes in.
+	Search(ctx context.Context, req *service.EntrySearchRequest) (*service.EntrySearchResponse, error)
+}
+
+// QueryServiceContract defines what an implementation of service.QueryService
+// should look like. This interface is derived from the routes.json file
+// provided as input to this generator, and it is a combination of the handler,
+// the request, and the response.
+type QueryServiceContract interface {
+	// Schema runs when a GET /api/query request comes in.
+	Schema(ctx context.Context) (*service.Schema, error)
+
+	// Query runs when a POST /api/query request comes in.
+	Query(ctx context.Context, req *service.QueryExecuteRequest) (*service.QueryResults, error)
+}
+
+// ShorthandServiceContract defines what an implementation of service.ShorthandService
+// should look like. This interface is derived from the routes.json file
+// provided as input to this generator, and it is a combination of the handler,
+// the request, and the response.
+type ShorthandServiceContract interface {
+	// Create runs when a POST /api/shorthands request comes in.
+	Create(ctx context.Context, req *service.ShorthandCreateRequest) (*model.Shorthand, error)
+}
+
 // UserServiceContract defines what an implementation of service.UserService
 // should look like. This interface is derived from the routes.json file
 // provided as input to this generator, and it is a combination of the handler,
@@ -47,606 +101,403 @@ type BookServiceContract interface {
 	Retrieve(ctx context.Context, req *service.BookRetrieveRequest) (*service.BookRetrieveResponse, error)
 }
 
-// SavedQueryServiceContract defines what an implementation of service.SavedQueryService
-// should look like. This interface is derived from the routes.json file
-// provided as input to this generator, and it is a combination of the handler,
-// the request, and the response.
-type SavedQueryServiceContract interface {
-	// Create runs when a POST /api/saved_query request comes in.
-	Create(ctx context.Context, req *service.SavedQueryCreateRequest) (*model.SavedQuery, error)
-
-	// Update runs when a PUT /api/saved_query request comes in.
-	Update(ctx context.Context, req *model.SavedQuery) (*model.SavedQuery, error)
-
-	// Retrieve runs when a GET /api/saved_query request comes in.
-	Retrieve(ctx context.Context) (*service.SavedQueriesRetrieveResponse, error)
-}
-
-// ExtractorServiceContract defines what an implementation of service.ExtractorService
-// should look like. This interface is derived from the routes.json file
-// provided as input to this generator, and it is a combination of the handler,
-// the request, and the response.
-type ExtractorServiceContract interface {
-	// Create runs when a POST /api/extractors request comes in.
-	Create(ctx context.Context, req *service.ExtractorCreateRequest) (*model.Extractor, error)
-}
-
-// EntryServiceContract defines what an implementation of service.EntryService
-// should look like. This interface is derived from the routes.json file
-// provided as input to this generator, and it is a combination of the handler,
-// the request, and the response.
-type EntryServiceContract interface {
-	// Create runs when a POST /api/entries request comes in.
-	Create(ctx context.Context, req *service.EntriesCreateRequest) (*service.EntriesCreateResponse, error)
-
-	// Update runs when a PUT /api/entries request comes in.
-	Update(ctx context.Context, req *service.EntryUpdateRequest) (*model.Entry, error)
-
-	// Delete runs when a DELETE /api/entries request comes in.
-	Delete(ctx context.Context, req *service.EntryDeleteRequest) (*service.EntryDeleteResponse, error)
-
-	// Retrieve runs when a GET /api/entries request comes in.
-	Retrieve(ctx context.Context, req *service.EntryRetrieveRequest) (*service.EntryRetrieveResponse, error)
-}
-
-// QueryServiceContract defines what an implementation of service.QueryService
-// should look like. This interface is derived from the routes.json file
-// provided as input to this generator, and it is a combination of the handler,
-// the request, and the response.
-type QueryServiceContract interface {
-	// Schema runs when a GET /api/query request comes in.
-	Schema(ctx context.Context) (*service.Schema, error)
-
-	// Query runs when a POST /api/query request comes in.
-	Query(ctx context.Context, req *service.QueryExecuteRequest) (*service.QueryResults, error)
-}
-
-// ShorthandServiceContract defines what an implementation of service.ShorthandService
-// should look like. This interface is derived from the routes.json file
-// provided as input to this generator, and it is a combination of the handler,
-// the request, and the response.
-type ShorthandServiceContract interface {
-	// Create runs when a POST /api/shorthands request comes in.
-	Create(ctx context.Context, req *service.ShorthandCreateRequest) (*model.Shorthand, error)
-}
-
-// MountUserService add a handler to a Gorilla Mux Router that will route
-// an incoming request through the service.UserService service.
-func MountUserService(router *mux.Router, serv UserServiceContract) {
-	log.Print("[INFO] mounting service.UserService on /sso")
-	log.Print("[INFO] handler POST /sso -> service.UserService.GenerateToken(service.UserLoginRequest) -> service.UserToken")
-
-	router.HandleFunc("/sso", func(w http.ResponseWriter, r *http.Request) {
-		switch r.Method {
-		case "POST":
-			req := &service.UserLoginRequest{}
-			data, err := ioutil.ReadAll(r.Body)
-			defer r.Body.Close()
-			if err != nil {
-				http.Error(w, "unable to read request body", http.StatusBadRequest)
-				log.Printf("[ERROR] error reading request body: %v", err)
-				return
-			}
-
-			if err := json.Unmarshal(data, req); err != nil {
-				http.Error(w, "unable to decode request", http.StatusBadRequest)
-				log.Printf("[ERROR] error unmarshaling request: %v", err)
-				return
-			}
-
-			res, err := serv.GenerateToken(r.Context(), req)
-			if err != nil {
-				http.Error(w, "unable to handle request", http.StatusInternalServerError)
-				log.Printf("[ERROR] error handling request: %v", err)
-				return
-			}
-
-			out, err := json.Marshal(res)
-			if err != nil {
-				http.Error(w, "unable to encode response", http.StatusInternalServerError)
-				log.Printf("[ERROR] error marshaling response: %v", err)
-				return
-			}
-
-			w.Write(out)
-
-		default:
-			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
-		}
-	})
-}
-
-// MountReportService add a handler to a Gorilla Mux Router that will route
-// an incoming request through the service.ReportService service.
-func MountReportService(router *mux.Router, serv ReportServiceContract) {
-	log.Print("[INFO] mounting service.ReportService on /api/reports")
-	log.Print("[INFO] handler GET /api/reports -> service.ReportService.Retrieve(service.ReportRetrieveRequest) -> service.ReportRetrieveResponse")
-
-	router.HandleFunc("/api/reports", func(w http.ResponseWriter, r *http.Request) {
-		switch r.Method {
-		case "GET":
-			req := &service.ReportRetrieveRequest{}
-			dec := schema.NewDecoder()
-			if err := dec.Decode(req, r.URL.Query()); err != nil {
-				http.Error(w, "unable to decode request", http.StatusBadRequest)
-				log.Printf("[ERROR] error unmarshaling request: %v", err)
-				return
-			}
-
-			res, err := serv.Retrieve(r.Context(), req)
-			if err != nil {
-				http.Error(w, "unable to handle request", http.StatusInternalServerError)
-				log.Printf("[ERROR] error handling request: %v", err)
-				return
-			}
-
-			out, err := json.Marshal(res)
-			if err != nil {
-				http.Error(w, "unable to encode response", http.StatusInternalServerError)
-				log.Printf("[ERROR] error marshaling response: %v", err)
-				return
-			}
-
-			w.Write(out)
-
-		default:
-			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
-		}
-	})
-}
-
-// MountBookService add a handler to a Gorilla Mux Router that will route
-// an incoming request through the service.BookService service.
-func MountBookService(router *mux.Router, serv BookServiceContract) {
-	log.Print("[INFO] mounting service.BookService on /api/books")
-	log.Print("[INFO] handler POST /api/books -> service.BookService.Create(service.BookCreateRequest) -> model.Book")
-	log.Print("[INFO] handler GET /api/books -> service.BookService.Retrieve(service.BookRetrieveRequest) -> service.BookRetrieveResponse")
-
-	router.HandleFunc("/api/books", func(w http.ResponseWriter, r *http.Request) {
-		switch r.Method {
-		case "POST":
-			req := &service.BookCreateRequest{}
-			data, err := ioutil.ReadAll(r.Body)
-			defer r.Body.Close()
-			if err != nil {
-				http.Error(w, "unable to read request body", http.StatusBadRequest)
-				log.Printf("[ERROR] error reading request body: %v", err)
-				return
-			}
-
-			if err := json.Unmarshal(data, req); err != nil {
-				http.Error(w, "unable to decode request", http.StatusBadRequest)
-				log.Printf("[ERROR] error unmarshaling request: %v", err)
-				return
-			}
-
-			res, err := serv.Create(r.Context(), req)
-			if err != nil {
-				http.Error(w, "unable to handle request", http.StatusInternalServerError)
-				log.Printf("[ERROR] error handling request: %v", err)
-				return
-			}
-
-			out, err := json.Marshal(res)
-			if err != nil {
-				http.Error(w, "unable to encode response", http.StatusInternalServerError)
-				log.Printf("[ERROR] error marshaling response: %v", err)
-				return
-			}
-
-			w.Write(out)
-
-		case "GET":
-			req := &service.BookRetrieveRequest{}
-			dec := schema.NewDecoder()
-			if err := dec.Decode(req, r.URL.Query()); err != nil {
-				http.Error(w, "unable to decode request", http.StatusBadRequest)
-				log.Printf("[ERROR] error unmarshaling request: %v", err)
-				return
-			}
-
-			res, err := serv.Retrieve(r.Context(), req)
-			if err != nil {
-				http.Error(w, "unable to handle request", http.StatusInternalServerError)
-				log.Printf("[ERROR] error handling request: %v", err)
-				return
-			}
-
-			out, err := json.Marshal(res)
-			if err != nil {
-				http.Error(w, "unable to encode response", http.StatusInternalServerError)
-				log.Printf("[ERROR] error marshaling response: %v", err)
-				return
-			}
-
-			w.Write(out)
-
-		default:
-			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
-		}
-	})
-}
-
 // MountSavedQueryService add a handler to a Gorilla Mux Router that will route
 // an incoming request through the service.SavedQueryService service.
 func MountSavedQueryService(router *mux.Router, serv SavedQueryServiceContract) {
-	log.Print("[INFO] mounting service.SavedQueryService on /api/saved_query")
-	log.Print("[INFO] handler POST /api/saved_query -> service.SavedQueryService.Create(service.SavedQueryCreateRequest) -> model.SavedQuery")
-	log.Print("[INFO] handler PUT /api/saved_query -> service.SavedQueryService.Update(model.SavedQuery) -> model.SavedQuery")
-	log.Print("[INFO] handler GET /api/saved_query -> service.SavedQueryService.Retrieve() -> service.SavedQueriesRetrieveResponse")
-
-	router.HandleFunc("/api/saved_query", func(w http.ResponseWriter, r *http.Request) {
-		switch r.Method {
-		case "POST":
-			req := &service.SavedQueryCreateRequest{}
-			data, err := ioutil.ReadAll(r.Body)
-			defer r.Body.Close()
-			if err != nil {
-				http.Error(w, "unable to read request body", http.StatusBadRequest)
-				log.Printf("[ERROR] error reading request body: %v", err)
-				return
-			}
-
-			if err := json.Unmarshal(data, req); err != nil {
-				http.Error(w, "unable to decode request", http.StatusBadRequest)
-				log.Printf("[ERROR] error unmarshaling request: %v", err)
-				return
-			}
-
-			res, err := serv.Create(r.Context(), req)
-			if err != nil {
-				http.Error(w, "unable to handle request", http.StatusInternalServerError)
-				log.Printf("[ERROR] error handling request: %v", err)
-				return
-			}
-
-			out, err := json.Marshal(res)
-			if err != nil {
-				http.Error(w, "unable to encode response", http.StatusInternalServerError)
-				log.Printf("[ERROR] error marshaling response: %v", err)
-				return
-			}
-
-			w.Write(out)
-
-		case "PUT":
-			req := &model.SavedQuery{}
-			data, err := ioutil.ReadAll(r.Body)
-			defer r.Body.Close()
-			if err != nil {
-				http.Error(w, "unable to read request body", http.StatusBadRequest)
-				log.Printf("[ERROR] error reading request body: %v", err)
-				return
-			}
-
-			if err := json.Unmarshal(data, req); err != nil {
-				http.Error(w, "unable to decode request", http.StatusBadRequest)
-				log.Printf("[ERROR] error unmarshaling request: %v", err)
-				return
-			}
-
-			res, err := serv.Update(r.Context(), req)
-			if err != nil {
-				http.Error(w, "unable to handle request", http.StatusInternalServerError)
-				log.Printf("[ERROR] error handling request: %v", err)
-				return
-			}
-
-			out, err := json.Marshal(res)
-			if err != nil {
-				http.Error(w, "unable to encode response", http.StatusInternalServerError)
-				log.Printf("[ERROR] error marshaling response: %v", err)
-				return
-			}
-
-			w.Write(out)
-
-		case "GET":
-			res, err := serv.Retrieve(r.Context())
-			if err != nil {
-				http.Error(w, "unable to handle request", http.StatusInternalServerError)
-				log.Printf("[ERROR] error handling request: %v", err)
-				return
-			}
-
-			out, err := json.Marshal(res)
-			if err != nil {
-				http.Error(w, "unable to encode response", http.StatusInternalServerError)
-				log.Printf("[ERROR] error marshaling response: %v", err)
-				return
-			}
-
-			w.Write(out)
-
-		default:
-			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+	log.Print("[INFO] mounting service.SavedQueryService")
+	log.Print("[INFO] handler POST /api/saved_query -> Create(service.SavedQueryCreateRequest) -> model.SavedQuery")
+	log.Print("[INFO] handler PUT /api/saved_query -> Update(model.SavedQuery) -> model.SavedQuery")
+	log.Print("[INFO] handler GET /api/saved_query -> Retrieve() -> service.SavedQueriesRetrieveResponse")
+	router.PathPrefix("/api/saved_query").Methods("POST").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		req := &service.SavedQueryCreateRequest{}
+		data, err := ioutil.ReadAll(r.Body)
+		defer r.Body.Close()
+		if err != nil {
+			http.Error(w, "unable to read request body", http.StatusBadRequest)
+			log.Printf("[ERROR] error reading request body: %v", err)
+			return
 		}
+
+		if err := json.Unmarshal(data, req); err != nil {
+			http.Error(w, "unable to decode request", http.StatusBadRequest)
+			log.Printf("[ERROR] error unmarshaling request: %v", err)
+			return
+		}
+
+		res, err := serv.Create(r.Context(), req)
+		if err != nil {
+			http.Error(w, "unable to handle request", http.StatusInternalServerError)
+			log.Printf("[ERROR] error handling request: %v", err)
+			return
+		}
+
+		out, err := json.Marshal(res)
+		if err != nil {
+			http.Error(w, "unable to encode response", http.StatusInternalServerError)
+			log.Printf("[ERROR] error marshaling response: %v", err)
+			return
+		}
+
+		w.Write(out)
 	})
+	router.PathPrefix("/api/saved_query").Methods("PUT").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		req := &model.SavedQuery{}
+		data, err := ioutil.ReadAll(r.Body)
+		defer r.Body.Close()
+		if err != nil {
+			http.Error(w, "unable to read request body", http.StatusBadRequest)
+			log.Printf("[ERROR] error reading request body: %v", err)
+			return
+		}
+
+		if err := json.Unmarshal(data, req); err != nil {
+			http.Error(w, "unable to decode request", http.StatusBadRequest)
+			log.Printf("[ERROR] error unmarshaling request: %v", err)
+			return
+		}
+
+		res, err := serv.Update(r.Context(), req)
+		if err != nil {
+			http.Error(w, "unable to handle request", http.StatusInternalServerError)
+			log.Printf("[ERROR] error handling request: %v", err)
+			return
+		}
+
+		out, err := json.Marshal(res)
+		if err != nil {
+			http.Error(w, "unable to encode response", http.StatusInternalServerError)
+			log.Printf("[ERROR] error marshaling response: %v", err)
+			return
+		}
+
+		w.Write(out)
+	})
+	router.PathPrefix("/api/saved_query").Methods("GET").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		res, err := serv.Retrieve(r.Context())
+		if err != nil {
+			http.Error(w, "unable to handle request", http.StatusInternalServerError)
+			log.Printf("[ERROR] error handling request: %v", err)
+			return
+		}
+
+		out, err := json.Marshal(res)
+		if err != nil {
+			http.Error(w, "unable to encode response", http.StatusInternalServerError)
+			log.Printf("[ERROR] error marshaling response: %v", err)
+			return
+		}
+
+		w.Write(out)
+	})
+
 }
 
 // MountExtractorService add a handler to a Gorilla Mux Router that will route
 // an incoming request through the service.ExtractorService service.
 func MountExtractorService(router *mux.Router, serv ExtractorServiceContract) {
-	log.Print("[INFO] mounting service.ExtractorService on /api/extractors")
-	log.Print("[INFO] handler POST /api/extractors -> service.ExtractorService.Create(service.ExtractorCreateRequest) -> model.Extractor")
-
-	router.HandleFunc("/api/extractors", func(w http.ResponseWriter, r *http.Request) {
-		switch r.Method {
-		case "POST":
-			req := &service.ExtractorCreateRequest{}
-			data, err := ioutil.ReadAll(r.Body)
-			defer r.Body.Close()
-			if err != nil {
-				http.Error(w, "unable to read request body", http.StatusBadRequest)
-				log.Printf("[ERROR] error reading request body: %v", err)
-				return
-			}
-
-			if err := json.Unmarshal(data, req); err != nil {
-				http.Error(w, "unable to decode request", http.StatusBadRequest)
-				log.Printf("[ERROR] error unmarshaling request: %v", err)
-				return
-			}
-
-			res, err := serv.Create(r.Context(), req)
-			if err != nil {
-				http.Error(w, "unable to handle request", http.StatusInternalServerError)
-				log.Printf("[ERROR] error handling request: %v", err)
-				return
-			}
-
-			out, err := json.Marshal(res)
-			if err != nil {
-				http.Error(w, "unable to encode response", http.StatusInternalServerError)
-				log.Printf("[ERROR] error marshaling response: %v", err)
-				return
-			}
-
-			w.Write(out)
-
-		default:
-			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+	log.Print("[INFO] mounting service.ExtractorService")
+	log.Print("[INFO] handler POST /api/extractors -> Create(service.ExtractorCreateRequest) -> model.Extractor")
+	router.PathPrefix("/api/extractors").Methods("POST").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		req := &service.ExtractorCreateRequest{}
+		data, err := ioutil.ReadAll(r.Body)
+		defer r.Body.Close()
+		if err != nil {
+			http.Error(w, "unable to read request body", http.StatusBadRequest)
+			log.Printf("[ERROR] error reading request body: %v", err)
+			return
 		}
+
+		if err := json.Unmarshal(data, req); err != nil {
+			http.Error(w, "unable to decode request", http.StatusBadRequest)
+			log.Printf("[ERROR] error unmarshaling request: %v", err)
+			return
+		}
+
+		res, err := serv.Create(r.Context(), req)
+		if err != nil {
+			http.Error(w, "unable to handle request", http.StatusInternalServerError)
+			log.Printf("[ERROR] error handling request: %v", err)
+			return
+		}
+
+		out, err := json.Marshal(res)
+		if err != nil {
+			http.Error(w, "unable to encode response", http.StatusInternalServerError)
+			log.Printf("[ERROR] error marshaling response: %v", err)
+			return
+		}
+
+		w.Write(out)
 	})
+
 }
 
 // MountEntryService add a handler to a Gorilla Mux Router that will route
 // an incoming request through the service.EntryService service.
 func MountEntryService(router *mux.Router, serv EntryServiceContract) {
-	log.Print("[INFO] mounting service.EntryService on /api/entries")
-	log.Print("[INFO] handler POST /api/entries -> service.EntryService.Create(service.EntriesCreateRequest) -> service.EntriesCreateResponse")
-	log.Print("[INFO] handler PUT /api/entries -> service.EntryService.Update(service.EntryUpdateRequest) -> model.Entry")
-	log.Print("[INFO] handler DELETE /api/entries -> service.EntryService.Delete(service.EntryDeleteRequest) -> service.EntryDeleteResponse")
-	log.Print("[INFO] handler GET /api/entries -> service.EntryService.Retrieve(service.EntryRetrieveRequest) -> service.EntryRetrieveResponse")
-
-	router.HandleFunc("/api/entries", func(w http.ResponseWriter, r *http.Request) {
-		switch r.Method {
-		case "POST":
-			req := &service.EntriesCreateRequest{}
-			data, err := ioutil.ReadAll(r.Body)
-			defer r.Body.Close()
-			if err != nil {
-				http.Error(w, "unable to read request body", http.StatusBadRequest)
-				log.Printf("[ERROR] error reading request body: %v", err)
-				return
-			}
-
-			if err := json.Unmarshal(data, req); err != nil {
-				http.Error(w, "unable to decode request", http.StatusBadRequest)
-				log.Printf("[ERROR] error unmarshaling request: %v", err)
-				return
-			}
-
-			res, err := serv.Create(r.Context(), req)
-			if err != nil {
-				http.Error(w, "unable to handle request", http.StatusInternalServerError)
-				log.Printf("[ERROR] error handling request: %v", err)
-				return
-			}
-
-			out, err := json.Marshal(res)
-			if err != nil {
-				http.Error(w, "unable to encode response", http.StatusInternalServerError)
-				log.Printf("[ERROR] error marshaling response: %v", err)
-				return
-			}
-
-			w.Write(out)
-
-		case "PUT":
-			req := &service.EntryUpdateRequest{}
-			data, err := ioutil.ReadAll(r.Body)
-			defer r.Body.Close()
-			if err != nil {
-				http.Error(w, "unable to read request body", http.StatusBadRequest)
-				log.Printf("[ERROR] error reading request body: %v", err)
-				return
-			}
-
-			if err := json.Unmarshal(data, req); err != nil {
-				http.Error(w, "unable to decode request", http.StatusBadRequest)
-				log.Printf("[ERROR] error unmarshaling request: %v", err)
-				return
-			}
-
-			res, err := serv.Update(r.Context(), req)
-			if err != nil {
-				http.Error(w, "unable to handle request", http.StatusInternalServerError)
-				log.Printf("[ERROR] error handling request: %v", err)
-				return
-			}
-
-			out, err := json.Marshal(res)
-			if err != nil {
-				http.Error(w, "unable to encode response", http.StatusInternalServerError)
-				log.Printf("[ERROR] error marshaling response: %v", err)
-				return
-			}
-
-			w.Write(out)
-
-		case "DELETE":
-			req := &service.EntryDeleteRequest{}
-			dec := schema.NewDecoder()
-			if err := dec.Decode(req, r.URL.Query()); err != nil {
-				http.Error(w, "unable to decode request", http.StatusBadRequest)
-				log.Printf("[ERROR] error unmarshaling request: %v", err)
-				return
-			}
-
-			res, err := serv.Delete(r.Context(), req)
-			if err != nil {
-				http.Error(w, "unable to handle request", http.StatusInternalServerError)
-				log.Printf("[ERROR] error handling request: %v", err)
-				return
-			}
-
-			out, err := json.Marshal(res)
-			if err != nil {
-				http.Error(w, "unable to encode response", http.StatusInternalServerError)
-				log.Printf("[ERROR] error marshaling response: %v", err)
-				return
-			}
-
-			w.Write(out)
-
-		case "GET":
-			req := &service.EntryRetrieveRequest{}
-			dec := schema.NewDecoder()
-			if err := dec.Decode(req, r.URL.Query()); err != nil {
-				http.Error(w, "unable to decode request", http.StatusBadRequest)
-				log.Printf("[ERROR] error unmarshaling request: %v", err)
-				return
-			}
-
-			res, err := serv.Retrieve(r.Context(), req)
-			if err != nil {
-				http.Error(w, "unable to handle request", http.StatusInternalServerError)
-				log.Printf("[ERROR] error handling request: %v", err)
-				return
-			}
-
-			out, err := json.Marshal(res)
-			if err != nil {
-				http.Error(w, "unable to encode response", http.StatusInternalServerError)
-				log.Printf("[ERROR] error marshaling response: %v", err)
-				return
-			}
-
-			w.Write(out)
-
-		default:
-			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+	log.Print("[INFO] mounting service.EntryService")
+	log.Print("[INFO] handler GET /api/entries/search -> Search(service.EntrySearchRequest) -> service.EntrySearchResponse")
+	router.PathPrefix("/api/entries/search").Methods("GET").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		req := &service.EntrySearchRequest{}
+		dec := schema.NewDecoder()
+		if err := dec.Decode(req, r.URL.Query()); err != nil {
+			http.Error(w, "unable to decode request", http.StatusBadRequest)
+			log.Printf("[ERROR] error unmarshaling request: %v", err)
+			return
 		}
+
+		res, err := serv.Search(r.Context(), req)
+		if err != nil {
+			http.Error(w, "unable to handle request", http.StatusInternalServerError)
+			log.Printf("[ERROR] error handling request: %v", err)
+			return
+		}
+
+		out, err := json.Marshal(res)
+		if err != nil {
+			http.Error(w, "unable to encode response", http.StatusInternalServerError)
+			log.Printf("[ERROR] error marshaling response: %v", err)
+			return
+		}
+
+		w.Write(out)
 	})
+
 }
 
 // MountQueryService add a handler to a Gorilla Mux Router that will route
 // an incoming request through the service.QueryService service.
 func MountQueryService(router *mux.Router, serv QueryServiceContract) {
-	log.Print("[INFO] mounting service.QueryService on /api/query")
-	log.Print("[INFO] handler GET /api/query -> service.QueryService.Schema() -> service.Schema")
-	log.Print("[INFO] handler POST /api/query -> service.QueryService.Query(service.QueryExecuteRequest) -> service.QueryResults")
-
-	router.HandleFunc("/api/query", func(w http.ResponseWriter, r *http.Request) {
-		switch r.Method {
-		case "GET":
-			res, err := serv.Schema(r.Context())
-			if err != nil {
-				http.Error(w, "unable to handle request", http.StatusInternalServerError)
-				log.Printf("[ERROR] error handling request: %v", err)
-				return
-			}
-
-			out, err := json.Marshal(res)
-			if err != nil {
-				http.Error(w, "unable to encode response", http.StatusInternalServerError)
-				log.Printf("[ERROR] error marshaling response: %v", err)
-				return
-			}
-
-			w.Write(out)
-
-		case "POST":
-			req := &service.QueryExecuteRequest{}
-			data, err := ioutil.ReadAll(r.Body)
-			defer r.Body.Close()
-			if err != nil {
-				http.Error(w, "unable to read request body", http.StatusBadRequest)
-				log.Printf("[ERROR] error reading request body: %v", err)
-				return
-			}
-
-			if err := json.Unmarshal(data, req); err != nil {
-				http.Error(w, "unable to decode request", http.StatusBadRequest)
-				log.Printf("[ERROR] error unmarshaling request: %v", err)
-				return
-			}
-
-			res, err := serv.Query(r.Context(), req)
-			if err != nil {
-				http.Error(w, "unable to handle request", http.StatusInternalServerError)
-				log.Printf("[ERROR] error handling request: %v", err)
-				return
-			}
-
-			out, err := json.Marshal(res)
-			if err != nil {
-				http.Error(w, "unable to encode response", http.StatusInternalServerError)
-				log.Printf("[ERROR] error marshaling response: %v", err)
-				return
-			}
-
-			w.Write(out)
-
-		default:
-			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+	log.Print("[INFO] mounting service.QueryService")
+	log.Print("[INFO] handler GET /api/query -> Schema() -> service.Schema")
+	log.Print("[INFO] handler POST /api/query -> Query(service.QueryExecuteRequest) -> service.QueryResults")
+	router.PathPrefix("/api/query").Methods("GET").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		res, err := serv.Schema(r.Context())
+		if err != nil {
+			http.Error(w, "unable to handle request", http.StatusInternalServerError)
+			log.Printf("[ERROR] error handling request: %v", err)
+			return
 		}
+
+		out, err := json.Marshal(res)
+		if err != nil {
+			http.Error(w, "unable to encode response", http.StatusInternalServerError)
+			log.Printf("[ERROR] error marshaling response: %v", err)
+			return
+		}
+
+		w.Write(out)
 	})
+	router.PathPrefix("/api/query").Methods("POST").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		req := &service.QueryExecuteRequest{}
+		data, err := ioutil.ReadAll(r.Body)
+		defer r.Body.Close()
+		if err != nil {
+			http.Error(w, "unable to read request body", http.StatusBadRequest)
+			log.Printf("[ERROR] error reading request body: %v", err)
+			return
+		}
+
+		if err := json.Unmarshal(data, req); err != nil {
+			http.Error(w, "unable to decode request", http.StatusBadRequest)
+			log.Printf("[ERROR] error unmarshaling request: %v", err)
+			return
+		}
+
+		res, err := serv.Query(r.Context(), req)
+		if err != nil {
+			http.Error(w, "unable to handle request", http.StatusInternalServerError)
+			log.Printf("[ERROR] error handling request: %v", err)
+			return
+		}
+
+		out, err := json.Marshal(res)
+		if err != nil {
+			http.Error(w, "unable to encode response", http.StatusInternalServerError)
+			log.Printf("[ERROR] error marshaling response: %v", err)
+			return
+		}
+
+		w.Write(out)
+	})
+
 }
 
 // MountShorthandService add a handler to a Gorilla Mux Router that will route
 // an incoming request through the service.ShorthandService service.
 func MountShorthandService(router *mux.Router, serv ShorthandServiceContract) {
-	log.Print("[INFO] mounting service.ShorthandService on /api/shorthands")
-	log.Print("[INFO] handler POST /api/shorthands -> service.ShorthandService.Create(service.ShorthandCreateRequest) -> model.Shorthand")
-
-	router.HandleFunc("/api/shorthands", func(w http.ResponseWriter, r *http.Request) {
-		switch r.Method {
-		case "POST":
-			req := &service.ShorthandCreateRequest{}
-			data, err := ioutil.ReadAll(r.Body)
-			defer r.Body.Close()
-			if err != nil {
-				http.Error(w, "unable to read request body", http.StatusBadRequest)
-				log.Printf("[ERROR] error reading request body: %v", err)
-				return
-			}
-
-			if err := json.Unmarshal(data, req); err != nil {
-				http.Error(w, "unable to decode request", http.StatusBadRequest)
-				log.Printf("[ERROR] error unmarshaling request: %v", err)
-				return
-			}
-
-			res, err := serv.Create(r.Context(), req)
-			if err != nil {
-				http.Error(w, "unable to handle request", http.StatusInternalServerError)
-				log.Printf("[ERROR] error handling request: %v", err)
-				return
-			}
-
-			out, err := json.Marshal(res)
-			if err != nil {
-				http.Error(w, "unable to encode response", http.StatusInternalServerError)
-				log.Printf("[ERROR] error marshaling response: %v", err)
-				return
-			}
-
-			w.Write(out)
-
-		default:
-			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+	log.Print("[INFO] mounting service.ShorthandService")
+	log.Print("[INFO] handler POST /api/shorthands -> Create(service.ShorthandCreateRequest) -> model.Shorthand")
+	router.PathPrefix("/api/shorthands").Methods("POST").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		req := &service.ShorthandCreateRequest{}
+		data, err := ioutil.ReadAll(r.Body)
+		defer r.Body.Close()
+		if err != nil {
+			http.Error(w, "unable to read request body", http.StatusBadRequest)
+			log.Printf("[ERROR] error reading request body: %v", err)
+			return
 		}
+
+		if err := json.Unmarshal(data, req); err != nil {
+			http.Error(w, "unable to decode request", http.StatusBadRequest)
+			log.Printf("[ERROR] error unmarshaling request: %v", err)
+			return
+		}
+
+		res, err := serv.Create(r.Context(), req)
+		if err != nil {
+			http.Error(w, "unable to handle request", http.StatusInternalServerError)
+			log.Printf("[ERROR] error handling request: %v", err)
+			return
+		}
+
+		out, err := json.Marshal(res)
+		if err != nil {
+			http.Error(w, "unable to encode response", http.StatusInternalServerError)
+			log.Printf("[ERROR] error marshaling response: %v", err)
+			return
+		}
+
+		w.Write(out)
 	})
+
+}
+
+// MountUserService add a handler to a Gorilla Mux Router that will route
+// an incoming request through the service.UserService service.
+func MountUserService(router *mux.Router, serv UserServiceContract) {
+	log.Print("[INFO] mounting service.UserService")
+	log.Print("[INFO] handler POST /sso -> GenerateToken(service.UserLoginRequest) -> service.UserToken")
+	router.PathPrefix("/sso").Methods("POST").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		req := &service.UserLoginRequest{}
+		data, err := ioutil.ReadAll(r.Body)
+		defer r.Body.Close()
+		if err != nil {
+			http.Error(w, "unable to read request body", http.StatusBadRequest)
+			log.Printf("[ERROR] error reading request body: %v", err)
+			return
+		}
+
+		if err := json.Unmarshal(data, req); err != nil {
+			http.Error(w, "unable to decode request", http.StatusBadRequest)
+			log.Printf("[ERROR] error unmarshaling request: %v", err)
+			return
+		}
+
+		res, err := serv.GenerateToken(r.Context(), req)
+		if err != nil {
+			http.Error(w, "unable to handle request", http.StatusInternalServerError)
+			log.Printf("[ERROR] error handling request: %v", err)
+			return
+		}
+
+		out, err := json.Marshal(res)
+		if err != nil {
+			http.Error(w, "unable to encode response", http.StatusInternalServerError)
+			log.Printf("[ERROR] error marshaling response: %v", err)
+			return
+		}
+
+		w.Write(out)
+	})
+
+}
+
+// MountReportService add a handler to a Gorilla Mux Router that will route
+// an incoming request through the service.ReportService service.
+func MountReportService(router *mux.Router, serv ReportServiceContract) {
+	log.Print("[INFO] mounting service.ReportService")
+	log.Print("[INFO] handler GET /api/reports -> Retrieve(service.ReportRetrieveRequest) -> service.ReportRetrieveResponse")
+	router.PathPrefix("/api/reports").Methods("GET").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		req := &service.ReportRetrieveRequest{}
+		dec := schema.NewDecoder()
+		if err := dec.Decode(req, r.URL.Query()); err != nil {
+			http.Error(w, "unable to decode request", http.StatusBadRequest)
+			log.Printf("[ERROR] error unmarshaling request: %v", err)
+			return
+		}
+
+		res, err := serv.Retrieve(r.Context(), req)
+		if err != nil {
+			http.Error(w, "unable to handle request", http.StatusInternalServerError)
+			log.Printf("[ERROR] error handling request: %v", err)
+			return
+		}
+
+		out, err := json.Marshal(res)
+		if err != nil {
+			http.Error(w, "unable to encode response", http.StatusInternalServerError)
+			log.Printf("[ERROR] error marshaling response: %v", err)
+			return
+		}
+
+		w.Write(out)
+	})
+
+}
+
+// MountBookService add a handler to a Gorilla Mux Router that will route
+// an incoming request through the service.BookService service.
+func MountBookService(router *mux.Router, serv BookServiceContract) {
+	log.Print("[INFO] mounting service.BookService")
+	log.Print("[INFO] handler POST /api/books -> Create(service.BookCreateRequest) -> model.Book")
+	log.Print("[INFO] handler GET /api/books -> Retrieve(service.BookRetrieveRequest) -> service.BookRetrieveResponse")
+	router.PathPrefix("/api/books").Methods("POST").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		req := &service.BookCreateRequest{}
+		data, err := ioutil.ReadAll(r.Body)
+		defer r.Body.Close()
+		if err != nil {
+			http.Error(w, "unable to read request body", http.StatusBadRequest)
+			log.Printf("[ERROR] error reading request body: %v", err)
+			return
+		}
+
+		if err := json.Unmarshal(data, req); err != nil {
+			http.Error(w, "unable to decode request", http.StatusBadRequest)
+			log.Printf("[ERROR] error unmarshaling request: %v", err)
+			return
+		}
+
+		res, err := serv.Create(r.Context(), req)
+		if err != nil {
+			http.Error(w, "unable to handle request", http.StatusInternalServerError)
+			log.Printf("[ERROR] error handling request: %v", err)
+			return
+		}
+
+		out, err := json.Marshal(res)
+		if err != nil {
+			http.Error(w, "unable to encode response", http.StatusInternalServerError)
+			log.Printf("[ERROR] error marshaling response: %v", err)
+			return
+		}
+
+		w.Write(out)
+	})
+	router.PathPrefix("/api/books").Methods("GET").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		req := &service.BookRetrieveRequest{}
+		dec := schema.NewDecoder()
+		if err := dec.Decode(req, r.URL.Query()); err != nil {
+			http.Error(w, "unable to decode request", http.StatusBadRequest)
+			log.Printf("[ERROR] error unmarshaling request: %v", err)
+			return
+		}
+
+		res, err := serv.Retrieve(r.Context(), req)
+		if err != nil {
+			http.Error(w, "unable to handle request", http.StatusInternalServerError)
+			log.Printf("[ERROR] error handling request: %v", err)
+			return
+		}
+
+		out, err := json.Marshal(res)
+		if err != nil {
+			http.Error(w, "unable to encode response", http.StatusInternalServerError)
+			log.Printf("[ERROR] error marshaling response: %v", err)
+			return
+		}
+
+		w.Write(out)
+	})
+
 }

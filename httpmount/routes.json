@@ -1,140 +1,92 @@
 {
-  "routes": [
-    {
-      "endpoint": "/sso",
-      "service": "service.UserService",
-      "methods": [
-        {
-          "method": "POST",
-          "handler": "GenerateToken",
-          "request": "service.UserLoginRequest",
-          "response": "service.UserToken"
-        }
-      ]
-    },
-    {
-      "endpoint": "/api/reports",
-      "service": "service.ReportService",
-      "methods": [
-        {
-          "method": "GET",
-          "handler": "Retrieve",
-          "request": "service.ReportRetrieveRequest",
-          "response": "service.ReportRetrieveResponse"
-        }
-      ]
-    },
-    {
-      "endpoint": "/api/books",
-      "service": "service.BookService",
-      "methods": [
-        {
-          "method": "POST",
-          "handler": "Create",
-          "request": "service.BookCreateRequest",
-          "response": "model.Book"
-        },
-        {
-          "method": "GET",
-          "handler": "Retrieve",
-          "request": "service.BookRetrieveRequest",
-          "response": "service.BookRetrieveResponse"
-        }
-      ]
-    },
-    {
-      "endpoint": "/api/saved_query",
-      "service": "service.SavedQueryService",
-      "methods": [
-        {
-          "method": "POST",
-          "handler": "Create",
-          "request": "service.SavedQueryCreateRequest",
-          "response": "model.SavedQuery"
-        },
-        {
-          "method": "PUT",
-          "handler": "Update",
-          "request": "model.SavedQuery",
-          "response": "model.SavedQuery"
-        },
-        {
-          "method": "GET",
-          "handler": "Retrieve",
-          "response": "service.SavedQueriesRetrieveResponse"
-        }
-      ]
-    },
-    {
-      "endpoint": "/api/extractors",
-      "service": "service.ExtractorService",
-      "methods": [
-        {
-          "method": "POST",
-          "handler": "Create",
-          "request": "service.ExtractorCreateRequest",
-          "response": "model.Extractor"
-        }
-      ]
-    },
-    {
-      "endpoint": "/api/entries",
-      "service": "service.EntryService",
-      "methods": [
-        {
-          "method": "POST",
-          "handler": "Create",
-          "request": "service.EntriesCreateRequest",
-          "response": "service.EntriesCreateResponse"
-        },
-        {
-          "method": "PUT",
-          "handler": "Update",
-          "request": "service.EntryUpdateRequest",
-          "response": "model.Entry"
-        },
-        {
-          "method": "DELETE",
-          "handler": "Delete",
-          "request": "service.EntryDeleteRequest",
-          "response": "service.EntryDeleteResponse"
-        },
-        {
-          "method": "GET",
-          "handler": "Retrieve",
-          "request": "service.EntryRetrieveRequest",
-          "response": "service.EntryRetrieveResponse"
-        }
-      ]
-    },
-    {
-      "endpoint": "/api/query",
-      "service": "service.QueryService",
-      "methods": [
-        {
-          "method": "GET",
-          "handler": "Schema",
-          "response": "service.Schema"
-        },
-        {
-          "method": "POST",
-          "handler": "Query",
-          "request": "service.QueryExecuteRequest",
-          "response": "service.QueryResults"
-        }
-      ]
-    },
-    {
-      "endpoint": "/api/shorthands",
-      "service": "service.ShorthandService",
-      "methods": [
-        {
-          "method": "POST",
-          "handler": "Create",
-          "request": "service.ShorthandCreateRequest",
-          "response": "model.Shorthand"
-        }
-      ]
+  "service.UserService": {
+    "/sso": {
+      "POST": {
+        "handler": "GenerateToken",
+        "request": "service.UserLoginRequest",
+        "response": "service.UserToken"
+      }
     }
-  ]
+  },
+  "service.ReportService": {
+    "/api/reports": {
+      "GET": {
+        "handler": "Retrieve",
+        "request": "service.ReportRetrieveRequest",
+        "response": "service.ReportRetrieveResponse"
+      }
+    }
+  },
+  "service.BookService": {
+    "/api/books": {
+      "POST": {
+        "handler": "Create",
+        "request": "service.BookCreateRequest",
+        "response": "model.Book"
+      },
+      "GET": {
+        "handler": "Retrieve",
+        "request": "service.BookRetrieveRequest",
+        "response": "service.BookRetrieveResponse"
+      }
+    }
+  },
+  "service.SavedQueryService": {
+    "/api/saved_query": {
+      "POST": {
+        "handler": "Create",
+        "request": "service.SavedQueryCreateRequest",
+        "response": "model.SavedQuery"
+      },
+      "PUT": {
+        "handler": "Update",
+        "request": "model.SavedQuery",
+        "response": "model.SavedQuery"
+      },
+      "GET": {
+        "handler": "Retrieve",
+        "response": "service.SavedQueriesRetrieveResponse"
+      }
+    }
+  },
+  "service.ExtractorService": {
+    "/api/extractors": {
+      "POST": {
+        "handler": "Create",
+        "request": "service.ExtractorCreateRequest",
+        "response": "model.Extractor"
+      }
+    }
+  },
+  "service.EntryService": {
+    "/api/entries/search": {
+      "GET": {
+        "handler": "Search",
+        "request": "service.EntrySearchRequest",
+        "response": "service.EntrySearchResponse"
+      }
+    }
+  },
+  "service.QueryService": {
+    "/api/query": {
+      "GET": {
+        "handler": "Schema",
+        "response": "service.Schema"
+      },
+      "POST": {
+        "handler": "Query",
+        "request": "service.QueryExecuteRequest",
+        "response": "service.QueryResults"
+      }
+    }
+  },
+  "service.ShorthandService": {
+    "/api/shorthands": {
+      "POST": {
+        "handler": "Create",
+        "request": "service.ShorthandCreateRequest",
+        "response": "model.Shorthand"
+      }
+    }
+  }
 }
