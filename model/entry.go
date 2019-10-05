@@ -12,13 +12,13 @@ type Entry struct {
 	GUID      kallax.ULID            `json:"guid"`
 	Original  string                 `json:"-"`
 	Text      string                 `json:"text"`
-	Data      map[string]interface{} `json:"data"`
+	Data      map[string]interface{} `json:"data,omitempty"`
 	CreatedAt time.Time              `json:"createdAt" sqltype:"timestamp"`
 	UpdatedAt time.Time              `json:"updatedAt" sqltype:"timestamp"`
 
-	Book       *Book       `fk:"book_guid,inverse"`
-	Collection *Collection `fk:"collection_guid,inverse"`
-	User       *User       `fk:"user_guid,inverse"`
+	Book       *Book       `json:"-" fk:"book_guid,inverse"`
+	Collection *Collection `json:"-" fk:"collection_guid,inverse"`
+	User       *User       `json:"-" fk:"user_guid,inverse"`
 }
 
 func newEntry(original, text string, data map[string]interface{}, collection *Collection) (*Entry, error) {
