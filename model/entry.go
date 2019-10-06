@@ -14,7 +14,7 @@ type Entry struct {
 	Text      string                 `json:"text"`
 	Data      map[string]interface{} `json:"data,omitempty"`
 	CreatedAt time.Time              `json:"createdAt" sqltype:"timestamp"`
-	UpdatedAt time.Time              `json:"updatedAt" sqltype:"timestamp"`
+	UpdatedAt time.Time              `json:"-" sqltype:"timestamp"`
 
 	Book       *Book       `json:"-" fk:"book_guid,inverse"`
 	Collection *Collection `json:"-" fk:"collection_guid,inverse"`
