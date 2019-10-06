@@ -114,8 +114,9 @@ func (f *function) QualifiedName(schema kallax.Schema) string {
 	return fmt.Sprintf("%s(%s)", f.fn, strings.Join(params, ", "))
 }
 
-func (f *function) String() string { return f.QualifiedName(nil) }
-func (*function) isSchemaField()   {}
+func (f *function) String() string {
+	return f.QualifiedName(nil)
+}
 
 func FunctionSelect(fn string, args ...kallax.SchemaField) kallax.SchemaField {
 	return &function{
@@ -161,8 +162,6 @@ type distinct struct {
 
 	field kallax.SchemaField
 }
-
-func (d *distinct) isSchemaField() {}
 
 func (d *distinct) String() string {
 	return d.field.String()
