@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"time"
 
 	"gopkg.in/src-d/go-kallax.v1"
@@ -236,7 +237,9 @@ func (s EntryService) Search(ctx context.Context, req *EntrySearchRequest) (*Ent
 	entries, err := s.entryStore.FindAll(model.NewEntryQuery().
 		Select(model.Schema.Entry.GUID, model.Schema.Entry.Text, model.Schema.Entry.CreatedAt).
 		Where(kallax.Eq(model.Schema.Entry.UserFK, userGUID)).
-		Order(kallax.Desc(model.Schema.Entry.CreatedAt)))
+		Where(kallax.Ilike(model.Schema.Entry.Text, fmt.Sprintf("%%%s%%", req.Text))).
+		Order(kallax.Desc(model.Schema.Entry.CreatedAt)).
+		Limit(20))
 	if err != nil {
 		return nil, err
 	}
