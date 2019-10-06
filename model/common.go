@@ -155,3 +155,23 @@ func IsNotNull(field kallax.SchemaField) kallax.Condition {
 		}
 	}
 }
+
+type distinct struct {
+	kallax.SchemaField
+
+	field kallax.SchemaField
+}
+
+func (d *distinct) isSchemaField() {}
+
+func (d *distinct) String() string {
+	return d.field.String()
+}
+
+func (d *distinct) QualifiedName(schema kallax.Schema) string {
+	return "distinct " + d.field.QualifiedName(schema) + " as " + d.String()
+}
+
+func Distinct(field kallax.SchemaField) kallax.SchemaField {
+	return &distinct{field: field}
+}

@@ -128,3 +128,13 @@ func TestIsNotNull(t *testing.T) {
 		t.Errorf("did not expect any arguments but got: %v", args)
 	}
 }
+
+func TestDistinct(t *testing.T) {
+	field := Distinct(Schema.Entry.Text)
+	qualifiedName := field.QualifiedName(Schema.Entry)
+	expectedQuery := "distinct __entry.text as text"
+	if qualifiedName != expectedQuery {
+		t.Errorf("unexpected qualified name: expected %s but got %s",
+			expectedQuery, qualifiedName)
+	}
+}

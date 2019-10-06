@@ -235,7 +235,7 @@ func (s EntryService) Search(ctx context.Context, req *EntrySearchRequest) (*Ent
 	}
 
 	entries, err := s.entryStore.FindAll(model.NewEntryQuery().
-		Select(model.Schema.Entry.GUID, model.Schema.Entry.Text, model.Schema.Entry.CreatedAt).
+		Select(model.Distinct(model.Schema.Entry.Text), model.Schema.Entry.CreatedAt).
 		Where(kallax.Eq(model.Schema.Entry.UserFK, userGUID)).
 		Where(kallax.Ilike(model.Schema.Entry.Text, fmt.Sprintf("%%%s%%", req.Text))).
 		Order(kallax.Desc(model.Schema.Entry.CreatedAt)).
