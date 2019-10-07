@@ -46,6 +46,18 @@ type ExtractorServiceContract interface {
 // provided as input to this generator, and it is a combination of the handler,
 // the request, and the response.
 type EntryServiceContract interface {
+	// Create runs when a POST /api/entries request comes in.
+	Create(ctx context.Context, req *service.EntryCreateRequest) (*service.EntryCreateResponse, error)
+
+	// Update runs when a PUT /api/entries request comes in.
+	Update(ctx context.Context, req *service.EntryUpdateRequest) (*model.Entry, error)
+
+	// Delete runs when a DELETE /api/entries request comes in.
+	Delete(ctx context.Context, req *service.EntryDeleteRequest) (*service.EntryDeleteResponse, error)
+
+	// Retrieve runs when a GET /api/entries request comes in.
+	Retrieve(ctx context.Context, req *service.EntryRetrieveRequest) (*service.EntryRetrieveResponse, error)
+
 	// Search runs when a GET /api/entries/search request comes in.
 	Search(ctx context.Context, req *service.EntrySearchRequest) (*service.EntrySearchResponse, error)
 }
@@ -236,7 +248,125 @@ func MountExtractorService(router *mux.Router, serv ExtractorServiceContract) {
 // an incoming request through the service.EntryService service.
 func MountEntryService(router *mux.Router, serv EntryServiceContract) {
 	log.Print("[INFO] mounting service.EntryService")
+	log.Print("[INFO] handler POST /api/entries -> Create(service.EntryCreateRequest) -> service.EntryCreateResponse")
+	log.Print("[INFO] handler PUT /api/entries -> Update(service.EntryUpdateRequest) -> model.Entry")
+	log.Print("[INFO] handler DELETE /api/entries -> Delete(service.EntryDeleteRequest) -> service.EntryDeleteResponse")
+	log.Print("[INFO] handler GET /api/entries -> Retrieve(service.EntryRetrieveRequest) -> service.EntryRetrieveResponse")
 	log.Print("[INFO] handler GET /api/entries/search -> Search(service.EntrySearchRequest) -> service.EntrySearchResponse")
+	router.PathPrefix("/api/entries").Methods("POST").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		req := &service.EntryCreateRequest{}
+		data, err := ioutil.ReadAll(r.Body)
+		defer r.Body.Close()
+		if err != nil {
+			http.Error(w, "unable to read request body", http.StatusBadRequest)
+			log.Printf("[ERROR] error reading request body: %v", err)
+			return
+		}
+
+		if err := json.Unmarshal(data, req); err != nil {
+			http.Error(w, "unable to decode request", http.StatusBadRequest)
+			log.Printf("[ERROR] error unmarshaling request: %v", err)
+			return
+		}
+
+		res, err := serv.Create(r.Context(), req)
+		if err != nil {
+			http.Error(w, "unable to handle request", http.StatusInternalServerError)
+			log.Printf("[ERROR] error handling request: %v", err)
+			return
+		}
+
+		out, err := json.Marshal(res)
+		if err != nil {
+			http.Error(w, "unable to encode response", http.StatusInternalServerError)
+			log.Printf("[ERROR] error marshaling response: %v", err)
+			return
+		}
+
+		w.Write(out)
+	})
+	router.PathPrefix("/api/entries").Methods("PUT").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		req := &service.EntryUpdateRequest{}
+		data, err := ioutil.ReadAll(r.Body)
+		defer r.Body.Close()
+		if err != nil {
+			http.Error(w, "unable to read request body", http.StatusBadRequest)
+			log.Printf("[ERROR] error reading request body: %v", err)
+			return
+		}
+
+		if err := json.Unmarshal(data, req); err != nil {
+			http.Error(w, "unable to decode request", http.StatusBadRequest)
+			log.Printf("[ERROR] error unmarshaling request: %v", err)
+			return
+		}
+
+		res, err := serv.Update(r.Context(), req)
+		if err != nil {
+			http.Error(w, "unable to handle request", http.StatusInternalServerError)
+			log.Printf("[ERROR] error handling request: %v", err)
+			return
+		}
+
+		out, err := json.Marshal(res)
+		if err != nil {
+			http.Error(w, "unable to encode response", http.StatusInternalServerError)
+			log.Printf("[ERROR] error marshaling response: %v", err)
+			return
+		}
+
+		w.Write(out)
+	})
+	router.PathPrefix("/api/entries").Methods("DELETE").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		req := &service.EntryDeleteRequest{}
+		dec := schema.NewDecoder()
+		if err := dec.Decode(req, r.URL.Query()); err != nil {
+			http.Error(w, "unable to decode request", http.StatusBadRequest)
+			log.Printf("[ERROR] error unmarshaling request: %v", err)
+			return
+		}
+
+		res, err := serv.Delete(r.Context(), req)
+		if err != nil {
+			http.Error(w, "unable to handle request", http.StatusInternalServerError)
+			log.Printf("[ERROR] error handling request: %v", err)
+			return
+		}
+
+		out, err := json.Marshal(res)
+		if err != nil {
+			http.Error(w, "unable to encode response", http.StatusInternalServerError)
+			log.Printf("[ERROR] error marshaling response: %v", err)
+			return
+		}
+
+		w.Write(out)
+	})
+	router.PathPrefix("/api/entries").Methods("GET").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		req := &service.EntryRetrieveRequest{}
+		dec := schema.NewDecoder()
+		if err := dec.Decode(req, r.URL.Query()); err != nil {
+			http.Error(w, "unable to decode request", http.StatusBadRequest)
+			log.Printf("[ERROR] error unmarshaling request: %v", err)
+			return
+		}
+
+		res, err := serv.Retrieve(r.Context(), req)
+		if err != nil {
+			http.Error(w, "unable to handle request", http.StatusInternalServerError)
+			log.Printf("[ERROR] error handling request: %v", err)
+			return
+		}
+
+		out, err := json.Marshal(res)
+		if err != nil {
+			http.Error(w, "unable to encode response", http.StatusInternalServerError)
+			log.Printf("[ERROR] error marshaling response: %v", err)
+			return
+		}
+
+		w.Write(out)
+	})
 	router.PathPrefix("/api/entries/search").Methods("GET").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		req := &service.EntrySearchRequest{}
 		dec := schema.NewDecoder()

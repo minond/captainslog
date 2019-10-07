@@ -59,6 +59,28 @@
     }
   },
   "service.EntryService": {
+    "/api/entries": {
+      "POST": {
+        "handler": "Create",
+        "request": "service.EntryCreateRequest",
+        "response": "service.EntryCreateResponse"
+      },
+      "PUT": {
+        "handler": "Update",
+        "request": "service.EntryUpdateRequest",
+        "response": "model.Entry"
+      },
+      "DELETE": {
+        "handler": "Delete",
+        "request": "service.EntryDeleteRequest",
+        "response": "service.EntryDeleteResponse"
+      },
+      "GET": {
+        "handler": "Retrieve",
+        "request": "service.EntryRetrieveRequest",
+        "response": "service.EntryRetrieveResponse"
+      }
+    },
     "/api/entries/search": {
       "GET": {
         "handler": "Search",
