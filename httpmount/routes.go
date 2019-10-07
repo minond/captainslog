@@ -47,7 +47,7 @@ type ExtractorServiceContract interface {
 // the request, and the response.
 type EntryServiceContract interface {
 	// Create runs when a POST /api/entries request comes in.
-	Create(ctx context.Context, req *service.EntryCreateRequest) (*service.EntryCreateResponse, error)
+	Create(ctx context.Context, req *service.EntriesCreateRequest) (*service.EntriesCreateResponse, error)
 
 	// Update runs when a PUT /api/entries request comes in.
 	Update(ctx context.Context, req *service.EntryUpdateRequest) (*model.Entry, error)
@@ -67,11 +67,11 @@ type EntryServiceContract interface {
 // provided as input to this generator, and it is a combination of the handler,
 // the request, and the response.
 type QueryServiceContract interface {
-	// Schema runs when a GET /api/query request comes in.
-	Schema(ctx context.Context) (*service.Schema, error)
-
 	// Query runs when a POST /api/query request comes in.
 	Query(ctx context.Context, req *service.QueryExecuteRequest) (*service.QueryResults, error)
+
+	// Schema runs when a GET /api/query request comes in.
+	Schema(ctx context.Context) (*service.Schema, error)
 }
 
 // ShorthandServiceContract defines what an implementation of service.ShorthandService
@@ -248,13 +248,13 @@ func MountExtractorService(router *mux.Router, serv ExtractorServiceContract) {
 // an incoming request through the service.EntryService service.
 func MountEntryService(router *mux.Router, serv EntryServiceContract) {
 	log.Print("[INFO] mounting service.EntryService")
-	log.Print("[INFO] handler POST /api/entries -> Create(service.EntryCreateRequest) -> service.EntryCreateResponse")
+	log.Print("[INFO] handler POST /api/entries -> Create(service.EntriesCreateRequest) -> service.EntriesCreateResponse")
 	log.Print("[INFO] handler PUT /api/entries -> Update(service.EntryUpdateRequest) -> model.Entry")
 	log.Print("[INFO] handler DELETE /api/entries -> Delete(service.EntryDeleteRequest) -> service.EntryDeleteResponse")
 	log.Print("[INFO] handler GET /api/entries -> Retrieve(service.EntryRetrieveRequest) -> service.EntryRetrieveResponse")
 	log.Print("[INFO] handler GET /api/entries/search -> Search(service.EntrySearchRequest) -> service.EntrySearchResponse")
 	router.PathPrefix("/api/entries").Methods("POST").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		req := &service.EntryCreateRequest{}
+		req := &service.EntriesCreateRequest{}
 		data, err := ioutil.ReadAll(r.Body)
 		defer r.Body.Close()
 		if err != nil {
@@ -399,25 +399,8 @@ func MountEntryService(router *mux.Router, serv EntryServiceContract) {
 // an incoming request through the service.QueryService service.
 func MountQueryService(router *mux.Router, serv QueryServiceContract) {
 	log.Print("[INFO] mounting service.QueryService")
-	log.Print("[INFO] handler GET /api/query -> Schema() -> service.Schema")
 	log.Print("[INFO] handler POST /api/query -> Query(service.QueryExecuteRequest) -> service.QueryResults")
-	router.PathPrefix("/api/query").Methods("GET").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		res, err := serv.Schema(r.Context())
-		if err != nil {
-			http.Error(w, "unable to handle request", http.StatusInternalServerError)
-			log.Printf("[ERROR] error handling request: %v", err)
-			return
-		}
-
-		out, err := json.Marshal(res)
-		if err != nil {
-			http.Error(w, "unable to encode response", http.StatusInternalServerError)
-			log.Printf("[ERROR] error marshaling response: %v", err)
-			return
-		}
-
-		w.Write(out)
-	})
+	log.Print("[INFO] handler GET /api/query -> Schema() -> service.Schema")
 	router.PathPrefix("/api/query").Methods("POST").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		req := &service.QueryExecuteRequest{}
 		data, err := ioutil.ReadAll(r.Body)
@@ -435,6 +418,23 @@ func MountQueryService(router *mux.Router, serv QueryServiceContract) {
 		}
 
 		res, err := serv.Query(r.Context(), req)
+		if err != nil {
+			http.Error(w, "unable to handle request", http.StatusInternalServerError)
+			log.Printf("[ERROR] error handling request: %v", err)
+			return
+		}
+
+		out, err := json.Marshal(res)
+		if err != nil {
+			http.Error(w, "unable to encode response", http.StatusInternalServerError)
+			log.Printf("[ERROR] error marshaling response: %v", err)
+			return
+		}
+
+		w.Write(out)
+	})
+	router.PathPrefix("/api/query").Methods("GET").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		res, err := serv.Schema(r.Context())
 		if err != nil {
 			http.Error(w, "unable to handle request", http.StatusInternalServerError)
 			log.Printf("[ERROR] error handling request: %v", err)

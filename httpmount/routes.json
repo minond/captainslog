@@ -62,8 +62,8 @@
     "/api/entries": {
       "POST": {
         "handler": "Create",
-        "request": "service.EntryCreateRequest",
-        "response": "service.EntryCreateResponse"
+        "request": "service.EntriesCreateRequest",
+        "response": "service.EntriesCreateResponse"
       },
       "PUT": {
         "handler": "Update",
