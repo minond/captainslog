@@ -8,7 +8,7 @@ import { Entries } from "./component/entries"
 import { LoginForm } from "./component/login_form"
 import { ReportView } from "./component/report"
 
-import { isLoggedIn } from "./auth"
+import { logout, isLoggedIn } from "./auth"
 import { cachedGetBook } from "./remote"
 
 import history from "./history"
@@ -32,7 +32,11 @@ const Page = ({ active, children }: PageProps) => {
     <div className="page-header">
       <div className="page-header-content">
         <Link to="/">Captain's Log</Link>
-        {isLoggedIn() ? <Books active={active} /> : null}
+        {isLoggedIn() ?
+          <>
+            <Books active={active} />
+            <div className="logout" onClick={logout}>logout</div>
+          </> : null}
       </div>
     </div>
     <div className="page-content">

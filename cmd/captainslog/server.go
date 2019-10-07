@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"html/template"
 	"io"
 	"io/ioutil"
@@ -81,7 +82,7 @@ func loginHandler(userService *service.UserService) func(http.ResponseWriter, *h
 			return
 		}
 
-		serve(w, r, "index.tmpl", PageConfig{Token: token})
+		http.Redirect(w, r, fmt.Sprintf("/?key=%s", token), http.StatusSeeOther)
 	}
 }
 
