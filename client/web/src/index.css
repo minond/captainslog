@@ -209,12 +209,6 @@ h1, h2, h3 {
   background-color: #96ccff6b;
 }
 
-.report-label {
-  border-bottom: 1px solid #cfcfcf;
-  display: inline-block;
-  margin-bottom: 30px;
-}
-
 .report-variable-fields {
   margin-bottom: 30px;
 }

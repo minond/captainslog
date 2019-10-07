@@ -426,7 +426,7 @@ export const ReportView = (props: {}) => {
   loadReportData(inputs, outputs, dispatchInput, dispatchOutput)
 
   return <div className="report">
-    <h2 className="report-label">{report ? report.label : " "}</h2>
+    <h1>{report ? report.label : " "}</h1>
     {editForm}
     <VariablesForm variables={variables} inputs={inputs} onSelect={setInput} />
     <Outputs outputs={outputs} onEdit={(output) => setEditing(output)} />
