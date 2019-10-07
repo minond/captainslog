@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-url=http://localhost
+url=${URL:-http://localhost}
 
 log() {
   local label="$1"
@@ -131,6 +131,7 @@ create_blood_pressure() {
 }
 
 # reset_db
+echo "talking to $url"
 login
 create_workouts &
 create_blood_pressure &
