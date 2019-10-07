@@ -29,7 +29,7 @@ const Page = ({ active, children }: PageProps) => {
   })
 
   return <div className="page-wrapper">
-    <div className={"page-header " + (active ? "page-header-active" : "")}>
+    <div className="page-header">
       <div className="page-header-content">
         <Link to="/">Captain's Log</Link>
         {isLoggedIn() ? <Books active={active} /> : null}
