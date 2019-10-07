@@ -1,8 +1,15 @@
 import * as React from "react"
 import * as ReactDOM from "react-dom"
-import { Router, Route, Switch } from "react-router-dom"
+import { ReactNode, useEffect } from "react"
+import { Router, Route, Link, Switch } from "react-router-dom"
 
-import { BookPage, IndexPage, ReportPage, QueryPage } from "./component/pages"
+import { Books } from "./component/books"
+import { Entries } from "./component/entries"
+import { LoginForm } from "./component/login_form"
+import { ReportView } from "./component/report"
+
+import { isLoggedIn } from "./auth"
+import { cachedGetBook } from "./remote"
 
 import history from "./history"
 
@@ -11,13 +18,61 @@ require("./index.css")
 require("./react-datepicker.css")
 /* tslint:enable:no-var-requires */
 
-export const Index = () => (
+type PageProps = {
+  active?: string
+  children?: ReactNode
+}
+
+const Page = ({ active, children }: PageProps) => {
+  useEffect(() => {
+    document.title = `Captain's Log`
+  })
+
+  return <div className="page-wrapper">
+    <div className={"page-header " + (active ? "page-header-active" : "")}>
+      <div className="page-header-content">
+        <Link to="/">Captain's Log</Link>
+        {isLoggedIn() ? <Books active={active} /> : null}
+      </div>
+    </div>
+    <div className="page-content">
+      {children}
+    </div>
+  </div>
+}
+
+const IndexPage = (props: {}) =>
+  <Page>
+    {isLoggedIn() ? <ReportView /> : <LoginForm />}
+  </Page>
+
+type BookPageProps = {
+  guid: string
+  date: Date
+}
+
+const BookPage = ({ guid, date }: BookPageProps) => {
+  useEffect(() => {
+    document.title = "Captain's Log"
+    cachedGetBook(guid).then((book) => {
+      if (book) {
+        document.title = `${book.name} - Captain's Log`
+      }
+    })
+  })
+
+  return <>
+    <Page active={guid}>
+      <Entries bookGuid={guid} date={date} />
+    </Page>
+  </>
+}
+
+const App = () =>
   <div>
     <Router history={history}>
       <Switch>
         <Route exact={true} path="/" component={IndexPage} />
-        <Route exact={true} path="/report" component={ReportPage} />
-        <Route exact={true} path="/query" component={QueryPage} />
         <Route exact={true} path="/book/:guid/:at?" render={(prop) => {
           let guid = prop.match.params["guid"]
           let at = prop.match.params["at"] || Date.now()
@@ -26,6 +81,5 @@ export const Index = () => (
       </Switch>
     </Router>
   </div>
-)
 
-ReactDOM.render(<Index />, document.getElementById("body"))
+ReactDOM.render(<App />, document.getElementById("body"))
