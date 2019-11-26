@@ -46,11 +46,11 @@ type Expr interface {
 	expr() expr
 }
 
-type sexpr struct{ Values []Expr }
+type Sexpr struct{ Values []Expr }
 
-func Sexpr(values ...Expr) *sexpr { return &sexpr{Values: values} }
-func (sexpr) expr() expr          { return exprSexpr }
-func (e sexpr) String() string {
+func NewSexpr(values ...Expr) *Sexpr { return &Sexpr{Values: values} }
+func (Sexpr) expr() expr             { return exprSexpr }
+func (e Sexpr) String() string {
 	buff := strings.Builder{}
 	buff.WriteString("(")
 	for i, val := range e.Values {
@@ -63,35 +63,35 @@ func (e sexpr) String() string {
 	return buff.String()
 }
 
-type quote struct{ Value Expr }
+type Quote struct{ Value Expr }
 
-func Quote(value Expr) *quote  { return &quote{Value: value} }
-func (quote) expr() expr       { return exprQuote }
-func (e quote) String() string { return fmt.Sprintf("'%v", e.Value.String()) }
+func NewQuote(value Expr) *Quote { return &Quote{Value: value} }
+func (Quote) expr() expr         { return exprQuote }
+func (e Quote) String() string   { return fmt.Sprintf("'%v", e.Value.String()) }
 
-type identifier struct{ Value string }
+type Identifier struct{ Value string }
 
-func Identifier(value string) *identifier { return &identifier{Value: value} }
-func (identifier) expr() expr             { return exprId }
-func (e identifier) String() string       { return e.Value }
+func NewIdentifier(value string) *Identifier { return &Identifier{Value: value} }
+func (Identifier) expr() expr                { return exprId }
+func (e Identifier) String() string          { return e.Value }
 
-type number struct{ Value float64 }
+type Number struct{ Value float64 }
 
-func Number(value float64) *number { return &number{Value: value} }
-func (number) expr() expr          { return exprScalar }
-func (e number) String() string    { return strconv.FormatFloat(e.Value, 'f', -1, 64) }
+func NewNumber(value float64) *Number { return &Number{Value: value} }
+func (Number) expr() expr             { return exprScalar }
+func (e Number) String() string       { return strconv.FormatFloat(e.Value, 'f', -1, 64) }
 
-type str struct{ Value string }
+type String struct{ Value string }
 
-func String(value string) *str { return &str{Value: value} }
-func (str) expr() expr         { return exprScalar }
-func (e str) String() string   { return fmt.Sprintf(`"%v"`, e.Value) }
+func NewString(value string) *String { return &String{Value: value} }
+func (String) expr() expr            { return exprScalar }
+func (e String) String() string      { return fmt.Sprintf(`"%v"`, e.Value) }
 
-type boolean struct{ Value bool }
+type Boolean struct{ Value bool }
 
-func Boolean(value bool) *boolean { return &boolean{Value: value} }
-func (boolean) expr() expr        { return exprScalar }
-func (e boolean) String() string {
+func NewBoolean(value bool) *Boolean { return &Boolean{Value: value} }
+func (Boolean) expr() expr           { return exprScalar }
+func (e Boolean) String() string {
 	if e.Value {
 		return "#t"
 	}
@@ -193,7 +193,7 @@ func (p *parser) parseExpr() (Expr, error) {
 	return nil, fmt.Errorf("invalid syntax: %v", p.curr())
 }
 
-func (p *parser) parseSexpr() (*sexpr, error) {
+func (p *parser) parseSexpr() (*Sexpr, error) {
 	if err := p.expectEq(tokenOpenParen); err != nil {
 		return nil, err
 	}
@@ -216,10 +216,10 @@ func (p *parser) parseSexpr() (*sexpr, error) {
 
 	p.eat() // Eat the closing paren
 
-	return Sexpr(values...), nil
+	return NewSexpr(values...), nil
 }
 
-func (p *parser) parseQuote() (*quote, error) {
+func (p *parser) parseQuote() (*Quote, error) {
 	if err := p.expectEq(tokenQuote); err != nil {
 		return nil, err
 	}
@@ -231,10 +231,10 @@ func (p *parser) parseQuote() (*quote, error) {
 		return nil, err
 	}
 
-	return Quote(val), nil
+	return NewQuote(val), nil
 }
 
-func (p *parser) parseId() (*identifier, error) {
+func (p *parser) parseId() (*Identifier, error) {
 	if err := p.expectA(tokWord); err != nil {
 		return nil, err
 	}
@@ -242,10 +242,10 @@ func (p *parser) parseId() (*identifier, error) {
 	curr := p.curr()
 	p.eat() // Eat the id
 
-	return Identifier(string(curr.lexeme)), nil
+	return NewIdentifier(string(curr.lexeme)), nil
 }
 
-func (p *parser) parseNumber() (*number, error) {
+func (p *parser) parseNumber() (*Number, error) {
 	if err := p.expectA(tokNumber); err != nil {
 		return nil, err
 	}
@@ -258,10 +258,10 @@ func (p *parser) parseNumber() (*number, error) {
 		return nil, fmt.Errorf("invalid number: %v", curr)
 	}
 
-	return Number(val), nil
+	return NewNumber(val), nil
 }
 
-func (p *parser) parseString() (*str, error) {
+func (p *parser) parseString() (*String, error) {
 	if err := p.expectA(tokString); err != nil {
 		return nil, err
 	}
@@ -269,10 +269,10 @@ func (p *parser) parseString() (*str, error) {
 	curr := p.curr()
 	p.eat() // Eat the string
 
-	return String(string(curr.lexeme)), nil
+	return NewString(string(curr.lexeme)), nil
 }
 
-func (p *parser) parseBoolean() (*boolean, error) {
+func (p *parser) parseBoolean() (*Boolean, error) {
 	if err := p.expectA(tokBoolean); err != nil {
 		return nil, err
 	}
@@ -290,5 +290,5 @@ func (p *parser) parseBoolean() (*boolean, error) {
 		return nil, fmt.Errorf("invalid boolean: %v", curr)
 	}
 
-	return Boolean(val), nil
+	return NewBoolean(val), nil
 }
