@@ -53,6 +53,14 @@ func (e Sexpr) String() string {
 	return buff.String()
 }
 
+func (e Sexpr) Head() Expr {
+	return e.Values[0]
+}
+
+func (e Sexpr) Tail() []Expr {
+	return e.Values[1:]
+}
+
 type Quote struct{ Value Expr }
 
 func NewQuote(value Expr) *Quote { return &Quote{Value: value} }
