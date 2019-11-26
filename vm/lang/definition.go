@@ -65,6 +65,7 @@ type Identifier struct{ value string }
 
 func NewIdentifier(value string) *Identifier { return &Identifier{value: value} }
 func (Identifier) isExpr()                   {}
+func (e Identifier) Value() string           { return e.value }
 func (e Identifier) String() string          { return e.value }
 
 type Number struct{ value float64 }
@@ -72,6 +73,7 @@ type Number struct{ value float64 }
 func NewNumber(value float64) *Number { return &Number{value: value} }
 func (Number) isExpr()                {}
 func (Number) isValue()               {}
+func (e Number) Value() float64       { return e.value }
 func (e Number) String() string       { return strconv.FormatFloat(e.value, 'f', -1, 64) }
 
 type String struct{ value string }
