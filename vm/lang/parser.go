@@ -46,10 +46,11 @@ type Expr interface {
 	expr() expr
 }
 
-type Sexpr struct{ Values []Expr }
+type sexpr struct{ Values []Expr }
 
-func (Sexpr) expr() expr { return exprSexpr }
-func (e Sexpr) String() string {
+func Sexpr(values ...Expr) *sexpr { return &sexpr{Values: values} }
+func (sexpr) expr() expr          { return exprSexpr }
+func (e sexpr) String() string {
 	buff := strings.Builder{}
 	buff.WriteString("(")
 	for i, val := range e.Values {
@@ -62,30 +63,35 @@ func (e Sexpr) String() string {
 	return buff.String()
 }
 
-type Quote struct{ Value Expr }
+type quote struct{ Value Expr }
 
-func (Quote) expr() expr       { return exprQuote }
-func (e Quote) String() string { return fmt.Sprintf("'%v", e.Value.String()) }
+func Quote(value Expr) *quote  { return &quote{Value: value} }
+func (quote) expr() expr       { return exprQuote }
+func (e quote) String() string { return fmt.Sprintf("'%v", e.Value.String()) }
 
-type Id struct{ Value string }
+type identifier struct{ Value string }
 
-func (Id) expr() expr       { return exprId }
-func (e Id) String() string { return e.Value }
+func Identifier(value string) *identifier { return &identifier{Value: value} }
+func (identifier) expr() expr             { return exprId }
+func (e identifier) String() string       { return e.Value }
 
-type Number struct{ Value float64 }
+type number struct{ Value float64 }
 
-func (Number) expr() expr       { return exprScalar }
-func (e Number) String() string { return strconv.FormatFloat(e.Value, 'f', -1, 64) }
+func Number(value float64) *number { return &number{Value: value} }
+func (number) expr() expr          { return exprScalar }
+func (e number) String() string    { return strconv.FormatFloat(e.Value, 'f', -1, 64) }
 
-type String struct{ Value string }
+type str struct{ Value string }
 
-func (String) expr() expr       { return exprScalar }
-func (e String) String() string { return fmt.Sprintf(`"%v"`, e.Value) }
+func String(value string) *str { return &str{Value: value} }
+func (str) expr() expr         { return exprScalar }
+func (e str) String() string   { return fmt.Sprintf(`"%v"`, e.Value) }
 
-type Boolean struct{ Value bool }
+type boolean struct{ Value bool }
 
-func (Boolean) expr() expr { return exprScalar }
-func (e Boolean) String() string {
+func Boolean(value bool) *boolean { return &boolean{Value: value} }
+func (boolean) expr() expr        { return exprScalar }
+func (e boolean) String() string {
 	if e.Value {
 		return "#t"
 	}
@@ -187,7 +193,7 @@ func (p *parser) parseExpr() (Expr, error) {
 	return nil, fmt.Errorf("invalid syntax: %v", p.curr())
 }
 
-func (p *parser) parseSexpr() (*Sexpr, error) {
+func (p *parser) parseSexpr() (*sexpr, error) {
 	if err := p.expectEq(tokenOpenParen); err != nil {
 		return nil, err
 	}
@@ -210,10 +216,10 @@ func (p *parser) parseSexpr() (*Sexpr, error) {
 
 	p.eat() // Eat the closing paren
 
-	return &Sexpr{Values: values}, nil
+	return Sexpr(values...), nil
 }
 
-func (p *parser) parseQuote() (*Quote, error) {
+func (p *parser) parseQuote() (*quote, error) {
 	if err := p.expectEq(tokenQuote); err != nil {
 		return nil, err
 	}
@@ -225,10 +231,10 @@ func (p *parser) parseQuote() (*Quote, error) {
 		return nil, err
 	}
 
-	return &Quote{Value: val}, nil
+	return Quote(val), nil
 }
 
-func (p *parser) parseId() (*Id, error) {
+func (p *parser) parseId() (*identifier, error) {
 	if err := p.expectA(tokWord); err != nil {
 		return nil, err
 	}
@@ -236,10 +242,10 @@ func (p *parser) parseId() (*Id, error) {
 	curr := p.curr()
 	p.eat() // Eat the id
 
-	return &Id{Value: string(curr.lexeme)}, nil
+	return Identifier(string(curr.lexeme)), nil
 }
 
-func (p *parser) parseNumber() (*Number, error) {
+func (p *parser) parseNumber() (*number, error) {
 	if err := p.expectA(tokNumber); err != nil {
 		return nil, err
 	}
@@ -252,10 +258,10 @@ func (p *parser) parseNumber() (*Number, error) {
 		return nil, fmt.Errorf("invalid number: %v", curr)
 	}
 
-	return &Number{Value: val}, nil
+	return Number(val), nil
 }
 
-func (p *parser) parseString() (*String, error) {
+func (p *parser) parseString() (*str, error) {
 	if err := p.expectA(tokString); err != nil {
 		return nil, err
 	}
@@ -263,10 +269,10 @@ func (p *parser) parseString() (*String, error) {
 	curr := p.curr()
 	p.eat() // Eat the string
 
-	return &String{Value: string(curr.lexeme)}, nil
+	return String(string(curr.lexeme)), nil
 }
 
-func (p *parser) parseBoolean() (*Boolean, error) {
+func (p *parser) parseBoolean() (*boolean, error) {
 	if err := p.expectA(tokBoolean); err != nil {
 		return nil, err
 	}
@@ -284,5 +290,5 @@ func (p *parser) parseBoolean() (*Boolean, error) {
 		return nil, fmt.Errorf("invalid boolean: %v", curr)
 	}
 
-	return &Boolean{Value: val}, nil
+	return Boolean(val), nil
 }
