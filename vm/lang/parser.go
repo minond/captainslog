@@ -3,6 +3,7 @@ package lang
 import (
 	"fmt"
 	"strconv"
+	"strings"
 )
 
 type expr uint8
@@ -40,23 +41,59 @@ const (
  * string        = ?? string ??
  *               ;
  */
-type Expr interface{ expr() expr }
+type Expr interface {
+	fmt.Stringer
+	expr() expr
+}
 
 type Sexpr struct{ Values []Expr }
+
+func (Sexpr) expr() expr { return exprSexpr }
+func (e Sexpr) String() string {
+	buff := strings.Builder{}
+	buff.WriteString("(")
+	for i, val := range e.Values {
+		if i != 0 {
+			buff.WriteRune(' ')
+		}
+		buff.WriteString(val.String())
+	}
+	buff.WriteString(")")
+	return buff.String()
+}
+
 type Quote struct{ Value Expr }
+
+func (Quote) expr() expr       { return exprQuote }
+func (e Quote) String() string { return fmt.Sprintf("'%v", e.Value.String()) }
+
 type Id struct{ Value string }
+
+func (Id) expr() expr       { return exprId }
+func (e Id) String() string { return e.Value }
+
 type Number struct{ Value float64 }
+
+func (Number) expr() expr       { return exprScalar }
+func (e Number) String() string { return strconv.FormatFloat(e.Value, 'f', -1, 64) }
+
 type String struct{ Value string }
+
+func (String) expr() expr       { return exprScalar }
+func (e String) String() string { return fmt.Sprintf(`"%v"`, e.Value) }
+
 type Boolean struct{ Value bool }
 
-func (Sexpr) expr() expr   { return exprSexpr }
-func (Quote) expr() expr   { return exprQuote }
-func (Id) expr() expr      { return exprId }
-func (Number) expr() expr  { return exprScalar }
-func (String) expr() expr  { return exprScalar }
 func (Boolean) expr() expr { return exprScalar }
+func (e Boolean) String() string {
+	if e.Value {
+		return "#t"
+	}
+	return "#f"
+}
 
-func Parse(tokens []Token) ([]Expr, error) {
+func Parse(code string) ([]Expr, error) {
+	tokens := lex(code)
 	p := parser{
 		tokens: tokens,
 		len:    len(tokens),
