@@ -94,7 +94,7 @@ func lex(text string) []Token {
 			pos += size + 1
 			buff = append(buff, tokenBoolean(append([]rune{curr}, lexeme...)))
 		case unicode.IsNumber(curr):
-			lexeme, size := eatUntil(chars, pos, max, not(unicode.IsNumber))
+			lexeme, size := eatUntil(chars, pos, max, not(or(unicode.IsNumber, is('.'))))
 			pos += size - 1
 			buff = append(buff, tokenNumber(lexeme))
 		case isIdentifier(curr):
@@ -117,6 +117,17 @@ type predicate func(rune) bool
 func is(c rune) predicate {
 	return func(r rune) bool {
 		return r == c
+	}
+}
+
+func or(preds ...predicate) predicate {
+	return func(r rune) bool {
+		for _, pred := range preds {
+			if pred(r) {
+				return true
+			}
+		}
+		return false
 	}
 }
 

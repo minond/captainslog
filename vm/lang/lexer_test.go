@@ -82,12 +82,14 @@ func TestLexer(t *testing.T) {
 		},
 		{
 			label: "numbers",
-			input: `1 2 3 456`,
+			input: `1 2 3 456 0.1 432432.432342432`,
 			expected: []Token{
 				tokenNumber([]rune("1")),
 				tokenNumber([]rune("2")),
 				tokenNumber([]rune("3")),
 				tokenNumber([]rune("456")),
+				tokenNumber([]rune("0.1")),
+				tokenNumber([]rune("432432.432342432")),
 			},
 		},
 		{
