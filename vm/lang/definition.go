@@ -33,17 +33,19 @@ import (
  */
 type Expr interface {
 	fmt.Stringer
-	expr()
+	isExpr()
 }
 
-type Sexpr struct{ Values []Expr }
+type Sexpr struct{ values []Expr }
 
-func NewSexpr(values ...Expr) *Sexpr { return &Sexpr{Values: values} }
-func (Sexpr) expr()                  {}
+func NewSexpr(values ...Expr) *Sexpr { return &Sexpr{values: values} }
+func (Sexpr) isExpr()                {}
+func (e Sexpr) Head() Expr           { return e.values[0] }
+func (e Sexpr) Tail() []Expr         { return e.values[1:] }
 func (e Sexpr) String() string {
 	buff := strings.Builder{}
 	buff.WriteString("(")
-	for i, val := range e.Values {
+	for i, val := range e.values {
 		if i != 0 {
 			buff.WriteRune(' ')
 		}
@@ -53,44 +55,39 @@ func (e Sexpr) String() string {
 	return buff.String()
 }
 
-func (e Sexpr) Head() Expr {
-	return e.Values[0]
-}
+type Quote struct{ value Expr }
 
-func (e Sexpr) Tail() []Expr {
-	return e.Values[1:]
-}
+func NewQuote(value Expr) *Quote { return &Quote{value: value} }
+func (Quote) isExpr()            {}
+func (e Quote) String() string   { return fmt.Sprintf("'%v", e.value.String()) }
 
-type Quote struct{ Value Expr }
+type Identifier struct{ value string }
 
-func NewQuote(value Expr) *Quote { return &Quote{Value: value} }
-func (Quote) expr()              {}
-func (e Quote) String() string   { return fmt.Sprintf("'%v", e.Value.String()) }
+func NewIdentifier(value string) *Identifier { return &Identifier{value: value} }
+func (Identifier) isExpr()                   {}
+func (e Identifier) String() string          { return e.value }
 
-type Identifier struct{ Value string }
+type Number struct{ value float64 }
 
-func NewIdentifier(value string) *Identifier { return &Identifier{Value: value} }
-func (Identifier) expr()                     {}
-func (e Identifier) String() string          { return e.Value }
+func NewNumber(value float64) *Number { return &Number{value: value} }
+func (Number) isExpr()                {}
+func (Number) isValue()               {}
+func (e Number) String() string       { return strconv.FormatFloat(e.value, 'f', -1, 64) }
 
-type Number struct{ Value float64 }
+type String struct{ value string }
 
-func NewNumber(value float64) *Number { return &Number{Value: value} }
-func (Number) expr()                  {}
-func (e Number) String() string       { return strconv.FormatFloat(e.Value, 'f', -1, 64) }
+func NewString(value string) *String { return &String{value: value} }
+func (String) isExpr()               {}
+func (String) isValue()              {}
+func (e String) String() string      { return fmt.Sprintf(`"%v"`, e.value) }
 
-type String struct{ Value string }
+type Boolean struct{ value bool }
 
-func NewString(value string) *String { return &String{Value: value} }
-func (String) expr()                 {}
-func (e String) String() string      { return fmt.Sprintf(`"%v"`, e.Value) }
-
-type Boolean struct{ Value bool }
-
-func NewBoolean(value bool) *Boolean { return &Boolean{Value: value} }
-func (Boolean) expr()                {}
+func NewBoolean(value bool) *Boolean { return &Boolean{value: value} }
+func (Boolean) isExpr()              {}
+func (Boolean) isValue()             {}
 func (e Boolean) String() string {
-	if e.Value {
+	if e.value {
 		return "#t"
 	}
 	return "#f"
