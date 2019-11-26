@@ -1,6 +1,7 @@
 package lang
 
 import (
+	"fmt"
 	"unicode"
 )
 
@@ -16,6 +17,26 @@ const (
 	tokWord
 	tokBoolean
 )
+
+var (
+	tokLabel = map[tok]string{
+		tokInvalid:    "INVALID",
+		tokOpenParen:  "OPEN_PAREN",
+		tokCloseParen: "CLOSE_PAREN",
+		tokQuote:      "QUOTE",
+		tokString:     "STRING",
+		tokNumber:     "NUMBER",
+		tokWord:       "WORD",
+		tokBoolean:    "BOOLEAN",
+	}
+)
+
+func (t tok) String() string {
+	if label, ok := tokLabel[t]; ok {
+		return label
+	}
+	return "INVALID"
+}
 
 type Token struct {
 	tok    tok
@@ -33,6 +54,13 @@ func (t Token) Eqv(o Token) bool {
 
 func (t Token) Eq(o Token) bool {
 	return t.Eqv(o) && string(t.lexeme) == string(o.lexeme)
+}
+
+func (t Token) Info(o Token) string {
+	if t.tok == tokInvalid || t.tok == tokOpenParen || t.tok == tokCloseParen {
+		return fmt.Sprintf("(%s) @ %v", t.tok.String(), t.offset)
+	}
+	return fmt.Sprintf("(%s %s) @ %v", t.tok.String(), string(t.lexeme), t.offset)
 }
 
 var (
