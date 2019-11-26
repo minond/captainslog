@@ -13,10 +13,10 @@ expected: (len=%v) %v`, len(returned), returned, len(expected), expected)
 	}
 
 	for i := range returned {
-		if !returned[i].Eq(expected[i]) {
+		if !returned[i].Eq(expected[i]) || returned[i].offset != expected[i].offset {
 			t.Errorf(`missmatched token:\n
 returned: (index=%v) %v
-expected: (index=%v) %v`, i, returned, i, expected)
+expected: (index=%v) %v`, i, returned[i], i, expected[i])
 		}
 	}
 }
@@ -40,83 +40,83 @@ func TestLexer(t *testing.T) {
 		{
 			label:    "open and close paren",
 			input:    `()`,
-			expected: []Token{tokenOpenParen, tokenCloseParen},
+			expected: []Token{buildTokenOpenParen(0), buildTokenCloseParen(1)},
 		},
 		{
 			label:    "quoted list",
 			input:    `'()`,
-			expected: []Token{tokenQuote, tokenOpenParen, tokenCloseParen},
+			expected: []Token{buildTokenQuote(0), buildTokenOpenParen(1), buildTokenCloseParen(2)},
 		},
 		{
 			label:    "string",
 			input:    `"hi there, how are you today?"`,
-			expected: []Token{tokenString([]rune("hi there, how are you today?"))},
+			expected: []Token{buildTokenString([]rune("hi there, how are you today?"), 0)},
 		},
 		{
 			label: "strings",
 			input: `"hi there" "how are you today?"`,
 			expected: []Token{
-				tokenString([]rune("hi there")),
-				tokenString([]rune("how are you today?")),
+				buildTokenString([]rune("hi there"), 0),
+				buildTokenString([]rune("how are you today?"), 11),
 			},
 		},
 		{
 			label:    "boolean",
 			input:    `#f`,
-			expected: []Token{tokenBoolean([]rune("#f"))},
+			expected: []Token{buildTokenBoolean([]rune("#f"), 0)},
 		},
 		{
 			label: "booleans",
 			input: `#f #t #t #f`,
 			expected: []Token{
-				tokenBoolean([]rune("#f")),
-				tokenBoolean([]rune("#t")),
-				tokenBoolean([]rune("#t")),
-				tokenBoolean([]rune("#f")),
+				buildTokenBoolean([]rune("#f"), 0),
+				buildTokenBoolean([]rune("#t"), 3),
+				buildTokenBoolean([]rune("#t"), 6),
+				buildTokenBoolean([]rune("#f"), 9),
 			},
 		},
 		{
 			label:    "number",
 			input:    `123`,
-			expected: []Token{tokenNumber([]rune("123"))},
+			expected: []Token{buildTokenNumber([]rune("123"), 0)},
 		},
 		{
 			label: "numbers",
 			input: `1 2 3 456 0.1 432432.432342432`,
 			expected: []Token{
-				tokenNumber([]rune("1")),
-				tokenNumber([]rune("2")),
-				tokenNumber([]rune("3")),
-				tokenNumber([]rune("456")),
-				tokenNumber([]rune("0.1")),
-				tokenNumber([]rune("432432.432342432")),
+				buildTokenNumber([]rune("1"), 0),
+				buildTokenNumber([]rune("2"), 2),
+				buildTokenNumber([]rune("3"), 4),
+				buildTokenNumber([]rune("456"), 6),
+				buildTokenNumber([]rune("0.1"), 10),
+				buildTokenNumber([]rune("432432.432342432"), 14),
 			},
 		},
 		{
 			label:    "word",
 			input:    `one`,
-			expected: []Token{tokenWord([]rune("one"))},
+			expected: []Token{buildTokenWord([]rune("one"), 0)},
 		},
 		{
 			label: "words",
 			input: `one two? three-four+five*six!`,
 			expected: []Token{
-				tokenWord([]rune("one")),
-				tokenWord([]rune("two?")),
-				tokenWord([]rune("three-four+five*six!")),
+				buildTokenWord([]rune("one"), 0),
+				buildTokenWord([]rune("two?"), 4),
+				buildTokenWord([]rune("three-four+five*six!"), 9),
 			},
 		},
 		{
 			label: "everything",
 			input: `	 (+1 21 twenty_two #f abc#abc)`,
 			expected: []Token{
-				tokenOpenParen,
-				tokenWord([]rune("+1")),
-				tokenNumber([]rune("21")),
-				tokenWord([]rune("twenty_two")),
-				tokenBoolean([]rune("#f")),
-				tokenWord([]rune("abc#abc")),
-				tokenCloseParen,
+				buildTokenOpenParen(2),
+				buildTokenWord([]rune("+1"), 3),
+				buildTokenNumber([]rune("21"), 6),
+				buildTokenWord([]rune("twenty_two"), 9),
+				buildTokenBoolean([]rune("#f"), 20),
+				buildTokenWord([]rune("abc#abc"), 23),
+				buildTokenCloseParen(30),
 			},
 		},
 	}

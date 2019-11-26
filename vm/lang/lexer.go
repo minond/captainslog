@@ -20,6 +20,7 @@ const (
 type Token struct {
 	tok    tok
 	lexeme []rune
+	offset int
 }
 
 func (t Token) IsA(o tok) bool {
@@ -40,31 +41,59 @@ var (
 	tokenQuote      = Token{tok: tokQuote}
 )
 
-func tokenString(lexeme []rune) Token {
+func buildTokenOpenParen(offset int) Token {
+	return Token{
+		tok:    tokenOpenParen.tok,
+		lexeme: tokenOpenParen.lexeme,
+		offset: offset,
+	}
+}
+
+func buildTokenCloseParen(offset int) Token {
+	return Token{
+		tok:    tokenCloseParen.tok,
+		lexeme: tokenCloseParen.lexeme,
+		offset: offset,
+	}
+}
+
+func buildTokenQuote(offset int) Token {
+	return Token{
+		tok:    tokenQuote.tok,
+		lexeme: tokenQuote.lexeme,
+		offset: offset,
+	}
+}
+
+func buildTokenString(lexeme []rune, offset int) Token {
 	return Token{
 		tok:    tokString,
 		lexeme: lexeme,
+		offset: offset,
 	}
 }
 
-func tokenBoolean(lexeme []rune) Token {
+func buildTokenBoolean(lexeme []rune, offset int) Token {
 	return Token{
 		tok:    tokBoolean,
 		lexeme: lexeme,
+		offset: offset,
 	}
 }
 
-func tokenNumber(lexeme []rune) Token {
+func buildTokenNumber(lexeme []rune, offset int) Token {
 	return Token{
 		tok:    tokNumber,
 		lexeme: lexeme,
+		offset: offset,
 	}
 }
 
-func tokenWord(lexeme []rune) Token {
+func buildTokenWord(lexeme []rune, offset int) Token {
 	return Token{
 		tok:    tokWord,
 		lexeme: lexeme,
+		offset: offset,
 	}
 }
 
@@ -80,31 +109,32 @@ func lex(text string) []Token {
 		switch {
 		case unicode.IsSpace(curr):
 		case curr == '(':
-			buff = append(buff, tokenOpenParen)
+			buff = append(buff, buildTokenOpenParen(pos))
 		case curr == ')':
-			buff = append(buff, tokenCloseParen)
+			buff = append(buff, buildTokenCloseParen(pos))
 		case curr == '\'':
-			buff = append(buff, tokenQuote)
+			buff = append(buff, buildTokenQuote(pos))
 		case curr == '"':
 			lexeme, size := eatUntil(chars, pos+1, max, is('"'))
+			buff = append(buff, buildTokenString(lexeme, pos))
 			pos += size + 1
-			buff = append(buff, tokenString(lexeme))
 		case curr == '#':
 			lexeme, size := eatUntil(chars, pos+1, max, unicode.IsSpace)
+			buff = append(buff, buildTokenBoolean(append([]rune{curr}, lexeme...), pos))
 			pos += size + 1
-			buff = append(buff, tokenBoolean(append([]rune{curr}, lexeme...)))
 		case unicode.IsNumber(curr):
 			lexeme, size := eatUntil(chars, pos, max, not(or(unicode.IsNumber, is('.'))))
+			buff = append(buff, buildTokenNumber(lexeme, pos))
 			pos += size - 1
-			buff = append(buff, tokenNumber(lexeme))
 		case isIdentifier(curr):
 			lexeme, size := eatUntil(chars, pos, max, not(isIdentifier))
+			buff = append(buff, buildTokenWord(lexeme, pos))
 			pos += size - 1
-			buff = append(buff, tokenWord(lexeme))
 		default:
 			buff = append(buff, Token{
 				tok:    tokInvalid,
 				lexeme: []rune{curr},
+				offset: pos,
 			})
 		}
 	}
