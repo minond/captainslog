@@ -4,60 +4,72 @@ import (
 	"unicode"
 )
 
-type kind uint8
+type tok uint8
 
 const (
-	kindInvalid kind = iota
-	kindOpenParen
-	kindCloseParen
-	kindQuote
-	kindString
-	kindNumber
-	kindWord
+	tokInvalid tok = iota
+	tokOpenParen
+	tokCloseParen
+	tokQuote
+	tokString
+	tokNumber
+	tokWord
+	tokBoolean
 )
 
-type token struct {
-	kind   kind
+type Token struct {
+	tok    tok
 	lexeme []rune
 }
 
-func (t token) eqv(o token) bool {
-	return t.kind == o.kind
+func (t Token) IsA(o tok) bool {
+	return t.tok == o
 }
 
-func (t token) eq(o token) bool {
-	return t.eqv(o) && string(t.lexeme) == string(o.lexeme)
+func (t Token) Eqv(o Token) bool {
+	return t.tok == o.tok
+}
+
+func (t Token) Eq(o Token) bool {
+	return t.Eqv(o) && string(t.lexeme) == string(o.lexeme)
 }
 
 var (
-	tokenOpenParen  = token{kind: kindOpenParen}
-	tokenCloseParen = token{kind: kindCloseParen}
-	tokenQuote      = token{kind: kindQuote}
+	tokenOpenParen  = Token{tok: tokOpenParen}
+	tokenCloseParen = Token{tok: tokCloseParen}
+	tokenQuote      = Token{tok: tokQuote}
 )
 
-func tokenString(lexeme []rune) token {
-	return token{
-		kind:   kindString,
+func tokenString(lexeme []rune) Token {
+	return Token{
+		tok:    tokString,
 		lexeme: lexeme,
 	}
 }
 
-func tokenNumber(lexeme []rune) token {
-	return token{
-		kind:   kindNumber,
+func tokenBoolean(lexeme []rune) Token {
+	return Token{
+		tok:    tokBoolean,
 		lexeme: lexeme,
 	}
 }
 
-func tokenWord(lexeme []rune) token {
-	return token{
-		kind:   kindWord,
+func tokenNumber(lexeme []rune) Token {
+	return Token{
+		tok:    tokNumber,
 		lexeme: lexeme,
 	}
 }
 
-func lex(text string) []token {
-	var buff []token
+func tokenWord(lexeme []rune) Token {
+	return Token{
+		tok:    tokWord,
+		lexeme: lexeme,
+	}
+}
+
+func lex(text string) []Token {
+	var buff []Token
 
 	chars := []rune(text)
 	max := len(chars)
@@ -77,6 +89,10 @@ func lex(text string) []token {
 			lexeme, size := eatUntil(chars, pos+1, max, is('"'))
 			pos += size + 1
 			buff = append(buff, tokenString(lexeme))
+		case curr == '#':
+			lexeme, size := eatUntil(chars, pos+1, max, unicode.IsSpace)
+			pos += size + 1
+			buff = append(buff, tokenBoolean(append([]rune{curr}, lexeme...)))
 		case unicode.IsNumber(curr):
 			lexeme, size := eatUntil(chars, pos, max, not(unicode.IsNumber))
 			pos += size - 1
@@ -86,8 +102,8 @@ func lex(text string) []token {
 			pos += size - 1
 			buff = append(buff, tokenWord(lexeme))
 		default:
-			buff = append(buff, token{
-				kind:   kindInvalid,
+			buff = append(buff, Token{
+				tok:    tokInvalid,
 				lexeme: []rune{curr},
 			})
 		}
