@@ -44,6 +44,14 @@ var procedureSum = NewProcedure("+", func(args []lang.Value) (lang.Value, error)
 	return lang.NewNumber(sum), nil
 })
 
-var builtins = map[string]lang.Value{
-	"+": procedureSum,
+var builtins map[string]lang.Value
+var procedures = []*Procedure{
+	procedureSum,
+}
+
+func init() {
+	builtins = make(map[string]lang.Value)
+	for _, proc := range procedures {
+		builtins[proc.name] = proc
+	}
 }
