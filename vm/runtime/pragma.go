@@ -34,6 +34,7 @@ var builtinCond = NewBuiltin(func(exprs []lang.Expr, env *Environment) (lang.Val
 		id, ok := expr.(*lang.Identifier)
 		return ok && id.Value() == "else"
 	}
+
 	conds := make([]*lang.Sexpr, len(exprs))
 	for i, expr := range exprs {
 		switch sexpr := expr.(type) {
@@ -43,11 +44,13 @@ var builtinCond = NewBuiltin(func(exprs []lang.Expr, env *Environment) (lang.Val
 			} else if isElse(sexpr.Head()) && i != len(exprs)-1 {
 				return nil, errors.New("cond: `else` clause must be at the end")
 			}
+
 			conds[i] = sexpr
 		default:
 			return nil, errors.New("cond: invalid syntax")
 		}
 	}
+
 	for _, cond := range conds {
 		if isElse(cond.Head()) {
 			// Else must have subsequent expression to evaluate
@@ -60,22 +63,29 @@ var builtinCond = NewBuiltin(func(exprs []lang.Expr, env *Environment) (lang.Val
 			if err != nil {
 				return nil, err
 			}
+
 			switch b := val.(type) {
 			case *lang.Boolean:
+				// #f value, move on
 				if b.Value() == false {
 					continue
 				}
 			}
+
+			// Single item list, return the head
 			if len(cond.Tail()) == 0 {
 				return val, nil
 			}
 		}
+
 		vals, err := evalAll(cond.Tail(), env)
 		if err != nil {
 			return nil, err
 		}
+
 		return vals[len(vals)-1], nil
 	}
+
 	return nil, errors.New("cond: no return value")
 })
 
@@ -86,12 +96,14 @@ var procedureSum = func(args []lang.Value) (lang.Value, error) {
 		if !ok {
 			return nil, fmt.Errorf("contract error: expected a number in position %v", i)
 		}
+
 		if i == 0 {
 			total = num.Value()
 		} else {
 			total += num.Value()
 		}
 	}
+
 	return lang.NewNumber(total), nil
 }
 
@@ -102,12 +114,14 @@ var procedureSub = func(args []lang.Value) (lang.Value, error) {
 		if !ok {
 			return nil, fmt.Errorf("contract error: expected a number in position %v", i)
 		}
+
 		if i == 0 {
 			total = num.Value()
 		} else {
 			total -= num.Value()
 		}
 	}
+
 	return lang.NewNumber(total), nil
 }
 
@@ -118,12 +132,14 @@ var procedureMul = func(args []lang.Value) (lang.Value, error) {
 		if !ok {
 			return nil, fmt.Errorf("contract error: expected a number in position %v", i)
 		}
+
 		if i == 0 {
 			total = num.Value()
 		} else {
 			total += num.Value()
 		}
 	}
+
 	return lang.NewNumber(total), nil
 }
 
@@ -134,11 +150,13 @@ var procedureDiv = func(args []lang.Value) (lang.Value, error) {
 		if !ok {
 			return nil, fmt.Errorf("contract error: expected a number in position %v", i)
 		}
+
 		if i == 0 {
 			total = num.Value()
 		} else {
 			total /= num.Value()
 		}
 	}
+
 	return lang.NewNumber(total), nil
 }

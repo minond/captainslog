@@ -13,10 +13,17 @@ type Builtin struct {
 
 type builtinFn func(args []lang.Expr, env *Environment) (lang.Value, error)
 
-func NewBuiltin(fn builtinFn) *Builtin                                         { return &Builtin{fn: fn} }
-func (Builtin) isValue()                                                       {}
-func (v Builtin) String() string                                               { return "#<builtin>" }
-func (v Builtin) Apply(args []lang.Expr, env *Environment) (lang.Value, error) { return v.fn(args, env) }
+func NewBuiltin(fn builtinFn) *Builtin {
+	return &Builtin{fn: fn}
+}
+
+func (v Builtin) String() string {
+	return "#<builtin>"
+}
+
+func (v Builtin) Apply(args []lang.Expr, env *Environment) (lang.Value, error) {
+	return v.fn(args, env)
+}
 
 type Procedure struct {
 	lang.Value
@@ -26,7 +33,14 @@ type Procedure struct {
 
 type procedureFn func(args []lang.Value) (lang.Value, error)
 
-func NewProcedure(name string, fn procedureFn) *Procedure       { return &Procedure{fn: fn, name: name} }
-func (Procedure) isValue()                                      {}
-func (v Procedure) String() string                              { return fmt.Sprintf("#<procedure:%s>", v.name) }
-func (v Procedure) Apply(args []lang.Value) (lang.Value, error) { return v.fn(args) }
+func NewProcedure(name string, fn procedureFn) *Procedure {
+	return &Procedure{fn: fn, name: name}
+}
+
+func (v Procedure) String() string {
+	return fmt.Sprintf("#<procedure:%s>", v.name)
+}
+
+func (v Procedure) Apply(args []lang.Value) (lang.Value, error) {
+	return v.fn(args)
+}

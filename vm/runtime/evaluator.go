@@ -64,6 +64,7 @@ func eval(expr lang.Expr, env *Environment) (lang.Value, error) {
 		if e.Size() == 0 {
 			return nil, errors.New("missing procedure expression")
 		}
+
 		val, err := eval(e.Head(), env)
 		if err != nil {
 			return nil, err
@@ -77,6 +78,7 @@ func eval(expr lang.Expr, env *Environment) (lang.Value, error) {
 			if err != nil {
 				return nil, err
 			}
+
 			return fn.Apply(params)
 		default:
 			return nil, fmt.Errorf("not a procedure: %v", val)
@@ -93,7 +95,9 @@ func evalAll(exprs []lang.Expr, env *Environment) ([]lang.Value, error) {
 		if err != nil {
 			return nil, err
 		}
+
 		vals[i] = val
 	}
+
 	return vals, nil
 }
