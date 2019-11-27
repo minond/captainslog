@@ -66,22 +66,31 @@ func eval(expr lang.Expr, env *Environment) (lang.Value, error) {
 			return nil, err
 		}
 
-		proc, ok := val.(lang.Applicable)
-		if !ok {
-			return nil, fmt.Errorf("not a procedure: %v", val)
-		}
-
-		params := make([]lang.Value, len(e.Tail()))
-		for i, item := range e.Tail() {
-			val, err := eval(item, env)
+		switch fn := val.(type) {
+		case *Builtin:
+			return fn.Apply(e.Tail(), env)
+		case *Procedure:
+			params, err := evalAll(e.Tail(), env)
 			if err != nil {
 				return nil, err
 			}
-			params[i] = val
+			return fn.Apply(params)
+		default:
+			return nil, fmt.Errorf("not a procedure: %v", val)
 		}
-
-		return proc.Apply(params)
 	}
 
 	return nil, errors.New("unable to handle expression")
+}
+
+func evalAll(exprs []lang.Expr, env *Environment) ([]lang.Value, error) {
+	vals := make([]lang.Value, len(exprs))
+	for i, expr := range exprs {
+		val, err := eval(expr, env)
+		if err != nil {
+			return nil, err
+		}
+		vals[i] = val
+	}
+	return vals, nil
 }
