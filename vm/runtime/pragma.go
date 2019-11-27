@@ -12,10 +12,12 @@ var builtins = map[string]lang.Value{
 }
 
 var procedures = map[string]procedureFn{
-	"+": procedureSum,
-	"-": procedureSub,
-	"*": procedureMul,
-	"/": procedureDiv,
+	"+": binaryFloat64Op(func(a, b float64) float64 { return a + b }),
+	"-": binaryFloat64Op(func(a, b float64) float64 { return a - b }),
+	"*": binaryFloat64Op(func(a, b float64) float64 { return a * b }),
+	"/": binaryFloat64Op(func(a, b float64) float64 { return a / b }),
+
+	"not": unaryBoolOp(func(a bool) bool { return !a }),
 }
 
 func init() {
@@ -88,74 +90,37 @@ var builtinCond = NewBuiltin(func(exprs []lang.Expr, env *Environment) (lang.Val
 	return nil, errors.New("cond: no return value")
 })
 
-var procedureSum = func(args []lang.Value) (lang.Value, error) {
-	var total float64
-	for i, n := range args {
-		num, ok := n.(*lang.Number)
-		if !ok {
-			return nil, fmt.Errorf("contract error: expected a number in position %v", i)
+func binaryFloat64Op(op func(float64, float64) float64) func([]lang.Value) (lang.Value, error) {
+	return func(args []lang.Value) (lang.Value, error) {
+		var total float64
+		for i, n := range args {
+			num, ok := n.(*lang.Number)
+			if !ok {
+				return nil, fmt.Errorf("contract error: expected a number in position %v", i)
+			}
+
+			if i == 0 {
+				total = num.Float64()
+			} else {
+				total = op(total, num.Float64())
+			}
 		}
 
-		if i == 0 {
-			total = num.Float64()
-		} else {
-			total += num.Float64()
-		}
+		return lang.NewNumber(total), nil
 	}
-
-	return lang.NewNumber(total), nil
 }
 
-var procedureSub = func(args []lang.Value) (lang.Value, error) {
-	var total float64
-	for i, n := range args {
-		num, ok := n.(*lang.Number)
+func unaryBoolOp(op func(bool) bool) func([]lang.Value) (lang.Value, error) {
+	return func(args []lang.Value) (lang.Value, error) {
+		if len(args) == 0 {
+			return nil, errors.New("contract error: expected an argument")
+		}
+
+		arg, ok := args[0].(*lang.Boolean)
 		if !ok {
-			return nil, fmt.Errorf("contract error: expected a number in position %v", i)
+			return nil, errors.New("contract error: expected a boolean")
 		}
 
-		if i == 0 {
-			total = num.Float64()
-		} else {
-			total -= num.Float64()
-		}
+		return lang.NewBoolean(op(arg.Bool())), nil
 	}
-
-	return lang.NewNumber(total), nil
-}
-
-var procedureMul = func(args []lang.Value) (lang.Value, error) {
-	var total float64
-	for i, n := range args {
-		num, ok := n.(*lang.Number)
-		if !ok {
-			return nil, fmt.Errorf("contract error: expected a number in position %v", i)
-		}
-
-		if i == 0 {
-			total = num.Float64()
-		} else {
-			total += num.Float64()
-		}
-	}
-
-	return lang.NewNumber(total), nil
-}
-
-var procedureDiv = func(args []lang.Value) (lang.Value, error) {
-	var total float64
-	for i, n := range args {
-		num, ok := n.(*lang.Number)
-		if !ok {
-			return nil, fmt.Errorf("contract error: expected a number in position %v", i)
-		}
-
-		if i == 0 {
-			total = num.Float64()
-		} else {
-			total /= num.Float64()
-		}
-	}
-
-	return lang.NewNumber(total), nil
 }

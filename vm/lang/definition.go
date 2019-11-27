@@ -123,6 +123,10 @@ func NewBoolean(value bool) *Boolean {
 	return &Boolean{value: value}
 }
 
+func (e Boolean) Bool() bool {
+	return e.value
+}
+
 func (e Boolean) True() bool {
 	return e.value == true
 }
