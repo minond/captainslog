@@ -18,6 +18,31 @@ func Parse(code string) ([]lang.Expr, error) {
 	return p.do()
 }
 
+/**
+ * main			 = epxr*
+ *               ;
+ *
+ * expr          = "(" expr ")"
+ *               | "'" expr
+ *               | identifier
+ *               | number
+ *               | string
+ *               | boolean
+ *               ;
+ *
+ * boolean       = "#t"
+ *               | "#f"
+ *               ;
+ *
+ * identifier    = ?? identifier ??
+ *               ;
+ *
+ * number        = ?? number ??
+ *               ;
+ *
+ * string        = ?? string ??
+ *               ;
+ */
 type parser struct {
 	tokens []Token
 	len    int

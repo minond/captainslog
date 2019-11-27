@@ -6,34 +6,14 @@ import (
 	"strings"
 )
 
-/**
- * main			 = epxr*
- *               ;
- *
- * expr          = "(" expr ")"
- *               | "'" expr
- *               | identifier
- *               | number
- *               | string
- *               | boolean
- *               ;
- *
- * boolean       = "#t"
- *               | "#f"
- *               ;
- *
- * identifier    = ?? identifier ??
- *               ;
- *
- * number        = ?? number ??
- *               ;
- *
- * string        = ?? string ??
- *               ;
- */
 type Expr interface {
 	fmt.Stringer
 	isExpr()
+}
+
+type Value interface {
+	fmt.Stringer
+	isValue()
 }
 
 type Sexpr struct {
@@ -79,14 +59,13 @@ func NewQuote(value Expr) *Quote {
 	return &Quote{value: value}
 }
 
-func (Quote) isValue() {}
-
 func (e Quote) String() string {
 	return fmt.Sprintf("'%v", e.value.String())
 }
 
 type Identifier struct {
 	Expr
+	Value
 	value string
 }
 
@@ -94,9 +73,7 @@ func NewIdentifier(value string) *Identifier {
 	return &Identifier{value: value}
 }
 
-func (Identifier) isValue() {}
-
-func (e Identifier) Value() string {
+func (e Identifier) Label() string {
 	return e.value
 }
 
@@ -106,6 +83,7 @@ func (e Identifier) String() string {
 
 type Number struct {
 	Expr
+	Value
 	value float64
 }
 
@@ -113,9 +91,7 @@ func NewNumber(value float64) *Number {
 	return &Number{value: value}
 }
 
-func (Number) isValue() {}
-
-func (e Number) Value() float64 {
+func (e Number) Float64() float64 {
 	return e.value
 }
 
@@ -125,6 +101,7 @@ func (e Number) String() string {
 
 type String struct {
 	Expr
+	Value
 	value string
 }
 
@@ -132,14 +109,13 @@ func NewString(value string) *String {
 	return &String{value: value}
 }
 
-func (String) isValue() {}
-
 func (e String) String() string {
 	return fmt.Sprintf(`"%v"`, e.value)
 }
 
 type Boolean struct {
 	Expr
+	Value
 	value bool
 }
 
@@ -147,10 +123,12 @@ func NewBoolean(value bool) *Boolean {
 	return &Boolean{value: value}
 }
 
-func (Boolean) isValue() {}
+func (e Boolean) True() bool {
+	return e.value == true
+}
 
-func (e Boolean) Value() bool {
-	return e.value
+func (e Boolean) False() bool {
+	return e.value == false
 }
 
 func (e Boolean) String() string {

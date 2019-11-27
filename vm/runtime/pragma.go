@@ -32,7 +32,7 @@ func init() {
 var builtinCond = NewBuiltin(func(exprs []lang.Expr, env *Environment) (lang.Value, error) {
 	isElse := func(expr lang.Expr) bool {
 		id, ok := expr.(*lang.Identifier)
-		return ok && id.Value() == "else"
+		return ok && id.Label() == "else"
 	}
 
 	conds := make([]*lang.Sexpr, len(exprs))
@@ -66,8 +66,7 @@ var builtinCond = NewBuiltin(func(exprs []lang.Expr, env *Environment) (lang.Val
 
 			switch b := val.(type) {
 			case *lang.Boolean:
-				// #f value, move on
-				if b.Value() == false {
+				if b.False() {
 					continue
 				}
 			}
@@ -98,9 +97,9 @@ var procedureSum = func(args []lang.Value) (lang.Value, error) {
 		}
 
 		if i == 0 {
-			total = num.Value()
+			total = num.Float64()
 		} else {
-			total += num.Value()
+			total += num.Float64()
 		}
 	}
 
@@ -116,9 +115,9 @@ var procedureSub = func(args []lang.Value) (lang.Value, error) {
 		}
 
 		if i == 0 {
-			total = num.Value()
+			total = num.Float64()
 		} else {
-			total -= num.Value()
+			total -= num.Float64()
 		}
 	}
 
@@ -134,9 +133,9 @@ var procedureMul = func(args []lang.Value) (lang.Value, error) {
 		}
 
 		if i == 0 {
-			total = num.Value()
+			total = num.Float64()
 		} else {
-			total += num.Value()
+			total += num.Float64()
 		}
 	}
 
@@ -152,9 +151,9 @@ var procedureDiv = func(args []lang.Value) (lang.Value, error) {
 		}
 
 		if i == 0 {
-			total = num.Value()
+			total = num.Float64()
 		} else {
-			total /= num.Value()
+			total /= num.Float64()
 		}
 	}
 
