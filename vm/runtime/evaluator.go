@@ -32,15 +32,13 @@ func (env Environment) Get(id string) (lang.Value, error) {
 	return val, nil
 }
 
-func Eval(code string) ([]lang.Value, error) {
+func Eval(code string, env *Environment) ([]lang.Value, error) {
 	exprs, err := parser.Parse(code)
 	if err != nil {
 		return nil, err
 	}
 
 	var values []lang.Value
-	env := NewEnvironment()
-
 	for _, expr := range exprs {
 		val, err := eval(expr, env)
 		if err != nil {
