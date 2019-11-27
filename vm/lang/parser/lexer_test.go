@@ -43,6 +43,18 @@ func TestLexer(t *testing.T) {
 			expected: []Token{buildTokenOpenParen(0), buildTokenCloseParen(1)},
 		},
 		{
+			label: "nested parens",
+			input: `((()))`,
+			expected: []Token{
+				buildTokenOpenParen(0),
+				buildTokenOpenParen(1),
+				buildTokenOpenParen(2),
+				buildTokenCloseParen(3),
+				buildTokenCloseParen(4),
+				buildTokenCloseParen(5),
+			},
+		},
+		{
 			label:    "quoted list",
 			input:    `'()`,
 			expected: []Token{buildTokenQuote(0), buildTokenOpenParen(1), buildTokenCloseParen(2)},
@@ -108,7 +120,7 @@ func TestLexer(t *testing.T) {
 		},
 		{
 			label: "everything",
-			input: `	 (+1 21 twenty_two #f abc#abc)`,
+			input: `	 (+1 21 twenty_two #f abc#abc (#t) (one))`,
 			expected: []Token{
 				buildTokenOpenParen(2),
 				buildTokenWord([]rune("+1"), 3),
@@ -116,7 +128,13 @@ func TestLexer(t *testing.T) {
 				buildTokenWord([]rune("twenty_two"), 9),
 				buildTokenBoolean([]rune("#f"), 20),
 				buildTokenWord([]rune("abc#abc"), 23),
-				buildTokenCloseParen(30),
+				buildTokenOpenParen(31),
+				buildTokenBoolean([]rune("#t"), 32),
+				buildTokenCloseParen(34),
+				buildTokenOpenParen(36),
+				buildTokenWord([]rune("one"), 37),
+				buildTokenCloseParen(40),
+				buildTokenCloseParen(41),
 			},
 		},
 	}

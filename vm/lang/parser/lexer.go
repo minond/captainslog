@@ -147,9 +147,9 @@ func lex(text string) []Token {
 			buff = append(buff, buildTokenString(lexeme, pos))
 			pos += size + 1
 		case curr == '#':
-			lexeme, size := eatUntil(chars, pos+1, max, unicode.IsSpace)
-			buff = append(buff, buildTokenBoolean(append([]rune{curr}, lexeme...), pos))
-			pos += size + 1
+			lexeme, size := eatUntil(chars, pos, max, not(isIdentifier))
+			buff = append(buff, buildTokenBoolean(lexeme, pos))
+			pos += size - 1
 		case unicode.IsNumber(curr):
 			lexeme, size := eatUntil(chars, pos, max, not(or(unicode.IsNumber, is('.'))))
 			buff = append(buff, buildTokenNumber(lexeme, pos))
