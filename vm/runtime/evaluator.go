@@ -27,7 +27,7 @@ func (env Environment) Get(id string) (lang.Value, error) {
 	if !ok && env.parent != nil {
 		return env.parent.Get(id)
 	} else if !ok {
-		return nil, fmt.Errorf("missing binding: %v", id)
+		return nil, fmt.Errorf("undefined: %v", id)
 	}
 	return val, nil
 }

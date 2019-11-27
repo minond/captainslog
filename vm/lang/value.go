@@ -36,5 +36,5 @@ type Builtin struct{ fn builtinFn }
 
 func NewBuiltin(fn builtinFn) *Builtin              { return &Builtin{fn: fn} }
 func (Builtin) isValue()                            {}
-func (v Builtin) String() string                    { return "(builtin)" }
+func (v Builtin) String() string                    { return "#<builtin>" }
 func (v Builtin) Apply(args []Value) (Value, error) { return v.fn(args...) }
