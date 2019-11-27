@@ -41,6 +41,9 @@ var builtinCond = NewBuiltin(func(exprs []lang.Expr, env *Environment) (lang.Val
 	}
 	for _, cond := range conds {
 		// TODO implement else
+		if cond.Size() == 0 {
+			return nil, errors.New("cond: clause is not a pair")
+		}
 		val, err := eval(cond.Head(), env)
 		if err != nil {
 			return nil, err
