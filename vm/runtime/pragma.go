@@ -30,38 +30,51 @@ func init() {
 // return an error. An `else` clause is only allowed as the last item in the
 // list and it always evaluates to true.
 var builtinCond = NewBuiltin(func(exprs []lang.Expr, env *Environment) (lang.Value, error) {
+	isElse := func(expr lang.Expr) bool {
+		id, ok := expr.(*lang.Identifier)
+		return ok && id.Value() == "else"
+	}
 	conds := make([]*lang.Sexpr, len(exprs))
 	for i, expr := range exprs {
 		switch sexpr := expr.(type) {
 		case *lang.Sexpr:
+			if sexpr.Size() == 0 {
+				return nil, errors.New("cond: clause is not a pair")
+			} else if isElse(sexpr.Head()) && i != len(exprs)-1 {
+				return nil, errors.New("cond: `else` clause must be at the end")
+			}
 			conds[i] = sexpr
 		default:
 			return nil, errors.New("cond: invalid syntax")
 		}
 	}
 	for _, cond := range conds {
-		// TODO implement else
-		if cond.Size() == 0 {
-			return nil, errors.New("cond: clause is not a pair")
-		}
-		val, err := eval(cond.Head(), env)
-		if err != nil {
-			return nil, err
-		}
-		switch b := val.(type) {
-		case *lang.Boolean:
-			if b.Value() == false {
-				continue
+		if isElse(cond.Head()) {
+			// Else must have subsequent expression to evaluate
+			if len(cond.Tail()) == 0 {
+				return nil, errors.New("cond: missing expresison in `else` clause")
+			}
+		} else {
+			// We're in an "else" clause, move on to tail evaluation
+			val, err := eval(cond.Head(), env)
+			if err != nil {
+				return nil, err
+			}
+			switch b := val.(type) {
+			case *lang.Boolean:
+				if b.Value() == false {
+					continue
+				}
 			}
 			if len(cond.Tail()) == 0 {
 				return val, nil
 			}
-			vals, err := evalAll(cond.Tail(), env)
-			if err != nil {
-				return nil, err
-			}
-			return vals[len(vals)-1], nil
 		}
+		vals, err := evalAll(cond.Tail(), env)
+		if err != nil {
+			return nil, err
+		}
+		return vals[len(vals)-1], nil
 	}
 	return nil, errors.New("cond: no return value")
 })
