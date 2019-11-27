@@ -40,6 +40,7 @@ type Sexpr struct{ values []Expr }
 
 func NewSexpr(values ...Expr) *Sexpr { return &Sexpr{values: values} }
 func (Sexpr) isExpr()                {}
+func (e Sexpr) Size() int            { return len(e.values) }
 func (e Sexpr) Head() Expr           { return e.values[0] }
 func (e Sexpr) Tail() []Expr         { return e.values[1:] }
 func (e Sexpr) String() string {

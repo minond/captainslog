@@ -61,6 +61,9 @@ func eval(expr lang.Expr, env *Environment) (lang.Value, error) {
 	case *lang.Identifier:
 		return env.Get(e.Value())
 	case *lang.Sexpr:
+		if e.Size() == 0 {
+			return nil, errors.New("missing procedure expression")
+		}
 		val, err := eval(e.Head(), env)
 		if err != nil {
 			return nil, err
