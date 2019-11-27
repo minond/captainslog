@@ -31,7 +31,7 @@ func (Procedure) isValue()                                      {}
 func (v Procedure) String() string                              { return fmt.Sprintf("#<procedure:%s>", v.name) }
 func (v Procedure) Apply(args []lang.Value) (lang.Value, error) { return v.fn(args) }
 
-var procedureSum = NewProcedure("+", func(args []lang.Value) (lang.Value, error) {
+var procedureSum = func(args []lang.Value) (lang.Value, error) {
 	sum := float64(0)
 	for i, n := range args {
 		num, ok := n.(*lang.Number)
@@ -40,18 +40,17 @@ var procedureSum = NewProcedure("+", func(args []lang.Value) (lang.Value, error)
 		}
 		sum += num.Value()
 	}
-
 	return lang.NewNumber(sum), nil
-})
+}
 
 var builtins map[string]lang.Value
-var procedures = []*Procedure{
-	procedureSum,
+var procedures = map[string]procedureFn{
+	"+": procedureSum,
 }
 
 func init() {
 	builtins = make(map[string]lang.Value)
-	for _, proc := range procedures {
-		builtins[proc.name] = proc
+	for name, proc := range procedures {
+		builtins[name] = NewProcedure(name, proc)
 	}
 }
