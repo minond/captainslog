@@ -17,7 +17,9 @@ var procedures = map[string]procedureFn{
 	"*": binaryFloat64Op(func(a, b float64) float64 { return a * b }),
 	"/": binaryFloat64Op(func(a, b float64) float64 { return a / b }),
 
-	"not": unaryBoolOp(func(a bool) bool { return !a }),
+	"not":    unaryBoolOp(func(a bool) bool { return !a }),
+	"true?":  unaryBoolOp(func(a bool) bool { return a == true }),
+	"false?": unaryBoolOp(func(a bool) bool { return a == false }),
 }
 
 func init() {
