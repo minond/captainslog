@@ -88,6 +88,7 @@ type Boolean struct{ value bool }
 func NewBoolean(value bool) *Boolean { return &Boolean{value: value} }
 func (Boolean) isExpr()              {}
 func (Boolean) isValue()             {}
+func (e Boolean) Value() bool        { return e.value }
 func (e Boolean) String() string {
 	if e.value {
 		return "#t"
