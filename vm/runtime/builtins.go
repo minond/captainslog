@@ -32,20 +32,75 @@ func (v Procedure) String() string                              { return fmt.Spr
 func (v Procedure) Apply(args []lang.Value) (lang.Value, error) { return v.fn(args) }
 
 var procedureSum = func(args []lang.Value) (lang.Value, error) {
-	sum := float64(0)
+	var total float64
 	for i, n := range args {
 		num, ok := n.(*lang.Number)
 		if !ok {
 			return nil, fmt.Errorf("contract error: expected a number in position %v", i)
 		}
-		sum += num.Value()
+		if i == 0 {
+			total = num.Value()
+		} else {
+			total += num.Value()
+		}
 	}
-	return lang.NewNumber(sum), nil
+	return lang.NewNumber(total), nil
+}
+
+var procedureSub = func(args []lang.Value) (lang.Value, error) {
+	var total float64
+	for i, n := range args {
+		num, ok := n.(*lang.Number)
+		if !ok {
+			return nil, fmt.Errorf("contract error: expected a number in position %v", i)
+		}
+		if i == 0 {
+			total = num.Value()
+		} else {
+			total -= num.Value()
+		}
+	}
+	return lang.NewNumber(total), nil
+}
+
+var procedureMul = func(args []lang.Value) (lang.Value, error) {
+	var total float64
+	for i, n := range args {
+		num, ok := n.(*lang.Number)
+		if !ok {
+			return nil, fmt.Errorf("contract error: expected a number in position %v", i)
+		}
+		if i == 0 {
+			total = num.Value()
+		} else {
+			total += num.Value()
+		}
+	}
+	return lang.NewNumber(total), nil
+}
+
+var procedureDiv = func(args []lang.Value) (lang.Value, error) {
+	var total float64
+	for i, n := range args {
+		num, ok := n.(*lang.Number)
+		if !ok {
+			return nil, fmt.Errorf("contract error: expected a number in position %v", i)
+		}
+		if i == 0 {
+			total = num.Value()
+		} else {
+			total /= num.Value()
+		}
+	}
+	return lang.NewNumber(total), nil
 }
 
 var builtins map[string]lang.Value
 var procedures = map[string]procedureFn{
 	"+": procedureSum,
+	"-": procedureSub,
+	"*": procedureMul,
+	"/": procedureDiv,
 }
 
 func init() {
