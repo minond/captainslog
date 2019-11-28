@@ -14,17 +14,7 @@ func Eval(code string, env *Environment) ([]lang.Value, *Environment, error) {
 		return nil, env, err
 	}
 
-	var values []lang.Value
-	for _, expr := range exprs {
-		val, newEnv, err := eval(expr, env)
-		env = newEnv
-		if err != nil {
-			return nil, env, err
-		}
-		values = append(values, val)
-	}
-
-	return values, env, nil
+	return evalAll(exprs, env)
 }
 
 func eval(expr lang.Expr, env *Environment) (lang.Value, *Environment, error) {
