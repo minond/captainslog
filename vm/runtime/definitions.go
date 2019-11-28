@@ -6,8 +6,48 @@ import (
 	"github.com/minond/captainslog/vm/lang"
 )
 
+type Applicable interface {
+	Apply([]lang.Expr, *Environment) (lang.Value, *Environment, error)
+}
+
+type Lambda struct {
+	lang.Value
+	Applicable
+	args []string
+	body lang.Expr
+}
+
+func NewLambda(args []string, body lang.Expr) *Lambda {
+	return &Lambda{args: args, body: body}
+}
+
+func (v Lambda) Apply(exprs []lang.Expr, env *Environment) (lang.Value, *Environment, error) {
+	if len(v.args) != len(exprs) {
+		return nil, env, fmt.Errorf("expected %v arguments but got %v",
+			len(v.args), len(exprs))
+	}
+
+	params, newEnv, err := evalAll(exprs, env)
+	env = newEnv
+	if err != nil {
+		return nil, env, err
+	}
+
+	scope := env.Scoped()
+	for i, val := range params {
+		scope.Set(v.args[i], val)
+	}
+
+	return eval(v.body, scope)
+}
+
+func (v Lambda) String() string {
+	return "#<procedure>"
+}
+
 type Builtin struct {
 	lang.Value
+	Applicable
 	fn builtinFn
 }
 
@@ -27,6 +67,7 @@ func (v Builtin) Apply(args []lang.Expr, env *Environment) (lang.Value, *Environ
 
 type Procedure struct {
 	lang.Value
+	Applicable
 	name string
 	fn   procedureFn
 }
@@ -41,6 +82,13 @@ func (v Procedure) String() string {
 	return fmt.Sprintf("#<procedure:%s>", v.name)
 }
 
-func (v Procedure) Apply(args []lang.Value) (lang.Value, error) {
-	return v.fn(args)
+func (v Procedure) Apply(exprs []lang.Expr, env *Environment) (lang.Value, *Environment, error) {
+	params, newEnv, err := evalAll(exprs, env)
+	env = newEnv
+	if err != nil {
+		return nil, env, err
+	}
+
+	val, err := v.fn(params)
+	return val, env, err
 }

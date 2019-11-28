@@ -22,6 +22,10 @@ func NewEnvironment() *Environment {
 	}
 }
 
+func (env *Environment) Scoped() *Environment {
+	return &Environment{parent: env}
+}
+
 func (env *Environment) TopMostParent() *Environment {
 	if env.parent == nil {
 		return env
@@ -78,26 +82,11 @@ func eval(expr lang.Expr, env *Environment) (lang.Value, *Environment, error) {
 			return nil, env, errors.New("missing procedure expression")
 		}
 
-		val, newEnv, err := eval(e.Head(), env)
-		env = newEnv
-		if err != nil {
-			return nil, env, err
-		}
-
-		switch fn := val.(type) {
-		case *Builtin:
-			return fn.Apply(e.Tail(), env)
-		case *Procedure:
-			params, newEnv, err := evalAll(e.Tail(), env)
-			env = newEnv
-			if err != nil {
-				return nil, env, err
-			}
-
-			val, err := fn.Apply(params)
-			return val, env, err
-		default:
-			return nil, env, fmt.Errorf("not a procedure: %v", val)
+		if isLambda(e) {
+			lambda, err := makeLambda(e)
+			return lambda, env, err
+		} else {
+			return app(e, env)
 		}
 	}
 
@@ -117,4 +106,47 @@ func evalAll(exprs []lang.Expr, env *Environment) ([]lang.Value, *Environment, e
 	}
 
 	return vals, env, nil
+}
+
+func app(expr *lang.Sexpr, env *Environment) (lang.Value, *Environment, error) {
+	val, newEnv, err := eval(expr.Head(), env)
+	env = newEnv
+	if err != nil {
+		return nil, env, err
+	}
+
+	fn, ok := val.(Applicable)
+	if !ok {
+		return nil, env, fmt.Errorf("not a procedure: %v", val)
+	}
+
+	return fn.Apply(expr.Tail(), env)
+}
+
+func isLambda(expr *lang.Sexpr) bool {
+	id, ok := expr.Head().(*lang.Identifier)
+	return ok && id.Label() == "lambda"
+}
+
+func makeLambda(expr *lang.Sexpr) (*Lambda, error) {
+	if expr.Size() != 3 {
+		return nil, errors.New("syntax error: lambda")
+	}
+
+	argDef, ok := expr.At(1).(*lang.Sexpr)
+	if !ok {
+		return nil, errors.New("syntax error: invalid lambda arguments definition")
+	}
+
+	argExprs := argDef.Values()
+	args := make([]string, len(argExprs))
+	for i, argExpr := range argExprs {
+		id, ok := argExpr.(*lang.Identifier)
+		if !ok {
+			return nil, errors.New("syntax error: invalid lambda argument definition")
+		}
+		args[i] = id.Label()
+	}
+
+	return NewLambda(args, expr.At(2)), nil
 }

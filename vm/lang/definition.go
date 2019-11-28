@@ -29,6 +29,14 @@ func (e Sexpr) Size() int {
 	return len(e.values)
 }
 
+func (e Sexpr) Values() []Expr {
+	return e.values
+}
+
+func (e Sexpr) At(i int) Expr {
+	return e.values[i]
+}
+
 func (e Sexpr) Head() Expr {
 	return e.values[0]
 }
