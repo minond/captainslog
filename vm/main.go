@@ -76,7 +76,7 @@ func (r *repl) eval() (string, error) {
 func main() {
 	r := repl{
 		running: true,
-		env:     runtime.NewEnvironment(),
+		env:     runtime.NewEnvironmentWithPrelude(),
 		output:  os.Stdout,
 		input:   os.Stdin,
 	}

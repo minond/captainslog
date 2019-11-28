@@ -14,16 +14,21 @@ type Environment struct {
 }
 
 func NewEnvironment() *Environment {
-	return &Environment{
-		bindings: make(map[string]lang.Value),
-		parent: &Environment{
-			bindings: builtins,
-		},
-	}
+	return &Environment{bindings: make(map[string]lang.Value)}
+}
+
+func NewEnvironmentWithPrelude() *Environment {
+	uni := NewEnvironment()
+	uni.bindings = builtins
+	env := NewEnvironment()
+	env.parent = uni
+	return env
 }
 
 func (env *Environment) Scoped() *Environment {
-	return &Environment{parent: env}
+	scoped := NewEnvironment()
+	scoped.parent = env
+	return scoped
 }
 
 func (env *Environment) TopMostParent() *Environment {
