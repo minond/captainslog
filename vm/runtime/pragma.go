@@ -11,6 +11,7 @@ var builtins = map[string]lang.Value{
 	"cond":   builtinCond,
 	"set!":   builtinSetBang,
 	"define": builtinDefine,
+	"lambda": builtinLambda,
 }
 
 var procedures = map[string]procedureFn{
@@ -29,6 +30,29 @@ func init() {
 		builtins[name] = NewProcedure(name, proc)
 	}
 }
+
+var builtinLambda = NewBuiltin(func(exprs []lang.Expr, env *Environment) (lang.Value, *Environment, error) {
+	if len(exprs) != 2 {
+		return nil, env, errors.New("syntax error: lambda")
+	}
+
+	argDef, ok := exprs[0].(*lang.Sexpr)
+	if !ok {
+		return nil, env, errors.New("syntax error: invalid lambda arguments definition")
+	}
+
+	argExprs := argDef.Values()
+	args := make([]string, len(argExprs))
+	for i, argExpr := range argExprs {
+		id, ok := argExpr.(*lang.Identifier)
+		if !ok {
+			return nil, env, errors.New("syntax error: invalid lambda argument definition")
+		}
+		args[i] = id.Label()
+	}
+
+	return NewLambda(args, exprs[1]), env, nil
+})
 
 var builtinDefine = NewBuiltin(func(exprs []lang.Expr, env *Environment) (lang.Value, *Environment, error) {
 	if len(exprs) != 2 {

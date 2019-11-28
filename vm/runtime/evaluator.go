@@ -82,12 +82,7 @@ func eval(expr lang.Expr, env *Environment) (lang.Value, *Environment, error) {
 			return nil, env, errors.New("missing procedure expression")
 		}
 
-		if isLambda(e) {
-			lambda, err := makeLambda(e)
-			return lambda, env, err
-		} else {
-			return app(e, env)
-		}
+		return app(e, env)
 	}
 
 	return nil, env, errors.New("unable to handle expression")
@@ -121,32 +116,4 @@ func app(expr *lang.Sexpr, env *Environment) (lang.Value, *Environment, error) {
 	}
 
 	return fn.Apply(expr.Tail(), env)
-}
-
-func isLambda(expr *lang.Sexpr) bool {
-	id, ok := expr.Head().(*lang.Identifier)
-	return ok && id.Label() == "lambda"
-}
-
-func makeLambda(expr *lang.Sexpr) (*Lambda, error) {
-	if expr.Size() != 3 {
-		return nil, errors.New("syntax error: lambda")
-	}
-
-	argDef, ok := expr.At(1).(*lang.Sexpr)
-	if !ok {
-		return nil, errors.New("syntax error: invalid lambda arguments definition")
-	}
-
-	argExprs := argDef.Values()
-	args := make([]string, len(argExprs))
-	for i, argExpr := range argExprs {
-		id, ok := argExpr.(*lang.Identifier)
-		if !ok {
-			return nil, errors.New("syntax error: invalid lambda argument definition")
-		}
-		args[i] = id.Label()
-	}
-
-	return NewLambda(args, expr.At(2)), nil
 }
