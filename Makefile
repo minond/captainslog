@@ -1,3 +1,24 @@
+# Run `make` to build server and web client, run linterns and autoformatters with
+# `make fmt lint`. To start the application server, run `./captainslog server`
+# after building project. Run `./captainslog help` to see a list of other
+# commands.
+#
+# Developing on the mobile client can be done with an emulator. To start an iOS
+# emulator and run the application:
+#
+# ```
+# cd client/mobile
+# flutter emulators --launch apple_ios_simulator
+# flutter run
+# ```
+#
+# Make sure to run `go generate` with Go modules disabled -- Kallax's generator
+# does not like to be ran with modules enabled:
+#
+# ```
+# GO111MODULE=off go generate ./...
+# ```
+
 IN_MOBILE_CLIENT = cd client/mobile &&
 IN_WEB_CLIENT = cd client/web &&
 
