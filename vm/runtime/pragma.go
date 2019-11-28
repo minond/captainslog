@@ -33,7 +33,7 @@ func init() {
 // the last item. Otherwise move on to the next item. If no cond is true then
 // return an error. An `else` clause is only allowed as the last item in the
 // list and it always evaluates to true.
-var builtinCond = NewBuiltin(func(exprs []lang.Expr, env *Environment) (lang.Value, error) {
+var builtinCond = NewBuiltin(func(exprs []lang.Expr, env *Environment) (lang.Value, *Environment, error) {
 	isElse := func(expr lang.Expr) bool {
 		id, ok := expr.(*lang.Identifier)
 		return ok && id.Label() == "else"
@@ -44,14 +44,14 @@ var builtinCond = NewBuiltin(func(exprs []lang.Expr, env *Environment) (lang.Val
 		switch sexpr := expr.(type) {
 		case *lang.Sexpr:
 			if sexpr.Size() == 0 {
-				return nil, errors.New("cond: clause is not a pair")
+				return nil, env, errors.New("cond: clause is not a pair")
 			} else if isElse(sexpr.Head()) && i != len(exprs)-1 {
-				return nil, errors.New("cond: `else` clause must be at the end")
+				return nil, env, errors.New("cond: `else` clause must be at the end")
 			}
 
 			conds[i] = sexpr
 		default:
-			return nil, errors.New("cond: invalid syntax")
+			return nil, env, errors.New("cond: invalid syntax")
 		}
 	}
 
@@ -59,13 +59,14 @@ var builtinCond = NewBuiltin(func(exprs []lang.Expr, env *Environment) (lang.Val
 		if isElse(cond.Head()) {
 			// Else must have subsequent expression to evaluate
 			if len(cond.Tail()) == 0 {
-				return nil, errors.New("cond: missing expresison in `else` clause")
+				return nil, env, errors.New("cond: missing expresison in `else` clause")
 			}
 		} else {
 			// We're in an "else" clause, move on to tail evaluation
-			val, err := eval(cond.Head(), env)
+			val, newEnv, err := eval(cond.Head(), env)
+			env = newEnv
 			if err != nil {
-				return nil, err
+				return nil, env, err
 			}
 
 			switch b := val.(type) {
@@ -77,19 +78,19 @@ var builtinCond = NewBuiltin(func(exprs []lang.Expr, env *Environment) (lang.Val
 
 			// Single item list, return the head
 			if len(cond.Tail()) == 0 {
-				return val, nil
+				return val, env, nil
 			}
 		}
 
-		vals, err := evalAll(cond.Tail(), env)
+		vals, env, err := evalAll(cond.Tail(), env)
 		if err != nil {
-			return nil, err
+			return nil, env, err
 		}
 
-		return vals[len(vals)-1], nil
+		return vals[len(vals)-1], env, nil
 	}
 
-	return nil, errors.New("cond: no return value")
+	return nil, env, errors.New("cond: no return value")
 })
 
 func binaryFloat64Op(op func(float64, float64) float64) func([]lang.Value) (lang.Value, error) {

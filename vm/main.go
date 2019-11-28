@@ -54,7 +54,8 @@ func (r *repl) eval() (string, error) {
 		return "", nil
 	}
 
-	out, err := runtime.Eval(orig, r.env)
+	out, env, err := runtime.Eval(orig, r.env)
+	r.env = env
 	r.buff.Reset()
 	if err != nil {
 		return "", err

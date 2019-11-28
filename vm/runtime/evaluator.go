@@ -32,72 +32,78 @@ func (env Environment) Get(id string) (lang.Value, error) {
 	return val, nil
 }
 
-func Eval(code string, env *Environment) ([]lang.Value, error) {
+func Eval(code string, env *Environment) ([]lang.Value, *Environment, error) {
 	exprs, err := parser.Parse(code)
 	if err != nil {
-		return nil, err
+		return nil, env, err
 	}
 
 	var values []lang.Value
 	for _, expr := range exprs {
-		val, err := eval(expr, env)
+		val, newEnv, err := eval(expr, env)
+		env = newEnv
 		if err != nil {
-			return nil, err
+			return nil, env, err
 		}
 		values = append(values, val)
 	}
 
-	return values, nil
+	return values, env, nil
 }
 
-func eval(expr lang.Expr, env *Environment) (lang.Value, error) {
+func eval(expr lang.Expr, env *Environment) (lang.Value, *Environment, error) {
 	switch e := expr.(type) {
 	case *lang.String:
-		return e, nil
+		return e, env, nil
 	case *lang.Boolean:
-		return e, nil
+		return e, env, nil
 	case *lang.Number:
-		return e, nil
+		return e, env, nil
 	case *lang.Identifier:
-		return env.Get(e.Label())
+		val, err := env.Get(e.Label())
+		return val, env, err
 	case *lang.Sexpr:
 		if e.Size() == 0 {
-			return nil, errors.New("missing procedure expression")
+			return nil, env, errors.New("missing procedure expression")
 		}
 
-		val, err := eval(e.Head(), env)
+		val, newEnv, err := eval(e.Head(), env)
+		env = newEnv
 		if err != nil {
-			return nil, err
+			return nil, env, err
 		}
 
 		switch fn := val.(type) {
 		case *Builtin:
 			return fn.Apply(e.Tail(), env)
 		case *Procedure:
-			params, err := evalAll(e.Tail(), env)
+			params, newEnv, err := evalAll(e.Tail(), env)
+			env = newEnv
 			if err != nil {
-				return nil, err
+				return nil, env, err
 			}
 
-			return fn.Apply(params)
+			val, err := fn.Apply(params)
+			return val, env, err
 		default:
-			return nil, fmt.Errorf("not a procedure: %v", val)
+			return nil, env, fmt.Errorf("not a procedure: %v", val)
 		}
 	}
 
-	return nil, errors.New("unable to handle expression")
+	return nil, env, errors.New("unable to handle expression")
 }
 
-func evalAll(exprs []lang.Expr, env *Environment) ([]lang.Value, error) {
+func evalAll(exprs []lang.Expr, env *Environment) ([]lang.Value, *Environment, error) {
 	vals := make([]lang.Value, len(exprs))
 	for i, expr := range exprs {
-		val, err := eval(expr, env)
+		val, newEnv, err := eval(expr, env)
+		env = newEnv
 		if err != nil {
-			return nil, err
+			return nil, env, err
 		}
 
 		vals[i] = val
 	}
 
-	return vals, nil
+	return vals, env, nil
 }
