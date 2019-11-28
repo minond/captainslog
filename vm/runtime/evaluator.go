@@ -22,6 +22,17 @@ func NewEnvironment() *Environment {
 	}
 }
 
+func (env *Environment) TopMostParent() *Environment {
+	if env.parent == nil {
+		return env
+	}
+	return env.parent
+}
+
+func (env *Environment) Set(id string, val lang.Value) {
+	env.bindings[id] = val
+}
+
 func (env Environment) Get(id string) (lang.Value, error) {
 	val, ok := env.bindings[id]
 	if !ok && env.parent != nil {

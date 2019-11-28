@@ -66,7 +66,9 @@ func (r *repl) eval() (string, error) {
 		if i != 0 {
 			buff.WriteRune('\n')
 		}
-		buff.WriteString(val.String())
+		if val != nil {
+			buff.WriteString(val.String())
+		}
 	}
 	return buff.String(), nil
 }

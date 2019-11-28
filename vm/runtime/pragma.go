@@ -9,6 +9,7 @@ import (
 
 var builtins = map[string]lang.Value{
 	"cond": builtinCond,
+	"set!": builtinSetBang,
 }
 
 var procedures = map[string]procedureFn{
@@ -27,6 +28,26 @@ func init() {
 		builtins[name] = NewProcedure(name, proc)
 	}
 }
+
+var builtinSetBang = NewBuiltin(func(exprs []lang.Expr, env *Environment) (lang.Value, *Environment, error) {
+	if len(exprs) != 2 {
+		return nil, env, errors.New("contract error: expected two arguments")
+	}
+
+	label, ok := exprs[0].(*lang.Identifier)
+	if !ok {
+		return nil, env, errors.New("contract error: expected an identifier as the first parameter")
+	}
+
+	val, newEnv, err := eval(exprs[1], env)
+	env = newEnv
+	if err != nil {
+		return nil, env, err
+	}
+
+	env.TopMostParent().Set(label.Label(), val)
+	return nil, env, nil
+})
 
 // builtinCond expects exprs to be a list of sexprs with at least one item. The
 // first item is evaluated. If it is not #f then evaluate the tail and return
