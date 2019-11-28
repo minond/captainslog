@@ -43,6 +43,8 @@ var builtinSetBang = NewBuiltin(func(exprs []lang.Expr, env *Environment) (lang.
 	env = newEnv
 	if err != nil {
 		return nil, env, err
+	} else if val == nil {
+		return nil, env, errors.New("cannot bind a name to an empty value")
 	}
 
 	env.TopMostParent().Set(label.Label(), val)
