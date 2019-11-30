@@ -25,14 +25,6 @@ func NewSexpr(values ...Expr) *Sexpr {
 	return &Sexpr{values: values}
 }
 
-func (e Sexpr) Map(fn func(Expr) Expr) []Expr {
-	ret := make([]Expr, len(e.values))
-	for i, val := range e.values {
-		ret[i] = fn(val)
-	}
-	return ret
-}
-
 func (e Sexpr) Size() int {
 	return len(e.values)
 }
@@ -69,12 +61,6 @@ type Quote struct {
 }
 
 func NewQuote(value Expr) *Quote {
-	return &Quote{value: value}
-}
-
-// NewQuotedExpr is an alternative to NewQuote that is helpful when mapping
-// from an unquoted expression into a quoted one.
-func NewQuotedExpr(value Expr) Expr {
 	return &Quote{value: value}
 }
 
@@ -167,18 +153,20 @@ func (e Boolean) String() string {
 
 type List struct {
 	Value
-	values []Expr
+	values []Value
 }
 
-func NewList(values []Expr) *List {
+func NewList(values []Value) *List {
 	return &List{values: values}
 }
 
 func (e List) String() string {
 	buff := strings.Builder{}
-	buff.WriteString("(list")
-	for _, val := range e.values {
-		buff.WriteRune(' ')
+	buff.WriteString("'(")
+	for i, val := range e.values {
+		if i != 0 {
+			buff.WriteRune(' ')
+		}
 		buff.WriteString(val.String())
 	}
 	buff.WriteString(")")

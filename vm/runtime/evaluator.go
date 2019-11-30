@@ -73,19 +73,42 @@ func app(expr *lang.Sexpr, env *Environment) (lang.Value, *Environment, error) {
 }
 
 func unquote(expr *lang.Quote) (lang.Value, error) {
-	switch e := expr.Unquote().(type) {
-	case *lang.String:
-		return e, nil
-	case *lang.Boolean:
-		return e, nil
-	case *lang.Number:
-		return e, nil
+	switch inner := expr.Unquote().(type) {
 	case *lang.Identifier:
 		return expr, nil
 	case *lang.Quote:
 		return expr, nil
+	case *lang.String:
+		return inner, nil
+	case *lang.Boolean:
+		return inner, nil
+	case *lang.Number:
+		return inner, nil
 	case *lang.Sexpr:
-		return lang.NewList(e.Map(lang.NewQuotedExpr)), nil
+		vals := make([]lang.Value, inner.Size())
+		for i, val := range inner.Values() {
+			switch inner := val.(type) {
+			case *lang.Identifier:
+				vals[i] = lang.NewQuote(val)
+			case *lang.Sexpr:
+				vals[i] = lang.NewQuote(val)
+			case *lang.Quote:
+				unquoted, err := unquote(inner)
+				if err != nil {
+					return nil, err
+				}
+				vals[i] = unquoted
+			case *lang.String:
+				vals[i] = inner
+			case *lang.Boolean:
+				vals[i] = inner
+			case *lang.Number:
+				vals[i] = inner
+			default:
+				return nil, errors.New("invalid quoted expression")
+			}
+		}
+		return lang.NewList(vals), nil
 	}
 	return nil, errors.New("invalid quoted expression")
 }
