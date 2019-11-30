@@ -29,11 +29,10 @@ func eval(expr lang.Expr, env *Environment) (lang.Value, *Environment, error) {
 		val, err := env.Get(e.Label())
 		return val, env, err
 	case *lang.Sexpr:
-		if e.Size() == 0 {
-			return nil, env, errors.New("missing procedure expression")
-		}
-
 		return app(e, env)
+	case *lang.Quote:
+		val, err := unquote(e)
+		return val, env, err
 	}
 
 	return nil, env, errors.New("unable to handle expression")
@@ -55,6 +54,10 @@ func evalAll(exprs []lang.Expr, env *Environment) ([]lang.Value, *Environment, e
 }
 
 func app(expr *lang.Sexpr, env *Environment) (lang.Value, *Environment, error) {
+	if expr.Size() == 0 {
+		return nil, env, errors.New("missing procedure expression")
+	}
+
 	val, newEnv, err := eval(expr.Head(), env)
 	env = newEnv
 	if err != nil {
@@ -67,4 +70,22 @@ func app(expr *lang.Sexpr, env *Environment) (lang.Value, *Environment, error) {
 	}
 
 	return fn.Apply(expr.Tail(), env)
+}
+
+func unquote(expr *lang.Quote) (lang.Value, error) {
+	switch e := expr.Unquote().(type) {
+	case *lang.String:
+		return e, nil
+	case *lang.Boolean:
+		return e, nil
+	case *lang.Number:
+		return e, nil
+	case *lang.Identifier:
+		return expr, nil
+	case *lang.Quote:
+		return expr, nil
+	case *lang.Sexpr:
+		return lang.NewList(e.Map(lang.NewQuotedExpr)), nil
+	}
+	return nil, errors.New("invalid quoted expression")
 }
