@@ -23,6 +23,11 @@ var procedures = map[string]procedureFn{
 	"not":    unaryBoolOp(func(a bool) bool { return !a }),
 	"true?":  unaryBoolOp(func(a bool) bool { return a == true }),
 	"false?": unaryBoolOp(func(a bool) bool { return a == false }),
+
+	"car":   procedureCar,
+	"cdr":   procedureCdr,
+	"pair?": procedurePairQ,
+	"list?": procedureListQ,
 }
 
 func init() {
@@ -196,4 +201,62 @@ func unaryBoolOp(op func(bool) bool) func([]lang.Value) (lang.Value, error) {
 
 		return lang.NewBoolean(op(arg.Bool())), nil
 	}
+}
+
+func procedureCar(args []lang.Value) (lang.Value, error) {
+	if len(args) != 1 {
+		return nil, errors.New("contract error: expected one argument")
+	}
+
+	switch arg := args[0].(type) {
+	case *lang.List:
+		if arg.PairQ() {
+			return arg.Head(), nil
+		} else {
+			return nil, errors.New("contract error: expected a pair")
+		}
+	}
+	return nil, errors.New("contract error: expected a list")
+}
+
+func procedureCdr(args []lang.Value) (lang.Value, error) {
+	if len(args) != 1 {
+		return nil, errors.New("contract error: expected one argument")
+	}
+
+	switch arg := args[0].(type) {
+	case *lang.List:
+		if arg.PairQ() {
+			return lang.NewList(arg.Tail()), nil
+		} else {
+			return nil, errors.New("contract error: expected a pair")
+		}
+	}
+	return nil, errors.New("contract error: expected a pair")
+}
+
+func procedurePairQ(args []lang.Value) (lang.Value, error) {
+	if len(args) != 1 {
+		return nil, errors.New("contract error: expected one argument")
+	}
+
+	switch arg := args[0].(type) {
+	case *lang.List:
+		return lang.NewBoolean(arg.PairQ()), nil
+	}
+
+	return lang.NewBoolean(false), nil
+}
+
+func procedureListQ(args []lang.Value) (lang.Value, error) {
+	if len(args) != 1 {
+		return nil, errors.New("contract error: expected one argument")
+	}
+
+	switch args[0].(type) {
+	case *lang.List:
+		return lang.NewBoolean(true), nil
+	}
+
+	return lang.NewBoolean(false), nil
 }

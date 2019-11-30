@@ -160,6 +160,22 @@ func NewList(values []Value) *List {
 	return &List{values: values}
 }
 
+func (e List) PairQ() bool {
+	return len(e.values) > 0
+}
+
+func (e List) Size() int {
+	return len(e.values)
+}
+
+func (e List) Head() Value {
+	return e.values[0]
+}
+
+func (e List) Tail() []Value {
+	return e.values[1:]
+}
+
 func (e List) String() string {
 	buff := strings.Builder{}
 	buff.WriteString("'(")
