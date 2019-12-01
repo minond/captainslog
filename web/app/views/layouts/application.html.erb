@@ -10,8 +10,7 @@
   </head>
 
   <body class="main-content-container">
-    <p class="notice"><%= notice %></p>
-    <p class="alert"><%= alert %></p>
+    <% render "layouts/alerts" %>
     <%= yield %>
   </body>
 </html>
