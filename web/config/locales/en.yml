@@ -1,4 +1,6 @@
 en:
+  captains_log: "Captain's Log"
+
   sign_out: "Sign out"
   sign_up: "Sign up"
   sign_in: "Sign in"
@@ -7,3 +9,5 @@ en:
   email: "Email"
   password: "Password"
   remember_me: "Remember me"
+
+  menu: "Menu"

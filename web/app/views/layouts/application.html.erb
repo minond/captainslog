@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Web</title>
+    <title><%= t(:captains_log) %></title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
@@ -9,8 +9,10 @@
     <%= javascript_include_tag "application", media: "all", "data-turbolinks-track": "reload" %>
   </head>
 
-  <body class="main-content-container">
-    <% render "layouts/alerts" %>
+  <body>
+    <%= render "layouts/header" %>
+    <%= render "layouts/alerts" %>
+
     <%= yield %>
   </body>
 </html>
