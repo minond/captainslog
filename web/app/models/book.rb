@@ -8,6 +8,6 @@ class Book < ApplicationRecord
 private
 
   def constructor
-    self.grouping ||= Book.groupings[:none]
+    self.grouping ||= :none
   end
 end
