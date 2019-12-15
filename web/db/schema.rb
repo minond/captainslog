@@ -10,15 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_15_021401) do
+ActiveRecord::Schema.define(version: 2019_12_15_201234) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "books", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.string "name"
-    t.integer "grouping"
+    t.string "name", null: false
+    t.integer "grouping", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["user_id"], name: "index_books_on_user_id"
@@ -26,7 +26,7 @@ ActiveRecord::Schema.define(version: 2019_12_15_021401) do
 
   create_table "collections", force: :cascade do |t|
     t.bigint "book_id", null: false
-    t.boolean "open"
+    t.boolean "open", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["book_id"], name: "index_collections_on_book_id"
