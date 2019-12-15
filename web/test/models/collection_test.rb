@@ -2,22 +2,23 @@ require 'test_helper'
 
 class CollectionTest < ActiveSupport::TestCase
   test "save happy path" do
-    coll = Collection.new(:book => books(:test_log))
-
-    assert coll.save
+    assert collection.save
   end
 
   test "closed by default" do
-    coll = Collection.new(:book => books(:test_log))
-    coll.save
+    collection.save
 
-    assert_not coll.open
+    assert_not collection.open
   end
 
   test "can be opened" do
-    coll = Collection.new(:book => books(:test_log), :open => true)
-    coll.save
+    collection(:open => true)
+    collection.save
 
-    assert coll.open
+    assert collection.open
+  end
+
+  def collection(overrides = {})
+    @collection ||= Collection.new({:book => books(:test_log)}.merge(overrides))
   end
 end
