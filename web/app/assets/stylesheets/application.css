@@ -69,3 +69,21 @@ label {
   background: #ffeaea;
   border-color: #ff3e3e;
 }
+
+.books-nav {
+  padding: 10px 0;
+}
+
+.books-nav a {
+  color: #646464;
+  text-decoration: none;
+  transition: color .1s;
+}
+
+.books-nav a:hover {
+  color: black;
+}
+
+.books-nav a + a {
+  margin-left: 10px;
+}
