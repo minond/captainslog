@@ -1,7 +1,1 @@
-<% if @books %>
-  <div class="books-nav">
-    <% @books.each do |book| %>
-      <%= link_to book.name, book %>
-    <% end %>
-  </div>
-<% end %>
+<%= render "book/nav" %>
