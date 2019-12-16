@@ -80,6 +80,11 @@ label {
   transition: color .1s;
 }
 
+.books-nav a.active {
+  color: black;
+  text-decoration: underline;
+}
+
 .books-nav a:hover {
   color: black;
 }

@@ -1,7 +1,7 @@
 <% if @books %>
   <div class="books-nav">
     <% @books.each do |book| %>
-      <%= link_to book.name, book %>
+      <%= link_to book.name, book, :class => book_nav_class(book, @book) %>
     <% end %>
   </div>
 <% end %>
