@@ -1,3 +1,8 @@
 <%= render "book/nav" %>
 
-<h1><%= @book.name %></h1>
+<br>
+<br>
+
+<%= form_for(@book, :url => book_path(@book)) do |f| %>
+  <textarea name="text" placeholder="<%= t(:enter_new_log) %>" class="entry-textarea"></textarea>
+<% end %>

@@ -87,3 +87,11 @@ label {
 .books-nav a + a {
   margin-left: 10px;
 }
+
+.entry-textarea {
+  border-bottom: 1px solid #acacac;
+  border: none;
+  padding: 2px 0;
+  resize: none;
+  width: 100%;
+}
