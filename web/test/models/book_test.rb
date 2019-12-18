@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class BookTest < ActiveSupport::TestCase
   setup { travel_to "2019-05-21 14:32:53" }
@@ -59,8 +59,8 @@ class BookTest < ActiveSupport::TestCase
 private
 
   def book(overrides = {})
-    @book ||= Book.new({:user => user,
-                        :name => "Testing"}.merge(overrides))
+    @book ||= Book.new({ :user => user,
+                         :name => "Testing" }.merge(overrides))
   end
 
   def user

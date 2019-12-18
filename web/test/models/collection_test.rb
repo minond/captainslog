@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class CollectionTest < ActiveSupport::TestCase
   test "save happy path" do
@@ -13,7 +13,7 @@ private
   end
 
   def collection(overrides = {})
-    @collection ||= Collection.new({:book => book}.merge(overrides))
+    @collection ||= Collection.new({ :book => book }.merge(overrides))
   end
 
   def user

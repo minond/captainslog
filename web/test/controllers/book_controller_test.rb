@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class BookControllerTest < ActionDispatch::IntegrationTest
   setup { sign_in user }
@@ -10,7 +10,7 @@ class BookControllerTest < ActionDispatch::IntegrationTest
 
   test "adding an entry" do
     assert_changes -> { Entry.count } do
-      post "/book/#{book.id}/entry", :params => {:text => "hi"}
+      post "/book/#{book.id}/entry", :params => { :text => "hi" }
     end
   end
 

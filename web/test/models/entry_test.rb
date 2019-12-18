@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class EntryTest < ActiveSupport::TestCase
   test "save happy path" do

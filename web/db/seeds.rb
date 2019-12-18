@@ -10,9 +10,9 @@
 me = User.create(:email => ENV["CAPTAINS_LOG_USERNAME"],
                  :password => ENV["CAPTAINS_LOG_PASSWORD"])
 
-workouts = Book.create(:user => me,
-                       :name => "Workouts",
-                       :grouping => :day)
+Book.create(:user => me,
+            :name => "Workouts",
+            :grouping => :day)
 
-blood_pressure = Book.create(:user => me,
-                             :name => "Blood Pressure")
+Book.create(:user => me,
+            :name => "Blood Pressure")
