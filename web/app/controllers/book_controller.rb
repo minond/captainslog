@@ -11,6 +11,7 @@ class BookController < ApplicationController
   def show
     @books = current_user.books
     @book = current_book
+    @entries = current_book.current_collection.entries
   end
 
   # === URL
