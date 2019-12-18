@@ -7,9 +7,23 @@ class EntryTest < ActiveSupport::TestCase
 
 private
 
-  def entry(overrides = {})
-    @entry ||= Entry.new({:book => books(:test_log),
-                          :collection => collections(:test_log_current),
-                          :original_text => "hi"}.merge(overrides))
+  def entry
+    @entry ||= Entry.new(:book => book,
+                         :collection => collection,
+                         :original_text => "hi")
+  end
+
+  def book
+    @book ||= Book.new(:user => user,
+                       :name => "Testing")
+  end
+
+  def collection
+    @collection ||= Collection.new(:book => book)
+  end
+
+  def user
+    @user ||= User.new(:email => "test1@test.com",
+                       :password => "xsj3k2lj4k3l2hio23321")
   end
 end
