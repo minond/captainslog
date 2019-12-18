@@ -16,6 +16,8 @@ class BookTest < ActiveSupport::TestCase
     assert book.group_by_day?
   end
 
+private
+
   def book(overrides = {})
     @book ||= Book.new({:user => users(:plain),
                         :name => "Testing"}.merge(overrides))

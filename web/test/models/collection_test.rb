@@ -18,6 +18,8 @@ class CollectionTest < ActiveSupport::TestCase
     assert collection.open
   end
 
+private
+
   def collection(overrides = {})
     @collection ||= Collection.new({:book => books(:test_log)}.merge(overrides))
   end
