@@ -3,5 +3,7 @@ Rails.application.routes.draw do
 
   devise_for :users, skip: [:registrations]
 
-  resources :book, :only => [:show]
+  resources :book, :only => [:show] do
+    post :entry
+  end
 end
