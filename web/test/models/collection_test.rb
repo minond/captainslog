@@ -5,19 +5,6 @@ class CollectionTest < ActiveSupport::TestCase
     assert collection.save
   end
 
-  test "closed by default" do
-    collection.save
-
-    assert_not collection.open
-  end
-
-  test "can be opened" do
-    collection(:open => true)
-    collection.save
-
-    assert collection.open
-  end
-
 private
 
   def book
