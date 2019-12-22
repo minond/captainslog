@@ -3,6 +3,8 @@ detectors:
     enabled: false
   ControlParameter:
     enabled: false
+  NilCheck:
+    enabled: false
 
 directories:
   db/migrate:
