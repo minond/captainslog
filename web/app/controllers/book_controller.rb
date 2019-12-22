@@ -14,6 +14,7 @@ class BookController < ApplicationController
     @books = current_user.books
     @book = current_book
     @entries = current_entries
+    @log_time = log_time
   end
 
   # === URL
@@ -30,7 +31,7 @@ class BookController < ApplicationController
   #   Redirect to /book/1
   #
   def entry
-    current_book.add_entry(params[:text], requested_time)
+    current_book.add_entry(params[:text], log_time)
     redirect_to(current_book)
   end
 
@@ -48,7 +49,7 @@ private
 
   # @return [Array<Entry>]
   def current_entries
-    collection = current_book.collection_at(requested_time)
+    collection = current_book.collection_at(log_time)
     collection.present? ? collection.entries : []
   end
 
@@ -60,7 +61,7 @@ private
   end
 
   # @return [Time]
-  def requested_time
-    Time.current
+  def log_time
+    params[:log_time] ? Time.at(params[:log_time].to_i) : Time.current
   end
 end

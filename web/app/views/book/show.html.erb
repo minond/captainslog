@@ -7,6 +7,7 @@
   <textarea name="text" rows="1" placeholder="<%= t(:enter_new_log) %>" class="entry-textarea"></textarea>
 
   <input type="hidden" name="book_id" value="<%= @book.id %>" />
+  <input type="hidden" name="log_time" value="<%= @log_time.to_i %>" />
 
   <%= f.submit t(:submit) %>
 <% end %>
