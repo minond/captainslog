@@ -11,10 +11,10 @@ class BookController < ApplicationController
   #   /book/1
   #
   def show
-    render :locals => { :books => current_user.books,
-                        :book => current_book,
-                        :entries => current_entries,
-                        :requested_time => requested_time }
+    locals :books => current_user.books,
+           :book => current_book,
+           :entries => current_entries,
+           :requested_time => requested_time
   end
 
   # === URL
