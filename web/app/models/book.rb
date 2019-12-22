@@ -6,10 +6,11 @@ class Book < ApplicationRecord
   enum :grouping => %i[none day], :_prefix => :group_by
 
   # @params [String] text
+  # @params [Time] current_time
   # @return [Entry]
-  def add_entry(text)
+  def add_entry(text, current_time)
     Entry.create(:book => self,
-                 :collection => current_collection,
+                 :collection => collection_at(current_time, true),
                  :original_text => text)
   end
 

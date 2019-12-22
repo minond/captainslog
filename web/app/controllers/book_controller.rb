@@ -1,4 +1,6 @@
 class BookController < ApplicationController
+  around_action :set_timezone, if: :current_user
+
   # === URL
   #   GET /book/:id
   #
@@ -11,7 +13,7 @@ class BookController < ApplicationController
   def show
     @books = current_user.books
     @book = current_book
-    @entries = current_book.current_collection.entries
+    @entries = current_book.collection_at(requested_time)&.entries || []
   end
 
   # === URL
@@ -28,7 +30,7 @@ class BookController < ApplicationController
   #   Redirect to /book/1
   #
   def entry
-    current_book.add_entry(params[:text])
+    current_book.add_entry(params[:text], requested_time)
     redirect_to(current_book)
   end
 
@@ -39,8 +41,15 @@ private
     @current_book ||= current_user.books.find(current_book_id)
   end
 
-  # @return [Number]
   def current_book_id
     params[:id] || params[:book_id]
+  end
+
+  def set_timezone(&block)
+    Time.use_zone(current_user.timezone, &block)
+  end
+
+  def requested_time
+    Time.current
   end
 end
