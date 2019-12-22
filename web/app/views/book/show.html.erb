@@ -12,6 +12,17 @@
   <%= f.submit t(:submit) %>
 <% end %>
 
+<%= @log_time.to_date %>
+
+<br>
+
+<%= link_to "prev", book_at_path(@book, @prev_time.to_i) %>
+<%= link_to "curr", @book %>
+<%= link_to "next", book_at_path(@book, @next_time.to_i) %>
+
+<br>
+<br>
+
 <% @entries.each do |entry| %>
   <div><%= entry.text %></div>
 <% end %>
