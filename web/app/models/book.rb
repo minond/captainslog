@@ -9,22 +9,26 @@ class Book < ApplicationRecord
   # @params [Time] current_time, defaults to `Time.current`
   # @return [Entry]
   def add_entry(text, current_time = Time.current)
+    collection = collection_at(current_time) || create_collection
     Entry.create(:book => self,
-                 :collection => collection_at(current_time, true),
+                 :collection => collection,
                  :original_text => text)
   end
 
   # @param [Time] time
-  # @param [Boolean] create_it
   # @return [Collection, Nil]
-  def collection_at(time, create_it = false)
+  def collection_at(time)
     start_time, end_time = time_range_at(time)
 
     res = Collection.by_book_id(id)
     res = start_time && end_time ? res.created_between(start_time, end_time) : res
 
-    return res.first unless res.empty?
-    return Collection.create(:book => self) if create_it
+    res.first
+  end
+
+  # @return [Collection]
+  def create_collection
+    Collection.create(:book => self)
   end
 
 private
