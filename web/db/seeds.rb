@@ -7,12 +7,15 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-me = User.create(:email => ENV["CAPTAINS_LOG_USERNAME"],
-                 :password => ENV["CAPTAINS_LOG_PASSWORD"])
+if ENV["CAPTAINS_LOG_USERNAME"]
+  me = User.create(:email => ENV["CAPTAINS_LOG_USERNAME"],
+                   :password => ENV["CAPTAINS_LOG_PASSWORD"],
+                   :timezone => "America/Denver")
 
-Book.create(:user => me,
-            :name => "Workouts",
-            :grouping => :day)
+  Book.create(:user => me,
+              :name => "Workouts",
+              :grouping => :day)
 
-Book.create(:user => me,
-            :name => "Blood Pressure")
+  Book.create(:user => me,
+              :name => "Blood Pressure")
+end
