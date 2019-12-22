@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+task :reek => %i[reek:run]
+
 namespace :reek do
   desc "Run reek"
 

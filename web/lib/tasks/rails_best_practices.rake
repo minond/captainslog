@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+task :rails_best_practices => %i[rails_best_practices:run]
+
 namespace :rails_best_practices do
   desc "Run rails best practices"
 
