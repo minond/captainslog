@@ -42,7 +42,9 @@ jobs:
 
     - name: Setup application database
       working-directory: ./web
-      run: bundle exec rake db:setup
+      run: |
+        printenv
+        bundle exec rake db:setup
 
     - name: Run tests
       working-directory: ./web
