@@ -6,6 +6,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:10.3
+        ports: ["5432:5432"]
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    env:
+      DATABASE_USERNAME: postgres
+      RAILS_ENV: test
+
     steps:
     - uses: actions/checkout@v1
 
@@ -13,13 +23,11 @@ jobs:
       with:
         ruby-version: 2.6.x
 
-    - uses: Harmon758/postgresql-action@v1.0.0
-      run: |
-        printenv
-      with:
-        postgresql version: 10.3
-        postgresql db: captainslog_test
-        postgresql user: postgres
+    # - uses: Harmon758/postgresql-action@v1.0.0
+    #   with:
+    #     postgresql version: 10.3
+    #     postgresql db: captainslog_test
+    #     postgresql user: postgres
 
     - uses: actions/cache@v1
       with:
