@@ -9,3 +9,5 @@ aggregated logs.
 
 [![Build Status](https://travis-ci.org/minond/captainslog.svg?branch=master)](https://travis-ci.org/minond/captainslog)
 [![Go Report Card](https://goreportcard.com/badge/github.com/minond/captainslog)](https://goreportcard.com/report/github.com/minond/captainslog)
+
+[![Web App](https://github.com/minond/captainslog/workflows/Web%20App/badge.svg)](https://github.com/minond/captainslog/actions?query=workflow%3A%22Web+App%22)
