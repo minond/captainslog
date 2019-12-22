@@ -1,5 +1,5 @@
 class BookController < ApplicationController
-  around_action :set_timezone, if: :current_user
+  around_action :use_timezone, :if => :current_user
 
   # === URL
   #   GET /book/:id
@@ -45,7 +45,7 @@ private
     params[:id] || params[:book_id]
   end
 
-  def set_timezone(&block)
+  def use_timezone(&block)
     Time.use_zone(current_user.timezone, &block)
   end
 
