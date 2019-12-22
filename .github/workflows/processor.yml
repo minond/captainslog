@@ -1,4 +1,4 @@
-name: Go
+name: Processor
 
 on: [push]
 
@@ -14,8 +14,11 @@ jobs:
         go-version: 1.13
       id: go
 
-    - name: Get dependencies
+    - name: Install dependencies
       run: go get -v -t -d ./...
 
-    - name: Build
+    - name: Run build
       run: go build cmd/captainslog/*
+
+    - name: Run tests
+      run: go test ./... -v -test.short
