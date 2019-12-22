@@ -36,7 +36,7 @@ class Book < ApplicationRecord
   #
   # @param [Book, Nil] current_book
   # @return [String]
-  def nav_ui_class(current_book)
+  def ui_nav_class(current_book)
     id == current_book&.id ? "active" : ""
   end
 
