@@ -23,10 +23,20 @@ jobs:
         postgresql db: captainslog_test
         postgresql user: postgres
 
-    - name: Build and test with Rake
+    - name: Install dependencies
       working-directory: ./web
       run: |
         gem install bundler
         bundle install --jobs 4 --retry 3
-        bundle exec rake lint
-        bundle exec rake test
+
+    - name: Setup database
+      working-directory: ./web
+      run: bundle exec rake db:setup
+
+    - name: Run linter
+      working-directory: ./web
+      run: bundle exec rake lint
+
+    - name: Run tests
+      working-directory: ./web
+      run: bundle exec rake test
