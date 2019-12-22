@@ -5,6 +5,7 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
+
     env:
       DATABASE_USERNAME: $POSTGRES_USER
 
@@ -16,6 +17,13 @@ jobs:
       with:
         ruby-version: 2.6.x
 
+    - name: Setup PostgreSQL
+      uses: Harmon758/postgresql-action@v1.0.0
+      with:
+        postgresql version: 10.3
+        postgresql db: captainslog_test
+        postgresql user: postgres
+
     - name: Install dependencies
       working-directory: ./web
       run: |
@@ -25,13 +33,6 @@ jobs:
     - name: Run linter
       working-directory: ./web
       run: bundle exec rake lint
-
-    - name: Setup PostgreSQL
-      uses: Harmon758/postgresql-action@v1.0.0
-      with:
-        postgresql version: 10.3
-        postgresql db: captainslog_test
-        postgresql user: postgres
 
     - name: Setup application database
       working-directory: ./web
