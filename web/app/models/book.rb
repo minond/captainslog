@@ -9,7 +9,7 @@ class Book < ApplicationRecord
   # @params [Time] current_time, defaults to `Time.current`
   # @return [Entry]
   def add_entry(text, current_time = Time.current)
-    collection = collection(current_time) || create_collection
+    collection = collection(current_time) || create_collection(current_time)
     Entry.create(:book => self,
                  :collection => collection,
                  :original_text => text)
@@ -21,14 +21,15 @@ class Book < ApplicationRecord
     start_time, end_time = grouping_range_at(time)
 
     res = Collection.by_book_id(id)
-    res = start_time && end_time ? res.created_between(start_time, end_time) : res
+    res = start_time && end_time ? res.datetime_between(start_time, end_time) : res
 
     res.first
   end
 
+  # @param [Time] datetime
   # @return [Collection]
-  def create_collection
-    Collection.create(:book => self)
+  def create_collection(datetime)
+    Collection.create(:book => self, :datetime => datetime)
   end
 
   # The time in which the previous collection falls in relative to the provided

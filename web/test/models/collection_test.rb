@@ -13,7 +13,7 @@ private
   end
 
   def collection(overrides = {})
-    @collection ||= Collection.new({ :book => book }.merge(overrides))
+    @collection ||= Collection.new({ :book => book, :datetime => Time.current }.merge(overrides))
   end
 
   def user

@@ -19,7 +19,7 @@ private
   end
 
   def collection
-    @collection ||= Collection.new(:book => book)
+    @collection ||= Collection.new(:book => book, :datetime => Time.current)
   end
 
   def user

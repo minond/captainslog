@@ -36,7 +36,7 @@ class BookTest < ActiveSupport::TestCase
 
   test "daily grouping does not match past collection" do
     book(:grouping => :day).save
-    past_collection = Collection.create(:book => book, :created_at => Date.yesterday)
+    past_collection = Collection.create(:book => book, :datetime => Date.yesterday)
 
     first_entry = book.add_entry(:original_text => "hi1")
     second_entry = book.add_entry(:original_text => "hi2")
@@ -47,7 +47,7 @@ class BookTest < ActiveSupport::TestCase
 
   test "daily grouping does not match future collection" do
     book(:grouping => :day).save
-    past_collection = Collection.create(:book => book, :created_at => Date.tomorrow)
+    past_collection = Collection.create(:book => book, :datetime => Date.tomorrow)
 
     first_entry = book.add_entry(:original_text => "hi1")
     second_entry = book.add_entry(:original_text => "hi2")

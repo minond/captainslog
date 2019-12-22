@@ -3,5 +3,5 @@ class Collection < ApplicationRecord
   has_many :entries
 
   scope :by_book_id, ->(id) { where(:book_id => id) }
-  scope :created_between, ->(start_time, end_time) { where("created_at between ? and ?", start_time, end_time) }
+  scope :datetime_between, ->(start_time, end_time) { where("datetime between ? and ?", start_time, end_time) }
 end
