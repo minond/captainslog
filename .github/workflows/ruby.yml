@@ -20,10 +20,9 @@ jobs:
         postgresql user: postgres
 
     - uses: actions/cache@v1
-      working-directory: ./web
       with:
-        path: vendor/bundle
-        key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
+        path: web/vendor/bundle
+        key: ${{ runner.os }}-gem-${{ hashFiles('web/Gemfile.lock') }}
         restore-keys: |
           ${{ runner.os }}-gem-
 
