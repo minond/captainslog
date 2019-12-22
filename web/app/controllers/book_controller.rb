@@ -13,7 +13,7 @@ class BookController < ApplicationController
   def show
     @books = current_user.books
     @book = current_book
-    @entries = current_book.collection_at(requested_time)&.entries || []
+    @entries = current_entries
   end
 
   # === URL
@@ -41,14 +41,25 @@ private
     @current_book ||= current_user.books.find(current_book_id)
   end
 
+  # @return [Integer]
   def current_book_id
     params[:id] || params[:book_id]
   end
 
+  # @return [Array<Entry>]
+  def current_entries
+    collection = current_book.collection_at(requested_time)
+    collection.present? ? collection.entries : []
+  end
+
+  # Ensures controller methods use the user's selected timezone
+  #
+  # @return [Block] &block
   def use_timezone(&block)
     Time.use_zone(current_user.timezone, &block)
   end
 
+  # @return [Time]
   def requested_time
     Time.current
   end
