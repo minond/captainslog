@@ -16,6 +16,16 @@ jobs:
       with:
         ruby-version: 2.6.x
 
+    - name: Install dependencies
+      working-directory: ./web
+      run: |
+        gem install bundler --version
+        bundle install --jobs 4 --retry 3
+
+    - name: Run linter
+      working-directory: ./web
+      run: bundle exec rake lint
+
     - name: Setup PostgreSQL
       uses: Harmon758/postgresql-action@v1.0.0
       with:
@@ -23,19 +33,9 @@ jobs:
         postgresql db: captainslog_test
         postgresql user: postgres
 
-    - name: Install dependencies
-      working-directory: ./web
-      run: |
-        gem install bundler
-        bundle install --jobs 4 --retry 3
-
-    - name: Setup database
+    - name: Setup application database
       working-directory: ./web
       run: bundle exec rake db:setup
-
-    - name: Run linter
-      working-directory: ./web
-      run: bundle exec rake lint
 
     - name: Run tests
       working-directory: ./web
