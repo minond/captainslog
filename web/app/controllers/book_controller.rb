@@ -16,9 +16,9 @@ class BookController < ApplicationController
     @entries = current_entries
 
     @log_time = log_time
+
     @curr_time = Time.current
-    @prev_time = @book.prev_collection_time(log_time)
-    @next_time = @book.next_collection_time(log_time)
+    @prev_time, @next_time = @book.grouping_prev_next_times(log_time)
   end
 
   # === URL

@@ -18,7 +18,7 @@ class Book < ApplicationRecord
   # @param [Time] time, defaults to `Time.current`
   # @return [Collection, Nil]
   def collection(time = Time.current)
-    start_time, end_time = grouping_range_at(time)
+    start_time, end_time = grouping_time_range(time)
 
     res = Collection.by_book_id(id)
     res = start_time && end_time ? res.datetime_between(start_time, end_time) : res
@@ -32,22 +32,16 @@ class Book < ApplicationRecord
     Collection.create(:book => self, :datetime => datetime)
   end
 
-  # The time in which the previous collection falls in relative to the provided
-  # time
+  # Calculates the times for the book collection that is before and after a
+  # given time.
   #
   # @param [Time] time
-  # @return [Time]
-  def prev_collection_time(time)
-    time - grouping_time_unit
-  end
-
-  # The time in which the previous collection falls in relative to the provided
-  # time
-  #
-  # @param [Time] time
-  # @return [Time]
-  def next_collection_time(time)
-    time + grouping_time_unit
+  # @return [Array<Time>]
+  def grouping_prev_next_times(time)
+    time_unit = grouping_time_unit
+    prev_time = (time - time_unit).beginning_of_day
+    next_time = (time + time_unit).beginning_of_day
+    [prev_time, next_time]
   end
 
 private
@@ -56,9 +50,11 @@ private
     self.grouping ||= :none
   end
 
+  # Calculates a book collection's start and end times for any given time.
+  #
   # @param [Time] time
   # @return [Tuple<Time, Time>]
-  def grouping_range_at(time)
+  def grouping_time_range(time)
     if group_by_none?
       []
     elsif group_by_day?
@@ -68,6 +64,9 @@ private
     end
   end
 
+  # Generates a book collection's time unit used to move back and forth between
+  # separate collections.
+  #
   # @return [::ActiveSupport::Duration]
   def grouping_time_unit
     if group_by_none?
