@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      DATABASE_USERNAME: $POSTGRES_USER
+      DATABASE_USERNAME: $(echo $POSTGRES_USER)
 
     steps:
     - uses: actions/checkout@v1
@@ -22,7 +22,7 @@ jobs:
         postgresql db: captainslog_test
         postgresql user: postgres
 
-    - name: Install PostgreSQL 11 client
+    - name: Install PostgreSQL client
       run: sudo apt-get -yqq install libpq-dev
 
     - name: Install dependencies
