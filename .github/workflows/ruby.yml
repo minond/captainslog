@@ -12,17 +12,18 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
-    - name: Set up Ruby 2.6
-      uses: actions/setup-ruby@v1
+    - uses: actions/setup-ruby@v1
       with:
         ruby-version: 2.6.x
 
-    - name: Setup PostgreSQL
-      uses: Harmon758/postgresql-action@v1.0.0
+    - uses: Harmon758/postgresql-action@v1.0.0
       with:
         postgresql version: 10.3
         postgresql db: captainslog_test
         postgresql user: postgres
+
+    - name: Install PostgreSQL 11 client
+      run: sudo apt-get -yqq install libpq-dev
 
     - name: Install dependencies
       working-directory: ./web
