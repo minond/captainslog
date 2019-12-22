@@ -6,9 +6,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    env:
-      DATABASE_USERNAME: $(echo $POSTGRES_USER)
-
     steps:
     - uses: actions/checkout@v1
 
@@ -22,6 +19,13 @@ jobs:
         postgresql db: captainslog_test
         postgresql user: postgres
 
+    - uses: actions/cache@v1
+      with:
+        path: vendor/bundle
+        key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-gem-
+
     - name: Install PostgreSQL client
       run: sudo apt-get -yqq install libpq-dev
 
@@ -29,6 +33,7 @@ jobs:
       working-directory: ./web
       run: |
         gem install bundler --version 2.1.0
+        bundle config path vendor/bundle
         bundle install --jobs 4 --retry 3
 
     - name: Run linter
