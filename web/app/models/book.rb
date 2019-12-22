@@ -6,34 +6,31 @@ class Book < ApplicationRecord
   enum :grouping => %i[none day], :_prefix => :group_by
 
   # @params [String] text
-  # @params [Time] current_time
+  # @params [Time] current_time, defaults to `Time.current`
   # @return [Entry]
-  def add_entry(text, current_time)
+  def add_entry(text, current_time = Time.current)
     Entry.create(:book => self,
                  :collection => collection_at(current_time, true),
                  :original_text => text)
   end
 
-  # @return [Collection]
-  def current_collection
-    collection_at(Time.now.utc)
+  # @param [Time] time
+  # @param [Boolean] create_it
+  # @return [Collection, Nil]
+  def collection_at(time, create_it = false)
+    start_time, end_time = time_range_at(time)
+
+    res = Collection.by_book_id(id)
+    res = start_time && end_time ? res.created_between(start_time, end_time) : res
+
+    return res.first unless res.empty?
+    return Collection.create(:book => self) if create_it
   end
 
 private
 
   def constructor
     self.grouping ||= :none
-  end
-
-  # @param [Time] time
-  # @return [Collection]
-  def collection_at(time)
-    start_time, end_time = time_range_at(time)
-
-    query = Collection.by_book_id(id)
-    query = start_time && end_time ? query.created_between(start_time, end_time) : query
-
-    query.first || Collection.create(:book => self)
   end
 
   # @param [Time] time
