@@ -31,15 +31,6 @@ class Book < ApplicationRecord
     Collection.create(:book => self)
   end
 
-  # Use in the book/nav partial when deciding the the book should be
-  # highlighted.
-  #
-  # @param [Book, Nil] current_book
-  # @return [String]
-  def ui_nav_class(current_book)
-    id == current_book&.id ? "active" : ""
-  end
-
 private
 
   def constructor

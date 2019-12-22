@@ -1,7 +1,7 @@
 <% if books %>
   <div class="books-nav">
     <% books.each do |book| %>
-      <%= link_to book.name, book, :class => book.ui_nav_class(current_book) %>
+      <%= link_to book.name, book, :class => current_book&.id == book.id ? "active" : "" %>
     <% end %>
   </div>
 <% end %>
