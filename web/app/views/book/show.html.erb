@@ -1,28 +1,30 @@
-<%= render "book/nav", :books => @books, :current_book => @book %>
+<%= render "book/nav", :books => books, :current_book => book %>
 
 <br>
 <br>
 
-<%= form_for(@book, :url => book_entry_path(@book), :method => :post) do |f| %>
+<%= form_for(book, :url => book_entry_path(book), :method => :post) do |f| %>
   <textarea name="text" rows="1" placeholder="<%= t(:enter_new_log) %>" class="entry-textarea"></textarea>
 
-  <input type="hidden" name="book_id" value="<%= @book.id %>" />
-  <input type="hidden" name="log_time" value="<%= @log_time.to_i %>" />
+  <input type="hidden" name="book_id" value="<%= book.id %>" />
+  <input type="hidden" name="requested_time" value="<%= requested_time.to_i %>" />
 
   <%= f.submit t(:submit) %>
 <% end %>
 
-<%= @log_time.to_date %>
+<%= requested_time.to_date %>
 
 <br>
 
-<%= link_to "prev", book_at_path(@book, @prev_time.to_i) %>
-<%= link_to "curr", @book %>
-<%= link_to "next", book_at_path(@book, @next_time.to_i) %>
+<% prev_time, next_time = book.grouping_prev_next_times(requested_time) %>
+
+<%= link_to "prev", book_at_path(book, prev_time.to_i) %>
+<%= link_to "curr", book %>
+<%= link_to "next", book_at_path(book, next_time.to_i) %>
 
 <br>
 <br>
 
-<% @entries.each do |entry| %>
+<% entries.each do |entry| %>
   <div><%= entry.text %></div>
 <% end %>

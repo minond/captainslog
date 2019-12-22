@@ -11,14 +11,10 @@ class BookController < ApplicationController
   #   /book/1
   #
   def show
-    @books = current_user.books
-    @book = current_book
-    @entries = current_entries
-
-    @log_time = log_time
-
-    @curr_time = Time.current
-    @prev_time, @next_time = @book.grouping_prev_next_times(log_time)
+    render :locals => { :books => current_user.books,
+                        :book => current_book,
+                        :entries => current_entries,
+                        :requested_time => requested_time }
   end
 
   # === URL
@@ -35,8 +31,8 @@ class BookController < ApplicationController
   #   Redirect to /book/1
   #
   def entry
-    current_book.add_entry(params[:text], log_time.utc)
-    redirect_to book_at_path(current_book, log_time.to_i)
+    current_book.add_entry(params[:text], requested_time.utc)
+    redirect_to book_at_path(current_book, requested_time.to_i)
   end
 
 private
@@ -53,7 +49,7 @@ private
 
   # @return [Array<Entry>]
   def current_entries
-    collection = current_book.collection(log_time)
+    collection = current_book.collection(requested_time)
     collection.present? ? collection.entries : []
   end
 
@@ -65,8 +61,8 @@ private
   end
 
   # @return [Time]
-  def log_time
-    log_time = params[:log_time]
-    log_time.present? && log_time != "0" ? Time.at(log_time.to_i) : Time.current
+  def requested_time
+    requested_time = params[:requested_time]
+    requested_time.present? && requested_time != "0" ? Time.at(requested_time.to_i) : Time.current
   end
 end
