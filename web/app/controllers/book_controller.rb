@@ -63,6 +63,6 @@ private
   # @return [Time]
   def requested_time
     requested_time = params[:requested_time]
-    requested_time.present? && requested_time != "0" ? Time.at(requested_time.to_i) : Time.current
+    requested_time.present? ? Time.at(requested_time.to_i) : Time.current
   end
 end
