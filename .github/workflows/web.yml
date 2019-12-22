@@ -1,4 +1,4 @@
-name: Ruby
+name: Web App
 
 on: [push]
 
@@ -22,12 +22,6 @@ jobs:
     - uses: actions/setup-ruby@v1
       with:
         ruby-version: 2.6.x
-
-    # - uses: Harmon758/postgresql-action@v1.0.0
-    #   with:
-    #     postgresql version: 10.3
-    #     postgresql db: captainslog_test
-    #     postgresql user: postgres
 
     - uses: actions/cache@v1
       with:
