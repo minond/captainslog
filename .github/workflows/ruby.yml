@@ -14,6 +14,8 @@ jobs:
         ruby-version: 2.6.x
 
     - uses: Harmon758/postgresql-action@v1.0.0
+      run: |
+        printenv
       with:
         postgresql version: 10.3
         postgresql db: captainslog_test
