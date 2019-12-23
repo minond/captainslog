@@ -96,9 +96,9 @@ private
 
   def collections_for(book)
     {
-      :past => create(:collection, :book => book, :datetime => Date.yesterday),
-      :future => create(:collection, :book => book, :datetime => Date.tomorrow),
-      :present => create(:collection, :book => book, :datetime => Date.today)
+      :past => create(:collection, :past, :book => book),
+      :future => create(:collection, :future, :book => book),
+      :present => create(:collection, :book => book)
     }
   end
 end
