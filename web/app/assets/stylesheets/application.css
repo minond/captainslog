@@ -181,3 +181,24 @@ input[type=submit] {
 .entry-group-nav a:hover {
   background-color: #fafafa;;
 }
+
+.entry-list .entry-item {
+  display: block;
+  padding: .4rem 0;
+}
+
+.entry-list .entry-item + .entry-item {
+  border-top: 1px solid rgba(0, 0, 0, .1);
+}
+
+.entry-list .entry-datum {
+  margin-top: .25rem;
+  margin-bottom: .25rem;
+}
+
+.entry-list .entry-data {
+  font-size: .8rem;
+  padding: .2rem .3rem;
+  border: 1px solid rgba(0, 0, 0, .6);
+  color: rgba(0, 0, 0, .8);
+}
