@@ -7,8 +7,8 @@ class Book < ApplicationRecord
 
   enum :grouping => %i[none day], :_prefix => :group_by
 
-  # @params [String] text
-  # @params [Time] time, defaults to `Time.current`. Use a time in the user's
+  # @param [String] text
+  # @param [Time] time, defaults to `Time.current`. Use a time in the user's
   #   timezone for best results.
   # @return [Entry]
   def add_entry(text, time = Time.current)
@@ -18,7 +18,7 @@ class Book < ApplicationRecord
                  :original_text => text)
   end
 
-  # @params [Time] time, defaults to `Time.current`. Use a time in the user's
+  # @param [Time] time, defaults to `Time.current`. Use a time in the user's
   #   timezone for best results.
   # @return [Collection, Nil]
   def find_collection(time = Time.current)
@@ -28,7 +28,7 @@ class Book < ApplicationRecord
     res.first
   end
 
-  # @params [Time] time, defaults to `Time.current`. Use user's timezone for
+  # @param [Time] time, defaults to `Time.current`. Use user's timezone for
   #   best results.
   # @return [Collection]
   def create_collection(time)

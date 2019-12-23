@@ -5,7 +5,7 @@ private
 
   # Calculates a book collection's start and end times for any given time.
   #
-  # @params [Time] time, defaults to `Time.current`. Use user's timezone for
+  # @param [Time] time, defaults to `Time.current`. Use user's timezone for
   #   best results.
   # @return [Tuple<Time, Time>]
   def grouping_time_range(time)
@@ -35,7 +35,7 @@ private
   # Calculates the times for the book collection that is before and after a
   # given time.
   #
-  # @params [Time] time, defaults to `Time.current`. Use user's timezone for
+  # @param [Time] time, defaults to `Time.current`. Use user's timezone for
   #   best results.
   # @return [Array<Time>]
   def grouping_prev_next_times(time)
