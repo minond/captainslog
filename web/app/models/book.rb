@@ -32,7 +32,7 @@ class Book < ApplicationRecord
   #   best results.
   # @return [Collection]
   def create_collection(time)
-    Collection.create(:book => self, :datetime => time.utc)
+    Collection.create(:book => self, :datetime => time)
   end
 
   # @see `Grouping.grouping_prev_next_times`
