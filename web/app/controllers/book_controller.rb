@@ -52,17 +52,4 @@ private
     collection = current_book.find_collection(requested_time)
     collection.present? ? collection.entries : []
   end
-
-  # Ensures controller methods use the user's selected timezone
-  #
-  # @return [Block] &block
-  def use_timezone(&block)
-    Time.use_zone(current_user.timezone, &block)
-  end
-
-  # @return [Time]
-  def requested_time
-    requested_time = params[:requested_time]
-    requested_time.present? ? Time.at(requested_time.to_i) : Time.current
-  end
 end

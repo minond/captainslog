@@ -12,4 +12,24 @@ class ApplicationController < ActionController::Base
   def locals(*view, **defs)
     render view.first, :locals => defs
   end
+
+  # This method ensures that `requested_time` matche the user's local time.
+  # Wrap a controller's actions in this method to ensure that the correct
+  # timezone is applied as the request is processed.
+  #
+  # @example
+  #   around_action :use_timezone, :if => :current_user
+  #
+  # @return [Block] &block
+  def use_timezone(&block)
+    Time.use_zone(current_user.timezone, &block)
+  end
+
+  # The requsted time represents the time that a user is requesting entries be
+  # loaded for or entries to be added under.
+  #
+  # @return [Time]
+  def requested_time
+    params[:requested_time] ? Time.at(params[:requested_time].to_i) : Time.current
+  end
 end
