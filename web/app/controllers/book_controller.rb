@@ -31,7 +31,7 @@ class BookController < ApplicationController
   #   Redirect to /book/1
   #
   def entry
-    current_book.add_entry(params[:text], requested_time.utc)
+    current_book.add_entry(params[:text], requested_time)
     redirect_to book_at_path(current_book, requested_time.to_i)
   end
 

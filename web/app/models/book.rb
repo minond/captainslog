@@ -6,16 +6,18 @@ class Book < ApplicationRecord
   enum :grouping => %i[none day], :_prefix => :group_by
 
   # @params [String] text
-  # @params [Time] current_time, defaults to `Time.current`
+  # @params [Time] time, defaults to `Time.current`. Use a time in the user's
+  #   timezone for best results.
   # @return [Entry]
-  def add_entry(text, current_time = Time.current)
-    collection = collection(current_time) || create_collection(current_time)
+  def add_entry(text, time = Time.current)
+    collection = collection(time) || create_collection(time)
     Entry.create(:book => self,
                  :collection => collection,
                  :original_text => text)
   end
 
-  # @param [Time] time, defaults to `Time.current`
+  # @params [Time] time, defaults to `Time.current`. Use a time in the user's
+  #   timezone for best results.
   # @return [Collection, Nil]
   def collection(time = Time.current)
     start_time, end_time = grouping_time_range(time)
@@ -26,21 +28,23 @@ class Book < ApplicationRecord
     res.first
   end
 
-  # @param [Time] datetime
+  # @params [Time] time, defaults to `Time.current`. Use user's timezone for
+  #   best results.
   # @return [Collection]
-  def create_collection(datetime)
-    Collection.create(:book => self, :datetime => datetime)
+  def create_collection(time)
+    Collection.create(:book => self, :datetime => time.utc)
   end
 
   # Calculates the times for the book collection that is before and after a
   # given time.
   #
-  # @param [Time] time
+  # @params [Time] time, defaults to `Time.current`. Use user's timezone for
+  #   best results.
   # @return [Array<Time>]
   def grouping_prev_next_times(time)
     time_unit = grouping_time_unit
-    prev_time = (time - time_unit).beginning_of_day
-    next_time = (time + time_unit).beginning_of_day
+    prev_time = time - time_unit
+    next_time = time + time_unit
     [prev_time, next_time]
   end
 
@@ -52,13 +56,14 @@ private
 
   # Calculates a book collection's start and end times for any given time.
   #
-  # @param [Time] time
+  # @params [Time] time, defaults to `Time.current`. Use user's timezone for
+  #   best results.
   # @return [Tuple<Time, Time>]
   def grouping_time_range(time)
     if group_by_none?
       []
     elsif group_by_day?
-      [time.beginning_of_day, time.end_of_day]
+      [time.beginning_of_day.utc, time.end_of_day.utc]
     else
       raise "invalid group"
     end

@@ -4,15 +4,14 @@
 <br>
 
 <%= form_for(book, :url => book_entry_path(book), :method => :post) do |f| %>
-  <textarea name="text" rows="1" placeholder="<%= t(:enter_new_log) %>" class="entry-textarea"></textarea>
+  <% textarea_placeholder = t(:enter_new_log, :datetime => requested_time.to_date) %>
+  <textarea name="text" rows="1" placeholder="<%= textarea_placeholder %>" class="entry-textarea"></textarea>
 
   <input type="hidden" name="book_id" value="<%= book.id %>" />
   <input type="hidden" name="requested_time" value="<%= requested_time.to_i %>" />
 
   <%= f.submit t(:submit) %>
 <% end %>
-
-<%= requested_time.to_date %>
 
 <br>
 

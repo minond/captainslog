@@ -11,5 +11,5 @@ en:
   remember_me: "Remember me"
 
   menu: "Menu"
-  enter_new_log: "Enter a new log!"
+  enter_new_log: "Enter a new log for %{datetime}"
   submit: "Submit"
