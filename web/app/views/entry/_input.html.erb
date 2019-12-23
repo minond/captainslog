@@ -1,0 +1,11 @@
+<textarea
+  name="text"
+  rows="1"
+  placeholder="<%= t(:enter_new_log, :datetime => requested_time.to_date) %>"
+  class="entry-input"
+  autofocus="true"
+></textarea>
+
+<script>
+  $(setupSubmitFormOnTextareaPressEnter)
+</script>

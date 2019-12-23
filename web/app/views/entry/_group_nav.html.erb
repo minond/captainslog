@@ -1,0 +1,8 @@
+<div class="entry-group-nav">
+  <% unless book.group_by_none? %>
+    <% prev_time, next_time = book.grouping_prev_next_times(requested_time) %>
+    <%= link_to "prev", book_at_path(book, prev_time.to_i) %>
+    <%= link_to "curr", book %>
+    <%= link_to "next", book_at_path(book, next_time.to_i) %>
+  <% end %>
+</div>

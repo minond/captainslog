@@ -109,10 +109,24 @@ label {
 
 /* BOOK ENTRIES PAGE ******************************************************/
 
-.entry-textarea {
+.entry-add-form {
+  margin: 20px 0 15px 0;
+}
+
+.entry-input {
   border-bottom: 1px solid #acacac;
   border: none;
   padding: 2px 0;
   resize: none;
   width: 100%;
+}
+
+.entry-group-nav {
+  min-height: 20px;
+  text-align: right;
+}
+
+.entry-group-nav a {
+  font-size: .8rem;
+  color: #3f3f3f;
 }
