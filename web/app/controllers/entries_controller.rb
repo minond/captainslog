@@ -1,5 +1,5 @@
 class EntriesController < ApplicationController
-  around_action :use_timezone, :if => :current_user
+  around_action :use_user_timezone, :if => :current_user
 
   # === URL
   #   POST /book/:book_id/entry

@@ -18,10 +18,10 @@ class ApplicationController < ActionController::Base
   # timezone is applied as the request is processed.
   #
   # @example
-  #   around_action :use_timezone, :if => :current_user
+  #   around_action :use_user_timezone, :if => :current_user
   #
   # @return [Block] &block
-  def use_timezone(&block)
+  def use_user_timezone(&block)
     Time.use_zone(current_user.timezone, &block)
   end
 
