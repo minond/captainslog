@@ -42,7 +42,7 @@ jobs:
 
     - name: Run linter
       working-directory: ./web
-      run: bundle exec rake lint
+      run: bundle exec rake lint:all
 
     - name: Setup application database
       working-directory: ./web
