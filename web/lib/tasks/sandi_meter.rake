@@ -6,7 +6,7 @@ namespace :sandi_meter do
   desc "Run rails best practices"
 
   task :run do
-    puts "Running rails best practices!"
-    bundle exec "sandi_meter"
+    puts "Running Sandi Meter"
+    puts `sandi_meter`
   end
 end
