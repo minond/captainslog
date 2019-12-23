@@ -6,6 +6,10 @@ en:
   sign_in: "Sign in"
   log_in: "Log in"
 
+  previous: "Previous"
+  current: "Current"
+  next: "Next"
+
   email: "Email"
   password: "Password"
   remember_me: "Remember me"
