@@ -20,40 +20,47 @@ class BookTest < ActiveSupport::TestCase
 
   test "add entry with no grouping" do
     book(:grouping => :none).save
-    entry = book.add_entry(:original_text => "hi")
+    entry = book.add_entry("hi")
 
     assert entry.persisted?
   end
 
-  test "collections are reused" do
+  test "adding entries that use the same collection in the present" do
     book(:grouping => :none).save
 
-    first_entry = book.add_entry(:original_text => "hi1")
-    second_entry = book.add_entry(:original_text => "hi2")
+    first_entry = book.add_entry("hi1")
+    second_entry = book.add_entry("hi2")
 
     assert first_entry.collection_id == second_entry.collection_id
   end
 
-  test "daily grouping does not match past collection" do
+  test "adding entries that use the same collection in the past" do
     book(:grouping => :day).save
-    past_collection = Collection.create(:book => book, :datetime => Date.yesterday)
+    collection = collections_for(book)[:past]
 
-    first_entry = book.add_entry(:original_text => "hi1")
-    second_entry = book.add_entry(:original_text => "hi2")
+    first_entry = book.add_entry("hi1")
+    second_entry = book.add_entry("hi2")
 
-    assert past_collection.id != second_entry.collection_id
+    assert collection.id != second_entry.collection_id
     assert first_entry.collection_id == second_entry.collection_id
   end
 
-  test "daily grouping does not match future collection" do
+  test "adding an entry creates a collection in the past" do
     book(:grouping => :day).save
-    past_collection = Collection.create(:book => book, :datetime => Date.tomorrow)
+    entry = book.add_entry("hi1", Date.yesterday)
+    assert_equal Date.yesterday, entry.collection.datetime
+  end
 
-    first_entry = book.add_entry(:original_text => "hi1")
-    second_entry = book.add_entry(:original_text => "hi2")
+  test "adding an entry creates a collection in the present" do
+    book(:grouping => :day).save
+    entry = book.add_entry("hi1", Date.today)
+    assert_equal Date.today, entry.collection.datetime
+  end
 
-    assert past_collection.id != second_entry.collection_id
-    assert first_entry.collection_id == second_entry.collection_id
+  test "adding an entry creates a collection in the future" do
+    book(:grouping => :day).save
+    entry = book.add_entry("hi1", Date.tomorrow)
+    assert_equal Date.tomorrow, entry.collection.datetime
   end
 
   test "expected collection is retrieved when multiple exist" do
