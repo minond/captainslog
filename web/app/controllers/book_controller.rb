@@ -31,7 +31,7 @@ private
 
   # @return [Array<Entry>]
   def entries
-    @entires ||=
+    @entries ||=
       begin
         collection = book.find_collection(requested_time)
         collection.present? ? collection.entries : []
