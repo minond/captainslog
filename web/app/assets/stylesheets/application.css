@@ -14,6 +14,11 @@
  *= require_self
  */
 
+
+/* --blue: #357edd; */
+/* --light-gray-border: rgba(0, 0, 0, .2); */
+/* --light-gray: rgba(0, 0, 0, .6); */
+
 /* BASE *******************************************************************/
 
 html, body {
@@ -24,12 +29,12 @@ html, body {
 
 html, body, textarea {
   font-family: PT Mono, monospace;
-  font-size: .95rem;
+  font-size: 1rem;
   line-height: 1.4;
 }
 
 textarea {
-  border-color: rgba(0,0,0,.2);
+  border-color: rgba(0, 0, 0, .2); /* light-gray */
   box-sizing: border-box;
 }
 
@@ -45,14 +50,13 @@ body {
 }
 
 header {
-  border-bottom: 1px solid #c2c2c2;
   padding: .8rem 0;
 }
 
 a,
 a:visited {
   text-decoration: none;
-  color: blue;
+  color: #357edd; /* blue */
 }
 
 label {
@@ -87,26 +91,30 @@ label {
 
 .books-nav {
   padding: .75rem 0;
+  border-top: 1px solid #c2c2c2;
+  border-bottom: 1px solid #c2c2c2;
 }
 
 .books-nav a {
-  color: #646464;
+  color: rgba(0, 0, 0, .6);
   text-decoration: none;
-  transition: color .1s;
+  transition: color .1s, font-weight .3s;
 }
 
-.books-nav a.active {
-  font-weight: bold;
-  color: black;
-}
-
+.books-nav a.active,
 .books-nav a:hover {
-  color: black;
+  font-weight: bold;
 }
 
 .books-nav a + a {
   margin-left: .5rem;
 }
+
+.books-nav a:nth-child(1) { color: #e7040f; }
+.books-nav a:nth-child(2) { color: #5e2ca5; }
+.books-nav a:nth-child(3) { color: #19a974; }
+.books-nav a:nth-child(4) { color: #00449e; }
+.books-nav a:nth-child(5) { color: #137752; }
 
 /* BOOK ENTRIES PAGE ******************************************************/
 
@@ -128,7 +136,7 @@ label {
 
 .entry-group-nav a {
   font-size: .9rem;
-  color: #3f3f3f;
+  color: rgba(0, 0, 0, .6); /* ligth-gray */
   border: 1px solid rebeccapurple;
   transition: background-color .1s;
   padding: .5rem .75rem;
