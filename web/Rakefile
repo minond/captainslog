@@ -6,9 +6,8 @@ Rails.application.load_tasks
 
 RuboCop::RakeTask.new
 
-task :lint, [*Rake.application[:rubocop].arg_names] => [:rubocop]
+task :lint, [*Rake.application[:rubocop].arg_names] => %i[rubocop reek]
 
 namespace :lint do
-  task :default, [*Rake.application[:rubocop].arg_names] => [:rubocop]
-  task :all => %i[rubocop sandi_meter rails_best_practices brakeman reek]
+  task :all => %i[lint sandi_meter rails_best_practices brakeman]
 end
