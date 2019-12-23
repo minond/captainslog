@@ -34,7 +34,7 @@ private
     @entries ||=
       begin
         collection = book.find_collection(requested_time)
-        collection.present? ? collection.entries : []
+        collection.present? ? collection.entries.order("created_at desc")  : []
       end
   end
 end
