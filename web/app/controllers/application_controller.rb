@@ -30,6 +30,7 @@ class ApplicationController < ActionController::Base
   #
   # @return [Time]
   def requested_time
-    params[:requested_time] ? Time.at(params[:requested_time].to_i) : Time.current
+    val = params[:requested_time]
+    val.present? ? Time.at(val.to_i) : Time.current
   end
 end
