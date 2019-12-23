@@ -7,6 +7,6 @@ namespace :sandi_meter do
 
   task :run do
     puts "Running Sandi Meter"
-    puts `sandi_meter`
+    puts `sandi_meter -d`
   end
 end
