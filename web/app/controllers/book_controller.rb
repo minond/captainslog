@@ -49,7 +49,7 @@ private
 
   # @return [Array<Entry>]
   def current_entries
-    collection = current_book.collection(requested_time)
+    collection = current_book.find_collection(requested_time)
     collection.present? ? collection.entries : []
   end
 

@@ -10,7 +10,7 @@ class Book < ApplicationRecord
   #   timezone for best results.
   # @return [Entry]
   def add_entry(text, time = Time.current)
-    collection = collection(time) || create_collection(time)
+    collection = find_collection(time) || create_collection(time)
     Entry.create(:book => self,
                  :collection => collection,
                  :original_text => text)
@@ -19,7 +19,7 @@ class Book < ApplicationRecord
   # @params [Time] time, defaults to `Time.current`. Use a time in the user's
   #   timezone for best results.
   # @return [Collection, Nil]
-  def collection(time = Time.current)
+  def find_collection(time = Time.current)
     start_time, end_time = grouping_time_range(time)
 
     res = Collection.by_book_id(id)
