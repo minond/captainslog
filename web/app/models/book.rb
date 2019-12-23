@@ -23,10 +23,8 @@ class Book < ApplicationRecord
   # @return [Collection, Nil]
   def find_collection(time = Time.current)
     start_time, end_time = grouping_time_range(time)
-
     res = Collection.by_book_id(id)
     res = start_time && end_time ? res.datetime_between(start_time, end_time) : res
-
     res.first
   end
 
