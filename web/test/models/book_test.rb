@@ -56,6 +56,30 @@ class BookTest < ActiveSupport::TestCase
     assert first_entry.collection_id == second_entry.collection_id
   end
 
+  test "expected collection is retrieved when multiple exist" do
+    book(:grouping => :day)
+    expected = collections_for(book)[:present]
+    assert book.find_collection(Date.today).id = expected.id
+  end
+
+  test "expected collection is retrieved when multiple exist and a past time is requested" do
+    book(:grouping => :day)
+    expected = collections_for(book)[:past]
+    assert book.find_collection(Date.yesterday).id = expected.id
+  end
+
+  test "expected collection is retrieved when multiple exist and a future time is requested" do
+    book(:grouping => :day)
+    expected = collections_for(book)[:future]
+    assert book.find_collection(Date.tomorrow).id = expected.id
+  end
+
+  test "grouping prev/next times are correcly calculated for day group" do
+    prev_time, next_time = book(:grouping => :day).grouping_prev_next_times(Date.today)
+    assert_equal Date.yesterday, prev_time
+    assert_equal Date.tomorrow, next_time
+  end
+
 private
 
   def book(overrides = {})
@@ -66,5 +90,13 @@ private
   def user
     @user ||= User.new(:email => "test1@test.com",
                        :password => "xsj3k2lj4k3l2hio23321")
+  end
+
+  def collections_for(book)
+    {
+      :past => Collection.create(:book => book, :datetime => Date.yesterday),
+      :future => Collection.create(:book => book, :datetime => Date.tomorrow),
+      :present => Collection.create(:book => book, :datetime => Date.today),
+    }
   end
 end
