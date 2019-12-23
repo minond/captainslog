@@ -4,7 +4,8 @@ Rails.application.routes.draw do
   devise_for :users, :skip => [:registrations]
 
   resources :book, :only => [:show] do
-    get "/:requested_time", :action => :show, :as => :at
-    post :entry
+    resource :entry, :only => [:create]
   end
+
+  get "/book/:id/:requested_time", :to => "book#show", :as => :book_at
 end
