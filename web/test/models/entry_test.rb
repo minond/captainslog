@@ -16,17 +16,12 @@ class EntryTest < ActiveSupport::TestCase
 private
 
   def entry(overrides = {})
-    @entry ||= Entry.new({ :book => book,
+    @entry ||= Entry.new({ :book => create(:book),
                            :collection => collection,
                            :original_text => "hi" }.merge(overrides))
   end
 
-  def book
-    @book ||= Book.new(:user => create(:user),
-                       :name => "Testing")
-  end
-
   def collection
-    @collection ||= Collection.new(:book => book, :datetime => Time.current)
+    @collection ||= Collection.new(:book => create(:book), :datetime => Time.current)
   end
 end

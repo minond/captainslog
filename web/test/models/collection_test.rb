@@ -7,12 +7,7 @@ class CollectionTest < ActiveSupport::TestCase
 
 private
 
-  def book
-    @book ||= Book.new(:user => create(:user),
-                       :name => "Testing")
-  end
-
   def collection(overrides = {})
-    @collection ||= Collection.new({ :book => book, :datetime => Time.current }.merge(overrides))
+    @collection ||= Collection.new({ :book => create(:book), :datetime => Time.current }.merge(overrides))
   end
 end
