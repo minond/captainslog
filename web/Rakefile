@@ -10,5 +10,5 @@ task :lint, [*Rake.application[:rubocop].arg_names] => [:rubocop]
 
 namespace :lint do
   task :default, [*Rake.application[:rubocop].arg_names] => [:rubocop]
-  task :all => %i[rubocop sandi_meter rails_best_practices reek brakeman]
+  task :all => %i[rubocop sandi_meter rails_best_practices brakeman reek]
 end
