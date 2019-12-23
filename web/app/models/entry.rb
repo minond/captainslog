@@ -16,7 +16,6 @@ private
   end
 
   def set_default_data
-    self.data ||= {}
     self.data[:created_at] = Time.now.utc.to_i
   end
 end

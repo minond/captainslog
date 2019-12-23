@@ -10,6 +10,7 @@ class Collection < ApplicationRecord
 private
 
   def constructor
-    self.datetime ||= self.datetime.utc
+    dt = datetime
+    self.datetime = dt.utc if dt
   end
 end
