@@ -42,7 +42,11 @@ jobs:
 
     - name: Run linter
       working-directory: ./web
-      run: bundle exec rake lint:all
+      run: bundle exec rake lint
+
+    - name: Run brakeman
+      working-directory: ./web
+      run: bundle exec rake brakeman
 
     - name: Setup application database
       working-directory: ./web
