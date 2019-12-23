@@ -3,7 +3,7 @@ class Entry < ApplicationRecord
   belongs_to :collection
 
   after_initialize :constructor
-  before_save :set_default_data
+  before_save :process
 
   def text
     processed_text || original_text
@@ -15,7 +15,7 @@ private
     self.data ||= {}
   end
 
-  def set_default_data
-    self.data[:created_at] = Time.now.utc.to_i
+  def process
+    Processor.process(self)
   end
 end
