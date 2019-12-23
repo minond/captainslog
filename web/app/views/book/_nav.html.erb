@@ -1,4 +1,4 @@
-<% if books %>
+<% unless books.empty? %>
   <div class="books-nav">
     <% books.each do |book| %>
       <%= link_to book.name, book, :class => current_book&.id == book.id ? "active" : "" %>
