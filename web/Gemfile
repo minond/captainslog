@@ -35,5 +35,6 @@ group :test do
   gem "factory_bot"                           # A library for setting up Ruby objects as test data
   gem "factory_bot_rails"                     # Provides Rails integration for factory_bot
   gem "selenium-webdriver"
+  gem "simplecov"                             # Code coverage for Ruby 1.9+ with a powerful configuration library and automatic merging of coverage across test suites
   gem "webdrivers"                            # Easy installation and use of web drivers to run system tests with browsers
 end
