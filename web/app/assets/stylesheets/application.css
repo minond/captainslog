@@ -14,6 +14,8 @@
  *= require_self
  */
 
+/* BASE *******************************************************************/
+
 html, body {
   cursor: default;
   margin: 0;
@@ -46,13 +48,23 @@ header {
   padding: 10px 0;
 }
 
+a,
+a:visited {
+  text-decoration: none;
+  color: blue;
+}
+
 label {
   display: block;
 }
 
+/* HELPERS ****************************************************************/
+
 .right {
   float: right;
 }
+
+/* FLASH ******************************************************************/
 
 #notice, #alert {
   border-width: 1px;
@@ -70,6 +82,8 @@ label {
   border-color: #ff3e3e;
 }
 
+/* BOOK NAV ***************************************************************/
+
 .books-nav {
   padding: 10px 0;
 }
@@ -81,8 +95,8 @@ label {
 }
 
 .books-nav a.active {
+  font-weight: bold;
   color: black;
-  text-decoration: underline;
 }
 
 .books-nav a:hover {
@@ -92,6 +106,8 @@ label {
 .books-nav a + a {
   margin-left: 10px;
 }
+
+/* BOOK ENTRIES PAGE ******************************************************/
 
 .entry-textarea {
   border-bottom: 1px solid #acacac;
