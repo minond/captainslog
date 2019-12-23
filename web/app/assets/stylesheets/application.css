@@ -56,7 +56,7 @@ header {
 a,
 a:visited {
   text-decoration: none;
-  color: #357edd; /* blue */
+  color: black;
 }
 
 label {
@@ -151,12 +151,6 @@ input[type=submit] {
 .books-nav a + a {
   margin-left: .5rem;
 }
-
-.books-nav a:nth-child(1) { color: #e7040f; }
-.books-nav a:nth-child(2) { color: #5e2ca5; }
-.books-nav a:nth-child(3) { color: #19a974; }
-.books-nav a:nth-child(4) { color: #00449e; }
-.books-nav a:nth-child(5) { color: #137752; }
 
 /* BOOK ENTRIES PAGE ******************************************************/
 
