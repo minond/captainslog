@@ -61,12 +61,47 @@ a:visited {
 
 label {
   display: block;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: rgba(0,0,0,.8);
+}
+
+input[type=checkbox] {
+  margin: 0;
+}
+
+input[type=text],
+input[type=password],
+input[type=email] {
+  padding: .5rem;
+  width: 100%;
+  border-style: solid;
+  border-width: 1px;
+  font-size: 100%;
+  line-height: 1.15;
+  margin: 0;
+}
+
+input[type=submit] {
+  font-size: .9rem;
+  color: black;
+  border: 1px solid black;
+  transition: background-color .1s;
+  padding: .5rem .75rem;
 }
 
 /* HELPERS ****************************************************************/
 
 .right {
   float: right;
+}
+
+.field + .field {
+  margin-top: 1rem;
+}
+
+.field.smaller label {
+  font-size: .875rem;
 }
 
 /* FLASH ******************************************************************/
@@ -85,6 +120,13 @@ label {
 #alert {
   background: #ffeaea;
   border-color: #ff3e3e;
+}
+
+/* LOGIN ******************************************************************/
+
+.login-form {
+  max-width: 30rem;
+  margin: 5rem auto;
 }
 
 /* BOOK NAV ***************************************************************/
