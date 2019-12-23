@@ -19,7 +19,7 @@ class ActiveSupport::TestCase
     SimpleCov.command_name "#{SimpleCov.command_name}-#{worker}"
   end
 
-  parallelize_teardown do |worker|
+  parallelize_teardown do
     SimpleCov.result
   end
 end

@@ -96,7 +96,7 @@ private
     {
       :past => Collection.create(:book => book, :datetime => Date.yesterday),
       :future => Collection.create(:book => book, :datetime => Date.tomorrow),
-      :present => Collection.create(:book => book, :datetime => Date.today),
+      :present => Collection.create(:book => book, :datetime => Date.today)
     }
   end
 end
