@@ -12,6 +12,7 @@ detectors:
   UtilityFunction:
     exclude:
       - BookTest#collections_for
+      - ProcessEntryJob#perform
 
 directories:
   db/migrate:
