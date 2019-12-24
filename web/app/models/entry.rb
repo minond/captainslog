@@ -3,7 +3,7 @@ class Entry < ApplicationRecord
   belongs_to :collection
 
   after_initialize :constructor
-  after_save :schedule_processing
+  after_create :schedule_processing
 
   def text
     processed_text || original_text
