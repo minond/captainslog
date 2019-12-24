@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class ProcessEntryJobTest < ActiveJob::TestCase
   test "calls out to external processor" do

@@ -1,4 +1,10 @@
+# This migration was generated with `rails generate delayed_job:active_record`,
+# see https://github.com/collectiveidea/delayed_job#installation for more
+# details.
 class CreateDelayedJobs < ActiveRecord::Migration[6.0]
+  # rubocop:disable Metrics/MethodLength Style/SymbolArray Style/HashSyntax
+  # rubocop:disable Style/SymbolArray
+  # rubocop:disable Style/HashSyntax
   def self.up
     create_table :delayed_jobs, force: true do |table|
       table.integer :priority, default: 0, null: false # Allows some jobs to jump to the front of the queue
@@ -15,6 +21,9 @@ class CreateDelayedJobs < ActiveRecord::Migration[6.0]
 
     add_index :delayed_jobs, [:priority, :run_at], name: "delayed_jobs_priority"
   end
+  # rubocop:enable Metrics/MethodLength Style/SymbolArray Style/HashSyntax
+  # rubocop:enable Style/SymbolArray
+  # rubocop:enable Style/HashSyntax
 
   def self.down
     drop_table :delayed_jobs
