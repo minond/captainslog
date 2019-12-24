@@ -4,6 +4,9 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 gem "bcrypt", "~> 3.1.7"                      # Use Active Model has_secure_password
 gem "bootsnap", ">= 1.4.2", :require => false # Reduces boot times through caching; required in config/boot.rb
+gem "daemons"                                 # Provides an easy way to wrap ruby scripts to be run as a daemon. Needed by Delayed Job
+gem "delayed_job"                             # Database based asynchronous priority queue system
+gem "delayed_job_active_record"               # AR bindings for Delayed Job
 gem "devise"                                  # Flexible authentication solution for Rails with Warden.
 gem "jbuilder", "~> 2.7"                      # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem "jquery-rails"                            # A gem to automate using jQuery with Rails
