@@ -3,7 +3,7 @@ require_relative "boot"
 require "rails"
 # Pick the frameworks you want:
 require "active_model/railtie"
-# require "active_job/railtie"
+require "active_job/railtie"
 require "active_record/railtie"
 # require "active_storage/engine"
 require "action_controller/railtie"
@@ -29,5 +29,9 @@ module Web
     # -- all .rb files in that directory are automatically loaded after loading
     # the framework and any gems in your application.
     config.autoload_paths += %w[lib]
+
+    # https://guides.rubyonrails.org/active_job_basics.html
+    # https://github.com/collectiveidea/delayed_job#active-job
+    config.active_job.queue_adapter = :delayed_job
   end
 end

@@ -3,7 +3,7 @@ class Entry < ApplicationRecord
   belongs_to :collection
 
   after_initialize :constructor
-  before_save :process
+  after_save :schedule_processing
 
   def text
     processed_text || original_text
@@ -15,7 +15,7 @@ private
     self.data ||= {}
   end
 
-  def process
-    Processor.process(self)
+  def schedule_processing
+    ProcessEntryJob.perform_later self
   end
 end
