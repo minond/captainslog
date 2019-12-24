@@ -5,6 +5,6 @@ class ProcessEntryJobTest < ActiveJob::TestCase
     entry = build(:entry)
     job = ProcessEntryJob.new
     job.perform(entry)
-    assert entry.data["created_at"]
+    assert entry.data["_created_at"]
   end
 end
