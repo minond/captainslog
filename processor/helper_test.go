@@ -1,12 +1,24 @@
 package main
 
 import (
+	"bytes"
 	"database/sql"
+	"net/http"
+	"net/http/httptest"
 	"reflect"
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
 )
+
+func assertEqual(t *testing.T, expected, returned interface{}) {
+	t.Helper()
+	if !reflect.DeepEqual(expected, returned) {
+		t.Errorf(`error: not equal:
+		expected: %v
+		returned: %v`, expected, returned)
+	}
+}
 
 func newMockDB(t *testing.T) (*sql.DB, sqlmock.Sqlmock) {
 	db, mock, err := sqlmock.New()
@@ -21,11 +33,16 @@ func newMockRepo(t *testing.T) (*Repository, *sql.DB, sqlmock.Sqlmock) {
 	return NewRepository(db), db, mock
 }
 
-func assertEqual(t *testing.T, expected, returned interface{}) {
-	t.Helper()
-	if !reflect.DeepEqual(expected, returned) {
-		t.Errorf(`error: not equal:
-		expected: %v
-		returned: %v`, expected, returned)
+func makeRequest(t *testing.T, rawBody string, repo *Repository) *httptest.ResponseRecorder {
+	body := bytes.NewBufferString(rawBody)
+	req, err := http.NewRequest(http.MethodPost, "/", body)
+	if err != nil {
+		t.Fatalf("unexpected error from http.NewRequest: %v", err)
 	}
+
+	rr := httptest.NewRecorder()
+	service := NewService(repo)
+	service.ServeHTTP(rr, req)
+
+	return rr
 }
