@@ -23,11 +23,11 @@ type Server struct {
 
 func NewServer(config ServerConfig) (*Server, error) {
 	if config.dbConn == "" {
-		return nil, errors.New("empty PROCESSOR_DB_CONN value")
+		return nil, errors.New("missing database connection value (PROCESSOR_DB_CONN)")
 	}
 
 	if config.httpListen == "" {
-		return nil, errors.New("empty PROCESSOR_HTTP_LISTEN value")
+		return nil, errors.New("missing http listen value (PROCESSOR_HTTP_LISTEN)")
 	}
 
 	db, err := sql.Open("postgres", config.dbConn)
