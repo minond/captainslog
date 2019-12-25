@@ -1,0 +1,16 @@
+Web interface for Captain's Log. This is a Rails app that handles all CRUD
+operations and calls out to external services for entry processing and
+querying.
+
+
+=== Development
+
+    bundle                                # install dependencies
+    bundle exec rake test                 # run tests
+    bundle exec rake lint                 # run linters
+
+    bundle exec rake test:system          # run e2e tests
+    bundle exec rake lint:all             # run all linters
+
+    bundle exec rails s                   # start the web server process
+    bundle exec ./bin/delayed_job start   # start worker process
