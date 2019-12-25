@@ -3,9 +3,15 @@ operations and calls out to external services for entry processing and
 querying.
 
 
+=== Requirements
+
+- PostgreSQL 10.3
+
+
 === Development
 
     bundle                                # install dependencies
+    bundle exec rake db:setup             # setup database
     bundle exec rake test                 # run tests
     bundle exec rake lint                 # run linters
 
@@ -14,3 +20,11 @@ querying.
 
     bundle exec rails s                   # start the web server process
     bundle exec ./bin/delayed_job start   # start worker process
+
+
+=== Database
+
+Captain's Log uses a single database, one that which this application need read
+and write access to. The database and schema create by `rake db:setup` is the
+one that external services use and require access to as well. These services
+should only need read-only access.
