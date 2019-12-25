@@ -64,8 +64,8 @@ ActiveRecord::Schema.define(version: 2019_12_25_052747) do
     t.string "label", null: false
     t.string "match", null: false
     t.bigint "book_id", null: false
-    t.datetime "created_at", precision: 6
-    t.datetime "updated_at", precision: 6
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.index ["book_id"], name: "index_extractors_on_book_id"
   end
 
@@ -75,8 +75,8 @@ ActiveRecord::Schema.define(version: 2019_12_25_052747) do
     t.string "match"
     t.string "text"
     t.bigint "book_id", null: false
-    t.datetime "created_at", precision: 6
-    t.datetime "updated_at", precision: 6
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
     t.index ["book_id"], name: "index_shorthands_on_book_id"
   end
 

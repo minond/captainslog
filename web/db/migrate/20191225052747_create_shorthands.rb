@@ -6,7 +6,7 @@ class CreateShorthands < ActiveRecord::Migration[6.0]
       t.string :match
       t.string :text
       t.belongs_to :book, null: false, foreign_key: true
-      t.timestamps :null => true
+      t.timestamps :null => false
     end
   end
 end
