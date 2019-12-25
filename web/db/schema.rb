@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_24_001445) do
+ActiveRecord::Schema.define(version: 2019_12_25_052747) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -60,6 +60,26 @@ ActiveRecord::Schema.define(version: 2019_12_24_001445) do
     t.index ["collection_id"], name: "index_entries_on_collection_id"
   end
 
+  create_table "extractors", force: :cascade do |t|
+    t.string "label", null: false
+    t.string "match", null: false
+    t.bigint "book_id", null: false
+    t.datetime "created_at", precision: 6
+    t.datetime "updated_at", precision: 6
+    t.index ["book_id"], name: "index_extractors_on_book_id"
+  end
+
+  create_table "shorthands", force: :cascade do |t|
+    t.integer "priority", null: false
+    t.string "expansion", null: false
+    t.string "match"
+    t.string "text"
+    t.bigint "book_id", null: false
+    t.datetime "created_at", precision: 6
+    t.datetime "updated_at", precision: 6
+    t.index ["book_id"], name: "index_shorthands_on_book_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", null: false
     t.string "encrypted_password", null: false
@@ -77,4 +97,6 @@ ActiveRecord::Schema.define(version: 2019_12_24_001445) do
   add_foreign_key "collections", "books"
   add_foreign_key "entries", "books"
   add_foreign_key "entries", "collections"
+  add_foreign_key "extractors", "books"
+  add_foreign_key "shorthands", "books"
 end
