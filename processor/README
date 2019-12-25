@@ -5,7 +5,9 @@ uses for processing.
 
 === Development
 
-Run and test with `go run ./...` and `go test ./...`.
+    go build ./...  # build the service
+    go run ./...    # run the service locally
+    go test ./...   # run all tests
 
 
 === Configuration
