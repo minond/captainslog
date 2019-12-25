@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"database/sql"
 	"net/http"
 	"net/http/httptest"
@@ -45,4 +46,17 @@ func makeRequest(t *testing.T, rawBody string, repo Repository) *httptest.Respon
 	service.ServeHTTP(rr, req)
 
 	return rr
+}
+
+type testRepository struct {
+	extractors []Extractor
+	shorthands []Shorthand
+}
+
+func (r *testRepository) FindExtractors(ctx context.Context, bookId int64) ([]Extractor, error) {
+	return r.extractors, nil
+}
+
+func (r *testRepository) FindShorthands(ctx context.Context, bookId int64) ([]Shorthand, error) {
+	return r.shorthands, nil
 }
