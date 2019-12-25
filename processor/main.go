@@ -14,7 +14,7 @@ func main() {
 	log.Println("setting up database connection")
 	db, err := sql.Open("postgres", dbConn)
 	if err != nil {
-		log.Fatalf("unable to open database connection: %v", err)
+		log.Fatalf("error: unable to open database connection: %v", err)
 	}
 
 	repo := NewRepository(db)
