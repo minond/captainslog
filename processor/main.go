@@ -1,34 +1,21 @@
 package main
 
 import (
-	"database/sql"
 	"log"
-	"net/http"
 	"os"
 )
 
 func main() {
-	dbConn := os.Getenv("PROCESSOR_DB_CONN")
-	httpListen := os.Getenv("PROCESSOR_HTTP_LISTEN")
-
-	if dbConn == "" {
-		log.Fatalf("error: empty PROCESSOR_DB_CONN value")
-	}
-
-	if httpListen == "" {
-		log.Fatalf("error: empty PROCESSOR_HTTP_LISTEN value")
-	}
-
-	log.Println("setting up database connection")
-	db, err := sql.Open("postgres", dbConn)
+	server, err := NewServer(ServerConfig{
+		dbConn:     os.Getenv("PROCESSOR_DB_CONN"),
+		httpListen: os.Getenv("PROCESSOR_HTTP_LISTEN"),
+	})
 	if err != nil {
-		log.Fatalf("error: unable to open database connection: %v", err)
+		panic(err)
 	}
 
-	repo := NewRepository(db)
-	serv := NewService(repo)
-
-	log.Printf("listening on %s", httpListen)
-	http.Handle("/", serv)
-	log.Fatal(http.ListenAndServe(httpListen, nil))
+	log.Printf("listening on %s", os.Getenv("PROCESSOR_HTTP_LISTEN"))
+	go server.Start()
+	server.ListenForShutdown()
+	log.Print("server shutdown is complete")
 }
