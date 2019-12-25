@@ -7,17 +7,22 @@ import (
 	_ "github.com/lib/pq"
 )
 
-type Repository struct {
+type Repository interface {
+	FindShorthands(ctx context.Context, bookID int64) ([]Shorthand, error)
+	FindExtractors(ctx context.Context, bookID int64) ([]Extractor, error)
+}
+
+type repository struct {
 	db *sql.DB
 }
 
-func NewRepository(db *sql.DB) *Repository {
-	return &Repository{
+func NewRepository(db *sql.DB) Repository {
+	return &repository{
 		db: db,
 	}
 }
 
-func (r *Repository) FindExtractors(ctx context.Context, bookID int64) ([]Extractor, error) {
+func (r *repository) FindExtractors(ctx context.Context, bookID int64) ([]Extractor, error) {
 	var extractors []Extractor
 
 	rows, err := r.db.QueryContext(ctx, "select label, match, type from extractors where book_id = $1", bookID)
@@ -51,7 +56,7 @@ func (r *Repository) FindExtractors(ctx context.Context, bookID int64) ([]Extrac
 	return extractors, nil
 }
 
-func (r *Repository) FindShorthands(ctx context.Context, bookID int64) ([]Shorthand, error) {
+func (r *repository) FindShorthands(ctx context.Context, bookID int64) ([]Shorthand, error) {
 	var shorthands []Shorthand
 
 	rows, err := r.db.QueryContext(ctx, "select priority, expansion, match, text from shorthands where book_id = $1", bookID)
