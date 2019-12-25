@@ -11,6 +11,14 @@ func main() {
 	dbConn := os.Getenv("PROCESSOR_DB_CONN")
 	httpListen := os.Getenv("PROCESSOR_HTTP_LISTEN")
 
+	if dbConn == "" {
+		log.Fatalf("error: empty PROCESSOR_DB_CONN value")
+	}
+
+	if httpListen == "" {
+		log.Fatalf("error: empty PROCESSOR_HTTP_LISTEN value")
+	}
+
 	log.Println("setting up database connection")
 	db, err := sql.Open("postgres", dbConn)
 	if err != nil {
