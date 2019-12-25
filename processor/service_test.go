@@ -6,6 +6,12 @@ import (
 	"testing"
 )
 
+func TestService_Error_BadJSON(t *testing.T) {
+	rr := makeRequest(t, ``, nil)
+	assertEqual(t, http.StatusBadRequest, rr.Code)
+	assertEqual(t, `{"message":"unable to parse request body"}`, rr.Body.String())
+}
+
 func TestService_Error_MissingText(t *testing.T) {
 	rr := makeRequest(t, `{}`, nil)
 	assertEqual(t, http.StatusBadRequest, rr.Code)
