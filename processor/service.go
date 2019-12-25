@@ -15,8 +15,8 @@ type ProcessingRequest struct {
 
 type ProcessingResponse struct {
 	Message string                 `json:"message"`
-	Text    string                 `json:"text"`
-	Data    map[string]interface{} `json:"data"`
+	Text    string                 `json:"text,omitempty"`
+	Data    map[string]interface{} `json:"data,omitempty"`
 }
 
 type Service struct {
