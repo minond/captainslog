@@ -49,14 +49,16 @@ func makeRequest(t *testing.T, rawBody string, repo Repository) *httptest.Respon
 }
 
 type testRepository struct {
-	extractors []Extractor
-	shorthands []Shorthand
+	extractorLookupError error
+	shorthandLookupError error
+	extractors           []Extractor
+	shorthands           []Shorthand
 }
 
 func (r *testRepository) FindExtractors(ctx context.Context, bookId int64) ([]Extractor, error) {
-	return r.extractors, nil
+	return r.extractors, r.extractorLookupError
 }
 
 func (r *testRepository) FindShorthands(ctx context.Context, bookId int64) ([]Shorthand, error) {
-	return r.shorthands, nil
+	return r.shorthands, r.shorthandLookupError
 }
