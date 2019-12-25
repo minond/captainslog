@@ -5,6 +5,7 @@ querying.
 
 === Requirements
 
+- Ruby 2.6.1
 - PostgreSQL 10.3
 
 

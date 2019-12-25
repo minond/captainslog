@@ -3,6 +3,11 @@ HTTP interface which accepts the text and book id of an entry which is then
 uses for processing.
 
 
+=== Requirements
+
+- See requirements for web application
+
+
 === Development
 
     go build ./...  # build the service
