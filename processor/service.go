@@ -32,64 +32,93 @@ func NewService(repo *Repository) *Service {
 func (s *Service) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	log.Println("handling request")
 
+	req, err := s.read(w, r)
+	if err != nil {
+		return
+	}
+
+	if !s.valid(w, req) {
+		return
+	}
+
+	text, data, err := s.process(w, req)
+	if err != nil {
+		return
+	}
+
+	respond(w, http.StatusOK, ok(text, data))
+}
+
+func (s Service) read(w http.ResponseWriter, r *http.Request) (*ProcessingRequest, error) {
 	contents, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		log.Printf("error: unable to read request body: %v", err)
 		w.WriteHeader(http.StatusBadRequest)
-		return
+		return nil, err
 	}
 	defer r.Body.Close()
 
-	var req ProcessingRequest
+	var req *ProcessingRequest
 	if err := json.Unmarshal(contents, &req); err != nil {
 		log.Printf("error: unable to parse request body: %v", err)
 		respond(w, http.StatusBadRequest, message("unable to parse request body"))
-		return
+		return nil, err
 	}
 
+	return req, nil
+}
+
+func (s Service) valid(w http.ResponseWriter, req *ProcessingRequest) bool {
 	if req.Text == "" {
 		log.Println("error: missing text in request")
 		respond(w, http.StatusBadRequest, message("missing text in request"))
-		return
+		return false
 	}
 
 	if req.BookID == 0 {
 		log.Println("error: missing book id in request")
 		respond(w, http.StatusBadRequest, message("missing book id in request"))
-		return
+		return false
 	}
 
-	ctx := context.Background()
+	return true
+}
 
+func (s Service) process(w http.ResponseWriter, req *ProcessingRequest) (string, map[string]interface{}, error) {
+	ctx := context.Background()
 	extractors, err := s.repo.FindExtractors(ctx, req.BookID)
 	if err != nil {
 		log.Printf("error: unable to find extractors: %v", err)
 		respond(w, http.StatusInternalServerError, message("unable to find extractors"))
-		return
+		return "", nil, err
 	}
 
 	shorthands, err := s.repo.FindShorthands(ctx, req.BookID)
 	if err != nil {
 		log.Printf("error: unable to find shorthands: %v", err)
 		respond(w, http.StatusInternalServerError, message("unable to find shorthands"))
-		return
+		return "", nil, err
 	}
 
 	text, data, err := Process(req.Text, shorthands, extractors)
 	if err != nil {
 		log.Printf("error: unable process text: %v", err)
 		respond(w, http.StatusInternalServerError, message("unable to process text"))
-		return
+		return "", nil, err
 	}
 
-	respond(w, http.StatusOK, ProcessingResponse{
-		Text: text,
-		Data: data,
-	})
+	return text, data, nil
 }
 
 func message(msg string) ProcessingResponse {
 	return ProcessingResponse{Message: msg}
+}
+
+func ok(text string, data map[string]interface{}) ProcessingResponse {
+	return ProcessingResponse{
+		Text: text,
+		Data: data,
+	}
 }
 
 func respond(w http.ResponseWriter, statusCode int, res interface{}) error {
