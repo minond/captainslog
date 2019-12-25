@@ -20,4 +20,5 @@ func TestService_Error_MissingBookID(t *testing.T) {
 func TestService_HappyPath_ServeHTTP(t *testing.T) {
 	rr := makeRequest(t, `{"text":"hi","book_id":2}`, &testRepository{})
 	assertEqual(t, http.StatusOK, rr.Code)
+	assertEqual(t, `{"text":"hi"}`, rr.Body.String())
 }
