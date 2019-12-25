@@ -28,12 +28,12 @@ func newMockDB(t *testing.T) (*sql.DB, sqlmock.Sqlmock) {
 	return db, mock
 }
 
-func newMockRepo(t *testing.T) (*Repository, *sql.DB, sqlmock.Sqlmock) {
+func newMockRepo(t *testing.T) (Repository, *sql.DB, sqlmock.Sqlmock) {
 	db, mock := newMockDB(t)
 	return NewRepository(db), db, mock
 }
 
-func makeRequest(t *testing.T, rawBody string, repo *Repository) *httptest.ResponseRecorder {
+func makeRequest(t *testing.T, rawBody string, repo Repository) *httptest.ResponseRecorder {
 	body := bytes.NewBufferString(rawBody)
 	req, err := http.NewRequest(http.MethodPost, "/", body)
 	if err != nil {
