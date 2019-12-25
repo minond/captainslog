@@ -3,6 +3,11 @@ HTTP interface which accepts the text and book id of an entry which is then
 uses for processing.
 
 
+=== Development
+
+Run and test with `go run ./...` and `go test ./...`.
+
+
 === Configuration
 
 The services needs to know what database to connect to and port binding
