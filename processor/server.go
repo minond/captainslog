@@ -14,6 +14,7 @@ import (
 
 type ServerConfig struct {
 	dbConn     string
+	dbDriver   string
 	httpListen string
 }
 
@@ -30,7 +31,11 @@ func NewServer(config ServerConfig) (*Server, error) {
 		return nil, errors.New("missing http listen value (PROCESSOR_HTTP_LISTEN)")
 	}
 
-	db, err := sql.Open("postgres", config.dbConn)
+	driver := "postgres"
+	if config.dbDriver != "" {
+		driver = config.dbDriver
+	}
+	db, err := sql.Open(driver, config.dbConn)
 	if err != nil {
 		return nil, fmt.Errorf("unable to open database connection: %v", err)
 	}

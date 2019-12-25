@@ -9,8 +9,14 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/DATA-DOG/go-txdb"
+
 	"github.com/DATA-DOG/go-sqlmock"
 )
+
+func init() {
+	txdb.Register("txdb", "postgres", "testconn")
+}
 
 func assertEqual(t *testing.T, expected, returned interface{}) {
 	t.Helper()
