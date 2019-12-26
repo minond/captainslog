@@ -7,7 +7,7 @@ detectors:
     enabled: false
   UncommunicativeVariableName:
     exclude:
-      - Processor::Client#request # has the variable name 'e', ok since it's in a rescue block
+      - ExternalService#self.client # has the variable name 'e', ok since it's in a rescue block
   FeatureEnvy:
     exclude:
       - ApplicationController#requested_time
@@ -15,6 +15,9 @@ detectors:
   UtilityFunction:
     exclude:
       - ProcessEntryJob#perform
+  TooManyStatements:
+    exclude:
+      - ExternalService#self.client
 
 directories:
   db/migrate:
