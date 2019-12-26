@@ -51,7 +51,7 @@ module ProcessorTest
   # @return [Tuple<ProcessorTest::HTTPResponse, String, Hash>]
   def self.new_sample_response
     expected_text = "hi"
-    expected_data = {"a" => "b"}
+    expected_data = { "a" => "b" }
     response = ProcessorTest.new_ok_response(expected_text, expected_data)
     [response, expected_text, expected_data]
   end
