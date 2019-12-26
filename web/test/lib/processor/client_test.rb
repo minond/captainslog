@@ -9,9 +9,15 @@ class ProcessorClientTest < ActiveSupport::TestCase
   end
 
   test "it raises any errors from the http request" do
-    poster = TestPoster.new(nil, StandardError.new("err"))
-    client = Processor::Client.new(poster)
+    client = Processor::Client.new(TestPoster.new(nil, StandardError.new("err")))
     assert_raises(Processor::Error) { client.request(Processor::Request.new) }
+  end
+
+  test "parses data from response when it is successful" do
+    client = Processor::Client.new(TestPoster.new)
+    response = client.request(Processor::Request.new)
+    assert_equal SampleResponse[:data][:text], response.text
+    assert_equal SampleResponse[:data][:data], response.data
   end
 
   SampleResponse =
