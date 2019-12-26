@@ -25,7 +25,7 @@ func TestService_Error_ExtractorLookup(t *testing.T) {
 	req := &ProcessingRequest{Text: "hi", BookID: 2}
 	service := NewService(repo)
 	_, err := service.Handle(context.TODO(), req)
-	assertEqual(t, errors.New("bad"), err)
+	assertEqual(t, ErrUnableToFetchExtractors, err)
 }
 
 func TestService_Error_ShorhandLookup(t *testing.T) {
@@ -33,7 +33,7 @@ func TestService_Error_ShorhandLookup(t *testing.T) {
 	req := &ProcessingRequest{Text: "hi", BookID: 2}
 	service := NewService(repo)
 	_, err := service.Handle(context.TODO(), req)
-	assertEqual(t, errors.New("bad"), err)
+	assertEqual(t, ErrUnableToFetchShorthands, err)
 }
 
 func TestService_HappyPath_ServeHTTP(t *testing.T) {

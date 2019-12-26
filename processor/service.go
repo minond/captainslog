@@ -6,8 +6,10 @@ import (
 )
 
 var (
-	ErrReqMissingText   = errors.New("missing text in request")
-	ErrReqMissingBookID = errors.New("missing book id in request")
+	ErrReqMissingText          = errors.New("missing text in request")
+	ErrReqMissingBookID        = errors.New("missing book id in request")
+	ErrUnableToFetchExtractors = errors.New("unable to fetch extractors")
+	ErrUnableToFetchShorthands = errors.New("unable to fetch shorthands")
 )
 
 type Service struct {
@@ -41,12 +43,12 @@ func (s *Service) Handle(ctx context.Context, req *ProcessingRequest) (*Processi
 
 	extractors, err := s.repo.FindExtractors(ctx, req.BookID)
 	if err != nil {
-		return nil, err
+		return nil, ErrUnableToFetchExtractors
 	}
 
 	shorthands, err := s.repo.FindShorthands(ctx, req.BookID)
 	if err != nil {
-		return nil, err
+		return nil, ErrUnableToFetchShorthands
 	}
 
 	text, data, err := Process(req.Text, shorthands, extractors)

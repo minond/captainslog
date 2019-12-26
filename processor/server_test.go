@@ -48,7 +48,7 @@ func TestServer_Error_ExtractorLookup(t *testing.T) {
 		extractorLookupError: errors.New("bad"),
 	})
 	assertEqual(t, http.StatusBadRequest, rr.Code)
-	assertEqual(t, `{"error":"unable to process text: bad"}`, rr.Body.String())
+	assertEqual(t, `{"error":"unable to process text: unable to fetch extractors"}`, rr.Body.String())
 }
 
 func TestServer_Error_ShorhandLookup(t *testing.T) {
@@ -56,7 +56,7 @@ func TestServer_Error_ShorhandLookup(t *testing.T) {
 		shorthandLookupError: errors.New("bad"),
 	})
 	assertEqual(t, http.StatusBadRequest, rr.Code)
-	assertEqual(t, `{"error":"unable to process text: bad"}`, rr.Body.String())
+	assertEqual(t, `{"error":"unable to process text: unable to fetch shorthands"}`, rr.Body.String())
 }
 
 func TestServer_HappyPath_ServeHTTP(t *testing.T) {
