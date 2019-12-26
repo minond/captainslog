@@ -15,7 +15,8 @@ module Processor
     # @raise [Processor::Error]
     # @return [Tuple<String, Hash>]
     def process
-      fail response if response.is_a?(Processor::Error)
+      raise response if response.is_a?(Processor::Error)
+
       [processed_text, processed_fields.merge(system_fields)]
     end
 
