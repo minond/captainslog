@@ -12,13 +12,48 @@ if ENV["CAPTAINS_LOG_USERNAME"]
                    :password => ENV["CAPTAINS_LOG_PASSWORD"],
                    :timezone => "America/Denver")
 
-  Book.create(:user => me,
-              :name => "Workouts",
-              :grouping => :day)
+  workouts = Book.create(:user => me,
+                         :name => "Workouts",
+                         :grouping => :day)
+  Extractor.create(:book => workouts,
+                   :label => "",
+                   :match => "",
+                   :type => 1)
+  Extractor.create(:book => workouts,
+                   :label => "exercise",
+                   :match => '^(.+),',
+                   :type => 0)
+  Extractor.create(:book => workouts,
+                   :label => "sets",
+                   :match => ',\\s{0,}(\\d+)\\s{0,}x',
+                   :type => 1)
+  Extractor.create(:book => workouts,
+                   :label => "reps",
+                   :match => '\\dx\\s{0,}(\\d+)',
+                   :type => 1)
+  Extractor.create(:book => workouts,
+                   :label => "weight",
+                   :match => '@\\s{0,}(\\d+(\\.\\d{1,2})?)$',
+                   :type => 1)
+  Extractor.create(:book => workouts,
+                   :label => "time"     ,
+                   :match => '(\\d+)\\s{0,}(sec|seconds|min|minutes|hour|hours)',
+                   :type => 1)
+  Extractor.create(:book => workouts,
+                   :label => "time_unit",
+                   :match => '\\d+\\s{0,}(sec|seconds|min|minutes|hour|hours)',
+                   :type => 0)
+  Extractor.create(:book => workouts,
+                   :label => "distance"     ,
+                   :match => '(\\d+(\\.\\d+)?)\\s{0,}(mile|miles|k|kilometers)',
+                   :type => 1)
+  Extractor.create(:book => workouts,
+                   :label => "distance_unit",
+                   :match => '\\d+\\s{0,}(mile|miles|k|kilometers)',
+                   :type => 0)
 
   blood_pressure = Book.create(:user => me,
                                :name => "Blood Pressure")
-
   Extractor.create(:book => blood_pressure,
                    :label => "a",
                    :match => "^(\\d+)\\s{0,}/",
