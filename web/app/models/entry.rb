@@ -10,7 +10,7 @@ class Entry < ApplicationRecord
   end
 
   def text=(text)
-    @processed_text = text
+    self.processed_text = text
   end
 
 private
