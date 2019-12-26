@@ -5,6 +5,7 @@ SimpleCov.start "rails"
 
 require_relative "../config/environment"
 require "rails/test_help"
+require_relative "./processor_test_helper"
 
 class ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
