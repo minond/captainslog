@@ -8,4 +8,12 @@ class ProcessorRunnerTest < ActiveSupport::TestCase
     runner = Processor::Runner.new(create(:entry), client)
     assert_raises(Processor::ProcessingError) { runner.process }
   end
+
+  # test "returns processing response text and data" do
+  #   response = ProcessorTest.ok_response("hi", {"a" => "b"})
+  #   poster = ProcessorTest::Poster.new(response)
+  #   client = Processor::Client.new(poster)
+  #   runner = Processor::Runner.new(create(:entry), client)
+  #   assert_raises(Processor::ProcessingError) { runner.process }
+  # end
 end

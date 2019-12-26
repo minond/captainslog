@@ -2,20 +2,10 @@ module ProcessorTest
   HTTPResponse =
     Struct.new(:code, :body)
 
-  SAMPLE_RESULTS = {
-    :data => {
-      :text => "hi",
-      :data => {}
-    }
-  }.freeze
-
-  SAMPLE_OK_RESPONSE =
-    ProcessorTest::HTTPResponse.new("200", JSON.dump(ProcessorTest::SAMPLE_RESULTS))
-
   class Poster
     attr_reader :res, :err, :calls
 
-    def initialize(res = SAMPLE_OK_RESPONSE, err = nil)
+    def initialize(res = ProcessorTest.ok_response, err = nil)
       @res = res
       @err = err
       @calls = []
@@ -36,7 +26,7 @@ module ProcessorTest
   # @param [String] text
   # @param [Hash] data
   # @return [ProcessorTest::HTTPResponse]
-  def self.ok_response(text, data)
+  def self.ok_response(text = "", data = {})
     response = {
       :data => {
         :text => text,
