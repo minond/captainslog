@@ -32,4 +32,18 @@ module ProcessorTest
       calls[index]
     end
   end
+
+  # @param [String] text
+  # @param [Hash] data
+  # @return [ProcessorTest::HTTPResponse]
+  def self.ok_response(text, data)
+    response = {
+      :data => {
+        :text => text,
+        :data => data
+      }
+    }
+
+    ProcessorTest::HTTPResponse.new("200", response.to_json)
+  end
 end

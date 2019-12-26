@@ -16,16 +16,13 @@ class ProcessorResponseTest < ActiveSupport::TestCase
   end
 
   test "#text" do
-    text = "text"
-    results = { :data => { :text => text } }
-    response = ProcessorTest::HTTPResponse.new("200", results.to_json)
-    assert_equal text, Processor::Response.new(response).text
+    response = ProcessorTest.ok_response("text", {})
+    assert_equal "text", Processor::Response.new(response).text
   end
 
   test "#data" do
     data = { "a" => "b" }
-    results = { :data => { :data => data } }
-    response = ProcessorTest::HTTPResponse.new("200", results.to_json)
+    response = ProcessorTest.ok_response("text", data)
     assert_equal data, Processor::Response.new(response).data
   end
 end
