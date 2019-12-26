@@ -66,10 +66,20 @@ type testRepository struct {
 	shorthands           []Shorthand
 }
 
-func (r *testRepository) FindExtractors(ctx context.Context, bookId int64) ([]Extractor, error) {
+func (r testRepository) FindExtractors(ctx context.Context, bookId int64) ([]Extractor, error) {
 	return r.extractors, r.extractorLookupError
 }
 
-func (r *testRepository) FindShorthands(ctx context.Context, bookId int64) ([]Shorthand, error) {
+func (r testRepository) FindShorthands(ctx context.Context, bookId int64) ([]Shorthand, error) {
 	return r.shorthands, r.shorthandLookupError
+}
+
+type testProcessor struct {
+	text string
+	data map[string]interface{}
+	err  error
+}
+
+func (r testProcessor) Process(text string, ss []Shorthand, es []Extractor) (string, map[string]interface{}, error) {
+	return r.text, r.data, r.err
 }

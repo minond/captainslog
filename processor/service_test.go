@@ -21,7 +21,7 @@ func TestService_Error_MissingBookID(t *testing.T) {
 }
 
 func TestService_Error_ExtractorLookup(t *testing.T) {
-	repo := &testRepository{extractorLookupError: errors.New("bad")}
+	repo := testRepository{extractorLookupError: errors.New("bad")}
 	req := &ProcessingRequest{Text: "hi", BookID: 2}
 	service := NewService(repo, NewProcessor())
 	_, err := service.Handle(context.TODO(), req)
@@ -29,15 +29,24 @@ func TestService_Error_ExtractorLookup(t *testing.T) {
 }
 
 func TestService_Error_ShorhandLookup(t *testing.T) {
-	repo := &testRepository{shorthandLookupError: errors.New("bad")}
+	repo := testRepository{shorthandLookupError: errors.New("bad")}
 	req := &ProcessingRequest{Text: "hi", BookID: 2}
 	service := NewService(repo, NewProcessor())
 	_, err := service.Handle(context.TODO(), req)
 	assertEqual(t, ErrUnableToFetchShorthands, err)
 }
 
+func TestService_Error_ProcessingError(t *testing.T) {
+	repo := testRepository{}
+	processor := testProcessor{err: errors.New("bad")}
+	req := &ProcessingRequest{Text: "hi", BookID: 2}
+	service := NewService(repo, processor)
+	_, err := service.Handle(context.TODO(), req)
+	assertEqual(t, ErrUnableProcessText, err)
+}
+
 func TestService_HappyPath_ServeHTTP(t *testing.T) {
-	repo := &testRepository{}
+	repo := testRepository{}
 	req := &ProcessingRequest{Text: "hi", BookID: 2}
 	service := NewService(repo, NewProcessor())
 	res, err := service.Handle(context.TODO(), req)

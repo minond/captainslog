@@ -10,6 +10,7 @@ var (
 	ErrReqMissingBookID        = errors.New("missing book id in request")
 	ErrUnableToFetchExtractors = errors.New("unable to fetch extractors")
 	ErrUnableToFetchShorthands = errors.New("unable to fetch shorthands")
+	ErrUnableProcessText       = errors.New("unable to process text")
 )
 
 type Service struct {
@@ -51,7 +52,7 @@ func (s *Service) Handle(ctx context.Context, req *ProcessingRequest) (*Processi
 
 	text, data, err := s.processor.Process(req.Text, shorthands, extractors)
 	if err != nil {
-		return nil, err
+		return nil, ErrUnableProcessText
 	}
 
 	return &ProcessingResponse{Text: text, Data: data}, nil
