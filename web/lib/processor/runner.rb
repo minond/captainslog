@@ -8,9 +8,10 @@ module Processor
     end
 
     # @param [Entry] entry
-    def initialize(entry)
+    # @param [Processor::Client] client, defaults to a new client
+    def initialize(entry, client = Processor::Client.new)
       @entry = entry
-      @client = Processor::Client.new
+      @client = client
     end
 
     # Runs entry through external text processor. Also generates standard

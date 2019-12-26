@@ -1,8 +1,10 @@
 module Processor
   class Client
     # @param [Hash] config
-    def initialize(config = Rails.application.config.processor)
+    # @param [HTTPPostClient] poster, defaults to `Net::HTTP`
+    def initialize(config = Rails.application.config.processor, poster = Net::HTTP)
       @config = config
+      @poster = poster
     end
 
     # @raise [Processor::Error]
@@ -15,7 +17,7 @@ module Processor
 
   private
 
-    attr_reader :config
+    attr_reader :config, :poster
 
     # @return [URI]
     def uri
@@ -33,7 +35,7 @@ module Processor
     # @param [Processor::Request] req
     # @return [Net::HTTPResponse] res
     def post(uri, req)
-      Net::HTTP.post(uri, req.to_json)
+      poster.post(uri, req.to_json)
     rescue StandardError => e
       raise Processor::Error, "unable to make request: #{e}"
     end
