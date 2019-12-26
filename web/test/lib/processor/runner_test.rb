@@ -20,4 +20,15 @@ class ProcessorRunnerTest < ActiveSupport::TestCase
     returned_text, returned_data = runner.process
     assert_equal expected_data["a"], returned_data["a"]
   end
+
+  test "returns system data" do
+    response, _, _ = ProcessorTest.new_sample_response
+    runner = ProcessorTest.new_runner_with_response(response)
+    _, data = runner.process
+
+    assert data[:_processed]
+    assert data[:_processed_at]
+    assert data[:_created_at]
+    assert data[:_updated_at]
+  end
 end
