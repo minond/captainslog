@@ -8,13 +8,27 @@ class ProcessorClientTest < ActiveSupport::TestCase
     assert_equal URI("http://addr"), poster[0][:uri]
   end
 
+  test "it raises any errors from the http request" do
+    poster = TestPoster.new(nil, StandardError.new("err"))
+    client = Processor::Client.new(poster)
+    assert_raises(Processor::Error) { client.request(Processor::Request.new) }
+  end
+
+  SampleResponse =
+    {
+      :data => {
+        :text => "hi",
+        :data => {}
+      }
+    }
+
   TestResponse =
     Struct.new(:code, :body)
 
   class TestPoster
     attr_reader :res, :err, :calls
 
-    def initialize(res = TestResponse.new(200, "{}"), err = nil)
+    def initialize(res = TestResponse.new("200", JSON.dump(SampleResponse)), err = nil)
       @res = res
       @err = err
       @calls = []
