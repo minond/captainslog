@@ -3,20 +3,14 @@ require "test_helper"
 class ProcessEntryJobTest < ActiveJob::TestCase
   test "updates text" do
     entry = build(:entry)
-    process_entry_job.perform(entry)
+    ProcessEntryJob.new.perform(entry, TestProcessor.new)
     assert_equal "updated text", entry.text
   end
 
   test "updates data" do
     entry = build(:entry)
-    process_entry_job.perform(entry)
+    ProcessEntryJob.new.perform(entry, TestProcessor.new)
     assert_equal "b", entry.data["a"]
-  end
-
-  def process_entry_job
-    job = ProcessEntryJob.new
-    job.processor = TestProcessor.new
-    job
   end
 
   class TestProcessor

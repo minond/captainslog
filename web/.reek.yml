@@ -15,7 +15,6 @@ detectors:
       - Processor::Client#response # refers to 'data' more than self
   UtilityFunction:
     exclude:
-      - BookTest#collections_for
       - ProcessEntryJob#perform
       - Processor::Client#error
       - Processor::Client#ok?

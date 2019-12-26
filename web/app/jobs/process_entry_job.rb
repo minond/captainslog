@@ -1,17 +1,11 @@
 class ProcessEntryJob < ApplicationJob
   queue_as :default
 
-  attr_writer :processor
-
   # @param [Entry] entry
-  def perform(entry)
+  def perform(entry, processor = Processor)
     text, data = processor.process(entry)
     entry.text = text
     entry.data = data
     entry.save
-  end
-
-  def processor
-    @processor || Processor
   end
 end
