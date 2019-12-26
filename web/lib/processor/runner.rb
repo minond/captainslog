@@ -22,7 +22,7 @@ module Processor
     # @raise [Processor::RequestError]
     # @return [Tuple<String, Hash>]
     def process
-      [processed_text, processed_fields.merge(system_fields)]
+      [processed_text, processed_data.merge(system_data)]
     end
 
   private
@@ -52,12 +52,12 @@ module Processor
     # extracted data.
     #
     # @return [Hash]
-    def processed_fields
+    def processed_data
       response.data || {}
     end
 
     # @return [Hash]
-    def system_fields
+    def system_data
       {
         :_processed => true,
         :_processed_at => Time.now.utc.to_i,
