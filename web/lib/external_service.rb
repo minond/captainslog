@@ -1,4 +1,7 @@
 module ExternalService
+  # Error is the top-level class for all external service errors.
+  Error = Class.new(StandardError)
+
   # Dynamically generate a client class for an external service
   #
   # @example

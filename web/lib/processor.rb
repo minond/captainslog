@@ -2,7 +2,7 @@ require "net/http"
 require "uri"
 
 module Processor
-  Error = Class.new(StandardError)
+  Error = Class.new(ExternalService::Error)
 
   # RequestError represents an error that occured _while making_ the request to
   # the processing service.
