@@ -11,8 +11,9 @@ type extractTest struct {
 }
 
 func runExtractTests(label string, t *testing.T, tests []extractTest, extractors []Extractor) {
+	p := processor{}
 	for _, test := range tests {
-		data, err := Extract(test.text, extractors)
+		data, err := p.Extract(test.text, extractors)
 		if err != nil {
 			t.Errorf("%s: unexpected error: %v", label, err)
 		}
@@ -71,8 +72,9 @@ func str(str string) *string {
 }
 
 func runExpandTests(label string, t *testing.T, tests []expandTest, shorthands []Shorthand) {
+	p := processor{}
 	for _, test := range tests {
-		output, err := Expand(test.input, shorthands)
+		output, err := p.Expand(test.input, shorthands)
 		if err != nil {
 			t.Errorf("%s: unexpected error: %v", label, err)
 		}
@@ -126,7 +128,8 @@ func TestProcess(t *testing.T) {
 		{Label: "weight", Match: `@\s{0,}(\d+)$`, Type: NumberData},
 	}
 
-	text, data, err := Process("Bench press, xxx 65", shorthands, extractors)
+	p := processor{}
+	text, data, err := p.Process("Bench press, xxx 65", shorthands, extractors)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
 	} else if text != expectedText {

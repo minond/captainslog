@@ -8,17 +8,27 @@ import (
 	"strings"
 )
 
-func Process(orig string, shorthands []Shorthand, extractors []Extractor) (string, map[string]interface{}, error) {
-	text, err := Expand(orig, shorthands)
+type Processor interface {
+	Process(string, []Shorthand, []Extractor) (string, map[string]interface{}, error)
+}
+
+type processor struct{}
+
+func NewProcessor() Processor {
+	return processor{}
+}
+
+func (p processor) Process(orig string, shorthands []Shorthand, extractors []Extractor) (string, map[string]interface{}, error) {
+	text, err := p.Expand(orig, shorthands)
 	if err != nil {
 		return text, nil, err
 	}
 
-	data, err := Extract(text, extractors)
+	data, err := p.Extract(text, extractors)
 	return text, data, err
 }
 
-func Extract(text string, extractors []Extractor) (map[string]interface{}, error) {
+func (processor) Extract(text string, extractors []Extractor) (map[string]interface{}, error) {
 	data := make(map[string]interface{})
 
 	for _, extractor := range extractors {
@@ -58,7 +68,7 @@ func Extract(text string, extractors []Extractor) (map[string]interface{}, error
 
 // Expand expands a string of text using shorthands. The rules for expansion
 // are taken from what is defined in the documentation for the Shorthand model.
-func Expand(text string, shorthands []Shorthand) (string, error) {
+func (processor) Expand(text string, shorthands []Shorthand) (string, error) {
 	for _, shorthand := range shorthands {
 		validText := shorthand.Text != nil
 		validMatch := shorthand.Match != nil

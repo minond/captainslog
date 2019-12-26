@@ -13,12 +13,14 @@ var (
 )
 
 type Service struct {
-	repo Repository
+	repo      Repository
+	processor Processor
 }
 
-func NewService(repo Repository) *Service {
+func NewService(repo Repository, processor Processor) *Service {
 	return &Service{
-		repo: repo,
+		repo:      repo,
+		processor: processor,
 	}
 }
 
@@ -47,7 +49,7 @@ func (s *Service) Handle(ctx context.Context, req *ProcessingRequest) (*Processi
 		return nil, ErrUnableToFetchShorthands
 	}
 
-	text, data, err := Process(req.Text, shorthands, extractors)
+	text, data, err := s.processor.Process(req.Text, shorthands, extractors)
 	if err != nil {
 		return nil, err
 	}

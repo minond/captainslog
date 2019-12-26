@@ -57,7 +57,7 @@ func NewServerFromConfig(config ServerConfig) (*Server, error) {
 	}
 
 	repo := NewRepository(db)
-	service := NewService(repo)
+	service := NewService(repo, NewProcessor())
 	server, err := NewServer(service)
 	if err != nil {
 		return nil, err

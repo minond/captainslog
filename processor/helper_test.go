@@ -48,7 +48,7 @@ func makeRequest(t *testing.T, rawBody string, repo Repository) *httptest.Respon
 	}
 
 	rr := httptest.NewRecorder()
-	service := NewService(repo)
+	service := NewService(repo, NewProcessor())
 	server, err := NewServer(service)
 	if err != nil {
 		t.Fatalf("unexpected error from NewServer: %v", err)
