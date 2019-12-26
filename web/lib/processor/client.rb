@@ -5,14 +5,11 @@ module Processor
       @config = config
     end
 
-    # @return [Processor::Response, Processor::Error]
+    # @raise [Processor::Error]
+    # @param [Processor::Request] req
+    # @return [Processor::Response]
     def request(req)
-      res = begin
-              Net::HTTP.post(uri, req.to_json)
-            rescue StandardError => e
-              return Processor::Error.new("unable to make request: #{e}")
-            end
-
+      res = post(uri, req)
       ok?(res) ? response(res) : error(res)
     end
 
@@ -29,6 +26,16 @@ module Processor
     # @return [Boolean]
     def ok?(res)
       res.code == "200"
+    end
+
+    # @raise [Processor::Error]
+    # @param [URI] uri
+    # @param [Processor::Request] req
+    # @return [Net::HTTPResponse] res
+    def post(uri, req)
+      Net::HTTP.post(uri, req.to_json)
+    rescue StandardError => e
+      raise Processor::Error, "unable to make request: #{e}"
     end
 
     # @param [Net::HTTPResponse] res

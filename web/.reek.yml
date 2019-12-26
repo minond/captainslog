@@ -7,7 +7,7 @@ detectors:
     enabled: false
   UncommunicativeVariableName:
     exclude:
-      - Processor::Client#request # has the variable name 'e', ok since it's in a rescue block
+      - Processor::Client#post # has the variable name 'e', ok since it's in a rescue block
   FeatureEnvy:
     exclude:
       - ApplicationController#requested_time
