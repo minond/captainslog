@@ -15,7 +15,9 @@ module Processor
     # @return [Processor::Response]
     def request(req)
       res = post(uri, req)
-      ok?(res) ? response(res) : error(res)
+      raise Processor::Error, "bad response: [#{res.code}] #{res.body}" unless ok?(res)
+
+      response(res)
     end
 
   private
@@ -49,12 +51,6 @@ module Processor
       data = parsed_response_data(res)
       Processor::Response.new(:text => data["text"],
                               :data => data["data"] || {})
-    end
-
-    # @param [Net::HTTPResponse] res
-    # @return [Processor::Error]
-    def error(res)
-      Processor::Error.new("bad response: [#{res.code}] #{res.body}")
     end
 
     # @param [Net::HTTPResponse] res
