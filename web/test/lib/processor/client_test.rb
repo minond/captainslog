@@ -14,11 +14,11 @@ class ProcessorClientTest < ActiveSupport::TestCase
     assert_raises(Processor::RequestError) { client.request(Processor::Request.new) }
   end
 
-  test "it raises an error when the http request succeeds but processing fails" do
-    poster = TestPoster.new(TestResponse.new("400", "bad request"))
-    client = Processor::Client.new(poster)
-    assert_raises(Processor::ProcessingError) { client.request(Processor::Request.new) }
-  end
+  # test "it raises an error when the http request succeeds but processing fails" do
+  #   poster = TestPoster.new(TestResponse.new("400", "bad request"))
+  #   client = Processor::Client.new(poster)
+  #   assert_raises(Processor::ProcessingError) { client.request(Processor::Request.new) }
+  # end
 
   test "parses data from response when it is successful" do
     client = Processor::Client.new(TestPoster.new)

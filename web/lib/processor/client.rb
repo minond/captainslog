@@ -10,15 +10,13 @@ module Processor
       @config = config
     end
 
-    # @raise [Processor::ProcessingError]
     # @raise [Processor::RequestError]
     # @param [Processor::Request] req
     # @return [Processor::Response]
     def request(req)
-      res = post(uri, req)
-      raise Processor::ProcessingError, "bad response: [#{res.code}] #{res.body}" unless ok?(res)
-
-      response(res)
+      Processor::Response.new(poster.post(uri, req.to_json))
+    rescue StandardError => e
+      raise Processor::RequestError, "unable to make request: #{e}"
     end
 
   private
@@ -28,36 +26,6 @@ module Processor
     # @return [URI]
     def uri
       URI(config[:address])
-    end
-
-    # @param [Net::HTTPResponse] res
-    # @return [Boolean]
-    def ok?(res)
-      res.code == "200"
-    end
-
-    # @raise [Processor::RequestError]
-    # @param [URI] uri
-    # @param [Processor::Request] req
-    # @return [Net::HTTPResponse] res
-    def post(uri, req)
-      poster.post(uri, req.to_json)
-    rescue StandardError => e
-      raise Processor::RequestError, "unable to make request: #{e}"
-    end
-
-    # @param [Net::HTTPResponse] res
-    # @return [Processor::Response]
-    def response(res)
-      data = parsed_response_data(res)
-      Processor::Response.new(:text => data["text"],
-                              :data => data["data"] || {})
-    end
-
-    # @param [Net::HTTPResponse] res
-    # @return [Hash]
-    def parsed_response_data(res)
-      @parsed_response_data ||= JSON.parse(res.body)["data"]
     end
   end
 end

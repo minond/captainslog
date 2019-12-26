@@ -53,7 +53,7 @@ module Processor
     #
     # @return [Hash]
     def processed_fields
-      response.data
+      response.data || {}
     end
 
     # @return [Hash]

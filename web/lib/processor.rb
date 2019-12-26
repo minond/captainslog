@@ -14,5 +14,4 @@ module Processor
   class ProcessingError < Error; end
 
   Request = Struct.new(:book_id, :text, :keyword_init => true)
-  Response = Struct.new(:text, :data, :keyword_init => true)
 end
