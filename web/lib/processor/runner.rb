@@ -1,8 +1,12 @@
-require "net/http"
-require "uri"
-
 module Processor
   class Runner
+    # @raise [Processor::Error]
+    # @param [Entry] entry
+    # @return [Tuple<String, Hash>]
+    def self.process(entry)
+      new(entry).process
+    end
+
     # @param [Entry] entry
     def initialize(entry)
       @entry = entry
