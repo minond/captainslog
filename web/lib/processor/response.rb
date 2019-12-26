@@ -7,7 +7,17 @@ module Processor
 
     # # @return [Boolean]
     def ok?
-      res.code == "200"
+      code == "200"
+    end
+
+    # @return [String]
+    def code
+      res.code
+    end
+
+    # @return [String]
+    def body
+      res.body
     end
 
     # @return [String]

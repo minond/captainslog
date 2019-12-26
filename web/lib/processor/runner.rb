@@ -22,6 +22,8 @@ module Processor
     # @raise [Processor::RequestError]
     # @return [Tuple<String, Hash>]
     def process
+      raise Processor::ProcessingError, "bad response: [#{response.code}] #{response.body}" unless response.ok?
+
       [processed_text, processed_data.merge(system_data)]
     end
 
