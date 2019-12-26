@@ -9,6 +9,10 @@ class Entry < ApplicationRecord
     processed_text || original_text
   end
 
+  def text=(text)
+    @processed_text = text
+  end
+
 private
 
   def constructor

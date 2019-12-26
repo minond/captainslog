@@ -3,6 +3,9 @@ class ProcessEntryJob < ApplicationJob
 
   # @param [Entry] entry
   def perform(entry)
-    Processor.process(entry).save
+    text, data = Processor.process(entry)
+    entry.text = text
+    entry.data = data
+    entry.save
   end
 end

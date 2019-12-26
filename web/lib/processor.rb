@@ -1,14 +1,49 @@
-module Processor
-  # @param [Entry] entry
-  # @return [Entry]
-  def self.process(entry)
-    entry.data = entry.data.merge(standard_fields(entry))
-    entry
-  end
+class Processor
+  Request = Struct.new(:book_id, :text, :keyword_init => true)
+  Response = Struct.new(:error, :data, :keyword_init => true)
+  Data = Struct.new(:text, :data, :keyword_init => true)
 
   # @param [Entry] entry
   # @return [Hash]
-  def self.standard_fields(entry)
+  def self.process(entry)
+    Processor.new(entry).process
+  end
+
+  # @param [Entry] entry
+  def initialize(entry)
+    @entry = entry
+  end
+
+  # Runs entry through external text processor. Also generates standard system
+  # data that it tags to the entry.
+  #
+  # @return [Tuple<String, Hash>]
+  def process
+    [processed_text, processed_fields.merge(system_fields)]
+  end
+
+private
+
+  attr_reader :entry
+
+  # Processes entry text through external processor service to generate processed text.
+  #
+  # @return [Hash]
+  def processed_text
+    entry.original_text
+  end
+
+  # Processes entry text through external processor service to generate extracted data.
+  #
+  # @return [Hash]
+  def processed_fields
+    # req = Request.new(:book_id => entry.book.id,
+    #                   :text => entry.original_text)
+    {}
+  end
+
+  # @return [Hash]
+  def system_fields
     {
       :_processed => true,
       :_processed_at => Time.now.utc.to_i,
