@@ -1,5 +1,5 @@
 module ProcessorTest
-  Response =
+  HTTPResponse =
     Struct.new(:code, :body)
 
   SAMPLE_RESULTS = {
@@ -10,7 +10,7 @@ module ProcessorTest
   }.freeze
 
   SAMPLE_OK_RESPONSE =
-    ProcessorTest::Response.new("200", JSON.dump(ProcessorTest::SAMPLE_RESULTS))
+    ProcessorTest::HTTPResponse.new("200", JSON.dump(ProcessorTest::SAMPLE_RESULTS))
 
   class Poster
     attr_reader :res, :err, :calls
