@@ -16,6 +16,19 @@ if ENV["CAPTAINS_LOG_USERNAME"]
               :name => "Workouts",
               :grouping => :day)
 
-  Book.create(:user => me,
-              :name => "Blood Pressure")
+  blood_pressure = Book.create(:user => me,
+                               :name => "Blood Pressure")
+
+  Extractor.create(:book => blood_pressure,
+                   :label => "a",
+                   :match => "^(\\d+)\\s{0,}/",
+                   :type => 1)
+  Extractor.create(:book => blood_pressure,
+                   :label => "b",
+                   :match => "/\\s{0,}(\\d+)",
+                   :type => 1)
+  Extractor.create(:book => blood_pressure,
+                   :label => "pulse",
+                   :match => "\\(pulse (\\d+)\\)",
+                   :type => 1)
 end
