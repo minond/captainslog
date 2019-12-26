@@ -1,7 +1,63 @@
+require "net/http"
+require "uri"
+
 class Processor
+  class Error < StandardError; end
+
   Request = Struct.new(:book_id, :text, :keyword_init => true)
-  Response = Struct.new(:error, :data, :keyword_init => true)
-  Data = Struct.new(:text, :data, :keyword_init => true)
+  Response = Struct.new(:text, :data, :keyword_init => true)
+
+  class Client
+    # @param [Hash] config
+    def initialize(config = Rails.application.config.processor)
+      @config = config
+    end
+
+    # @return [Net::HTTPResponse]
+    def request(req)
+      res = begin
+              Net::HTTP.post(uri, req.to_json)
+            rescue => err
+              return Processor::Error.new("unable to make request: #{err}")
+            end
+
+      ok?(res) ? response(res) : error(res)
+    end
+
+  private
+
+    # @return [URI]
+    def uri
+      URI(config[:address])
+    end
+
+    # @param [Net::HTTPResponse] res
+    # @return [Boolean]
+    def ok?(res)
+      res.code == "200"
+    end
+
+    # @param [Net::HTTPResponse] res
+    # @return [Processor::Response]
+    def response(res)
+      Processor::Response.new(:text => data(res)["text"],
+                              :data => data(res)["data"] || {})
+    end
+
+    # @param [Net::HTTPResponse] res
+    # @return [Processor::Error]
+    def error(res)
+      Processor::Error.new("bad response: [#{res.code}] #{res.body}")
+    end
+
+    # @param [Net::HTTPResponse] res
+    # @return [Hash]
+    def data(res)
+      @data ||= JSON.parse(res.body)["data"]
+    end
+
+    attr_reader :config
+  end
 
   # @param [Entry] entry
   # @return [Hash]
