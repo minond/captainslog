@@ -1,14 +1,8 @@
 module Processor
-  class Request
+  class Request < ExternalService::Request
     # @param [Entry] entry
     def initialize(entry)
       @entry = entry
-    end
-
-    # @param [Any] *args, defined to meet requirements for `JSON.generate`
-    # @return [String]
-    def to_json(*_args)
-      to_hash.to_json
     end
 
     # @return [Hash]
