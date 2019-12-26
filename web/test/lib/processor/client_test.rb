@@ -17,7 +17,7 @@ class ProcessorClientTest < ActiveSupport::TestCase
   test "parses data from response when it is successful" do
     processed_text = "testing"
     processed_data = { "a" => "b" }
-    service_response = ProcessorTest.ok_response(processed_text, processed_data)
+    service_response = ProcessorTest.new_ok_response(processed_text, processed_data)
     client = Processor::Client.new(ProcessorTest::Poster.new(service_response))
     response = client.request(Processor::Request.new(create(:entry)))
     assert_equal processed_text, response.text

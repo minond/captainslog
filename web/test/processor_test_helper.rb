@@ -5,7 +5,7 @@ module ProcessorTest
   class Poster
     attr_reader :res, :err, :calls
 
-    def initialize(res = ProcessorTest.ok_response, err = nil)
+    def initialize(res = ProcessorTest.new_ok_response, err = nil)
       @res = res
       @err = err
       @calls = []
@@ -26,7 +26,7 @@ module ProcessorTest
   # @param [String] text, defaults to an empty string
   # @param [Hash] data, defaults to an empty hash
   # @return [ProcessorTest::HTTPResponse]
-  def self.ok_response(text = "", data = {})
+  def self.new_ok_response(text = "", data = {})
     response = {
       :data => {
         :text => text,
@@ -52,7 +52,7 @@ module ProcessorTest
   def self.new_sample_response
     expected_text = "hi"
     expected_data = {"a" => "b"}
-    response = ProcessorTest.ok_response(expected_text, expected_data)
+    response = ProcessorTest.new_ok_response(expected_text, expected_data)
     [response, expected_text, expected_data]
   end
 end

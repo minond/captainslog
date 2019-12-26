@@ -16,13 +16,13 @@ class ProcessorResponseTest < ActiveSupport::TestCase
   end
 
   test "#text" do
-    response = ProcessorTest.ok_response("text", {})
+    response = ProcessorTest.new_ok_response("text", {})
     assert_equal "text", Processor::Response.new(response).text
   end
 
   test "#data" do
     data = { "a" => "b" }
-    response = ProcessorTest.ok_response("text", data)
+    response = ProcessorTest.new_ok_response("text", data)
     assert_equal data, Processor::Response.new(response).data
   end
 end
