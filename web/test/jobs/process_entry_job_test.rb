@@ -1,10 +1,16 @@
 require "test_helper"
 
 class ProcessEntryJobTest < ActiveJob::TestCase
-  test "calls out to external processor" do
+  test "updates text" do
     entry = build(:entry)
     process_entry_job.perform(entry)
     assert_equal "updated text", entry.text
+  end
+
+  test "updates data" do
+    entry = build(:entry)
+    process_entry_job.perform(entry)
+    assert_equal "b", entry.data["a"]
   end
 
   def process_entry_job
@@ -14,8 +20,8 @@ class ProcessEntryJobTest < ActiveJob::TestCase
   end
 
   class TestProcessor
-    def process(entry)
-      ["updated text", {:a => "a"}]
+    def process(_entry)
+      ["updated text", { :a => :b }]
     end
   end
 end
