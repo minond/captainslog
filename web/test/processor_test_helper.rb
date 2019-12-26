@@ -2,6 +2,12 @@ module ProcessorTest
   HTTPResponse =
     Struct.new(:code, :body)
 
+  class Runner
+    def run(_entry)
+      ["updated text", { :a => :b }]
+    end
+  end
+
   class Poster
     attr_reader :res, :err, :calls
 

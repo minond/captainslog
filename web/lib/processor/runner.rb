@@ -1,13 +1,5 @@
 module Processor
-  class Runner
-    # @raise [Processor::ProcessingError]
-    # @raise [Processor::RequestError]
-    # @param [Entry] entry
-    # @return [Tuple<String, Hash>]
-    def self.process(entry)
-      new(entry).process
-    end
-
+  class Runner < ExternalService::Runner
     # @param [Entry] entry
     # @param [Processor::Client] client, defaults to a new client
     def initialize(entry, client = Processor::Client.new)
@@ -21,7 +13,7 @@ module Processor
     # @raise [Processor::ProcessingError]
     # @raise [Processor::RequestError]
     # @return [Tuple<String, Hash>]
-    def process
+    def run
       raise Processor::ProcessingError, "bad response: [#{response.code}] #{response.body}" unless response.ok?
 
       [processed_text, processed_data.merge(system_data)]

@@ -4,7 +4,7 @@ class ProcessEntryJob < ApplicationJob
   # @param [Entry] entry
   # @param [Processor] processor, defaults to `Processor::Runner`
   def perform(entry, processor = Processor::Runner)
-    text, data = processor.process(entry)
+    text, data = processor.run(entry)
     entry.text = text
     entry.data = data
     entry.save
