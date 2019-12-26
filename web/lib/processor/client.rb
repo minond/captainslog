@@ -10,12 +10,13 @@ module Processor
       @config = config
     end
 
-    # @raise [Processor::Error]
+    # @raise [Processor::ProcessingError]
+    # @raise [Processor::RequestError]
     # @param [Processor::Request] req
     # @return [Processor::Response]
     def request(req)
       res = post(uri, req)
-      raise Processor::Error, "bad response: [#{res.code}] #{res.body}" unless ok?(res)
+      raise Processor::ProcessingError, "bad response: [#{res.code}] #{res.body}" unless ok?(res)
 
       response(res)
     end
@@ -35,14 +36,14 @@ module Processor
       res.code == "200"
     end
 
-    # @raise [Processor::Error]
+    # @raise [Processor::RequestError]
     # @param [URI] uri
     # @param [Processor::Request] req
     # @return [Net::HTTPResponse] res
     def post(uri, req)
       poster.post(uri, req.to_json)
     rescue StandardError => e
-      raise Processor::Error, "unable to make request: #{e}"
+      raise Processor::RequestError, "unable to make request: #{e}"
     end
 
     # @param [Net::HTTPResponse] res

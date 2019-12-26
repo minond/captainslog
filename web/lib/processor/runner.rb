@@ -1,6 +1,7 @@
 module Processor
   class Runner
-    # @raise [Processor::Error]
+    # @raise [Processor::ProcessingError]
+    # @raise [Processor::RequestError]
     # @param [Entry] entry
     # @return [Tuple<String, Hash>]
     def self.process(entry)
@@ -17,7 +18,8 @@ module Processor
     # Runs entry through external text processor. Also generates standard
     # system data that it tags to the entry.
     #
-    # @raise [Processor::Error]
+    # @raise [Processor::ProcessingError]
+    # @raise [Processor::RequestError]
     # @return [Tuple<String, Hash>]
     def process
       [processed_text, processed_fields.merge(system_fields)]
