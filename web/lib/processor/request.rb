@@ -5,12 +5,13 @@ module Processor
       @entry = entry
     end
 
-    # # @return [String]
-    def to_json
+    # @param [Any] *args, defined to meet requirements for `JSON.generate`
+    # @return [String]
+    def to_json(*_args)
       to_hash.to_json
     end
 
-    # # @return [Hash]
+    # @return [Hash]
     def to_hash
       {
         :book_id => entry.book_id,

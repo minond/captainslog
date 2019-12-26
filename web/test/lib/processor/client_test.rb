@@ -23,17 +23,16 @@ class ProcessorClientTest < ActiveSupport::TestCase
   test "parses data from response when it is successful" do
     client = Processor::Client.new(TestPoster.new)
     response = client.request(Processor::Request.new(create(:entry)))
-    assert_equal SampleResponse[:data][:text], response.text
-    assert_equal SampleResponse[:data][:data], response.data
+    assert_equal SAMPLE_RESPONSE[:data][:text], response.text
+    assert_equal SAMPLE_RESPONSE[:data][:data], response.data
   end
 
-  SampleResponse =
-    {
-      :data => {
-        :text => "hi",
-        :data => {}
-      }
+  SAMPLE_RESPONSE = {
+    :data => {
+      :text => "hi",
+      :data => {}
     }
+  }.freeze
 
   TestResponse =
     Struct.new(:code, :body)
@@ -41,7 +40,7 @@ class ProcessorClientTest < ActiveSupport::TestCase
   class TestPoster
     attr_reader :res, :err, :calls
 
-    def initialize(res = TestResponse.new("200", JSON.dump(SampleResponse)), err = nil)
+    def initialize(res = TestResponse.new("200", JSON.dump(SAMPLE_RESPONSE)), err = nil)
       @res = res
       @err = err
       @calls = []
