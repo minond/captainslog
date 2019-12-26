@@ -5,14 +5,20 @@ detectors:
     enabled: false
   NilCheck:
     enabled: false
+  UncommunicativeVariableName:
+    exclude:
+      - Processor::Client#request # has the variable name 'e', ok since it's in a rescue block
   FeatureEnvy:
     exclude:
       - ApplicationController#requested_time
       - Grouping#grouping_prev_next_times
+      - Processor::Client#response # refers to 'data' more than self
   UtilityFunction:
     exclude:
       - BookTest#collections_for
       - ProcessEntryJob#perform
+      - Processor::Client#error
+      - Processor::Client#ok?
 
 directories:
   db/migrate:

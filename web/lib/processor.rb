@@ -13,18 +13,20 @@ class Processor
       @config = config
     end
 
-    # @return [Net::HTTPResponse]
+    # @return [Processor::Response, Processor::Error]
     def request(req)
       res = begin
               Net::HTTP.post(uri, req.to_json)
-            rescue => err
-              return Processor::Error.new("unable to make request: #{err}")
+            rescue StandardError => e
+              return Processor::Error.new("unable to make request: #{e}")
             end
 
       ok?(res) ? response(res) : error(res)
     end
 
   private
+
+    attr_reader :config
 
     # @return [URI]
     def uri
@@ -40,8 +42,9 @@ class Processor
     # @param [Net::HTTPResponse] res
     # @return [Processor::Response]
     def response(res)
-      Processor::Response.new(:text => data(res)["text"],
-                              :data => data(res)["data"] || {})
+      data = parsed_response_data(res)
+      Processor::Response.new(:text => data["text"],
+                              :data => data["data"] || {})
     end
 
     # @param [Net::HTTPResponse] res
@@ -52,11 +55,9 @@ class Processor
 
     # @param [Net::HTTPResponse] res
     # @return [Hash]
-    def data(res)
-      @data ||= JSON.parse(res.body)["data"]
+    def parsed_response_data(res)
+      @parsed_response_data ||= JSON.parse(res.body)["data"]
     end
-
-    attr_reader :config
   end
 
   # @param [Entry] entry
