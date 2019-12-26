@@ -13,6 +13,12 @@ class ProcessEntryJobTest < ActiveJob::TestCase
     assert_equal "b", entry.data["a"]
   end
 
+  test "saves the entry" do
+    entry = create(:entry)
+    ProcessEntryJob.new.perform(entry, TestProcessor.new)
+    assert entry.persisted?
+  end
+
   class TestProcessor
     def process(_entry)
       ["updated text", { :a => :b }]
