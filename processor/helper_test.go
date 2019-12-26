@@ -40,6 +40,13 @@ func newMockRepo(t *testing.T) (Repository, *sql.DB, sqlmock.Sqlmock) {
 	return NewRepository(db), db, mock
 }
 
+func newMockService(t *testing.T) (*Service, Repository, *sql.DB, sqlmock.Sqlmock) {
+	db, mock := newMockDB(t)
+	repo := NewRepository(db)
+	service := NewService(repo)
+	return service, repo, db, mock
+}
+
 func makeRequest(t *testing.T, rawBody string, repo Repository) *httptest.ResponseRecorder {
 	body := bytes.NewBufferString(rawBody)
 	req, err := http.NewRequest(http.MethodPost, "/", body)
@@ -49,7 +56,8 @@ func makeRequest(t *testing.T, rawBody string, repo Repository) *httptest.Respon
 
 	rr := httptest.NewRecorder()
 	service := NewService(repo)
-	service.ServeHTTP(rr, req)
+	server, _ := NewServerWithService(service, ServerConfig{})
+	server.ServeHTTP(rr, req)
 
 	return rr
 }
