@@ -1,9 +1,6 @@
 package main
 
-import (
-	"log"
-	"os"
-)
+import "log"
 
 func main() {
 	server, err := NewServerFromEnv()
@@ -11,7 +8,7 @@ func main() {
 		panic(err)
 	}
 
-	log.Printf("listening on %s", os.Getenv("PROCESSOR_HTTP_LISTEN"))
+	log.Printf("listening on %s", server.Addr())
 	go server.Start()
 	server.ListenForShutdown()
 	log.Print("server shutdown is complete")

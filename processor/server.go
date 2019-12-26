@@ -78,6 +78,10 @@ func (s *Server) SetAddr(addr string) {
 	s.server.Addr = addr
 }
 
+func (s *Server) Addr() string {
+	return s.server.Addr
+}
+
 func (s *Server) Start() {
 	if err := s.server.ListenAndServe(); err != nil {
 		log.Fatal(err)
