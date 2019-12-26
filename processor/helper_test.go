@@ -49,7 +49,7 @@ func makeRequest(t *testing.T, rawBody string, repo Repository) *httptest.Respon
 
 	rr := httptest.NewRecorder()
 	service := NewService(repo)
-	server, _ := NewServerWithService(service, ServerConfig{})
+	server, _ := NewServer(service, &http.Server{})
 	server.ServeHTTP(rr, req)
 
 	return rr

@@ -30,7 +30,13 @@ type Server struct {
 	server  *http.Server
 }
 
-func NewServer(config ServerConfig) (*Server, error) {
+func NewServer(service *Service, server *http.Server) (*Server, error) {
+	s := &Server{service: service, server: server}
+	server.Handler = s
+	return s, nil
+}
+
+func NewServerFromConfig(config ServerConfig) (*Server, error) {
 	if config.dbConn == "" {
 		return nil, errors.New("missing database connection value (PROCESSOR_DB_CONN)")
 	}
@@ -43,6 +49,7 @@ func NewServer(config ServerConfig) (*Server, error) {
 	if config.dbDriver != "" {
 		driver = config.dbDriver
 	}
+
 	db, err := sql.Open(driver, config.dbConn)
 	if err != nil {
 		return nil, fmt.Errorf("unable to open database connection: %v", err)
@@ -50,15 +57,16 @@ func NewServer(config ServerConfig) (*Server, error) {
 
 	repo := NewRepository(db)
 	service := NewService(repo)
+	server := &http.Server{Addr: config.httpListen}
 
-	return NewServerWithService(service, config)
+	return NewServer(service, server)
 }
 
-func NewServerWithService(service *Service, config ServerConfig) (*Server, error) {
-	server := &Server{}
-	server.service = service
-	server.server = &http.Server{Addr: config.httpListen, Handler: server}
-	return server, nil
+func NewServerFromEnv() (*Server, error) {
+	return NewServerFromConfig(ServerConfig{
+		dbConn:     os.Getenv("PROCESSOR_DB_CONN"),
+		httpListen: os.Getenv("PROCESSOR_HTTP_LISTEN"),
+	})
 }
 
 func (s *Server) Start() {

@@ -6,10 +6,7 @@ import (
 )
 
 func main() {
-	server, err := NewServer(ServerConfig{
-		dbConn:     os.Getenv("PROCESSOR_DB_CONN"),
-		httpListen: os.Getenv("PROCESSOR_HTTP_LISTEN"),
-	})
+	server, err := NewServerFromEnv()
 	if err != nil {
 		panic(err)
 	}
