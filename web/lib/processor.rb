@@ -12,6 +12,4 @@ module Processor
   # means the request was successful, but there was an error in processing the
   # text.
   class ProcessingError < Error; end
-
-  Request = Struct.new(:book_id, :text, :keyword_init => true)
 end

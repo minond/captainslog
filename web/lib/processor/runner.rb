@@ -31,8 +31,7 @@ module Processor
 
     # @return [Processor::Request]
     def request
-      Processor::Request.new(:book_id => entry.book_id,
-                             :text => entry.original_text)
+      Processor::Request.new(entry)
     end
 
     # @return [Processor::Response]
