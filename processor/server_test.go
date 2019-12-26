@@ -64,3 +64,9 @@ func TestServer_HappyPath_ServeHTTP(t *testing.T) {
 	assertEqual(t, http.StatusOK, rr.Code)
 	assertEqual(t, `{"data":{"text":"hi"}}`, rr.Body.String())
 }
+
+func TestServer_AddGetterSetter(t *testing.T) {
+	server, _ := NewServer(nil)
+	server.SetAddr("xs")
+	assertEqual(t, "xs", server.Addr())
+}
