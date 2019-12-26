@@ -30,9 +30,10 @@ type Server struct {
 	server  *http.Server
 }
 
-func NewServer(service *Service, server *http.Server) (*Server, error) {
-	s := &Server{service: service, server: server}
-	server.Handler = s
+func NewServer(service *Service) (*Server, error) {
+	s := &Server{}
+	s.service = service
+	s.server = &http.Server{Handler: s}
 	return s, nil
 }
 
@@ -57,9 +58,13 @@ func NewServerFromConfig(config ServerConfig) (*Server, error) {
 
 	repo := NewRepository(db)
 	service := NewService(repo)
-	server := &http.Server{Addr: config.httpListen}
+	server, err := NewServer(service)
+	if err != nil {
+		return nil, err
+	}
 
-	return NewServer(service, server)
+	server.SetAddr(config.httpListen)
+	return server, nil
 }
 
 func NewServerFromEnv() (*Server, error) {
@@ -67,6 +72,10 @@ func NewServerFromEnv() (*Server, error) {
 		dbConn:     os.Getenv("PROCESSOR_DB_CONN"),
 		httpListen: os.Getenv("PROCESSOR_HTTP_LISTEN"),
 	})
+}
+
+func (s *Server) SetAddr(addr string) {
+	s.server.Addr = addr
 }
 
 func (s *Server) Start() {

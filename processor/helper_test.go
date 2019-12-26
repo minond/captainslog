@@ -49,7 +49,11 @@ func makeRequest(t *testing.T, rawBody string, repo Repository) *httptest.Respon
 
 	rr := httptest.NewRecorder()
 	service := NewService(repo)
-	server, _ := NewServer(service, &http.Server{})
+	server, err := NewServer(service)
+	if err != nil {
+		t.Fatalf("unexpected error from NewServer: %v", err)
+	}
+
 	server.ServeHTTP(rr, req)
 
 	return rr
