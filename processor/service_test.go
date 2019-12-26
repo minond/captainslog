@@ -7,14 +7,14 @@ import (
 )
 
 func TestService_Error_MissingText(t *testing.T) {
-	service, _, _, _ := newMockService(t)
+	service := NewService(nil)
 	req := &ProcessingRequest{}
 	_, err := service.Handle(context.TODO(), req)
 	assertEqual(t, ErrReqMissingText, err)
 }
 
 func TestService_Error_MissingBookID(t *testing.T) {
-	service, _, _, _ := newMockService(t)
+	service := NewService(nil)
 	req := &ProcessingRequest{Text: "hi"}
 	_, err := service.Handle(context.TODO(), req)
 	assertEqual(t, ErrReqMissingBookID, err)

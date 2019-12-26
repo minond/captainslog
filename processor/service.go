@@ -33,12 +33,8 @@ type ProcessingResponse struct {
 }
 
 func (s *Service) Handle(ctx context.Context, req *ProcessingRequest) (*ProcessingResponse, error) {
-	if req.Text == "" {
-		return nil, ErrReqMissingText
-	}
-
-	if req.BookID == 0 {
-		return nil, ErrReqMissingBookID
+	if err := s.validate(req); err != nil {
+		return nil, err
 	}
 
 	extractors, err := s.repo.FindExtractors(ctx, req.BookID)
@@ -57,4 +53,16 @@ func (s *Service) Handle(ctx context.Context, req *ProcessingRequest) (*Processi
 	}
 
 	return &ProcessingResponse{Text: text, Data: data}, nil
+}
+
+func (s *Service) validate(req *ProcessingRequest) error {
+	if req.Text == "" {
+		return ErrReqMissingText
+	}
+
+	if req.BookID == 0 {
+		return ErrReqMissingBookID
+	}
+
+	return nil
 }
