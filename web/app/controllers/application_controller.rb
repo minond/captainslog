@@ -25,6 +25,7 @@ private
   # @return [Block] &block
   def user_timezone(&block)
     return yield unless current_user
+
     Time.use_zone(current_user.timezone, &block)
   end
 
