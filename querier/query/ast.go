@@ -1,3 +1,4 @@
+//go:generate stringer -type=QueryType
 package query
 
 import (
