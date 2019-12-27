@@ -15,3 +15,6 @@ en:
 
   enter_new_log: "Enter a new log for %{datetime}"
   end_of_list: "End of list"
+
+  search_results_for: "Search results for \"%{query}\":"
+  no_search_results_for: "There were no results for \"%{query}\"."

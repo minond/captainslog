@@ -9,7 +9,7 @@
           <form action="<%= search_path %>" class="search">
             <label>
               <%= image_tag("search.svg") %>
-              <input type="text" />
+              <input type="text" name="query" />
             </label>
           </form>
           <%= link_to t(:sign_out), destroy_user_session_path, :class => "right", :method => :delete %>
