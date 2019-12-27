@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_25_054625) do
+ActiveRecord::Schema.define(version: 2019_12_27_231209) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -56,8 +56,10 @@ ActiveRecord::Schema.define(version: 2019_12_25_054625) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.jsonb "data"
+    t.bigint "user_id", null: false
     t.index ["book_id"], name: "index_entries_on_book_id"
     t.index ["collection_id"], name: "index_entries_on_collection_id"
+    t.index ["user_id"], name: "index_entries_on_user_id"
   end
 
   create_table "extractors", force: :cascade do |t|
@@ -98,6 +100,7 @@ ActiveRecord::Schema.define(version: 2019_12_25_054625) do
   add_foreign_key "collections", "books"
   add_foreign_key "entries", "books"
   add_foreign_key "entries", "collections"
+  add_foreign_key "entries", "users"
   add_foreign_key "extractors", "books"
   add_foreign_key "shorthands", "books"
 end
