@@ -25,6 +25,7 @@ private
 
   def entry(overrides = {})
     @entry ||= Entry.new({ :book => book,
+                           :user => book.user,
                            :collection => collection,
                            :original_text => "hi" }.merge(overrides))
   end
