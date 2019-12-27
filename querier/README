@@ -10,9 +10,10 @@ generate and execute a query against the extracted processing data.
 
 === Development
 
-    go build ./...  # build the service
-    go run ./...    # run the service locally
-    go test ./...   # run all tests
+    go generate./...  # execute code generators
+    go build ./...    # build the service
+    go run ./...      # run the service locally
+    go test ./...     # run all tests
 
 
 === Configuration

@@ -1,4 +1,4 @@
-//go:generate stringer -type=tok
+//go:generate stringer -type=Tok
 package query
 
 import (
