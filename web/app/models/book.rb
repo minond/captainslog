@@ -5,9 +5,7 @@ class Book < ApplicationRecord
 
   after_initialize :constructor
 
-  validates :grouping, :presence => true
-  validates :name, :presence => true
-  validates :user, :presence => true
+  validates :grouping, :name, :user, :presence => true
 
   enum :grouping => %i[none day], :_prefix => :group_by
 
