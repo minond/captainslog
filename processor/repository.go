@@ -8,8 +8,8 @@ import (
 )
 
 type Repository interface {
-	FindShorthands(ctx context.Context, bookID int64) ([]Shorthand, error)
-	FindExtractors(ctx context.Context, bookID int64) ([]Extractor, error)
+	FindShorthands(context.Context, int64) ([]Shorthand, error)
+	FindExtractors(context.Context, int64) ([]Extractor, error)
 }
 
 type repository struct {
@@ -97,7 +97,3 @@ func (r *repository) FindShorthands(ctx context.Context, bookID int64) ([]Shorth
 
 	return shorthands, nil
 }
-
-// func Open() (*sql.DB, error) {
-// 	return sql.Open("postgres", "postgres://postgres@localhost:5432/captainslog?sslmode=disable")
-// }
