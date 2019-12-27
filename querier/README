@@ -2,6 +2,11 @@ The querier service handles request for entry querying. It exposes an HTTP
 interface which accepts the sql and user information which it then uses to
 generate and execute a query against the extracted processing data.
 
+The SQL query is rewritten so that it is able to be executed in the application
+database (converts columns into json selectors for the `data` column, converts
+book in `from` clause into a filter and uses correct table) and add filters to
+the query for the appropriate user and book.
+
 
 === Requirements
 
