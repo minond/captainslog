@@ -269,13 +269,13 @@ func (b BinaryExpr) String() string {
 
 type UnaryExpr struct {
 	Op    string
-	Tight Expr
+	Right Expr
 }
 
 func (UnaryExpr) isExpr() {}
 
 func (b UnaryExpr) String() string {
-	return fmt.Sprintf("%s %s", b.Op, b.Tight.String())
+	return fmt.Sprintf("%s %s", b.Op, b.Right.String())
 }
 
 type IsNull struct {

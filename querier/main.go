@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/k0kubun/pp"
 	"github.com/minond/captainslog/querier/query"
 )
@@ -19,4 +21,5 @@ order by created_at asc`
 		panic(err)
 	}
 	pp.Println(ast)
+	fmt.Println(ast.Print(true))
 }
