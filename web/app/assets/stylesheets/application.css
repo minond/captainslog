@@ -164,9 +164,11 @@ header td:nth-child(2) {
 /* BOOK NAV ***************************************************************/
 
 .books-nav {
-  padding: .75rem 0;
-  border-top: 1px solid #c2c2c2;
   border-bottom: 1px solid #c2c2c2;
+  border-top: 1px solid #c2c2c2;
+  overflow-x: scroll;
+  padding: .75rem 0;
+  white-space: nowrap;
 }
 
 .books-nav a {
@@ -177,7 +179,7 @@ header td:nth-child(2) {
 
 .books-nav a.active,
 .books-nav a:hover {
-  font-weight: bold;
+  color: black;
 }
 
 .books-nav a + a {
