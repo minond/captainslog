@@ -5,6 +5,10 @@ class Book < ApplicationRecord
 
   after_initialize :constructor
 
+  validates :user, :presence => true
+  validates :name, :presence => true
+  validates :grouping, :presence => true
+
   enum :grouping => %i[none day], :_prefix => :group_by
 
   # @param [String] text

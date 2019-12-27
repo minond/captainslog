@@ -4,4 +4,6 @@ class User < ApplicationRecord
   devise :database_authenticatable, :rememberable, :validatable
 
   has_many :books
+
+  validates :email, :presence => true
 end

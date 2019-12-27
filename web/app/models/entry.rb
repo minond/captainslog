@@ -5,6 +5,10 @@ class Entry < ApplicationRecord
   after_initialize :constructor
   after_create :schedule_processing
 
+  validates :book, :presence => true
+  validates :collection, :presence => true
+  validates :original_text, :presence => true
+
   def text
     processed_text || original_text
   end
