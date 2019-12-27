@@ -16,6 +16,7 @@ class Book < ApplicationRecord
   def add_entry(text, time = Time.current)
     collection = find_collection(time) || create_collection(time)
     Entry.create(:book => self,
+                 :user => user,
                  :collection => collection,
                  :original_text => text)
   end

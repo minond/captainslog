@@ -1,11 +1,15 @@
 class Entry < ApplicationRecord
   belongs_to :book
   belongs_to :collection
+  belongs_to :user
 
   after_initialize :constructor
   after_create :schedule_processing
 
-  validates :book, :collection, :original_text, :presence => true
+  validates :book, :collection, :user, :original_text, :presence => true
+
+  scope :by_user, ->(user) { where(:user => user) }
+  scope :by_text, ->(text) { where("processed_text ilike ?", "%#{text}%") }
 
   def text
     processed_text || original_text
