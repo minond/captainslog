@@ -3,9 +3,9 @@
     <div class="entry-item">
       <span><%= entry.text %></span>
 
-      <% unless entry.data.empty? %>
+      <% unless entry.user_data.empty? %>
         <div class="entry-datum">
-          <% entry.data.each do |key, val| %>
+          <% entry.user_data.each do |key, val| %>
             <span class="entry-data"><%= key %>: <%= val %></span>
           <% end %>
         </div>
