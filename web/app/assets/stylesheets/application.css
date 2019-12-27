@@ -67,13 +67,14 @@ input[type=checkbox] {
 input[type=text],
 input[type=password],
 input[type=email] {
-  padding: .5rem;
-  width: 100%;
   border-style: solid;
   border-width: 1px;
+  box-sizing: border-box;
   font-size: 100%;
   line-height: 1.15;
   margin: 0;
+  padding: .5rem;
+  width: 100%;
 }
 
 input[type=submit] {
@@ -163,6 +164,7 @@ header td:nth-child(2) {
 .login-form {
   max-width: 30rem;
   margin: 5rem auto;
+  padding: 1rem;
 }
 
 /* BOOK NAV ***************************************************************/
