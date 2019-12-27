@@ -1,0 +1,23 @@
+name: Querier Service
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Set up Go 1.13
+      uses: actions/setup-go@v1
+      with:
+        go-version: 1.13
+      id: go
+
+    - name: Run build
+      working-directory: ./querier
+      run: go build ./...
+
+    - name: Run tests
+      working-directory: ./querier
+      run: go test ./... -v
