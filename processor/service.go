@@ -36,7 +36,7 @@ type ProcessingResponse struct {
 }
 
 func (s *Service) Handle(ctx context.Context, req *ProcessingRequest) (*ProcessingResponse, error) {
-	if err := s.validate(req); err != nil {
+	if err := validateServiceRequest(req); err != nil {
 		return nil, err
 	}
 
@@ -58,7 +58,7 @@ func (s *Service) Handle(ctx context.Context, req *ProcessingRequest) (*Processi
 	return &ProcessingResponse{Text: text, Data: data}, nil
 }
 
-func (s *Service) validate(req *ProcessingRequest) error {
+func validateServiceRequest(req *ProcessingRequest) error {
 	if req.Text == "" {
 		return ErrReqMissingText
 	}
