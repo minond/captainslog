@@ -14,6 +14,19 @@ var (
 	ErrQueryProcessing  = errors.New("unable to process query")
 )
 
+type QueryExecutionError struct {
+	Query string
+	Err   error
+}
+
+func (e *QueryExecutionError) Error() string {
+	return e.Query + ": " + e.Err.Error()
+}
+
+func (e *QueryExecutionError) Unwrap() error {
+	return e.Err
+}
+
 type Service struct {
 	repo Repository
 }
@@ -51,7 +64,10 @@ func (s *Service) Handle(ctx context.Context, req *QueryRequest) (*QueryResponse
 
 	columns, results, err := s.repo.Execute(ctx, sanitized.String())
 	if err != nil {
-		return nil, err
+		return nil, &QueryExecutionError{
+			Query: req.Query,
+			Err:   err,
+		}
 	}
 
 	response := &QueryResponse{
