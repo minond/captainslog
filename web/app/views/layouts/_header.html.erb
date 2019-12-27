@@ -6,6 +6,12 @@
       </td>
       <td>
         <% if current_user %>
+          <form action="/search" class="search">
+            <label>
+              <%= image_tag("search.svg") %>
+              <input type="text" />
+            </label>
+          </form>
           <%= link_to t(:sign_out), destroy_user_session_path, :class => "right", :method => :delete %>
         <% else %>
           <%= link_to t(:sign_in), new_user_session_path, :class => "right" %>

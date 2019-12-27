@@ -20,7 +20,7 @@ querying.
     bundle exec rake lint:all             # run all linters
 
     bundle exec rails s                   # start the web server process
-    bundle exec ./bin/delayed_job start   # start worker process
+    bundle exec ./bin/delayed_job start   # start the background worker process
 
 
 === Database

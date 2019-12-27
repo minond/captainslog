@@ -43,10 +43,6 @@ h1, h2, h3 {
   font-weight: 500;
 }
 
-header {
-  padding: .8rem;
-}
-
 a,
 a:visited {
   text-decoration: none;
@@ -54,7 +50,6 @@ a:visited {
 }
 
 label {
-  display: block;
   font-size: 1rem;
   line-height: 1.5;
   color: rgba(0,0,0,.8);
@@ -127,15 +122,12 @@ table, tr, td {
 
 /* HEADER *****************************************************************/
 
-.logo {
-  display: flex;
+header {
+  padding: .8rem;
 }
 
-.logo img {
-  height: 30px;
-}
-
-header table, header tbody {
+header table,
+header tbody {
   width: 100%;
 }
 
@@ -145,10 +137,56 @@ header td {
 
 header td:nth-child(1) {
   text-align: left;
+  width: 1%;
 }
 
 header td:nth-child(2) {
   text-align: right;
+}
+
+header .logo {
+  display: flex;
+}
+
+header .logo img {
+  height: 30px;
+}
+
+header .search {
+  display: flex;
+  position: relative;
+  margin-right: 20px;
+}
+
+header .search,
+header .search input {
+  display: inline;
+}
+
+header .search input {
+  border: none;
+  width: 0;
+  margin-right: 40px;
+  height: 20px;
+  padding: 0;
+  outline: none;
+  transition: width .5s;
+}
+
+header .search:focus input,
+header .search:active input,
+header .search input:focus,
+header .search input:active {
+  border-bottom: 1px solid rgba(0, 0, 0, .2);
+  width: 50%;
+  max-width: 300px;
+}
+
+header .search img {
+  height: 20px;
+  cursor: pointer;
+  position: absolute;
+  right: 10px;
 }
 
 /* BODY *******************************************************************/
