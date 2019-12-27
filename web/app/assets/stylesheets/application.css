@@ -262,3 +262,21 @@ header td:nth-child(2) {
   border: 1px solid rgba(0, 0, 0, .6);
   color: rgba(0, 0, 0, .8);
 }
+
+.entry-list-fin {
+  text-align: center;
+  padding: 3rem;
+  font-size: .8rem;
+  font-style: italic;
+  color: rgba(0, 0, 0, .8);
+}
+
+.entry-list-fin::before {
+  margin-right: 5px;
+  content: '-';
+}
+
+.entry-list-fin::after {
+  margin-left: 5px;
+  content: '-';
+}

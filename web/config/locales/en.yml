@@ -14,3 +14,4 @@ en:
   remember_me: "Remember me"
 
   enter_new_log: "Enter a new log for %{datetime}"
+  end_of_list: "End of list"
