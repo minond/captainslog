@@ -1,9 +1,16 @@
 <header>
-  <%= link_to t(:captains_log), root_path %>
-
-  <% if current_user %>
-    <%= link_to t(:sign_out), destroy_user_session_path, :class => "right", :method => :delete %>
-  <% else %>
-    <%= link_to t(:sign_in), new_user_session_path, :class => "right" %>
-  <% end %>
+  <table>
+    <tr>
+      <td>
+        <%= link_to image_tag("logo.png"), root_path, :class => "logo" %>
+      </td>
+      <td>
+        <% if current_user %>
+          <%= link_to t(:sign_out), destroy_user_session_path, :class => "right", :method => :delete %>
+        <% else %>
+          <%= link_to t(:sign_in), new_user_session_path, :class => "right" %>
+        <% end %>
+      </td>
+    </tr>
+  </table>
 </header>

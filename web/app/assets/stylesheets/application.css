@@ -90,6 +90,12 @@ input[type=submit] {
   padding: .5rem .75rem;
 }
 
+table, tr, td {
+  padding: 0;
+  margin: 0;
+  border-collapse: collapse;
+}
+
 /* HELPERS ****************************************************************/
 
 .right {
@@ -120,6 +126,32 @@ input[type=submit] {
 #alert {
   background: #ffeaea;
   border-color: #ff3e3e;
+}
+
+/* HEADER *****************************************************************/
+
+.logo {
+  display: flex;
+}
+
+.logo img {
+  height: 30px;
+}
+
+header table, header tbody {
+  width: 100%;
+}
+
+header td {
+  width: 50%;
+}
+
+header td:nth-child(1) {
+  text-align: left;
+}
+
+header td:nth-child(2) {
+  text-align: right;
 }
 
 /* LOGIN ******************************************************************/
