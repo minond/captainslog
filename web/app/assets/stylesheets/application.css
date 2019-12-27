@@ -43,14 +43,8 @@ h1, h2, h3 {
   font-weight: 500;
 }
 
-body {
-  margin: 0 auto;
-  max-width: 50rem;
-  padding: 0 10px;
-}
-
 header {
-  padding: .8rem 0;
+  padding: .8rem;
 }
 
 a,
@@ -113,9 +107,11 @@ table, tr, td {
 /* FLASH ******************************************************************/
 
 #notice, #alert {
-  border-width: 1px;
-  border-style: solid;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  margin: 0;
   padding: 10px;
+  text-align: center;
 }
 
 #notice {
@@ -154,6 +150,14 @@ header td:nth-child(2) {
   text-align: right;
 }
 
+/* BODY *******************************************************************/
+
+.content-view {
+  margin: 0 auto;
+  max-width: 50rem;
+  padding: 0 10px;
+}
+
 /* LOGIN ******************************************************************/
 
 .login-form {
@@ -167,7 +171,7 @@ header td:nth-child(2) {
   border-bottom: 1px solid #c2c2c2;
   border-top: 1px solid #c2c2c2;
   overflow-x: scroll;
-  padding: .75rem 0;
+  padding: .8rem;
   white-space: nowrap;
 }
 

@@ -1,12 +1,14 @@
 <%= render "book/nav", :books => books, :current_book => book %>
 
-<form method="post" action="<%= book_entry_path(book) %>" class="entry-add-form">
-  <%= hidden_field_tag :authenticity_token, form_authenticity_token -%>
-  <%= hidden_field_tag :book_id, book.id -%>
-  <%= hidden_field_tag :requested_time, requested_time.to_i -%>
+<div class="content-view">
+  <form method="post" action="<%= book_entry_path(book) %>" class="entry-add-form">
+    <%= hidden_field_tag :authenticity_token, form_authenticity_token -%>
+    <%= hidden_field_tag :book_id, book.id -%>
+    <%= hidden_field_tag :requested_time, requested_time.to_i -%>
 
-  <%= render "entry/input", :requested_time => requested_time %>
-  <%= render "entry/group_nav", :book => book, :requested_time => requested_time %>
-</form>
+    <%= render "entry/input", :requested_time => requested_time %>
+    <%= render "entry/group_nav", :book => book, :requested_time => requested_time %>
+  </form>
 
-<%= render "entry/list", :entries => entries %>
+  <%= render "entry/list", :entries => entries %>
+</div>
