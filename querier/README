@@ -1,0 +1,25 @@
+The querier service handles request for entry querying. It exposes an HTTP
+interface which accepts the sql and user information which it then uses to
+generate and execute a query against the extracted processing data.
+
+
+=== Requirements
+
+- See requirements for web application
+
+
+=== Development
+
+    go build ./...  # build the service
+    go run ./...    # run the service locally
+    go test ./...   # run all tests
+
+
+=== Configuration
+
+The services needs to know what database to connect to and port binding
+information for the HTTP service. This is done using the following environment
+variables:
+
+    QUERIER_DB_CONN     # database connection url, example "postgres://ro_user@localhost:5432/captainslog"
+    QUERIER_HTTP_LISTEN # http host/port string, example ":8082"
