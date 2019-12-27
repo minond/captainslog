@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/minond/captainslog/master/web/app/assets/images/logo.png" />
+![Captain's Log](https://raw.githubusercontent.com/minond/captainslog/master/web/app/assets/images/logo.png | width=100)
 
 Captain's Log is an application for logging anything you want.
 
