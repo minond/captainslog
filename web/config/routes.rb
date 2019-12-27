@@ -3,6 +3,8 @@ Rails.application.routes.draw do
 
   devise_for :users, :skip => [:registrations]
 
+  resource :search, :only => [:show]
+
   resources :book, :only => [:show] do
     resource :entry, :only => [:create]
   end

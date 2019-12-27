@@ -6,7 +6,7 @@
       </td>
       <td>
         <% if current_user %>
-          <form action="/search" class="search">
+          <form action="<%= search_path %>" class="search">
             <label>
               <%= image_tag("search.svg") %>
               <input type="text" />
