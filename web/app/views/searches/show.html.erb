@@ -6,5 +6,6 @@
   <% else %>
     <h2><%= t(:search_results_for, :query => query) %></h2>
     <%= render "entry/list", :entries => results %>
+    <%= render "entry/fin" %>
   <% end %>
 </div>
