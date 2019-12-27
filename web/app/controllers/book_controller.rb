@@ -1,5 +1,6 @@
 class BookController < ApplicationController
-  around_action :use_user_timezone, :if => :current_user
+  around_action :user_timezone
+  before_action :require_login
 
   # === URL
   #   GET /book/:id

@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::Base
+private
+
   # Helper method for rendering a view with local variables.
   #
   # @example
@@ -18,11 +20,20 @@ class ApplicationController < ActionController::Base
   # timezone is applied as the request is processed.
   #
   # @example
-  #   around_action :use_user_timezone, :if => :current_user
+  #   around_action :user_timezone
   #
   # @return [Block] &block
-  def use_user_timezone(&block)
+  def user_timezone(&block)
+    return yield unless current_user
     Time.use_zone(current_user.timezone, &block)
+  end
+
+  # Redirect request to the login page when there is no active session.
+  #
+  # @example
+  #   before_action :require_login
+  def require_login
+    redirect_to(new_user_session_url) unless current_user
   end
 
   # The requsted time represents the time that a user is requesting entries be
