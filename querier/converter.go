@@ -2,9 +2,30 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/minond/captainslog/querier/query"
 )
+
+// Convert takes an AST and rewrites it so that it is able to be executed in
+// the application database (converts columns to JSON selectors, rewrites book
+// in from clause to use correct filter, etc.) and add filters to the query for
+// the appropriate user and book.
+func Convert(ast query.Ast, userID int64) (query.Ast, error) {
+	env := make(environment)
+	switch stmt := ast.(type) {
+	case *query.SelectStmt:
+		rewritten, err := rewriteSelectStmt(stmt, env)
+		if err != nil {
+			return nil, err
+		}
+
+		withUser := addUserFilter(rewritten, userID)
+		withBook := addBookFilter(withUser, userID)
+		return withBook, nil
+	}
+	return nil, fmt.Errorf("invalid query type: %v", ast.QueryType())
+}
 
 type environment map[string]struct{}
 
@@ -22,19 +43,6 @@ func (env environment) define(alias string) environment {
 	return env
 }
 
-func Convert(ast query.Ast, userGUID string) (query.Ast, error) {
-	env := make(environment)
-	switch stmt := ast.(type) {
-	case *query.SelectStmt:
-		rewritten, err := rewriteAst(stmt, env)
-		if err != nil {
-			return nil, err
-		}
-		return withBookFilter(withUserFilter(rewritten.(*query.SelectStmt), userGUID), userGUID), nil
-	}
-	return nil, fmt.Errorf("invalid query type: %v", ast.QueryType())
-}
-
 func and(stmt *query.SelectStmt, expr query.Expr) *query.SelectStmt {
 	if stmt.Where == nil {
 		stmt.Where = expr
@@ -48,26 +56,30 @@ func and(stmt *query.SelectStmt, expr query.Expr) *query.SelectStmt {
 	return stmt
 }
 
-func withUserFilter(stmt *query.SelectStmt, userGUID string) *query.SelectStmt {
+func addUserFilter(stmt *query.SelectStmt, userID int64) *query.SelectStmt {
+	userIDStr := strconv.Itoa(int(userID))
+
 	return and(stmt, query.BinaryExpr{
-		Left: query.Identifier{Name: "user_guid"},
+		Left: query.Identifier{Name: "user_id"},
 		Op:   query.OpEq,
 		Right: query.Value{
-			Ty:  query.TyString,
-			Tok: query.Token{Lexeme: userGUID},
+			Ty:  query.TyNumber,
+			Tok: query.Token{Lexeme: userIDStr},
 		},
 	})
 }
 
-func withBookFilter(stmt *query.SelectStmt, userGUID string) *query.SelectStmt {
+func addBookFilter(stmt *query.SelectStmt, userID int64) *query.SelectStmt {
 	from := &query.Table{Name: "entries"}
+	userIDStr := strconv.Itoa(int(userID))
+
 	if stmt.From != nil {
 		tableMatcher := query.BinaryExpr{
-			Left: query.Identifier{Name: "book_guid"},
+			Left: query.Identifier{Name: "book_id"},
 			Op:   query.OpEq,
 			Right: query.Subquery{
 				Stmt: &query.SelectStmt{
-					Columns: []query.Expr{query.Identifier{Name: "guid"}},
+					Columns: []query.Expr{query.Identifier{Name: "id"}},
 					From:    &query.Table{Name: "books"},
 					Where: query.BinaryExpr{
 						Left: query.BinaryExpr{
@@ -80,11 +92,11 @@ func withBookFilter(stmt *query.SelectStmt, userGUID string) *query.SelectStmt {
 						},
 						Op: query.OpAnd,
 						Right: query.BinaryExpr{
-							Left: query.Identifier{Name: "user_guid"},
+							Left: query.Identifier{Name: "user_id"},
 							Op:   query.OpEq,
 							Right: query.Value{
-								Ty:  query.TyString,
-								Tok: query.Token{Lexeme: userGUID},
+								Ty:  query.TyNumber,
+								Tok: query.Token{Lexeme: userIDStr},
 							},
 						},
 					},
@@ -94,40 +106,37 @@ func withBookFilter(stmt *query.SelectStmt, userGUID string) *query.SelectStmt {
 
 		stmt = and(stmt, tableMatcher)
 	}
+
 	stmt.From = from
 	return stmt
 }
 
-func rewriteAst(ast query.Ast, env environment) (query.Ast, error) {
-	switch stmt := ast.(type) {
-	case *query.SelectStmt:
-		var newexpr query.Expr
-		var newenv environment
+func rewriteSelectStmt(stmt *query.SelectStmt, env environment) (*query.SelectStmt, error) {
+	var newexpr query.Expr
+	var newenv environment
 
-		for i, expr := range stmt.Columns {
-			newexpr, newenv = rewriteExpr(expr, env, true)
-			env = newenv
-			stmt.Columns[i] = newexpr
-		}
-		for i, expr := range stmt.GroupBy {
-			newexpr, _ = rewriteExpr(expr, env, false)
-			stmt.GroupBy[i] = newexpr
-		}
-		for i, expr := range stmt.OrderBy {
-			newexpr, _ = rewriteExpr(expr.Expr, env, false)
-			stmt.OrderBy[i].Expr = newexpr
-		}
-
-		newexpr, _ = rewriteExpr(stmt.Having, env, false)
-		stmt.Having = newexpr
-
-		// Column aliases are not available in where clause, so we use a new
-		// environment when rewriting the where clause expression.
-		newexpr, _ = rewriteExpr(stmt.Where, make(environment), false)
-		stmt.Where = newexpr
-		return ast, nil
+	for i, expr := range stmt.Columns {
+		newexpr, newenv = rewriteExpr(expr, env, true)
+		env = newenv
+		stmt.Columns[i] = newexpr
 	}
-	return nil, fmt.Errorf("invalid query type: %v", ast.QueryType())
+	for i, expr := range stmt.GroupBy {
+		newexpr, _ = rewriteExpr(expr, env, false)
+		stmt.GroupBy[i] = newexpr
+	}
+	for i, expr := range stmt.OrderBy {
+		newexpr, _ = rewriteExpr(expr.Expr, env, false)
+		stmt.OrderBy[i].Expr = newexpr
+	}
+
+	newexpr, _ = rewriteExpr(stmt.Having, env, false)
+	stmt.Having = newexpr
+
+	// Column aliases are not available in where clause, so we use a new
+	// environment when rewriting the where clause expression.
+	newexpr, _ = rewriteExpr(stmt.Where, make(environment), false)
+	stmt.Where = newexpr
+	return stmt, nil
 }
 
 func rewriteExpr(ex query.Expr, env environment, autoAlias bool) (query.Expr, environment) {
