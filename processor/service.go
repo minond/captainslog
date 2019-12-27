@@ -55,7 +55,12 @@ func (s *Service) Handle(ctx context.Context, req *ProcessingRequest) (*Processi
 		return nil, ErrUnableProcessText
 	}
 
-	return &ProcessingResponse{Text: text, Data: data}, nil
+	response := &ProcessingResponse{
+		Text: text,
+		Data: data,
+	}
+
+	return response, nil
 }
 
 func validateServiceRequest(req *ProcessingRequest) error {
