@@ -25,7 +25,7 @@ const (
 	underscore  = rune('_')
 )
 
-type Tok int8
+type Tok uint8
 
 const (
 	tokInvalid Tok = iota
