@@ -3,4 +3,6 @@
     <%= image_tag("logo.png") %>
     <p><%= t(:intro_message) %></p>
   </div>
+
+  <%= link_to t(:sign_in), new_user_session_path, :class => "btn" %>
 </div>

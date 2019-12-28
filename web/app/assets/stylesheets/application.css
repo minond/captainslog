@@ -104,6 +104,26 @@ table, tr, td {
   font-size: .875rem;
 }
 
+/* BUTTON *****************************************************************/
+
+.btn {
+  border: 1px solid rebeccapurple;
+  box-sizing: border-box;
+  color: rgba(0, 0, 0, .6); /* ligth-gray */
+  display: inline-block;
+  font-size: .9rem;
+  padding: .5rem .75rem;
+  transition: background-color .1s;
+}
+
+.btn + .btn {
+  border-left: none;
+}
+
+.btn:hover {
+  background-color: #fafafa;;
+}
+
 /* FLASH ******************************************************************/
 
 #notice, #alert {
@@ -261,24 +281,6 @@ header .search img {
   .entry-group-nav a {
     width: 33%;
   }
-}
-
-.entry-group-nav a {
-  border: 1px solid rebeccapurple;
-  box-sizing: border-box;
-  color: rgba(0, 0, 0, .6); /* ligth-gray */
-  display: inline-block;
-  font-size: .9rem;
-  padding: .5rem .75rem;
-  transition: background-color .1s;
-}
-
-.entry-group-nav a + a {
-  border-left: none;
-}
-
-.entry-group-nav a:hover {
-  background-color: #fafafa;;
 }
 
 .entry-list .entry-item {
