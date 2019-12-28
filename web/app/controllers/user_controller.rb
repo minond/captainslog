@@ -1,14 +1,14 @@
 class UserController < ApplicationController
   # === URL
-  #   GET /user/:id/edit
+  #   GET /user/:id
   #
   # === Request fields
   #   [Integer] id - the id for the user to load
   #
   # === Sample request
-  #   /user/1/edit
+  #   /user/1
   #
-  def edit
+  def show
     locals :user => current_user,
            :books => books
   end
@@ -26,7 +26,8 @@ class UserController < ApplicationController
   #
   def update
     notify(update_user, :successful_user_update, :failure_in_user_update)
-    redirect_to edit_user_path(current_user)
+    locals "user/show", :user => current_user,
+                        :books => books
   end
 
 private

@@ -1,0 +1,8 @@
+<%= render "layouts/header" %>
+<%= render "book/nav", :books => books, :current_book => nil %>
+
+<div class="content-view slim">
+  <h1>User</h1>
+
+  <%= render "user/edit_form", :user => user %>
+</div>

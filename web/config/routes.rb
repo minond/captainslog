@@ -13,5 +13,5 @@ Rails.application.routes.draw do
   end
 
   resource :search, :only => %i[show]
-  resources :user, :only => %i[edit update]
+  resources :user, :only => %i[show update]
 end

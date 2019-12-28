@@ -1,0 +1,16 @@
+<%= form_for(user, :url => user_path(user), :method => :patch) do |f| %>
+  <div class="field">
+    <%= f.label :email, t(:email) %>
+    <%= f.email_field :email %>
+  </div>
+
+  <div class="field">
+    <%= f.label :timezone, t(:timezone) %>
+    <%= f.text_field :timezone %>
+  </div>
+
+  <div class="field btns">
+    <%= f.submit t(:save), :class => "w1 btn" %>
+    <%= link_to t(:cancel), root_path %>
+  </div>
+<% end %>
