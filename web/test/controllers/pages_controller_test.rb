@@ -9,6 +9,6 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
   test "renders the home page when there is a session" do
     sign_in user
     get "/"
-    assert response.body.include? "Sign out"
+    assert_not response.body.include? "is an application for logging"
   end
 end
