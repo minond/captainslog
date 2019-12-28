@@ -278,7 +278,7 @@ header .search img {
     text-align: center;
   }
 
-  .entry-group-nav a {
+  .entry-group-nav .btn {
     width: 33%;
   }
 }
