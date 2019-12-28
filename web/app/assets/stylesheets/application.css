@@ -124,6 +124,11 @@ hr {
   transition: background-color .1s;
 }
 
+.btn.smol {
+  font-size: .8rem;
+  line-height: 1;
+}
+
 .btn.destructive {
   background: #ffeaea;
   border-color: #ff3e3e;
