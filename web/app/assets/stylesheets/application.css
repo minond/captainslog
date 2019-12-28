@@ -126,9 +126,14 @@ table, tr, td {
 
 /* BUTTON *****************************************************************/
 
+.btns {
+  font-size: 0;
+}
+
 .btn {
   border: 1px solid rebeccapurple;
   box-sizing: border-box;
+  font-size: 1rem;
   color: black;
   display: inline-block;
   padding: .5rem .75rem;
@@ -293,7 +298,6 @@ img.captains-log-logo {
 
 .entry-group-nav {
   text-align: right;
-  font-size: 0;
 }
 
 @media screen and (max-width: 35em) {
