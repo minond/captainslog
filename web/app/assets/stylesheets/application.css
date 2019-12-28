@@ -350,7 +350,32 @@ header .books-nav {
 
 .entry-list .entry-item {
   display: block;
-  padding: .5rem 0;
+  padding: .4rem 0;
+}
+
+.entry-list .entry-item table {
+  width: 100%;
+}
+
+.entry-list .entry-item td:nth-child(1) {
+  padding: 5px 10px 5px 0;
+}
+
+@media screen and (min-width: 801px) {
+  .entry-list .entry-item td:nth-child(2) {
+    max-width: 80%;
+    text-align: right;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .entry-list .entry-item td:nth-child(1) {
+    display: block;
+  }
+
+  .entry-list .entry-item td:nth-child(2) {
+    display: block;
+  }
 }
 
 .entry-list .entry-item + .entry-item {
@@ -365,11 +390,23 @@ header .books-nav {
 .entry-list .entry-data {
   font-size: .8rem;
   line-height: 1;
-  margin: .3rem .3rem 0 0;
+  margin: .3rem 0 0 .3rem;
   display: inline-block;
   padding: .3rem;
   border: 1px solid rgba(0, 0, 0, .6);
   color: rgba(0, 0, 0, .8);
+}
+
+@media screen and (min-width: 801px) {
+  .entry-list .entry-data {
+    margin: .3rem 0 0 .3rem;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .entry-list .entry-data {
+    margin: .3rem .3rem 0 0;
+  }
 }
 
 .entry-list-fin {
