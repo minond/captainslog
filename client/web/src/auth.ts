@@ -1,6 +1,14 @@
 import history from "./history"
 
-declare var config: { token: string }
+type Config = { token: string }
+
+declare var config: Config
+
+declare global {
+  interface Window {
+    config: Config
+  }
+}
 
 export const logout = () => {
   localStorage.setItem("token", "")
@@ -20,14 +28,14 @@ const getConfigToken = () =>
 const getUrlToken = () =>
   (window.location.search.match(/key=(.+)/) || [])[1]
 
+if (!window.config || !config.token) {
+  window.config = window.config || {}
+  window.config.token = localStorage.getItem("token") || ""
+}
+
 if (getUrlToken()) {
   localStorage.setItem("token", getUrlToken())
   history.replace("/")
 } else if (getConfigToken()) {
   localStorage.setItem("token", getConfigToken())
-}
-
-if (!config || !config.token) {
-  config = config || {}
-  config.token = localStorage.getItem("token") || ""
 }
