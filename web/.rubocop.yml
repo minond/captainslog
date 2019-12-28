@@ -22,5 +22,5 @@ Style/Documentation:
 Layout/AccessModifierIndentation:
   EnforcedStyle: outdent
 
-Metrics/LineLength:
+Layout/LineLength:
   Enabled: false

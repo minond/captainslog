@@ -8,10 +8,10 @@ Rails.application.routes.draw do
   end
 
   get "/book/:id/:requested_time", :to => "book#show", :as => :book_at
-  resources :book, :only => [:show] do
-    resource :entry, :only => [:create]
+  resources :book, :only => %i[show] do
+    resource :entry, :only => %i[create]
   end
 
-  resource :search, :only => [:show]
-  resources :user, :only => [:edit, :update]
+  resource :search, :only => %i[show]
+  resources :user, :only => %i[edit update]
 end
