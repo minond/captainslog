@@ -1,5 +1,11 @@
 <%= form_for(user, :url => user_path(user), :method => :patch) do |f| %>
   <div class="field">
+    <%= f.label :name, t(:name) %>
+    <%= f.text_field :name %>
+    <%= render "layouts/field_error", :resource => user, :field => :name %>
+  </div>
+
+  <div class="field">
     <%= f.label :email, t(:email) %>
     <%= f.email_field :email %>
     <%= render "layouts/field_error", :resource => user, :field => :email %>

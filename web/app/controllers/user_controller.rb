@@ -18,8 +18,9 @@ class UserController < ApplicationController
   #
   # === Request fields
   #   [Integer] id - the id for the user to edit
-  #   [Integer] user[email] - the email address
-  #   [Integer] user[timezone] - the timezone value
+  #   [String] user[name] - the name
+  #   [String] user[email] - the email address
+  #   [String] user[timezone] - the timezone value
   #
   # === Sample request
   #   /user/1
@@ -43,6 +44,6 @@ private
   # @return [ActionController::Parameters]
   def permitted_user_params
     params.require(:user)
-          .permit(:email, :timezone)
+          .permit(:name, :email, :timezone)
   end
 end
