@@ -1,19 +1,20 @@
 /*
- * This is a manifest file that'll be compiled into application.css, which will include all the files
- * listed below.
+ * This is a manifest file that'll be compiled into application.css, which will
+ * include all the files listed below.
  *
- * Any CSS and SCSS file within this directory, lib/assets/stylesheets, or any plugin's
- * vendor/assets/stylesheets directory can be referenced here using a relative path.
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, or any
+ * plugin's vendor/assets/stylesheets directory can be referenced here using a
+ * relative path.
  *
- * You're free to add application-wide styles to this file and they'll appear at the bottom of the
- * compiled file so the styles you add here take precedence over styles defined in any other CSS/SCSS
- * files in this directory. Styles in this file should be added after the last require_* statement.
- * It is generally better to create a new file per style scope.
+ * You're free to add application-wide styles to this file and they'll appear
+ * at the bottom of the compiled file so the styles you add here take
+ * precedence over styles defined in any other CSS/SCSS files in this
+ * directory. Styles in this file should be added after the last require_*
+ * statement. It is generally better to create a new file per style scope.
  *
  *= require_tree .
  *= require_self
  */
-
 
 /* --blue: #357edd; */
 /* --light-gray-border: rgba(0, 0, 0, .2); */
@@ -125,7 +126,7 @@ table, tr, td {
   background-color: #fafafa;;
 }
 
-/* FLASH ******************************************************************/
+/* RAILS FLASH ************************************************************/
 
 #notice, #alert {
   border-bottom-style: solid;
@@ -143,6 +144,13 @@ table, tr, td {
 #alert {
   background: #ffeaea;
   border-color: #ff3e3e;
+}
+
+/* RAILS ERRORS ***********************************************************/
+
+.field_with_errors label {
+  color: red;
+  font-weight: bold;
 }
 
 /* HEADER *****************************************************************/
