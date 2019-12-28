@@ -1,6 +1,6 @@
 en:
   captains_log: "Captain‘s Log"
-  intro_message: "Captain's Log is an application for logging anything you want. The intent is to have an application that someone can use to log anything in relatively free form, but while still being able to extract (or inject) important information from each log entry and, more importantly, from aggregated logs."
+  intro_message: "Captain‘s Log is an application for logging anything you want. The intent is to have an application that someone can use to log anything in relatively free form, but while still being able to extract (or inject) important information from each log entry and, more importantly, from aggregated logs."
 
   sign_out: "Sign out"
   sign_up: "Sign up"
