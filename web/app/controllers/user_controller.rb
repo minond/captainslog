@@ -9,8 +9,7 @@ class UserController < ApplicationController
   #   /user/1
   #
   def show
-    locals :user => current_user,
-           :books => books
+    locals :user => current_user
   end
 
   # === URL
@@ -27,8 +26,7 @@ class UserController < ApplicationController
   #
   def update
     notify(update_user, :successful_user_update, :failure_in_user_update)
-    locals "user/show", :user => current_user,
-                        :books => books
+    locals "user/show", :user => current_user
   end
 
 private

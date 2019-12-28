@@ -2,8 +2,7 @@ class SearchesController < ApplicationController
   before_action :require_login
 
   def show
-    locals :books => books,
-           :query => query,
+    locals :query => query,
            :results => results
   end
 

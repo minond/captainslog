@@ -12,8 +12,7 @@ class BookController < ApplicationController
   #   /book/1
   #
   def show
-    locals :books => books,
-           :book => current_book,
+    locals :book => current_book,
            :entries => entries,
            :requested_time => requested_time
   end
