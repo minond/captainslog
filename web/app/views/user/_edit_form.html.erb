@@ -2,11 +2,13 @@
   <div class="field">
     <%= f.label :email, t(:email) %>
     <%= f.email_field :email %>
+    <%= render "layouts/field_error", :resource => user, :field => :email %>
   </div>
 
   <div class="field">
     <%= f.label :timezone, t(:timezone) %>
     <%= f.text_field :timezone %>
+    <%= render "layouts/field_error", :resource => user, :field => :timezone %>
   </div>
 
   <div class="field btns">

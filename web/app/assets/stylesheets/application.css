@@ -98,6 +98,10 @@ table, tr, td {
   font-size: .875rem;
 }
 
+.field-error-message {
+  font-size: .8rem;
+}
+
 /* BUTTON *****************************************************************/
 
 .btns {

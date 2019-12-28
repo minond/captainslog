@@ -1,0 +1,5 @@
+<% if resource.errors.full_messages_for(field).any? %>
+  <span class="field-error-message">
+    <%= resource.errors.full_messages_for(field).join(", ") %>
+  </span>
+<% end %>
