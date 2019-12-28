@@ -47,6 +47,7 @@ a,
 a:visited {
   text-decoration: none;
   color: black;
+  font-size: 1rem;
 }
 
 label {
@@ -80,6 +81,10 @@ table, tr, td {
 
 /* HELPERS ****************************************************************/
 
+.bold {
+  font-weight: bold;
+}
+
 .right {
   float: right;
 }
@@ -108,8 +113,12 @@ table, tr, td {
   transition: background-color .1s;
 }
 
-.btn + .btn {
+.btns .btn + .btn {
   border-left: none;
+}
+
+.btns * + a {
+  margin-left: 20px;
 }
 
 .btn:hover {

@@ -6,6 +6,10 @@ en:
   sign_up: "Sign up"
   sign_in: "Sign in"
 
+  save: "Save"
+  cancel: "Cancel"
+  successful_user_update: "User was successfully updated!"
+
   previous: "Previous"
   current: "Current"
   next: "Next"
@@ -13,6 +17,7 @@ en:
   email: "Email"
   password: "Password"
   remember_me: "Remember me"
+  timezone: "Timezone"
 
   enter_new_log: "Enter a new log for %{datetime}"
   end_of_list: "End of list"
