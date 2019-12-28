@@ -46,6 +46,17 @@ private
     val.present? ? Time.at(val.to_i) : Time.current
   end
 
+  # @param [Boolean] success
+  # @param [Symbol] success_message_tag
+  # @param [Symbol] failure_message_tag
+  def notify(success, success_message_tag, failure_message_tag)
+    if success
+      flash.notice = t(success_message_tag)
+    else
+      flash.alert = t(failure_message_tag)
+    end
+  end
+
   # Find and return the ID of the "active" book. Looks at both a `book_id` and
   # an `id` param, in that order.
   #

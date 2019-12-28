@@ -1,16 +1,31 @@
 class UserController < ApplicationController
+  # === URL
+  #   GET /user/:id/edit
+  #
+  # === Request fields
+  #   [Integer] id - the id for the user to load
+  #
+  # === Sample request
+  #   /user/1/edit
+  #
   def edit
     locals :user => current_user,
            :books => books
   end
 
+  # === URL
+  #   GET /user/:id
+  #
+  # === Request fields
+  #   [Integer] id - the id for the user to edit
+  #   [Integer] user[email] - the email address
+  #   [Integer] user[timezone] - the timezone value
+  #
+  # === Sample request
+  #   /user/1
+  #
   def update
-    if update_user
-      flash.notice = t(:successful_user_update)
-    else
-      flash.alert = t(:failure_in_user_update)
-    end
-
+    notify(update_user, :successful_user_update, :failure_in_user_update)
     redirect_to edit_user_path(current_user)
   end
 

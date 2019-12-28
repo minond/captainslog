@@ -6,7 +6,7 @@ class BookController < ApplicationController
   #   GET /book/:id
   #
   # === Request fields
-  #   [Integer] id - the book id for the book to load
+  #   [Integer] id - the id for the book to load
   #
   # === Sample request
   #   /book/1
