@@ -9,6 +9,7 @@ en:
   save: "Save"
   cancel: "Cancel"
   successful_user_update: "User was successfully updated!"
+  failure_in_user_update: "There was an error updating the user."
 
   previous: "Previous"
   current: "Current"
