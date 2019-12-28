@@ -34,7 +34,7 @@ private
   # @example
   #   before_action :require_login
   def require_login
-    redirect_to(new_user_session_url) unless current_user
+    redirect_to(root_url) unless current_user
   end
 
   # The requsted time represents the time that a user is requesting entries be
