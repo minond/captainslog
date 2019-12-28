@@ -13,7 +13,7 @@
 
   <div class="field">
     <%= f.label :timezone, t(:timezone) %>
-    <%= f.text_field :timezone %>
+    <%= select(:user, :timezone, TZInfo::Timezone.all_identifiers, :object => user) %>
     <%= render "layouts/field_error", :resource => user, :field => :timezone %>
   </div>
 
