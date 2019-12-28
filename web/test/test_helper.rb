@@ -10,12 +10,12 @@ require_relative "./processor_test_helper"
 class ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
 
-  def user
-    @user ||= create(:user)
+  def user(*attrs)
+    @user ||= create(:user, *attrs)
   end
 
-  def book
-    @book ||= create(:book, :user => user)
+  def book(*attrs)
+    @book ||= create(:book, { :user => user }.merge(*attrs))
   end
 end
 
