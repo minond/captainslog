@@ -27,7 +27,7 @@ html, body {
   padding: 0;
 }
 
-html, body, textarea {
+html, body, textarea, input {
   font-family: PT Mono, monospace;
   font-size: 1rem;
   line-height: 1.4;
@@ -72,14 +72,6 @@ input[type=email] {
   width: 100%;
 }
 
-input[type=submit] {
-  font-size: .9rem;
-  color: black;
-  border: 1px solid black;
-  transition: background-color .1s;
-  padding: .5rem .75rem;
-}
-
 table, tr, td {
   padding: 0;
   margin: 0;
@@ -90,26 +82,6 @@ table, tr, td {
 
 .mt1 {
   margin-top: 5rem;
-}
-
-.mt2 {
-  margin-top: 3rem;
-}
-
-.mb2 {
-  margin-bottom: 3rem;
-}
-
-.w1 {
-  width: 10rem;
-}
-
-.inline-block {
-  display: inline-block
-}
-
-.center {
-  text-align: center;
 }
 
 .right {
@@ -131,7 +103,7 @@ table, tr, td {
 }
 
 .btn {
-  border: 1px solid rebeccapurple;
+  border: 1px solid rgba(0, 0, 0, .4);
   box-sizing: border-box;
   font-size: 1rem;
   color: black;
@@ -247,6 +219,16 @@ img.captains-log-logo {
   margin: 0 auto;
   max-width: 50rem;
   padding: 0 10px;
+}
+
+.content-view.slim {
+  max-width: 35rem;
+}
+
+/* WELCOME VIEW ***********************************************************/
+
+.welcome-content-view {
+  padding-top: 4rem;
 }
 
 /* LOGIN ******************************************************************/

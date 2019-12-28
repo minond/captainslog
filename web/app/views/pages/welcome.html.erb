@@ -1,12 +1,9 @@
-<div class="content-view">
-  <div class="mt1">
-    <div class="mb2">
-      <%= image_tag("logo.png", :class => "captains-log-logo") %>
-    </div>
-    <p><%= t(:intro_message) %></p>
-  </div>
+<div class="content-view slim">
+  <div class="welcome-content-view">
+    <%= image_tag("logo.png", :class => "captains-log-logo") %>
 
-  <div class="center mt2">
-    <%= link_to t(:sign_in), new_user_session_path, :class => "w1 inline-block center btn" %>
-  </center>
+    <p><%= t(:intro_message) %></p>
+
+    <%= render "devise/sessions/login_form" %>
+  </div>
 </div>
