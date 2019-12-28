@@ -2,7 +2,11 @@
 <%= render "book/nav", :books => books, :current_book => nil %>
 
 <div class="content-view slim">
-  <h1>User</h1>
+  <h2>User settings</h2>
 
   <%= render "user/edit_form", :user => user %>
+
+  <hr />
+
+  <%= link_to t(:sign_out), destroy_user_session_path, :method => :delete, :class => "btn destructive" %>
 </div>
