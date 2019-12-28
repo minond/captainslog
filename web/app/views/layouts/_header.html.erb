@@ -12,7 +12,7 @@
               <input type="text" name="query" />
             </label>
           </form>
-          <%= link_to t(:sign_out), destroy_user_session_path, :class => "right", :method => :delete %>
+          <%= link_to current_user.display_character, user_path(current_user), :class => "circular" %>
         <% end %>
       </td>
     </tr>

@@ -6,4 +6,12 @@ class User < ApplicationRecord
   has_many :books
 
   validates :email, :presence => true, :uniqueness => true
+
+  def display_name
+    name || email
+  end
+
+  def display_character
+    display_name[0]
+  end
 end
