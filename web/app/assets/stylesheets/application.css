@@ -289,6 +289,10 @@ img.captains-log-logo {
   white-space: nowrap;
 }
 
+header .books-nav {
+  margin-left: 1rem;
+}
+
 .standalone .books-nav {
   border-bottom: 1px solid #c2c2c2;
   padding: .8rem;
