@@ -316,7 +316,6 @@ header .books-nav {
   transition: color .1s, font-weight .3s;
 }
 
-.books-nav a.active,
 .books-nav a:hover {
   color: black;
 }

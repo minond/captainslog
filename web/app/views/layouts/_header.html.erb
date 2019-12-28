@@ -5,7 +5,7 @@
         <%= link_to image_tag("logo.png"), root_path, :class => "logo" %>
       </td>
       <td>
-        <%= render "book/nav", :books => current_user.books, :current_book => nil %>
+        <%= render "book/nav", :books => current_user.books %>
       </td>
       <td>
         <% if current_user %>
@@ -23,6 +23,5 @@
 </header>
 
 <div class="standalone">
-  <%= render "book/nav", :books => current_user.books,
-                         :current_book => nil %>
+  <%= render "book/nav", :books => current_user.books %>
 </div>
