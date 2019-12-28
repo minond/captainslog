@@ -214,7 +214,7 @@ img.captains-log-logo {
 .content-view {
   margin: 0 auto;
   max-width: 50rem;
-  padding: 0 10px;
+  padding: 2rem 10px 0 10px;
 }
 
 .content-view.slim {
@@ -225,12 +225,6 @@ img.captains-log-logo {
 
 .no-search-results {
   margin-top: 4rem;
-}
-
-/* WELCOME VIEW ***********************************************************/
-
-.welcome-content-view {
-  padding-top: 4rem;
 }
 
 /* LOGIN ******************************************************************/
@@ -267,10 +261,6 @@ img.captains-log-logo {
 }
 
 /* BOOK ENTRIES PAGE ******************************************************/
-
-.entry-add-form {
-  margin: 2rem 0 1rem 0;
-}
 
 .entry-input {
   border-bottom: 1px solid #acacac;

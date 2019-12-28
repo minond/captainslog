@@ -2,7 +2,7 @@
 <%= render "book/nav", :books => books, :current_book => book %>
 
 <div class="content-view">
-  <form method="post" action="<%= book_entry_path(book) %>" class="entry-add-form">
+  <form method="post" action="<%= book_entry_path(book) %>">
     <%= hidden_field_tag :authenticity_token, form_authenticity_token -%>
     <%= hidden_field_tag :book_id, book.id -%>
     <%= hidden_field_tag :requested_time, requested_time.to_i -%>
