@@ -2,7 +2,7 @@
 <%= render "book/nav", :books => books, :current_book => nil %>
 
 <div class="content-view slim">
-  <h2>User settings</h2>
+  <h2><%= t(:user_settings) %></h2>
 
   <%= render "user/edit_form", :user => user %>
 
