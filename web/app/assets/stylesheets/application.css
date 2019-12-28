@@ -80,10 +80,6 @@ table, tr, td {
 
 /* HELPERS ****************************************************************/
 
-.mt1 {
-  margin-top: 5rem;
-}
-
 .right {
   float: right;
 }
@@ -223,6 +219,12 @@ img.captains-log-logo {
 
 .content-view.slim {
   max-width: 35rem;
+}
+
+/* SEARCH VIEW ************************************************************/
+
+.no-search-results {
+  margin-top: 4rem;
 }
 
 /* WELCOME VIEW ***********************************************************/

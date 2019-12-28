@@ -19,3 +19,4 @@ en:
 
   search_results_for: "Search results for \"%{query}\":"
   no_search_results_for: "There were no results for \"%{query}\"."
+  search_again_q: "Would you like to search for something else?"
