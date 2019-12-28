@@ -13,14 +13,4 @@ class BookControllerTest < ActionDispatch::IntegrationTest
       post "/book/#{book.id}/entry", :params => { :text => "hi" }
     end
   end
-
-private
-
-  def user
-    @user ||= create(:user)
-  end
-
-  def book
-    @book ||= create(:book, :user => user)
-  end
 end

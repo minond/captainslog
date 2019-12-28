@@ -9,6 +9,14 @@ require_relative "./processor_test_helper"
 
 class ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
+
+  def user
+    @user ||= create(:user)
+  end
+
+  def book
+    @book ||= create(:book, :user => user)
+  end
 end
 
 class ActiveSupport::TestCase
