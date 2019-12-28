@@ -45,4 +45,27 @@ private
     val = params[:requested_time]
     val.present? ? Time.at(val.to_i) : Time.current
   end
+
+  # Find and return the ID of the "active" book. Looks at both a `book_id` and
+  # an `id` param, in that order.
+  #
+  # @return [Integer]
+  def current_book_id
+    @current_book_id ||= params[:book_id] || params[:id]
+  end
+
+  # Find and return the current "active" book. This is scopes to the user's
+  # books.
+  #
+  # @return [Book]
+  def current_book
+    @current_book ||= books.find(current_book_id)
+  end
+
+  # Return all of the current user's books.
+  #
+  # @return [Array<Book>]
+  def books
+    @books ||= current_user.books
+  end
 end

@@ -13,28 +13,18 @@ class BookController < ApplicationController
   #
   def show
     locals :books => books,
-           :book => book,
+           :book => current_book,
            :entries => entries,
            :requested_time => requested_time
   end
 
 private
 
-  # @return [Book]
-  def book
-    @book ||= books.find(params[:id])
-  end
-
-  # @return [Array<Book>]
-  def books
-    @books ||= current_user.books
-  end
-
   # @return [Array<Entry>]
   def entries
     @entries ||=
       begin
-        collection = book.find_collection(requested_time)
+        collection = current_book.find_collection(requested_time)
         collection.present? ? collection.entries.order("created_at desc") : []
       end
   end

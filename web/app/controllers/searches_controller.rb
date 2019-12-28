@@ -17,9 +17,4 @@ private
   def query
     params[:query]
   end
-
-  # @return [Array<Book>]
-  def books
-    @books ||= current_user.books
-  end
 end

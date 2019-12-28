@@ -16,14 +16,7 @@ class EntriesController < ApplicationController
   #   Redirect to /book/1
   #
   def create
-    book.add_entry(params[:text], requested_time)
-    redirect_to book_at_path(book, requested_time.to_i)
-  end
-
-private
-
-  # @return [Book]
-  def book
-    @book ||= current_user.books.find(params[:book_id])
+    current_book.add_entry(params[:text], requested_time)
+    redirect_to book_at_path(current_book, requested_time.to_i)
   end
 end
