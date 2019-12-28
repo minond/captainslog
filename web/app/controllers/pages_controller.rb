@@ -1,5 +1,9 @@
 class PagesController < ApplicationController
   def home
-    @books = current_user&.books || []
+    if current_user
+      @books = current_user&.books || []
+    else
+      render "pages/welcome"
+    end
   end
 end

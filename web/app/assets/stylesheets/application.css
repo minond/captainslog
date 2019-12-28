@@ -92,6 +92,26 @@ table, tr, td {
   margin-top: 5rem;
 }
 
+.mt2 {
+  margin-top: 3rem;
+}
+
+.mb2 {
+  margin-bottom: 3rem;
+}
+
+.w1 {
+  width: 10rem;
+}
+
+.inline-block {
+  display: inline-block
+}
+
+.center {
+  text-align: center;
+}
+
 .right {
   float: right;
 }
@@ -109,9 +129,8 @@ table, tr, td {
 .btn {
   border: 1px solid rebeccapurple;
   box-sizing: border-box;
-  color: rgba(0, 0, 0, .6); /* ligth-gray */
+  color: black;
   display: inline-block;
-  font-size: .9rem;
   padding: .5rem .75rem;
   transition: background-color .1s;
 }
@@ -214,6 +233,10 @@ header .search img {
 }
 
 /* BODY *******************************************************************/
+
+img.captains-log-logo {
+  height: 45px;
+}
 
 .content-view {
   margin: 0 auto;

@@ -1,8 +1,12 @@
 <div class="content-view">
   <div class="mt1">
-    <%= image_tag("logo.png") %>
+    <div class="mb2">
+      <%= image_tag("logo.png", :class => "captains-log-logo") %>
+    </div>
     <p><%= t(:intro_message) %></p>
   </div>
 
-  <%= link_to t(:sign_in), new_user_session_path, :class => "btn" %>
+  <div class="center mt2">
+    <%= link_to t(:sign_in), new_user_session_path, :class => "w1 inline-block center btn" %>
+  </center>
 </div>
