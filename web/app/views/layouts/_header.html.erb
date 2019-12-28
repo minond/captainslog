@@ -13,8 +13,6 @@
             </label>
           </form>
           <%= link_to t(:sign_out), destroy_user_session_path, :class => "right", :method => :delete %>
-        <% else %>
-          <%= link_to t(:sign_in), new_user_session_path, :class => "right" %>
         <% end %>
       </td>
     </tr>
