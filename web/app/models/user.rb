@@ -9,10 +9,10 @@ class User < ApplicationRecord
 
   # @return [String, nil]
   def display_name
-    name || email
+    name.present? ? name : email
   end
 
-  # @return [String, nil]
+  # @return [String]
   def display_character
     display_name[0]
   end
