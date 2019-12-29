@@ -7,10 +7,12 @@ class User < ApplicationRecord
 
   validates :email, :presence => true, :uniqueness => true
 
+  # @return [String, nil]
   def display_name
     name || email
   end
 
+  # @return [String, nil]
   def display_character
     display_name[0]
   end
