@@ -1,4 +1,0 @@
-dir="$1"
-id="${2:-$dir}"
-sum="$(git ls-files "$dir" | md5sum | cut -d' ' -f1)"
-echo "cl-$id-$sum"
