@@ -15,7 +15,9 @@
               <%= image_tag("search.svg") %>
             </label>
           </form>
-          <%= link_to current_user.display_character, user_path, :class => "circular" %>
+          <%= link_to current_user.display_character, user_path,
+            :class => "circular",
+            :data => { :testing => :userpage } %>
         <% end %>
       </td>
     </tr>
