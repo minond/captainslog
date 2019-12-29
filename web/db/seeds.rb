@@ -8,7 +8,8 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 if ENV["CAPTAINS_LOG_USERNAME"]
-  me = User.create(:email => ENV["CAPTAINS_LOG_USERNAME"],
+  me = User.create(:name => "Test User",
+                   :email => ENV["CAPTAINS_LOG_USERNAME"],
                    :password => ENV["CAPTAINS_LOG_PASSWORD"],
                    :timezone => "America/Denver")
 
