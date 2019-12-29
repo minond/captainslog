@@ -29,3 +29,17 @@ Captain's Log uses a single database, one that which this application need read
 and write access to. The database and schema create by `rake db:setup` is the
 one that external services use and require access to as well. These services
 should only need read-only access.
+
+
+=== Container (WIP)
+
+    # build base image with rails application and all dependencies
+    docker build -t cl-ruby-base -f Dockerfile.base .
+
+    # build and run server application
+    docker build -t cl-web-image -f Dockerfile.web .
+    docker run -d --env-file .env --name cl-web -p 8080:3000 cl-web-image
+
+    # build and run worker application
+    docker build -t cl-worker-image -f Dockerfile.worker .
+    docker run -d --env-file .env --name cl-worker cl-worker-image

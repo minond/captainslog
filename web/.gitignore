@@ -2,6 +2,7 @@
 !/tmp/.keep
 /.bundle
 /.byebug_history
+/.env
 /config/master.key
 /coverage/
 /log/*

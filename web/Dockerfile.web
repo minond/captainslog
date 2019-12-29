@@ -1,0 +1,5 @@
+FROM cl-ruby-base
+
+EXPOSE 3000
+
+CMD ["bundle", "exec", "./bin/rails", "server", "-b", "0.0.0.0"]
