@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   # === URL
-  #   GET /users
+  #   GET /user
   #
   # === Sample request
   #   /user
@@ -22,7 +22,7 @@ class UsersController < ApplicationController
   #
   def update
     notify(update_user, :successful_user_update, :failure_in_user_update)
-    locals "user/show", :user => current_user
+    locals "users/show", :user => current_user
   end
 
 private
