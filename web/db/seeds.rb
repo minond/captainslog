@@ -52,6 +52,20 @@ if ENV["CAPTAINS_LOG_USERNAME"]
                    :label => "distance_unit",
                    :match => "\\d+\\s{0,}(mile|miles|k|kilometers)",
                    :type => 0)
+  Shorthand.create(:book => workouts,
+                   :priority => 1,
+                   :expansion => "xx @ ",
+                   :match => "xx \\d",
+                   :text => "xx ")
+  Shorthand.create(:book => workouts,
+                   :priority => 0,
+                   :expansion => "3x10",
+                   :text => "xxx")
+  Shorthand.create(:book => workouts,
+                   :priority => 0,
+                   :expansion => " @ ",
+                   :match => "\\d@\\d",
+                   :text => "@")
 
   blood_pressure = Book.create(:user => me,
                                :name => "Blood Pressure")
