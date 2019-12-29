@@ -1,9 +1,8 @@
 <%= render "layouts/header" %>
 
 <div class="content-view">
-  <form method="post" action="<%= book_entry_path(book) %>">
+  <form method="post" action="<%= book_entry_path(book.slug) %>">
     <%= hidden_field_tag :authenticity_token, form_authenticity_token -%>
-    <%= hidden_field_tag :book_id, book.id -%>
     <%= hidden_field_tag :requested_time, requested_time.to_i -%>
 
     <%= render "entry/input", :requested_time => requested_time %>

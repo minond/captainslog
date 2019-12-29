@@ -17,6 +17,6 @@ class EntriesController < ApplicationController
   #
   def create
     current_book.add_entry(params[:text], requested_time)
-    redirect_to book_at_path(current_book, requested_time.to_i)
+    redirect_to book_at_path(current_book.slug, requested_time.to_i)
   end
 end

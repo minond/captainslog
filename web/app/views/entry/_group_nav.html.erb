@@ -1,8 +1,8 @@
 <div class="btns entry-group-nav">
   <% unless book.group_by_none? %>
     <% prev_time, next_time = book.grouping_prev_next_times(requested_time) %>
-    <%= link_to t(:previous), book_at_path(book, prev_time.to_i), :class => "btn smol" %>
-    <%= link_to t(:current), book, :class => "btn smol" %>
-    <%= link_to t(:next), book_at_path(book, next_time.to_i), :class => "btn smol" %>
+    <%= link_to t(:previous), book_at_path(book.slug, prev_time.to_i), :class => "btn smol" %>
+    <%= link_to t(:current), book_path(book.slug), :class => "btn smol" %>
+    <%= link_to t(:next), book_at_path(book.slug, next_time.to_i), :class => "btn smol" %>
   <% end %>
 </div>

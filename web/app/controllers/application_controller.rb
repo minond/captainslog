@@ -57,20 +57,12 @@ private
     end
   end
 
-  # Find and return the ID of the "active" book. Looks at both a `book_id` and
-  # an `id` param, in that order.
-  #
-  # @return [Integer]
-  def current_book_id
-    @current_book_id ||= params[:book_id] || params[:id]
-  end
-
   # Find and return the current "active" book. This is scopes to the user's
   # books.
   #
   # @return [Book]
   def current_book
-    @current_book ||= books.find(current_book_id)
+    @current_book ||= books.find_by!(:slug => params[:book_slug])
   end
 
   # Return all of the current user's books.

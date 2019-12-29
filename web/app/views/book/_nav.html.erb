@@ -1,7 +1,7 @@
 <% unless books.empty? %>
   <div class="books-nav">
     <% books.each do |book| %>
-      <%= link_to book.name, book %>
+      <%= link_to book.name, book_path(book.slug) %>
     <% end %>
   </div>
 <% end %>
