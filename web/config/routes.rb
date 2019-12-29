@@ -12,5 +12,5 @@ Rails.application.routes.draw do
   resources :book, :only => %i[show], :param => :book_slug
 
   resource :search, :only => %i[show]
-  resources :user, :only => %i[show update]
+  resource :user, :only => %i[show update]
 end

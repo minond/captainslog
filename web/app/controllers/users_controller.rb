@@ -1,28 +1,24 @@
-class UserController < ApplicationController
+class UsersController < ApplicationController
   # === URL
-  #   GET /user/:id
-  #
-  # === Request fields
-  #   [Integer] id - the id for the user to load
+  #   GET /users
   #
   # === Sample request
-  #   /user/1
+  #   /user
   #
   def show
     locals :user => current_user
   end
 
   # === URL
-  #   GET /user/:id
+  #   GET /user
   #
   # === Request fields
-  #   [Integer] id - the id for the user to edit
   #   [String] user[name] - the name
   #   [String] user[email] - the email address
   #   [String] user[timezone] - the timezone value
   #
   # === Sample request
-  #   /user/1
+  #   /user
   #
   def update
     notify(update_user, :successful_user_update, :failure_in_user_update)
