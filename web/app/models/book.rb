@@ -5,7 +5,8 @@ class Book < ApplicationRecord
 
   after_initialize :constructor
 
-  validates :grouping, :name, :user, :presence => true
+  validates :grouping, :name, :user, :slug, :presence => true
+  validates :slug, :uniqueness => { :scope => :user }
 
   enum :grouping => %i[none day], :_prefix => :group_by
 
@@ -47,5 +48,6 @@ private
 
   def constructor
     self.grouping ||= :none
+    self.slug ||= name&.parameterize&.gsub("-", "_")
   end
 end

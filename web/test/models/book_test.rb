@@ -87,6 +87,19 @@ class BookTest < ActiveSupport::TestCase
     assert_equal Date.tomorrow, next_time
   end
 
+  test "a user cannot have to books with the same slug" do
+    user = create(:user)
+    create(:book, :user => user, :slug => "slug")
+    assert_not build(:book, :user => user, :slug => "slug").valid?
+  end
+
+  test "two users can have to books with the same slug" do
+    first_user = create(:user)
+    second_user = create(:user)
+    create(:book, :user => first_user, :slug => "slug")
+    assert build(:book, :user => second_user, :slug => "slug").valid?
+  end
+
 private
 
   def book(overrides = {})
