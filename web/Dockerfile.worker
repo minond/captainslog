@@ -1,4 +1,4 @@
 FROM cl-ruby-base
 
 CMD ["bundle", "exec", "./bin/delayed_job", "start"]
-CMD ["tail", "-f", "log/production.log"]
+CMD ["bundle", "exec", "./bin/delayed_job", "run"]
