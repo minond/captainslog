@@ -23,3 +23,9 @@ variables:
 
     PROCESSOR_DB_CONN      # database connection url, example "postgres://ro_user@localhost:5432/captainslog"
     PROCESSOR_HTTP_LISTEN  # http host/port string, example ":8081"
+
+
+=== Container
+
+    docker build -t cl-processor-image -f Dockerfile.base .
+    docker run -d --env-file .env --name cl-processor -p 8081:8081 cl-processor-image
