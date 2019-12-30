@@ -31,7 +31,16 @@ one that external services use and require access to as well. These services
 should only need read-only access.
 
 
-=== Container (WIP)
+=== Configuration
+
+The application needs to know what database it should read and write from and
+where the external services live:
+
+    PROCESSOR_ADDRESS   # example http://host.docker.internal:8081
+    DATABASE_URL        # example postgres://postgres@host.docker.internal:5432/captainslog
+
+
+=== Container
 
     # build base image with rails application and all dependencies
     docker build -t cl-ruby-base -f Dockerfile.base .
