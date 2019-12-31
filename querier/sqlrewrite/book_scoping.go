@@ -11,10 +11,8 @@ type BookScoping struct {
 }
 
 func (r BookScoping) RewriteSelect(stmt *sqlparse.SelectStmt, env Environment) (*sqlparse.SelectStmt, Environment, error) {
-	from := &sqlparse.Table{Name: "entries"}
-	userIDStr := strconv.Itoa(int(r.UserID))
-
 	if stmt.From != nil {
+		userIDStr := strconv.Itoa(int(r.UserID))
 		tableMatcher := sqlparse.BinaryExpr{
 			Left: sqlparse.Identifier{Name: "book_id"},
 			Op:   sqlparse.OpEq,
@@ -48,6 +46,5 @@ func (r BookScoping) RewriteSelect(stmt *sqlparse.SelectStmt, env Environment) (
 		stmt = addFilterToSelect(stmt, tableMatcher)
 	}
 
-	stmt.From = from
 	return stmt, env, nil
 }

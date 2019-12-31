@@ -6,7 +6,7 @@ import (
 	"github.com/minond/captainslog/querier/sqlparse"
 )
 
-func TestBookScoping_RewriteSelect(t *testing.T) {
+func TestFromEntries_RewriteSelect(t *testing.T) {
 	tests := []struct {
 		label    string
 		input    string
@@ -15,12 +15,12 @@ func TestBookScoping_RewriteSelect(t *testing.T) {
 		{
 			"a subquery filter is added",
 			`select exercise from workouts`,
-			`select exercise from workouts where book_id = (select id from books where name ilike 'workouts' and user_id = 42)`,
+			`select exercise from entries`,
 		},
 		{
 			"previous filters are kept",
 			`select exercise from workouts where true and false and 1`,
-			`select exercise from workouts where book_id = (select id from books where name ilike 'workouts' and user_id = 42) and (true and false and 1)`,
+			`select exercise from entries where true and false and 1`,
 		},
 	}
 
@@ -31,7 +31,7 @@ func TestBookScoping_RewriteSelect(t *testing.T) {
 				t.Errorf("unexpected error parsing query: %v", err)
 			}
 
-			rewriter := BookScoping{42}
+			rewriter := FromEntries{}
 			query, _, err := rewriter.RewriteSelect(ast.(*sqlparse.SelectStmt), make(Environment))
 			if err != nil {
 				t.Errorf("unexpected error converting query: %v", err)
