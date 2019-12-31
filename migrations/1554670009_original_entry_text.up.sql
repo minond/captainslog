@@ -1,5 +1,0 @@
-BEGIN;
-
-ALTER TABLE entries ADD COLUMN original text NOT NULL;
-
-COMMIT;

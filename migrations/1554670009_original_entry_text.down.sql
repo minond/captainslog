@@ -1,5 +1,0 @@
-BEGIN;
-
-ALTER TABLE entries DROP COLUMN original;
-
-COMMIT;

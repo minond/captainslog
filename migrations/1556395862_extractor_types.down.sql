@@ -1,5 +1,0 @@
-BEGIN;
-
-ALTER TABLE extractors DROP COLUMN type;
-
-COMMIT;
