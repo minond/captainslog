@@ -34,7 +34,7 @@ const _Tok_name = "tokInvalidtokEoftokCloseParenthesistokCommatokDivtokEqtokGeto
 var _Tok_index = [...]uint8{0, 10, 16, 35, 43, 49, 54, 59, 64, 69, 74, 82, 88, 106, 115, 122, 142, 155, 164, 184}
 
 func (i Tok) String() string {
-	if i < 0 || i >= Tok(len(_Tok_index)-1) {
+	if i >= Tok(len(_Tok_index)-1) {
 		return "Tok(" + strconv.FormatInt(int64(i), 10) + ")"
 	}
 	return _Tok_name[_Tok_index[i]:_Tok_index[i+1]]
