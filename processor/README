@@ -32,3 +32,6 @@ variables:
 
     # run it using local configuration and binding to the correct host and container port
     docker run -d --env-file .env --name cl-processor -p 8081:8081 minond/captainslog-processor
+
+    # push to container repo
+    docker push minond/captainslog-processor:latest
