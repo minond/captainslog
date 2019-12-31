@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/minond/captainslog/querier/query"
+	"github.com/minond/captainslog/querier/sqlparse"
 )
 
 func compstrmsg(msg, expecting, got string) string {
@@ -55,11 +55,11 @@ func TestConvert_rewriteAst(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.label, func(t *testing.T) {
-			ast, err := query.Parse(test.input)
+			ast, err := sqlparse.Parse(test.input)
 			if err != nil {
 				t.Errorf("unexpected error parsing query: %v", err)
 			}
-			query, err := rewriteSelectStmt(ast.(*query.SelectStmt), make(environment))
+			query, err := rewriteSelectStmt(ast.(*sqlparse.SelectStmt), make(environment))
 			if err != nil {
 				t.Errorf("unexpected error converting query: %v", err)
 			}
@@ -91,11 +91,11 @@ func TestConvert_withBookFilter(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.label, func(t *testing.T) {
-			ast, err := query.Parse(test.input)
+			ast, err := sqlparse.Parse(test.input)
 			if err != nil {
 				t.Errorf("unexpected error parsing query: %v", err)
 			}
-			query := addBookFilter(ast.(*query.SelectStmt), 42)
+			query := addBookFilter(ast.(*sqlparse.SelectStmt), 42)
 			if query.String() != test.expected {
 				t.Errorf(compstrmsg("bad conversion in "+test.label,
 					test.expected, query.String()))
@@ -134,7 +134,7 @@ func TestConvert_Convert(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.label, func(t *testing.T) {
-			ast, err := query.Parse(test.input)
+			ast, err := sqlparse.Parse(test.input)
 			if err != nil {
 				t.Errorf("unexpected error parsing query: %v", err)
 			}

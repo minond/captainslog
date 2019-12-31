@@ -12,7 +12,7 @@ import (
 	"strings"
 
 	"github.com/k0kubun/pp"
-	"github.com/minond/captainslog/querier/query"
+	"github.com/minond/captainslog/querier/sqlparse"
 	"github.com/olekukonko/tablewriter"
 )
 
@@ -87,7 +87,7 @@ func (r *repl) query(input string) error {
 		return errors.New("no active user, set one with `\\user [id]`")
 	}
 
-	raw, err := query.Parse(input)
+	raw, err := sqlparse.Parse(input)
 	if err != nil {
 		return err
 	}

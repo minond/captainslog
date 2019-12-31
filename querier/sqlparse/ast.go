@@ -1,5 +1,5 @@
 //go:generate stringer -type=QueryType
-package query
+package sqlparse
 
 import (
 	"fmt"

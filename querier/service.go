@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	"github.com/minond/captainslog/querier/query"
+	"github.com/minond/captainslog/querier/sqlparse"
 )
 
 var (
@@ -52,7 +52,7 @@ func (s *Service) Handle(ctx context.Context, req *QueryRequest) (*QueryResponse
 		return nil, err
 	}
 
-	unsafe, err := query.Parse(req.Query)
+	unsafe, err := sqlparse.Parse(req.Query)
 	if err != nil {
 		return nil, ErrQuerySyntax
 	}

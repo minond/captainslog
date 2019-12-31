@@ -4,17 +4,17 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/minond/captainslog/querier/query"
+	"github.com/minond/captainslog/querier/sqlparse"
 )
 
 // Convert takes an AST and rewrites it so that it is able to be executed in
 // the application database (converts columns to JSON selectors, rewrites book
 // in from clause to use correct filter, etc.) and add filters to the query for
 // the appropriate user and book.
-func Convert(ast query.Ast, userID int64) (query.Ast, error) {
+func Convert(ast sqlparse.Ast, userID int64) (sqlparse.Ast, error) {
 	env := make(environment)
 	switch stmt := ast.(type) {
-	case *query.SelectStmt:
+	case *sqlparse.SelectStmt:
 		rewritten, err := rewriteSelectStmt(stmt, env)
 		if err != nil {
 			return nil, err
@@ -43,60 +43,60 @@ func (env environment) define(alias string) environment {
 	return env
 }
 
-func and(stmt *query.SelectStmt, expr query.Expr) *query.SelectStmt {
+func and(stmt *sqlparse.SelectStmt, expr sqlparse.Expr) *sqlparse.SelectStmt {
 	if stmt.Where == nil {
 		stmt.Where = expr
 	} else {
-		stmt.Where = query.BinaryExpr{
+		stmt.Where = sqlparse.BinaryExpr{
 			Left:  expr,
-			Op:    query.OpAnd,
-			Right: query.Grouping{Sub: stmt.Where},
+			Op:    sqlparse.OpAnd,
+			Right: sqlparse.Grouping{Sub: stmt.Where},
 		}
 	}
 	return stmt
 }
 
-func addUserFilter(stmt *query.SelectStmt, userID int64) *query.SelectStmt {
+func addUserFilter(stmt *sqlparse.SelectStmt, userID int64) *sqlparse.SelectStmt {
 	userIDStr := strconv.Itoa(int(userID))
 
-	return and(stmt, query.BinaryExpr{
-		Left: query.Identifier{Name: "user_id"},
-		Op:   query.OpEq,
-		Right: query.Value{
-			Ty:  query.TyNumber,
-			Tok: query.Token{Lexeme: userIDStr},
+	return and(stmt, sqlparse.BinaryExpr{
+		Left: sqlparse.Identifier{Name: "user_id"},
+		Op:   sqlparse.OpEq,
+		Right: sqlparse.Value{
+			Ty:  sqlparse.TyNumber,
+			Tok: sqlparse.Token{Lexeme: userIDStr},
 		},
 	})
 }
 
-func addBookFilter(stmt *query.SelectStmt, userID int64) *query.SelectStmt {
-	from := &query.Table{Name: "entries"}
+func addBookFilter(stmt *sqlparse.SelectStmt, userID int64) *sqlparse.SelectStmt {
+	from := &sqlparse.Table{Name: "entries"}
 	userIDStr := strconv.Itoa(int(userID))
 
 	if stmt.From != nil {
-		tableMatcher := query.BinaryExpr{
-			Left: query.Identifier{Name: "book_id"},
-			Op:   query.OpEq,
-			Right: query.Subquery{
-				Stmt: &query.SelectStmt{
-					Columns: []query.Expr{query.Identifier{Name: "id"}},
-					From:    &query.Table{Name: "books"},
-					Where: query.BinaryExpr{
-						Left: query.BinaryExpr{
-							Left: query.Identifier{Name: "name"},
-							Op:   query.OpIlike,
-							Right: query.Value{
-								Ty:  query.TyString,
-								Tok: query.Token{Lexeme: stmt.From.Name},
+		tableMatcher := sqlparse.BinaryExpr{
+			Left: sqlparse.Identifier{Name: "book_id"},
+			Op:   sqlparse.OpEq,
+			Right: sqlparse.Subquery{
+				Stmt: &sqlparse.SelectStmt{
+					Columns: []sqlparse.Expr{sqlparse.Identifier{Name: "id"}},
+					From:    &sqlparse.Table{Name: "books"},
+					Where: sqlparse.BinaryExpr{
+						Left: sqlparse.BinaryExpr{
+							Left: sqlparse.Identifier{Name: "name"},
+							Op:   sqlparse.OpIlike,
+							Right: sqlparse.Value{
+								Ty:  sqlparse.TyString,
+								Tok: sqlparse.Token{Lexeme: stmt.From.Name},
 							},
 						},
-						Op: query.OpAnd,
-						Right: query.BinaryExpr{
-							Left: query.Identifier{Name: "user_id"},
-							Op:   query.OpEq,
-							Right: query.Value{
-								Ty:  query.TyNumber,
-								Tok: query.Token{Lexeme: userIDStr},
+						Op: sqlparse.OpAnd,
+						Right: sqlparse.BinaryExpr{
+							Left: sqlparse.Identifier{Name: "user_id"},
+							Op:   sqlparse.OpEq,
+							Right: sqlparse.Value{
+								Ty:  sqlparse.TyNumber,
+								Tok: sqlparse.Token{Lexeme: userIDStr},
 							},
 						},
 					},
@@ -111,8 +111,8 @@ func addBookFilter(stmt *query.SelectStmt, userID int64) *query.SelectStmt {
 	return stmt
 }
 
-func rewriteSelectStmt(stmt *query.SelectStmt, env environment) (*query.SelectStmt, error) {
-	var newexpr query.Expr
+func rewriteSelectStmt(stmt *sqlparse.SelectStmt, env environment) (*sqlparse.SelectStmt, error) {
+	var newexpr sqlparse.Expr
 	var newenv environment
 
 	for i, expr := range stmt.Columns {
@@ -139,59 +139,59 @@ func rewriteSelectStmt(stmt *query.SelectStmt, env environment) (*query.SelectSt
 	return stmt, nil
 }
 
-func rewriteExpr(ex query.Expr, env environment, autoAlias bool) (query.Expr, environment) {
+func rewriteExpr(ex sqlparse.Expr, env environment, autoAlias bool) (sqlparse.Expr, environment) {
 	switch x := ex.(type) {
-	case query.Identifier:
+	case sqlparse.Identifier:
 		// Note that alises are no possible to use in where clauses. In order
 		// to respect this, an empty environment is passed in when rewriting
 		// the where clause.
 		if env.defined(x.Name) {
 			return ex, env
 		}
-		var field query.Expr
-		field = query.JSONField{Col: "data", Prop: x.Name}
+		var field sqlparse.Expr
+		field = sqlparse.JSONField{Col: "data", Prop: x.Name}
 		if autoAlias {
-			field = query.Aliased{As: x.Name, Expr: field}
+			field = sqlparse.Aliased{As: x.Name, Expr: field}
 		}
 		return field, env
-	case query.Application:
+	case sqlparse.Application:
 		for i, ex := range x.Args {
 			newexpr, newenv := rewriteExpr(ex, env, false)
 			env = newenv
 			x.Args[i] = newexpr
 		}
 		if autoAlias {
-			return query.Aliased{As: x.Fn, Expr: x}, env
+			return sqlparse.Aliased{As: x.Fn, Expr: x}, env
 		}
 		return x, env
-	case query.Grouping:
+	case sqlparse.Grouping:
 		newexpr, newenv := rewriteExpr(x.Sub, env, false)
 		x.Sub = newexpr
 		return x, newenv
-	case query.BinaryExpr:
+	case sqlparse.BinaryExpr:
 		newleft, newenv := rewriteExpr(x.Left, env, false)
 		newright, lastenv := rewriteExpr(x.Right, newenv, false)
 		x.Left = newleft
 		x.Right = newright
 		return x, lastenv
-	case query.UnaryExpr:
+	case sqlparse.UnaryExpr:
 		newexpr, newenv := rewriteExpr(x.Right, env, false)
 		x.Right = newexpr
 		return x, newenv
-	case query.IsNull:
+	case sqlparse.IsNull:
 		newexpr, newenv := rewriteExpr(x.Expr, env, false)
 		x.Expr = newexpr
 		return x, newenv
-	case query.Aliased:
+	case sqlparse.Aliased:
 		newexpr, _ := rewriteExpr(x.Expr, env, false)
 		x.Expr = newexpr
 		env = env.define(x.As)
 		return x, env
-	case query.Value:
+	case sqlparse.Value:
 		return x, env
-	case query.JSONField:
+	case sqlparse.JSONField:
 		return x, env
-	case query.Subquery:
+	case sqlparse.Subquery:
 		return x, env
 	}
 	return ex, env
