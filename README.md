@@ -6,7 +6,7 @@ form, but while still being able to extract (or inject) important information
 from each log entry and, more importantly, from aggregated logs.
 
 Captain's Log is made up of three separate services: a service for [entry
-processing](processor), one for [querying](querier), and a [web
+processing](processor), one for [entry querying](querier), and a [web
 application](web). Code and documentation for each service can be found in the
 appropriate directory.
 
