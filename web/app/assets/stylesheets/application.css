@@ -212,12 +212,7 @@ header tbody {
   width: 100%;
 }
 
-header td {
-  width: 50%;
-}
-
 header td:nth-child(1) {
-  text-align: left;
   width: 1%;
 }
 
