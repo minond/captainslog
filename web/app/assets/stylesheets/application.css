@@ -364,6 +364,7 @@ header .books-nav {
 .entry-list .entry-item {
   display: block;
   padding: .4rem 0;
+  position :relative;
 }
 
 .entry-list .entry-item table {
@@ -399,8 +400,38 @@ header .books-nav {
   border-top: 1px solid rgba(0, 0, 0, .1);
 }
 
+.entry-controls {
+  opacity: 0;
+  transition: opacity .25s;
+}
+
+.entry-control-delete {
+  cursor: pointer;
+}
+
+.entry-control-delete::after {
+  content: 'x';
+  color: #ff3e3e;
+  font-weight: bold;
+}
+
+.entry-item:hover .entry-controls,
+.entry-item:focus .entry-controls,
+.entry-item:active .entry-controls {
+  opacity: 1;
+}
+
+.entry-item:hover .entry-text,
+.entry-item:focus .entry-text,
+.entry-item:active .entry-text {
+  left: 20px;
+}
+
 .entry-text {
   word-break: break-word;
+  transition: left .1s;
+  position: absolute;
+  left: 0;
 }
 
 .entry-list .entry-datum {
