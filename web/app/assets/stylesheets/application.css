@@ -381,11 +381,11 @@ header .books-nav {
 
 @media screen and (min-width: 801px) {
   .entry-list .entry-item td:nth-child(1) {
-    max-width: 50%;
+    width: 45%;
   }
 
   .entry-list .entry-item td:nth-child(2) {
-    max-width: 70%;
+    width: 55%;
     text-align: right;
   }
 }
