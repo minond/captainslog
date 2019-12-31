@@ -3,9 +3,9 @@ name: Legacy App
 on:
   push:
     paths-ignore:
-      - web/
-      - querier/
-      - processor/
+      - web/**
+      - querier/**
+      - processor/**
 
 jobs:
   build:
