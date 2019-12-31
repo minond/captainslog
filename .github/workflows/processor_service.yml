@@ -3,8 +3,8 @@ name: Processor Service
 on:
   push:
     paths:
-      - processor/
-      - .github
+      - processor/**
+      - .github/**
 
 jobs:
   build:

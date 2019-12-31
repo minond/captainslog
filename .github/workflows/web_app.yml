@@ -3,8 +3,8 @@ name: Web App
 on:
   push:
     paths:
-      - web/
-      - .github
+      - web/**
+      - .github/**
 
 jobs:
   build:

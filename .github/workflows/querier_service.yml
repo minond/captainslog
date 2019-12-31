@@ -3,8 +3,8 @@ name: Querier Service
 on:
   push:
     paths:
-      - querier/
-      - .github
+      - querier/**
+      - .github/**
 
 jobs:
   build:
