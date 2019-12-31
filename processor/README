@@ -10,8 +10,8 @@ uses for processing.
 
 === Development
 
-    go build ./...  # build the service
-    go run ./...    # run the service locally
+    go build        # build the service
+    go run .        # run the service locally
     go test ./...   # run all tests
 
 
