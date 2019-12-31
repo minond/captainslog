@@ -4,7 +4,7 @@ on:
   push:
     paths:
       - processor/**
-      - .github/**
+      - .github/workflows/processor_service.yml
 
 jobs:
   build:
