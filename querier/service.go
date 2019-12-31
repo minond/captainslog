@@ -5,6 +5,7 @@ import (
 	"errors"
 
 	"github.com/minond/captainslog/querier/sqlparse"
+	"github.com/minond/captainslog/querier/sqlrewrite"
 )
 
 var (
@@ -57,7 +58,7 @@ func (s *Service) Handle(ctx context.Context, req *QueryRequest) (*QueryResponse
 		return nil, ErrQuerySyntax
 	}
 
-	sanitized, err := Convert(unsafe, req.UserID)
+	sanitized, err := sqlrewrite.Convert(unsafe, req.UserID)
 	if err != nil {
 		return nil, ErrQueryProcessing
 	}

@@ -13,6 +13,7 @@ import (
 
 	"github.com/k0kubun/pp"
 	"github.com/minond/captainslog/querier/sqlparse"
+	"github.com/minond/captainslog/querier/sqlrewrite"
 	"github.com/olekukonko/tablewriter"
 )
 
@@ -92,7 +93,7 @@ func (r *repl) query(input string) error {
 		return err
 	}
 
-	sql, err := Convert(raw, r.userID)
+	sql, err := sqlrewrite.Convert(raw, r.userID)
 	if err != nil {
 		return err
 	}
