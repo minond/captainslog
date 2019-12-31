@@ -1,25 +1,17 @@
 package main
 
 import (
-	"fmt"
+	"database/sql"
+	"os"
 
-	"github.com/k0kubun/pp"
-	"github.com/minond/captainslog/querier/query"
+	_ "github.com/lib/pq"
 )
 
 func main() {
-	sql := `
-select cast(created_at as integer) as x,
-  cast(weight as float) as y
-from workouts
-where exercise ilike 'Bench Press'
-and weight is not null
-order by created_at asc`
-
-	ast, err := query.Parse(sql)
+	db, err := sql.Open("postgres", os.Getenv("QUERIER_DB_CONN"))
 	if err != nil {
 		panic(err)
 	}
-	pp.Println(ast)
-	fmt.Println(ast.Print(true))
+
+	newRepl(db).run()
 }
