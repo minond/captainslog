@@ -93,7 +93,7 @@ func (r *repl) query(input string) error {
 		return err
 	}
 
-	sql, err := sqlrewrite.Convert(raw, r.userID)
+	sql, err := sqlrewrite.Rewrite(raw, r.userID)
 	if err != nil {
 		return err
 	}

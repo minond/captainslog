@@ -7,11 +7,11 @@ import (
 	"github.com/minond/captainslog/querier/sqlparse"
 )
 
-// Convert takes an AST and rewrites it so that it is able to be executed in
+// Rewrite takes an AST and rewrites it so that it is able to be executed in
 // the application database (converts columns to JSON selectors, rewrites book
 // in from clause to use correct filter, etc.) and add filters to the query for
 // the appropriate user and book.
-func Convert(ast sqlparse.Ast, userID int64) (sqlparse.Ast, error) {
+func Rewrite(ast sqlparse.Ast, userID int64) (sqlparse.Ast, error) {
 	env := make(environment)
 	switch stmt := ast.(type) {
 	case *sqlparse.SelectStmt:

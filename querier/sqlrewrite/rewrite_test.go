@@ -15,7 +15,7 @@ func compstrmsg(msg, expecting, got string) string {
 		      got: %s`, msg, expecting, got)
 }
 
-func TestConvert_rewriteAst(t *testing.T) {
+func TestRewrite_rewriteAst(t *testing.T) {
 	tests := []struct {
 		label    string
 		input    string
@@ -71,7 +71,7 @@ func TestConvert_rewriteAst(t *testing.T) {
 	}
 }
 
-func TestConvert_withBookFilter(t *testing.T) {
+func TestRewrite_withBookFilter(t *testing.T) {
 	tests := []struct {
 		label    string
 		input    string
@@ -104,7 +104,7 @@ func TestConvert_withBookFilter(t *testing.T) {
 	}
 }
 
-func TestConvert_Convert(t *testing.T) {
+func TestRewrite_Rewrite(t *testing.T) {
 	tests := []struct {
 		label    string
 		input    string
@@ -138,7 +138,7 @@ func TestConvert_Convert(t *testing.T) {
 			if err != nil {
 				t.Errorf("unexpected error parsing query: %v", err)
 			}
-			query, err := Convert(ast, 21)
+			query, err := Rewrite(ast, 21)
 			if err != nil {
 				t.Errorf("unexpected error converting query: %v", err)
 			}
