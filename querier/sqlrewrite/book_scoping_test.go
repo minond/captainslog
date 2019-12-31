@@ -6,7 +6,7 @@ import (
 	"github.com/minond/captainslog/querier/sqlparse"
 )
 
-func TestBookFilter_RewriteSelect(t *testing.T) {
+func TestBookScoping_RewriteSelect(t *testing.T) {
 	tests := []struct {
 		label    string
 		input    string
@@ -31,7 +31,7 @@ func TestBookFilter_RewriteSelect(t *testing.T) {
 				t.Errorf("unexpected error parsing query: %v", err)
 			}
 
-			rewriter := BookFilter{42}
+			rewriter := BookScoping{42}
 			query, _, err := rewriter.RewriteSelect(ast.(*sqlparse.SelectStmt), make(Environment))
 			if err != nil {
 				t.Errorf("unexpected error converting query: %v", err)

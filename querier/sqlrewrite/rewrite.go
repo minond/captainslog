@@ -33,7 +33,7 @@ func RewriteEntryQuery(ast sqlparse.Ast, userID int64) (sqlparse.Ast, error) {
 	return Rewrite(ast,
 		ApplicationSchema{},
 		UserScoping{UserID: userID},
-		BookFilter{UserID: userID},
+		BookScoping{UserID: userID},
 	)
 }
 
