@@ -52,3 +52,7 @@ where the external services live:
     # build and run worker application
     docker build -t minond/captainslog-worker -f Dockerfile.worker .
     docker run -d --env-file .env --name cl-worker minond/captainslog-worker
+
+    # push to container repo
+    docker push minond/captainslog-web:latest
+    docker push minond/captainslog-worker:latest
