@@ -43,7 +43,7 @@ where the external services live:
 === Container
 
     # build base image with rails application and all dependencies
-    docker build -t cl-ruby-base -f Dockerfile.base .
+    docker build -t cl-ruby-base -f Dockerfile .
 
     # build and run server application
     docker build -t cl-web-image -f Dockerfile.web .
