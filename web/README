@@ -43,12 +43,12 @@ where the external services live:
 === Container
 
     # build base image with rails application and all dependencies
-    docker build -t cl-ruby-base -f Dockerfile .
+    docker build -t minond/captainslog-ruby -f Dockerfile .
 
     # build and run server application
-    docker build -t cl-web-image -f Dockerfile.web .
-    docker run -d --env-file .env --name cl-web -p 8080:3000 cl-web-image
+    docker build -t minond/captainslog-web -f Dockerfile.web .
+    docker run -d --env-file .env --name cl-web -p 8080:3000 minond/captainslog-web
 
     # build and run worker application
-    docker build -t cl-worker-image -f Dockerfile.worker .
-    docker run -d --env-file .env --name cl-worker cl-worker-image
+    docker build -t minond/captainslog-worker -f Dockerfile.worker .
+    docker run -d --env-file .env --name cl-worker minond/captainslog-worker

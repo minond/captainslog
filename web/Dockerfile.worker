@@ -1,3 +1,3 @@
-FROM cl-ruby-base
+FROM minond/captainslog-ruby
 
 CMD ["bundle", "exec", "./bin/delayed_job", "run"]
