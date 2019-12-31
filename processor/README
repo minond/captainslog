@@ -27,5 +27,8 @@ variables:
 
 === Container
 
-    docker build -t cl-processor-image -f Dockerfile.base .
-    docker run -d --env-file .env --name cl-processor -p 8081:8081 cl-processor-image
+    # build image with processor binary
+    docker build -t minond/captainslog-processor -f Dockerfile .
+
+    # run it using local configuration and binding to the correct host and container port
+    docker run -d --env-file .env --name cl-processor -p 8081:8081 minond/captainslog-processor
