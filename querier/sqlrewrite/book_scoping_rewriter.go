@@ -6,11 +6,11 @@ import (
 	"github.com/minond/captainslog/querier/sqlparse"
 )
 
-type BookScoping struct {
+type BookScopingRewriter struct {
 	UserID int64
 }
 
-func (r BookScoping) RewriteSelect(stmt *sqlparse.SelectStmt, env Environment) (*sqlparse.SelectStmt, Environment, error) {
+func (r BookScopingRewriter) RewriteSelect(stmt *sqlparse.SelectStmt, env Environment) (*sqlparse.SelectStmt, Environment, error) {
 	if stmt.From != nil {
 		userIDStr := strconv.Itoa(int(r.UserID))
 		tableMatcher := sqlparse.BinaryExpr{

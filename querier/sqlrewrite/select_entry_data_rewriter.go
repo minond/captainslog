@@ -4,9 +4,9 @@ import (
 	"github.com/minond/captainslog/querier/sqlparse"
 )
 
-type SelectEntryData struct{}
+type SelectEntryDataRewriter struct{}
 
-func (r SelectEntryData) RewriteSelect(stmt *sqlparse.SelectStmt, env Environment) (*sqlparse.SelectStmt, Environment, error) {
+func (r SelectEntryDataRewriter) RewriteSelect(stmt *sqlparse.SelectStmt, env Environment) (*sqlparse.SelectStmt, Environment, error) {
 	var newexpr sqlparse.Expr
 	var newenv Environment
 
@@ -34,7 +34,7 @@ func (r SelectEntryData) RewriteSelect(stmt *sqlparse.SelectStmt, env Environmen
 	return stmt, env, nil
 }
 
-func (r SelectEntryData) rewriteExpr(ex sqlparse.Expr, env Environment, autoAlias bool) (sqlparse.Expr, Environment) {
+func (r SelectEntryDataRewriter) rewriteExpr(ex sqlparse.Expr, env Environment, autoAlias bool) (sqlparse.Expr, Environment) {
 	switch x := ex.(type) {
 	case sqlparse.Identifier:
 		// Note that alises are no possible to use in where clauses. In order

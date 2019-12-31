@@ -6,7 +6,7 @@ import (
 	"github.com/minond/captainslog/querier/sqlparse"
 )
 
-func TestSelectEntryData_RewriteSelect(t *testing.T) {
+func TestSelectEntryDataRewriter_RewriteSelect(t *testing.T) {
 	tests := []struct {
 		label    string
 		input    string
@@ -51,7 +51,7 @@ func TestSelectEntryData_RewriteSelect(t *testing.T) {
 				t.Errorf("unexpected error parsing query: %v", err)
 			}
 
-			rewriter := SelectEntryData{}
+			rewriter := SelectEntryDataRewriter{}
 			query, _, err := rewriter.RewriteSelect(ast.(*sqlparse.SelectStmt), make(Environment))
 			if err != nil {
 				t.Errorf("unexpected error converting query: %v", err)
