@@ -1,6 +1,10 @@
 name: Web App
 
-on: [push]
+on:
+  push:
+    paths:
+      - web/
+      - .github
 
 jobs:
   build:

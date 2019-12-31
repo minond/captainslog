@@ -1,6 +1,10 @@
 name: Processor Service
 
-on: [push]
+on:
+  push:
+    paths:
+      - processor/
+      - .github
 
 jobs:
   build:
