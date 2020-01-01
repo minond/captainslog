@@ -3,7 +3,7 @@ class Entry < ApplicationRecord
   belongs_to :collection
   belongs_to :user
 
-  alias_attribute :data, :processed_data
+  alias_attribute :processed_data, :data
 
   after_initialize :constructor
   after_save :schedule_processing, :if => :saved_change_to_original_text?
@@ -22,13 +22,13 @@ class Entry < ApplicationRecord
   #
   # @return [Hash]
   def user_data
-    @user_data ||= data.filter { |key, _val| !key.starts_with?("_") }.sort
+    @user_data ||= processed_data.filter { |key, _val| !key.starts_with?("_") }.sort
   end
 
 private
 
   def constructor
-    self.data ||= {}
+    self.processed_data ||= {}
   end
 
   def schedule_processing
