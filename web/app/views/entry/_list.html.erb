@@ -5,9 +5,10 @@
         <tr>
           <td>
             <span class="entry-controls">
-              <a href="">
-                <span class="entry-control-delete"></span>
-              </a>
+              <a href="<%= entry_path(entry) %>"
+                 class="entry-control-delete"
+                 data-method="delete"
+               ></a>
             </span>
             <span class="entry-text"><%= entry.text %></span>
           </td>
@@ -22,4 +23,18 @@
       </table>
     </div>
   <% end %>
+
+  <script>
+    $(".entry-control-delete").click(function (ev) {
+      if (!confirm("Are you sure?")) {
+        ev.preventDefault()
+        return
+      }
+
+      $item = $(this).parents(".entry-item")
+      $item.animate({ opacity: 0 }, function () {
+        $item.slideUp();
+      })
+    })
+  </script>
 </div>
