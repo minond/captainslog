@@ -1,0 +1,24 @@
+<%= form_for(book, :url => book_path(book.slug)) do |f| %>
+  <div class="field">
+    <%= f.label :name, t(:name) %>
+    <%= f.text_field :name %>
+    <%= render "layouts/field_error", :resource => book, :field => :name %>
+  </div>
+
+  <div class="field">
+    <%= f.label :grouping, t(:grouping) %>
+    <%= select(:book, :grouping, {
+      t(:group_by_none) => :none,
+      t(:group_by_day) => :day,
+      t(:group_by_week) => :week,
+      t(:group_by_month) => :month,
+      t(:group_by_year) => :year,
+    }, :object => book) %>
+    <%= render "layouts/field_error", :resource => book, :field => :grouping %>
+  </div>
+
+  <div class="field btns">
+    <%= f.submit t(:save), :class => "w1 btn" %>
+    <%= link_to t(:cancel), user_path %>
+  </div>
+<% end %>

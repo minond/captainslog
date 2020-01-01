@@ -7,9 +7,9 @@ Rails.application.routes.draw do
     delete "/users/sign_out" => "devise/sessions#destroy", :as => :destroy_user_session
   end
 
+  resources :book, :only => %i[edit show update], :param => :book_slug
   post "/book/:book_slug/entry", :to => "entries#create", :as => :book_entry
   get "/book/:book_slug/:requested_time", :to => "book#show", :as => :book_at
-  resources :book, :only => %i[show], :param => :book_slug
   resources :entry, :only => %i[show update destroy]
 
   resource :search, :only => %i[show]

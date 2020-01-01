@@ -7,5 +7,13 @@
 
   <hr />
 
+  <h2><%= t(:book_settings) %></h2>
+
+  <% user.books.each do |book| %>
+    <div class="field"><%= link_to book.name, edit_book_path(book.slug) %></div>
+  <% end %>
+
+  <hr />
+
   <%= link_to t(:sign_out), destroy_user_session_path, :method => :delete, :class => "btn destructive" %>
 </div>

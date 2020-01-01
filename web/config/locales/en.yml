@@ -13,6 +13,16 @@ en:
   successful_user_update: "Successfully updated!"
   failure_in_user_update: "There was an error updating the user."
 
+  book_settings: "Book settings"
+  add_new_book: "Add new book"
+
+  grouping: "Grouping"
+  group_by_none: "None"
+  group_by_day: "Day"
+  group_by_week: "Week"
+  group_by_month: "Month"
+  group_by_year: "Year"
+
   successful_entry_update: "The entry was successfully updated!"
   failure_in_entry_update: "There was an error updating the entry."
 
