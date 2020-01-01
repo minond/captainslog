@@ -1,4 +1,4 @@
-module ProcessorTest
+module ProcessorTestHelper
   HTTPResponse =
     Struct.new(:code, :body)
 
@@ -11,7 +11,7 @@ module ProcessorTest
   class Poster
     attr_reader :res, :err, :calls
 
-    def initialize(res = ProcessorTest.new_ok_response, err = nil)
+    def initialize(res = ProcessorTestHelper.new_ok_response, err = nil)
       @res = res
       @err = err
       @calls = []
@@ -31,7 +31,7 @@ module ProcessorTest
 
   # @param [String] text, defaults to an empty string
   # @param [Hash] data, defaults to an empty hash
-  # @return [ProcessorTest::HTTPResponse]
+  # @return [ProcessorTestHelper::HTTPResponse]
   def self.new_ok_response(text = "", data = {})
     response = {
       :data => {
@@ -40,13 +40,13 @@ module ProcessorTest
       }
     }
 
-    ProcessorTest::HTTPResponse.new("200", response.to_json)
+    ProcessorTestHelper::HTTPResponse.new("200", response.to_json)
   end
 
-  # @param [ProcessorTest::HTTPResponse] http_res
+  # @param [ProcessorTestHelper::HTTPResponse] http_res
   # @return [Processor::Runner]
   def self.new_runner_with_response(http_res)
-    poster = ProcessorTest::Poster.new(http_res)
+    poster = ProcessorTestHelper::Poster.new(http_res)
     client = Processor::Client.new(poster)
     Processor::Runner.new(FactoryBot.create(:entry), client)
   end
@@ -54,11 +54,11 @@ module ProcessorTest
   # Creates a succssful test http response and returns this along with the used
   # text and data.
   #
-  # @return [Tuple<ProcessorTest::HTTPResponse, String, Hash>]
+  # @return [Tuple<ProcessorTestHelper::HTTPResponse, String, Hash>]
   def self.new_sample_response
     expected_text = "hi"
     expected_data = { "a" => "b" }
-    response = ProcessorTest.new_ok_response(expected_text, expected_data)
+    response = ProcessorTestHelper.new_ok_response(expected_text, expected_data)
     [response, expected_text, expected_data]
   end
 end
