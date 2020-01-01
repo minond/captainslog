@@ -425,20 +425,24 @@ header .books-nav {
   word-break: break-word;
 }
 
-.entry-list .entry-datum {
+.entry-datum {
   margin-bottom: .1rem;
   font-size: 0;
 }
 
-.entry-list .entry-data {
+.entry-data {
   border: 1px solid rgba(0, 0, 0, .6);
   color: rgba(0, 0, 0, .8);
   display: inline-block;
   font-size: .8rem;
   line-height: 1;
-  margin: .3rem 0 0 .3rem;
+  margin: .3rem .3rem 0 .0;
   padding: .3rem;
   word-break: break-all;
+}
+
+.entry-list .entry-data {
+  margin: .3rem 0 0 .3rem;
 }
 
 @media screen and (min-width: 801px) {
