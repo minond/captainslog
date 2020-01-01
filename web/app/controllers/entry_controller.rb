@@ -60,6 +60,7 @@ private
     params.permit(:original_text)
   end
 
+  # @return [Hash]
   def entry_update_attributes
     permitted_entry_params.to_hash.merge(:processed_text => nil)
   end
