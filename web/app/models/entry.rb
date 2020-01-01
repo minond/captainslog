@@ -3,6 +3,8 @@ class Entry < ApplicationRecord
   belongs_to :collection
   belongs_to :user
 
+  alias_attribute :data, :processed_data
+
   after_initialize :constructor
   after_save :schedule_processing, :if => :saved_change_to_original_text?
 
@@ -14,15 +16,6 @@ class Entry < ApplicationRecord
   # @return [String]
   def text
     processed_text || original_text
-  end
-
-  # All text updates done by the user are treated as the "original" text, which
-  # is completely controlled and owned user. So when the application is making
-  # an update to the text, it does so to the processed text.
-  #
-  # @param [String]
-  def text=(text)
-    self.processed_text = text
   end
 
   # Human friendly data
