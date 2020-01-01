@@ -22,7 +22,7 @@ class UsersController < ApplicationController
   #
   def update
     notify(update_user, :successful_user_update, :failure_in_user_update)
-    locals "users/show", :user => current_user
+    redirect_to user_path
   end
 
 private
