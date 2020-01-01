@@ -25,7 +25,7 @@ class EntryController < ApplicationController
   #
   def update
     notify(update_entry, :successful_entry_update, :failure_in_entry_update)
-    locals "entry/show", :entry => current_entry
+    redirect_to current_entry
   end
 
   # === URL
