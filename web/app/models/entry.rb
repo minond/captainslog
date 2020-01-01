@@ -4,17 +4,23 @@ class Entry < ApplicationRecord
   belongs_to :user
 
   after_initialize :constructor
-  after_create :schedule_processing
+  after_save :schedule_processing, :if => :saved_change_to_original_text?
 
   validates :book, :collection, :user, :original_text, :presence => true
 
   scope :by_user, ->(user) { where(:user => user) }
   scope :by_text, ->(text) { where("processed_text ilike ?", "%#{text}%") }
 
+  # @return [String]
   def text
     processed_text || original_text
   end
 
+  # All text updates done by the user are treated as the "original" text, which
+  # is completely controlled and owned user. So when the application is making
+  # an update to the text, it does so to the processed text.
+  #
+  # @param [String]
   def text=(text)
     self.processed_text = text
   end
