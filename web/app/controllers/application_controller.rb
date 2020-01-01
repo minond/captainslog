@@ -57,6 +57,15 @@ private
     end
   end
 
+  # Find and return the currently selected entry. This is scopes to the user's
+  # entries.
+  #
+  # @return [Entry]
+  def current_entry
+    Entry.by_user(current_user)
+         .find(params[:id])
+  end
+
   # Find and return the current "active" book. This is scopes to the user's
   # books.
   #

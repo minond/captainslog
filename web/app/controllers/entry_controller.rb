@@ -16,13 +16,6 @@ class EntryController < ApplicationController
   #
   def destroy
     current_entry.destroy
-  end
-
-private
-
-  # @return [Entry]
-  def current_entry
-    Entry.by_user(current_user)
-         .find(params[:id])
+    redirect_to request.headers[:referer]
   end
 end
