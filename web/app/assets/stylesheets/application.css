@@ -280,6 +280,11 @@ img.captains-log-logo {
   max-width: 40rem;
 }
 
+.content-view > h1,
+.content-view > h2 {
+  margin-top: 0;
+}
+
 /* SEARCH VIEW ************************************************************/
 
 .no-search-results {

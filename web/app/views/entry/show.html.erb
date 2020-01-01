@@ -1,6 +1,6 @@
 <%= render "layouts/header" %>
 
-<div class="content-view slim">
+<div class="content-view">
   <%= form_for(entry, :url => entry_path, :method => :patch) do |f| %>
     <textarea
       name="original_text"
