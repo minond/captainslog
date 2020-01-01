@@ -25,7 +25,7 @@ class EntryController < ApplicationController
   #
   def update
     notify(update_entry, :successful_entry_update, :failure_in_entry_update)
-    redirect_to current_entry
+    redirect_to :back
   end
 
   # === URL
@@ -46,6 +46,13 @@ class EntryController < ApplicationController
   end
 
 private
+
+  # Generate the url to be used when calling `redirect_to :back`
+  #
+  # @return [String]
+  def back_url
+    go_back_path(3) || current_entry.collection_path
+  end
 
   # Update the entry and return true if there were not errors doing so.
   #

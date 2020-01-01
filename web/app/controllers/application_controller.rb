@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::Base
+  before_action :save_history
+
 private
 
   # Helper method for rendering a view with local variables.
@@ -27,6 +29,20 @@ private
     return yield unless current_user
 
     Time.use_zone(current_user.timezone, &block)
+  end
+
+  # Triggered before every action, this method is in charge of building a
+  # session history which can then be used to go back to the expected page.
+  def save_history
+    history = session[:history] || []
+    history << request.url
+    session[:history] = history.last(5)
+  end
+
+  # @param [Integer] index
+  # @return [String, nil]
+  def go_back_path(index)
+    session[:history][-index]
   end
 
   # Redirect request to the login page when there is no active session.

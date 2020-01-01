@@ -25,6 +25,13 @@ class Entry < ApplicationRecord
     @user_data ||= processed_data.filter { |key, _val| !key.starts_with?("_") }.sort
   end
 
+  # Returns the book/collection URL in which this entry can be loaded.
+  #
+  # @return [String]
+  def collection_path
+    book_at_path(book.slug, collection.datetime.to_i)
+  end
+
 private
 
   def constructor
