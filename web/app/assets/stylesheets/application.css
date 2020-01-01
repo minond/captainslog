@@ -364,7 +364,6 @@ header .books-nav {
 .entry-list .entry-item {
   display: block;
   padding: .4rem 0;
-  position :relative;
 }
 
 .entry-list .entry-item table {
@@ -402,7 +401,13 @@ header .books-nav {
 
 .entry-controls {
   opacity: 0;
-  transition: opacity .25s;
+  transition: opacity .1s;
+}
+
+.entry-item:hover .entry-controls,
+.entry-item:focus .entry-controls,
+.entry-item:active .entry-controls {
+  opacity: 1;
 }
 
 .entry-control-delete {
@@ -415,23 +420,8 @@ header .books-nav {
   font-weight: bold;
 }
 
-.entry-item:hover .entry-controls,
-.entry-item:focus .entry-controls,
-.entry-item:active .entry-controls {
-  opacity: 1;
-}
-
-.entry-item:hover .entry-text,
-.entry-item:focus .entry-text,
-.entry-item:active .entry-text {
-  left: 20px;
-}
-
 .entry-text {
   word-break: break-word;
-  transition: left .1s;
-  position: absolute;
-  left: 0;
 }
 
 .entry-list .entry-datum {
