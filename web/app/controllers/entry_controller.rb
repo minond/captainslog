@@ -16,6 +16,6 @@ class EntryController < ApplicationController
   #
   def destroy
     current_entry.destroy
-    redirect_to request.headers[:referer]
+    redirect_to(request.headers[:referer] || root_path)
   end
 end
