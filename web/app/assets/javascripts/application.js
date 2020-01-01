@@ -6,7 +6,7 @@
 // worlds where we can have multiline input for adding multiple entries at a
 // time and also being able to submit with pressing enter on destop and mobile.
 function setupSubmitFormOnTextareaPressEnter() {
-  $("textarea[name=text]").on("keypress", function(ev) {
+  $("textarea[data-enter-to-submit=true]").on("keypress", function(ev) {
     if (ev.keyCode === 13) {
       $("form").submit()
       ev.preventDefault()

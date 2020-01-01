@@ -7,7 +7,12 @@
       rows="5"
       class="entry-input"
       autofocus="true"
+      data-enter-to-submit="true"
     ><%= entry.text %></textarea>
+
+    <script>
+      $(setupSubmitFormOnTextareaPressEnter)
+    </script>
 
     <div class="field entry-datum">
       <% entry.user_data.each do |key, val| %>
