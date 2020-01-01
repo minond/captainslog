@@ -11,3 +11,8 @@ task :lint, [*Rake.application[:rubocop].arg_names] => %i[rubocop reek]
 namespace :lint do
   task :all => %i[rubocop sandi_meter rails_best_practices brakeman reek]
 end
+
+task :docs do
+  `mmdc -i docs/entry_processing_flow.mmd -o docs/entry_processing_flow.svg`
+  `mmdc -i docs/entry_querying_flow.mmd -o docs/entry_querying_flow.svg`
+end

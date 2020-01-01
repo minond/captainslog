@@ -1,0 +1,8 @@
+sequenceDiagram
+  User ->> Web: Query for entry data
+  Web ->> Querier: SQL execution request
+  Querier -->> Querier: SQL processing and rewrite
+  Querier ->> Database: Execute SQL
+  Database ->> Querier: Send back results
+  Querier ->> Web: Send back results
+  Web ->> User: Send back results

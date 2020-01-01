@@ -1,0 +1,8 @@
+sequenceDiagram
+  User ->> Web: Add a new entry
+  Web ->> Database: Store entry
+  Web ->> Worker: Schedule entry processing
+  Web -->> User: Display entry
+  Worker ->> Processor: Trigger processing
+  Processor -->> Worker: Returned processed entry
+  Worker ->> Database: Update entry

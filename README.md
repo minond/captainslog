@@ -1,14 +1,29 @@
 ![Captain's Log](https://raw.githubusercontent.com/minond/captainslog/master/web/app/assets/images/logo.png)
 
 Captain's Log is an application for logging anything you want. The intent is to
-have an application that someone can use to log anything in relatively free
-form, but while still being able to extract (or inject) important information
-from each log entry and, more importantly, from aggregated logs.
+be able to log anything in relatively free form while still being able to
+extract and analyze your logs. Think
+[Logstash](https://github.com/elastic/logstash) but for persons and in personal
+use.
 
-Captain's Log is made up of three separate services: a service for [entry
+The application is made up of three separate services: a service for [entry
 processing](processor), one for [entry querying](querier), and a [web
-application](web). Code and documentation for each service can be found in the
-appropriate directory.
+application](web). Note that the web application is itself made up of a web
+server and a background worker.
+
+Code and documentation for each service can be found in the appropriate
+directory, however below you will find diagrams that give a high level overview
+of how a request flows through the system.
+
+#### Entry processing flow
+
+![Entry processing flow](web/docs/entry_processing_flow.svg)
+
+<br>
+
+#### Entry querying flow
+
+![Entry querying flow](web/docs/entry_querying_flow.svg)
 
 ---
 
