@@ -9,22 +9,24 @@ en:
   save: "Save"
   cancel: "Cancel"
 
-  user_settings: "User settings"
   successful_user_update: "Successfully updated!"
   failure_in_user_update: "There was an error updating the user."
+  successful_entry_update: "The entry was successfully updated!"
+  failure_in_entry_update: "There was an error updating the entry."
 
-  book_settings: "Book settings"
+  books: "Books"
   add_new_book: "Add new book"
 
+  name: "Name"
+  slug: "Slug"
+  created_at: "Created At"
+  updated_at: "Updated At"
   grouping: "Grouping"
   group_by_none: "None"
   group_by_day: "Day"
   group_by_week: "Week"
   group_by_month: "Month"
   group_by_year: "Year"
-
-  successful_entry_update: "The entry was successfully updated!"
-  failure_in_entry_update: "There was an error updating the entry."
 
   previous: "Previous"
   current: "Current"

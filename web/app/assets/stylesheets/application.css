@@ -114,6 +114,36 @@ hr {
   font-size: .8rem;
 }
 
+.table {
+  width: 100%;
+}
+
+.table th,
+.table td {
+  padding: .4rem;
+  border: 1px solid gray;
+}
+
+.controls {
+  opacity: 0;
+  transition: opacity .1s;
+}
+
+.controlled:hover .controls,
+.controlled:focus .controls,
+.controlled:active .controls {
+  opacity: 1;
+}
+
+.control {
+  position: relative;
+  cursor: pointer;
+}
+
+.control img {
+  width: .8rem;
+}
+
 /* BUTTON *****************************************************************/
 
 .btns {
@@ -402,28 +432,6 @@ header .books-nav {
 
 .entry-list .entry-item + .entry-item {
   border-top: 1px solid rgba(0, 0, 0, .1);
-}
-
-.entry-controls {
-  opacity: 0;
-  transition: opacity .1s;
-}
-
-.entry-item:hover .entry-controls,
-.entry-item:focus .entry-controls,
-.entry-item:active .entry-controls {
-  opacity: 1;
-}
-
-.entry-control-edit,
-.entry-control-delete {
-  position: relative;
-  cursor: pointer;
-}
-
-.entry-control-edit img,
-.entry-control-delete img {
-  width: .8rem;
 }
 
 .entry-text {

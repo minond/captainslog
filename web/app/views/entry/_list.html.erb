@@ -2,14 +2,14 @@
   <% entries.each do |entry| %>
     <div class="entry-item">
       <table>
-        <tr>
+        <tr class="controlled">
           <td>
             <span class="entry-text"><%= entry.text %></span>
-            <span class="entry-controls">
-              <%= link_to image_tag("edit.svg"), entry, :class => "entry-control-edit" %>
+            <span class="controls">
+              <%= link_to image_tag("edit.svg"), entry, :class => "control" %>
               <%= link_to image_tag("trash.svg"), entry,
                 :method => :delete,
-                :class => "entry-control-delete",
+                :class => "control",
                 :data => { :confirm => t(:are_you_sure_q) }
               %>
             </span>
