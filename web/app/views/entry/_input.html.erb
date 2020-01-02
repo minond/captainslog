@@ -1,8 +1,8 @@
 <textarea
-  name="text"
-  rows="1"
-  placeholder="<%= t(:enter_new_log, :datetime => requested_time.to_date) %>"
+  name="<%= config[:name] || 'text' %>"
+  rows="<%= config[:rows] || '1' %>"
+  placeholder="<%= config[:requested_time] ? t(:enter_new_log, :datetime => config[:requested_time].to_date) : '' %>"
   class="entry-input"
   autofocus="true"
   data-enter-to-submit="true"
-></textarea>
+><%= config[:text] || "" %></textarea>

@@ -5,7 +5,7 @@
     <%= hidden_field_tag :authenticity_token, form_authenticity_token -%>
     <%= hidden_field_tag :requested_time, requested_time.to_i -%>
 
-    <%= render "entry/input", :requested_time => requested_time %>
+    <%= render "entry/input", :config => { :requested_time => requested_time } %>
     <%= render "entry/group_nav", :book => book, :requested_time => requested_time %>
   </form>
 

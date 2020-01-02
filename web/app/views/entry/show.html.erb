@@ -2,14 +2,7 @@
 
 <div class="content-view">
   <%= form_for(entry, :url => entry_path, :method => :patch) do |f| %>
-    <textarea
-      name="original_text"
-      rows="5"
-      class="entry-input"
-      autofocus="true"
-      data-enter-to-submit="true"
-    ><%= entry.text %></textarea>
-
+    <%= render "entry/input", :config => { :text => entry.text, :name => "original_text", :rows => 5 } %>
     <%= render "entry/datum", :entry => entry %>
 
     <br>
