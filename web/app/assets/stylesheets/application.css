@@ -128,6 +128,10 @@ hr {
 }
 
 .table {
+  overflow: scroll;
+}
+
+.table table {
   width: 100%;
 }
 
