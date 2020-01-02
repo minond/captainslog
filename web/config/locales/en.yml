@@ -15,6 +15,8 @@ en:
   failure_in_entry_update: "There was an error updating the entry."
   successful_book_update: "Your book was successfully updated!"
   failure_in_book_update: "There was an error updating the book."
+  successful_book_create: "Your book was successfully created!"
+  failure_in_book_create: "There was an error creating the book."
 
   books: "Books"
   add_new_book: "Add new book"

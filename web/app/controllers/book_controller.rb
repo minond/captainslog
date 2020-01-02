@@ -8,7 +8,9 @@ class BookController < ApplicationController
   # === Sample request
   #   /book/new
   #
-  def new; end
+  def new
+    locals :book => Book.new
+  end
 
   # === URL
   #   POST /book
@@ -17,8 +19,9 @@ class BookController < ApplicationController
   #   /book
   #
   def create
-    book = Book.create(permitted_book_params.to_hash.merge(:user => current_user))
-    redirect_to book_path(book.slug)
+    book, ok = create_book
+    notify(ok, :successful_book_create, :failure_in_book_create)
+    ok ? redirect_to(book_path(book.slug)) : locals(:new, :book => book)
   end
 
   # === URL
@@ -72,6 +75,12 @@ private
         collection = current_book.find_collection(requested_time)
         collection.present? ? collection.entries.order("created_at desc") : []
       end
+  end
+
+  # @return [Tuple<Book, Boolean>]
+  def create_book
+    book = Book.create(permitted_book_params.to_hash.merge(:user => current_user))
+    [book, book.errors.empty?]
   end
 
   # Update the book and return true if there were not errors doing so.
