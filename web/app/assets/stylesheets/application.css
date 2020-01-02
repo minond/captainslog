@@ -114,6 +114,10 @@ hr {
   font-size: .8rem;
 }
 
+.field.btns {
+  margin-top: 2rem;
+}
+
 .table {
   width: 100%;
 }
