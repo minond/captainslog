@@ -19,6 +19,11 @@ en:
   failure_in_book_create: "There was an error creating the book."
 
   collections: "Collections"
+
+  edit_user: "Edit user"
+
+  edit_book: "Edit book"
+  new_book: "New book"
   books: "Books"
   add_new_book: "Add new book"
 
@@ -48,6 +53,7 @@ en:
   enter_new_log: "Enter a new log for %{datetime}"
   end_of_list: "End of list"
 
+  edit_entry: "Edit entry"
   search_results_for: "Search results for \"%{query}\":"
   no_search_results_for: "There were no results for \"%{query}\"."
   search_again_q: "Would you like to search for something else?"

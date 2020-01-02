@@ -1,6 +1,7 @@
 <%= render "layouts/header" %>
 
 <div class="content-view">
+  <h1><%= t(:edit_book) %></h1>
   <%= render "book/edit_form", :book => book %>
 
   <% unless book.collections.empty? %>
