@@ -19,6 +19,7 @@ en:
   failure_in_book_create: "There was an error creating the book."
 
   collections: "Collections"
+  entries: "Entries"
 
   edit_user: "Edit user"
 

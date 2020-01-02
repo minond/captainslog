@@ -4,12 +4,12 @@
       <th><%= t(:name) %></td>
       <th><%= t(:slug) %></td>
       <th><%= t(:grouping) %></td>
-      <th><%= t(:created_at) %></td>
-      <th><%= t(:updated_at) %></td>
+      <th><%= t(:collections) %></td>
+      <th><%= t(:entries) %></td>
     </tr>
     <% books.each do |book| %>
       <tr class="controlled">
-        <td>
+        <td class="nowrap">
           <%= book.name %>
           <span class="controls">
             <%= link_to image_tag("edit.svg"), edit_book_path(book.slug), :class => "control" %>
@@ -22,8 +22,8 @@
         </td>
         <td><%= book.slug %></td>
         <td><%= t("group_by_#{book.grouping}") %></td>
-        <td><%= book.created_at.to_date %></td>
-        <td><%= book.updated_at.to_date %></td>
+        <td class="text-right"><%= book.collections.count %></td>
+        <td class="text-right"><%= book.entries.count %></td>
       </tr>
     <% end %>
   </table>

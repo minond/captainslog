@@ -117,6 +117,14 @@ hr {
   float: right;
 }
 
+.text-right {
+  text-align: right;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
 .field + .field {
   margin-top: 1rem;
 }

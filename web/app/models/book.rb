@@ -3,6 +3,7 @@ class Book < ApplicationRecord
 
   belongs_to :user
   has_many :collections
+  has_many :entries
 
   after_initialize :constructor
 
