@@ -13,8 +13,12 @@ private
       []
     elsif group_by_day?
       [time.beginning_of_day.utc, time.end_of_day.utc]
-    else
-      raise "invalid group"
+    elsif group_by_week?
+      [time.beginning_of_week.utc, time.end_of_week.utc]
+    elsif group_by_month?
+      [time.beginning_of_month.utc, time.end_of_month.utc]
+    elsif group_by_year?
+      [time.beginning_of_year.utc, time.end_of_year.utc]
     end
   end
 
@@ -27,8 +31,12 @@ private
       0
     elsif group_by_day?
       1.day
-    else
-      raise "invalid group"
+    elsif group_by_week?
+      1.week
+    elsif group_by_month?
+      1.month
+    elsif group_by_year?
+      1.year
     end
   end
 

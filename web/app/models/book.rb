@@ -9,7 +9,7 @@ class Book < ApplicationRecord
   validates :grouping, :name, :user, :slug, :presence => true
   validates :slug, :uniqueness => { :scope => :user }
 
-  enum :grouping => %i[none day], :_prefix => :group_by
+  enum :grouping => %i[none day week month year], :_prefix => :group_by
 
   # @param [String] text
   # @param [Time] time, defaults to `Time.current`. Use a time in the user's
