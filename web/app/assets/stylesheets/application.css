@@ -94,6 +94,15 @@ hr {
 
 /* HELPERS ****************************************************************/
 
+.link,
+.link:visited {
+  color: #357edd; /* blue */
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
 .bold {
   font-weight: bold;
 }

@@ -9,10 +9,12 @@
 
     <h2><%= t(:collections) %></h2>
 
-    <% book.collections.each do |collection| %>
-      <div>
-        <%= link_to collection.datetime.to_date, book_at_path(book.slug, collection.datetime.to_i) %>
-      </div>
-    <% end %>
+    <ul>
+      <% book.collections.each do |collection| %>
+        <li>
+          <%= link_to collection.datetime.to_date, book_at_path(book.slug, collection.datetime.to_i), :class => "link" %>
+        </li>
+      <% end %>
+    </ul>
   <% end %>
 </div>
