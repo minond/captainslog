@@ -12,6 +12,7 @@ detectors:
     exclude:
       - ApplicationController#requested_time
       - Grouping#grouping_prev_next_times
+      - Grouping#grouping_time_range
   UtilityFunction:
     exclude:
       - ProcessEntryJob#perform

@@ -8,35 +8,30 @@ private
   # @param [Time] time, defaults to `Time.current`. Use user's timezone for
   #   best results.
   # @return [Tuple<Time, Time>]
+  #
+  # rubocop:disable Metrics/AbcSize
   def grouping_time_range(time)
-    if group_by_none?
-      []
-    elsif group_by_day?
-      [time.beginning_of_day.utc, time.end_of_day.utc]
-    elsif group_by_week?
-      [time.beginning_of_week.utc, time.end_of_week.utc]
-    elsif group_by_month?
-      [time.beginning_of_month.utc, time.end_of_month.utc]
-    elsif group_by_year?
-      [time.beginning_of_year.utc, time.end_of_year.utc]
+    case grouping.to_sym
+    when :none then []
+    when :day then [time.beginning_of_day.utc, time.end_of_day.utc]
+    when :week then [time.beginning_of_week.utc, time.end_of_week.utc]
+    when :month then [time.beginning_of_month.utc, time.end_of_month.utc]
+    when :year then [time.beginning_of_year.utc, time.end_of_year.utc]
     end
   end
+  # rubocop:enable Metrics/AbcSize
 
   # Generates a book collection's time unit used to move back and forth between
   # separate collections.
   #
   # @return [::ActiveSupport::Duration]
   def grouping_time_unit
-    if group_by_none?
-      0
-    elsif group_by_day?
-      1.day
-    elsif group_by_week?
-      1.week
-    elsif group_by_month?
-      1.month
-    elsif group_by_year?
-      1.year
+    case grouping.to_sym
+    when :none then 0
+    when :day then 1.day
+    when :week then 1.week
+    when :month then 1.month
+    when :year then 1.year
     end
   end
 

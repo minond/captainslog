@@ -21,10 +21,17 @@ class GroupingTest < ActiveSupport::TestCase
 
 private
 
+  # @param [Book] book
+  # @param [ActiveSupport::Duration]
   def assert_grouping_time_unit(book, expected_time_unit)
     assert_equal book.send(:grouping_time_unit), expected_time_unit
   end
 
+  # @param [Book] book
+  # @param [Time, nil] expected_start_time
+  # @param [Time, nil] expected_end_time
+  #
+  # rubocop:disable Metrics/MethodLength
   def assert_grouping_time_ranges(book, expected_start_time, expected_end_time)
     start_time, end_time = book.send(:grouping_time_range, Time.now)
 
@@ -40,4 +47,5 @@ private
       assert_equal expected_end_time, end_time
     end
   end
+  # rubocop:enable Metrics/MethodLength
 end
