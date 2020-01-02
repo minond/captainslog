@@ -31,7 +31,7 @@ class BookController < ApplicationController
   #   [Integer] slug - the slug for the book to load
   #
   # === Sample request
-  #   /book/1
+  #   /book/slugit
   #
   def show
     locals :book => current_book,
@@ -46,7 +46,7 @@ class BookController < ApplicationController
   #   [Integer] slug - the slug for the book to edit
   #
   # === Sample request
-  #   /book/1
+  #   /book/slugit
   #
   def edit
     locals :book => current_book
@@ -59,11 +59,25 @@ class BookController < ApplicationController
   #   [Integer] slug - the slug for the book to update
   #
   # === Sample request
-  #   /book/1?name=Updated+Name&grouping=day
+  #   /book/slugit?name=Updated+Name&grouping=day
   #
   def update
     notify(update_book, :successful_book_update, :failure_in_book_update)
     redirect_to edit_book_path(current_book.slug)
+  end
+
+  # === URL
+  #   DELETE /book/:slug
+  #
+  # === Request fields
+  #   [Integer] slug - the slug for the book to delete
+  #
+  # === Sample request
+  #   /book/slugit
+  #
+  def destroy
+    current_book.destroy
+    redirect_to(request.headers[:referer] || root_path)
   end
 
 private
