@@ -14,11 +14,9 @@
       $(setupSubmitFormOnTextareaPressEnter)
     </script>
 
-    <div class="field entry-datum">
-      <% entry.user_data.each do |key, val| %>
-        <span class="entry-data"><%= key %>: <%= val %></span>
-      <% end %>
-    </div>
+    <%= render "entry/datum", :entry => entry %>
+
+    <br>
 
     <div class="field btns">
       <%= f.submit t(:save), :class => "w1 btn" %>
