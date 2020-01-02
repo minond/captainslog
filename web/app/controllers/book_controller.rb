@@ -8,8 +8,7 @@ class BookController < ApplicationController
   # === Sample request
   #   /book/new
   #
-  def new
-  end
+  def new; end
 
   # === URL
   #   POST /book
@@ -19,7 +18,6 @@ class BookController < ApplicationController
   #
   def create
     book = Book.create(permitted_book_params.to_hash.merge(:user => current_user))
-    byebug
     redirect_to book_path(book.slug)
   end
 
