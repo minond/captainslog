@@ -6,6 +6,12 @@
   </div>
 
   <div class="field">
+    <%= f.label :slug, t(:slug) %>
+    <%= f.text_field :slug %>
+    <%= render "layouts/field_error", :resource => book, :field => :slug %>
+  </div>
+
+  <div class="field">
     <%= f.label :grouping, t(:grouping) %>
     <%= select(:book, :grouping, {
       t(:group_by_none) => :none,
@@ -15,6 +21,18 @@
       t(:group_by_year) => :year,
     }, :object => book) %>
     <%= render "layouts/field_error", :resource => book, :field => :grouping %>
+  </div>
+
+  <div class="field">
+    <%= f.label :created_at, t(:created_at) %>
+    <%= f.text_field :created_at, :readonly => true %>
+    <%= render "layouts/field_error", :resource => book, :field => :created_at %>
+  </div>
+
+  <div class="field">
+    <%= f.label :updated_at, t(:updated_at) %>
+    <%= f.text_field :updated_at, :readonly => true %>
+    <%= render "layouts/field_error", :resource => book, :field => :updated_at %>
   </div>
 
   <div class="field btns">

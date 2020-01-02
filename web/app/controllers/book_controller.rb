@@ -66,6 +66,6 @@ private
   # @return [ActionController::Parameters]
   def permitted_book_params
     params.require(:book)
-          .permit(:name, :grouping)
+          .permit(:name, :slug, :grouping)
   end
 end
