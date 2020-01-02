@@ -3,7 +3,7 @@
 Captain's Log is an application for logging anything you want. The intent is to
 be able to log anything in relatively free form while still being able to
 extract and analyze your logs. Think
-[Logstash](https://github.com/elastic/logstash) but for persons and in personal
+[Logstash](https://github.com/elastic/logstash) but for personal use.
 use.
 
 The application is made up of three separate services: a service for [entry
