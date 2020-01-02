@@ -3,6 +3,27 @@ class BookController < ApplicationController
   before_action :require_login
 
   # === URL
+  #   GET /book/new
+  #
+  # === Sample request
+  #   /book/new
+  #
+  def new
+  end
+
+  # === URL
+  #   POST /book
+  #
+  # === Sample request
+  #   /book
+  #
+  def create
+    book = Book.create(permitted_book_params.to_hash.merge(:user => current_user))
+    byebug
+    redirect_to book_path(book.slug)
+  end
+
+  # === URL
   #   GET /book/:slug
   #
   # === Request fields

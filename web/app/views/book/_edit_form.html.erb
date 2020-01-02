@@ -1,4 +1,4 @@
-<%= form_for(book, :url => book_path(book.slug)) do |f| %>
+<%= form_for(book, :url => book.id.present? ? book_path(book.slug) : book_index_path) do |f| %>
   <div class="field">
     <%= f.label :name, t(:name) %>
     <%= f.text_field :name %>

@@ -48,6 +48,9 @@ private
 
   def constructor
     self.grouping ||= :none
-    self.slug ||= name&.parameterize&.gsub("-", "_")
+
+    unless self.slug.present?
+      self.slug = name&.parameterize&.gsub("-", "_")
+    end
   end
 end
