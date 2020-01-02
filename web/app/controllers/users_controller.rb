@@ -21,8 +21,9 @@ class UsersController < ApplicationController
   #   /user
   #
   def update
-    notify(update_user, :successful_user_update, :failure_in_user_update)
-    redirect_to user_path
+    ok = update_user
+    notify(ok, :successful_user_update, :failure_in_user_update)
+    ok ? redirect_to(user_path) : locals(:show, :user => current_user)
   end
 
 private

@@ -16,7 +16,6 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
 
   test "missing user information results in an error" do
     put "/user", :params => { :user => { :email => "" } }
-    follow_redirect!
     assert response.body.include?("There was an error updating the user")
   end
 end
