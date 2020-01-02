@@ -1,10 +1,10 @@
 <%= form_for(entry, :url => entry_path, :method => :patch) do |f| %>
   <%= render "entry/input", :config => { :text => entry.text, :name => "original_text", :rows => 5 } %>
 
-  <div class="field">
-    <%= f.label :url, t(:url) %>
-    <%= link_to book_at_path(entry.book.slug, entry.collection.datetime.to_i) %>
-  </div>
+  <!-- <div class="field"> -->
+  <!--   <%= f.label :url, t(:url) %> -->
+  <!--   <%= link_to book_at_path(entry.book.slug, entry.collection.datetime.to_i) %> -->
+  <!-- </div> -->
 
   <div class="field">
     <%= f.label :processed_data, t(:processed_data) %>
