@@ -6,14 +6,15 @@
   <hr />
 
   <h2><%= t(:books) %></h2>
-
   <%= render "book/list", :books => user.books %>
-
-  <br>
-
-  <%= link_to t(:add_new_book), "", :class => "btn" %>
+  <div class="field btns">
+    <%= link_to t(:add_new_book), "", :class => "btn" %>
+  </div>
 
   <hr />
 
-  <%= link_to t(:sign_out), destroy_user_session_path, :method => :delete, :class => "btn destructive" %>
+  <%= link_to t(:sign_out), destroy_user_session_path,
+    :method => :delete,
+    :class => "btn destructive"
+  %>
 </div>
