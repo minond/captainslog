@@ -7,34 +7,7 @@
 
   <h2><%= t(:books) %></h2>
 
-  <table class="table">
-    <tr>
-      <th><%= t(:name) %></td>
-      <th><%= t(:slug) %></td>
-      <th><%= t(:grouping) %></td>
-      <th><%= t(:created_at) %></td>
-      <th><%= t(:updated_at) %></td>
-    </tr>
-    <% user.books.each do |book| %>
-      <tr class="controlled">
-        <td>
-          <%= book.name %>
-          <span class="controls">
-            <%= link_to image_tag("edit.svg"), edit_book_path(book.slug), :class => "control" %>
-            <%= link_to image_tag("trash.svg"), book_path(book.slug),
-              :method => :delete,
-              :class => "control",
-              :data => { :confirm => t(:are_you_sure_q) }
-            %>
-          </span>
-        </td>
-        <td><%= book.slug %></td>
-        <td><%= t("group_by_#{book.grouping}") %></td>
-        <td><%= book.created_at.to_date %></td>
-        <td><%= book.updated_at.to_date %></td>
-      </tr>
-    <% end %>
-  </table>
+  <%= render "book/list", :books => user.books %>
 
   <br>
 
