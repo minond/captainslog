@@ -1,0 +1,11 @@
+<%= form_for(entry, :url => entry_path, :method => :patch) do |f| %>
+  <%= render "entry/input", :config => { :text => entry.text, :name => "original_text", :rows => 5 } %>
+  <%= render "entry/datum", :entry => entry %>
+
+  <br>
+
+  <div class="field btns">
+    <%= f.submit t(:save), :class => "w1 btn" %>
+    <%= link_to t(:cancel), :back %>
+  </div>
+<% end %>
