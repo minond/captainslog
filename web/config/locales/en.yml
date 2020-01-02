@@ -13,6 +13,8 @@ en:
   failure_in_user_update: "There was an error updating the user."
   successful_entry_update: "The entry was successfully updated!"
   failure_in_entry_update: "There was an error updating the entry."
+  successful_book_update: "Your book was successfully updated!"
+  failure_in_book_update: "There was an error updating the book."
 
   books: "Books"
   add_new_book: "Add new book"

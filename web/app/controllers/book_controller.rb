@@ -40,7 +40,7 @@ class BookController < ApplicationController
   #   /book/1?name=Updated+Name&grouping=day
   #
   def update
-    notify(update_book, :successful_entry_update, :failure_in_entry_update)
+    notify(update_book, :successful_book_update, :failure_in_book_update)
     redirect_to edit_book_path(current_book.slug)
   end
 
