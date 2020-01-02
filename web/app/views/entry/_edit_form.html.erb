@@ -23,17 +23,19 @@
     <%= render "layouts/field_error", :resource => entry, :field => :original_text %>
   </div>
 
-  <div class="field">
-    <%= f.label :created_at, t(:created_at) %>
-    <%= f.text_field :created_at, :readonly => true %>
-    <%= render "layouts/field_error", :resource => entry, :field => :created_at %>
-  </div>
+  <% if entry.persisted? %>
+    <div class="field">
+      <%= f.label :created_at, t(:created_at) %>
+      <%= f.text_field :created_at, :readonly => true %>
+      <%= render "layouts/field_error", :resource => entry, :field => :created_at %>
+    </div>
 
-  <div class="field">
-    <%= f.label :updated_at, t(:updated_at) %>
-    <%= f.text_field :updated_at, :readonly => true %>
-    <%= render "layouts/field_error", :resource => entry, :field => :updated_at %>
-  </div>
+    <div class="field">
+      <%= f.label :updated_at, t(:updated_at) %>
+      <%= f.text_field :updated_at, :readonly => true %>
+      <%= render "layouts/field_error", :resource => entry, :field => :updated_at %>
+    </div>
+  <% end %>
 
   <div class="field btns">
     <%= f.submit t(:save), :class => "w1 btn" %>
