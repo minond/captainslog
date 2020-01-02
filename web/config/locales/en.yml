@@ -18,6 +18,7 @@ en:
   successful_book_create: "Your book was successfully created!"
   failure_in_book_create: "There was an error creating the book."
 
+  collections: "Collections"
   books: "Books"
   add_new_book: "Add new book"
 

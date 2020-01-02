@@ -2,4 +2,16 @@
 
 <div class="content-view">
   <%= render "book/edit_form", :book => book %>
+
+  <% unless book.collections.empty? %>
+    <hr />
+
+    <h2><%= t(:collections) %></h2>
+
+    <% book.collections.each do |collection| %>
+      <div>
+        <%= link_to collection.datetime.to_date, book_at_path(book.slug, collection.datetime.to_i) %>
+      </div>
+    <% end %>
+  <% end %>
 </div>

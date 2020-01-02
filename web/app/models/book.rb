@@ -2,6 +2,7 @@ class Book < ApplicationRecord
   include Grouping
 
   belongs_to :user
+  has_many :collections
 
   after_initialize :constructor
 
