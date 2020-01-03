@@ -4,13 +4,15 @@ class ProcessEntryJobTest < ActiveJob::TestCase
   test "updates text" do
     entry = build(:entry)
     ProcessEntryJob.new.perform(entry, ProcessorTestHelper::Runner.new)
-    assert_equal "updated text", entry.text
+    entry_from_db = Entry.find(entry.id)
+    assert_equal "updated text", entry_from_db.text
   end
 
   test "updates data" do
     entry = build(:entry)
     ProcessEntryJob.new.perform(entry, ProcessorTestHelper::Runner.new)
-    assert_equal "b", entry.data["a"]
+    entry_from_db = Entry.find(entry.id)
+    assert_equal "b", entry_from_db.data["a"]
   end
 
   test "saves the entry" do
