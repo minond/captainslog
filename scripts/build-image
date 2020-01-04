@@ -1,0 +1,44 @@
+#!/bin/bash
+
+set -euo pipefail
+
+if [ -z "${1:-}" ]; then
+  echo "Usage: $0 <service>"
+  exit 1
+fi
+
+service="$1"
+image="minond/captainslog-$service"
+
+case "$service" in
+  processor)
+    set -x
+    cd processor
+
+    docker build -t minond/captainslog-processor -f Dockerfile .
+
+    ;;
+
+  web)
+    set -x
+    cd web
+
+    docker build -t minond/captainslog-ruby -f Dockerfile .
+    docker build -t minond/captainslog-web -f Dockerfile.web .
+
+    ;;
+
+  worker)
+    set -x
+    cd web
+
+    docker build -t minond/captainslog-ruby -f Dockerfile .
+    docker build -t minond/captainslog-worker -f Dockerfile.worker .
+
+    ;;
+
+  *)
+    echo "Invalid service: $service"
+    exit 1
+    ;;
+esac

@@ -1,0 +1,23 @@
+#!/bin/bash
+
+set -euo pipefail
+
+if [ -z "${1:-}" ]; then
+  echo "Usage: $0 <service>"
+  exit 1
+fi
+
+service="$1"
+image="minond/captainslog-$service"
+
+case "$service" in
+  processor|web|worker)
+    set -x
+    docker push $image:latest
+    ;;
+
+  *)
+    echo "Invalid service: $service"
+    exit 1
+    ;;
+esac
