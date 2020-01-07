@@ -24,10 +24,11 @@ var procedures = map[string]procedureFn{
 	"true?":  unaryBoolOp(func(a bool) bool { return a == true }),
 	"false?": unaryBoolOp(func(a bool) bool { return a == false }),
 
-	"car":   procedureCar,
-	"cdr":   procedureCdr,
-	"pair?": procedurePairQ,
-	"list?": procedureListQ,
+	"car":    procedureCar,
+	"cdr":    procedureCdr,
+	"length": procedureLength,
+	"pair?":  procedurePairQ,
+	"list?":  procedureListQ,
 
 	"type": procedureType,
 }
@@ -235,6 +236,19 @@ func procedureCdr(args []lang.Value) (lang.Value, error) {
 		}
 	}
 	return nil, errors.New("contract error: expected a pair")
+}
+
+func procedureLength(args []lang.Value) (lang.Value, error) {
+	if len(args) != 1 {
+		return nil, errors.New("contract error: expected one argument")
+	}
+
+	switch arg := args[0].(type) {
+	case *lang.List:
+		return lang.NewNumber(float64(arg.Size())), nil
+	}
+
+	return lang.NewBoolean(false), nil
 }
 
 func procedurePairQ(args []lang.Value) (lang.Value, error) {
