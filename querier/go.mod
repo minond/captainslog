@@ -3,6 +3,7 @@ module github.com/minond/captainslog/querier
 go 1.12
 
 require (
+	github.com/DATA-DOG/go-sqlmock v1.4.0
 	github.com/DATA-DOG/go-txdb v0.1.3
 	github.com/go-sql-driver/mysql v1.4.1 // indirect
 	github.com/k0kubun/colorstring v0.0.0-20150214042306-9440f1994b88 // indirect

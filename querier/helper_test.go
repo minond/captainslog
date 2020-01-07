@@ -3,11 +3,13 @@ package main
 import (
 	"bytes"
 	"context"
+	"database/sql"
 	"net/http"
 	"net/http/httptest"
 	"reflect"
 	"testing"
 
+	"github.com/DATA-DOG/go-sqlmock"
 	txdb "github.com/DATA-DOG/go-txdb"
 )
 
@@ -24,18 +26,18 @@ func assertEqual(t *testing.T, expected, returned interface{}) {
 	}
 }
 
-// func newMockDB(t *testing.T) (*sql.DB, sqlmock.Sqlmock) {
-// 	db, mock, err := sqlmock.New()
-// 	if err != nil {
-// 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
-// 	}
-// 	return db, mock
-// }
+func newMockDB(t *testing.T) (*sql.DB, sqlmock.Sqlmock) {
+	db, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
+	}
+	return db, mock
+}
 
-// func newMockRepo(t *testing.T) (Repository, *sql.DB, sqlmock.Sqlmock) {
-// 	db, mock := newMockDB(t)
-// 	return NewRepository(db), db, mock
-// }
+func newMockRepo(t *testing.T) (Repository, *sql.DB, sqlmock.Sqlmock) {
+	db, mock := newMockDB(t)
+	return NewRepository(db), db, mock
+}
 
 func makeRequest(t *testing.T, rawBody string, repo Repository) *httptest.ResponseRecorder {
 	body := bytes.NewBufferString(rawBody)

@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"fmt"
 	"time"
 )
 
@@ -105,7 +104,9 @@ func buildRowContainer(columnTypes []*sql.ColumnType) ([]interface{}, error) {
 		case isTimestampt(typ):
 			row[i] = &NullTime{}
 		default:
-			return nil, fmt.Errorf("bad type: %s", typ.DatabaseTypeName())
+			// NOTE Used to return an error here but I'm trying out returning a
+			// string value instead: fmt.Errorf("bad type: %s", typ.DatabaseTypeName())
+			row[i] = &sql.NullString{}
 		}
 	}
 	return row, nil
