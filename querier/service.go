@@ -9,8 +9,8 @@ import (
 )
 
 var (
-	ErrReqMissingQuery  = errors.New("missing user id in request")
-	ErrReqMissingUserID = errors.New("missing query in request")
+	ErrReqMissingUserID = errors.New("missing user id in request")
+	ErrReqMissingQuery  = errors.New("missing query in request")
 	ErrQuerySyntax      = errors.New("query syntax error")
 	ErrQueryProcessing  = errors.New("unable to process query")
 )
