@@ -176,6 +176,10 @@ func (e List) Tail() []Value {
 	return e.values[1:]
 }
 
+func (e List) Values() []Value {
+	return e.values
+}
+
 func (e List) String() string {
 	buff := strings.Builder{}
 	buff.WriteString("'(")
