@@ -19,11 +19,7 @@ type repl struct {
 }
 
 func (r *repl) prompt() {
-	if r.buff.Len() == 0 {
-		r.print("> ")
-	} else {
-		r.print("  ")
-	}
+	r.print("= ")
 }
 
 func (r *repl) read() {
