@@ -105,15 +105,15 @@ func buildRowContainer(columnTypes []*sql.ColumnType) ([]interface{}, error) {
 		case isTimestampt(typ):
 			row[i] = &NullTime{}
 		default:
-			return nil, fmt.Errorf("bad type: %v", typ)
+			return nil, fmt.Errorf("bad type: %s", typ.DatabaseTypeName())
 		}
 	}
 	return row, nil
 }
 
 type NullTime struct {
-	Valid bool      `json:"Valid"`
-	Time  time.Time `json:"Time"`
+	Valid bool      `json:"valid"`
+	Time  time.Time `json:"time"`
 }
 
 func (nt *NullTime) Scan(value interface{}) error {
