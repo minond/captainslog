@@ -112,8 +112,8 @@ func buildRowContainer(columnTypes []*sql.ColumnType) ([]interface{}, error) {
 }
 
 type NullTime struct {
-	Valid bool      `json:"valid"`
-	Time  time.Time `json:"time"`
+	Valid bool      `json:"Valid"`
+	Time  time.Time `json:"Time"`
 }
 
 func (nt *NullTime) Scan(value interface{}) error {
