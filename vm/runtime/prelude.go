@@ -277,6 +277,8 @@ func procedureType(args []lang.Value) (lang.Value, error) {
 		return lang.NewQuote(lang.NewIdentifier("string")), nil
 	case *lang.Number:
 		return lang.NewQuote(lang.NewIdentifier("number")), nil
+	case *lang.Quote:
+		return lang.NewQuote(lang.NewIdentifier("quote")), nil
 
 	// TODO Maybe these three types should be commbined into two (a lazy one
 	// and an eager one.)
