@@ -219,33 +219,3 @@ func (r *repl) printData(cols []string, rows [][]interface{}) {
 
 	table.Render()
 }
-
-// var cmdRepl = &cobra.Command{
-// 	Use:   "repl",
-// 	Short: "Start database repl",
-// 	Run: func(cmd *cobra.Command, args []string) {
-// 		db, err := database()
-// 		if err != nil {
-// 			log.Fatalf("unable get database connection: %v", err)
-// 		}
-// 		defer db.Close()
-//
-// 		r := repl{
-// 			output: os.Stdout,
-// 			input:  os.Stdin,
-// 			db:     db,
-// 		}
-//
-// 		if err := r.execute("\\user e26e269c-0587-4094-bf01-108c61b0fa8a"); err != nil {
-// 			r.printf("\nerror setting user: %v\n\n", err)
-// 		}
-//
-// 		for !r.stopped {
-// 			r.prompt()
-// 			r.read()
-// 			if err := r.process(); err != nil {
-// 				r.printf("error handling input: %v\n", err)
-// 			}
-// 		}
-// 	},
-// }

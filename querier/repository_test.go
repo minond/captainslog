@@ -16,6 +16,8 @@ var (
 	secondRow = []driver.Value{"one", "two"}
 )
 
+// TODO Test using a real database
+
 func TestRepository_Handle_ReturnsTheRightColumns(t *testing.T) {
 	repo, db, mock := newMockRepo(t)
 	defer db.Close()
