@@ -27,6 +27,7 @@ var procedures = map[string]procedureFn{
 	"car":    procedureCar,
 	"cdr":    procedureCdr,
 	"cons":   procedureCons,
+	"null?":  procedureNullQ,
 	"length": procedureLength,
 	"pair?":  procedurePairQ,
 	"list?":  procedureListQ,
@@ -249,6 +250,19 @@ func procedureCons(args []lang.Value) (lang.Value, error) {
 		return lang.NewList(append([]lang.Value{args[0]}, tail.Values()...)), nil
 	}
 	return nil, errors.New("contract error: expected a list as the second argument")
+}
+
+func procedureNullQ(args []lang.Value) (lang.Value, error) {
+	if len(args) != 1 {
+		return nil, errors.New("contract error: expected one argument")
+	}
+
+	switch arg := args[0].(type) {
+	case *lang.List:
+		return lang.NewBoolean(arg.Size() == 0), nil
+	}
+
+	return nil, errors.New("contract error: expected a list")
 }
 
 func procedureLength(args []lang.Value) (lang.Value, error) {
