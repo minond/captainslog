@@ -65,4 +65,18 @@ class BookControllerTest < ActionDispatch::IntegrationTest
     follow_redirect!
     assert response.body.include? "There was an error updating the book."
   end
+
+  test "deleting a book" do
+    delete "/book/#{book.slug}"
+    follow_redirect!
+    assert_response :success
+  end
+
+  test "deleting a book owned by another user" do
+    other_user = create(:user)
+    other_book = create(:book, :user => other_user,
+                               :slug => "blah")
+
+    assert_raises(ActiveRecord::RecordNotFound) { delete "/book/#{other_book.slug}" }
+  end
 end
