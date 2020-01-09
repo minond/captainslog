@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   resources :book, :only => %i[create new edit show update destroy], :param => :book_slug
   post "/book/:book_slug/entry", :to => "entries#create", :as => :book_entry
   get "/book/:book_slug/:requested_time", :to => "book#show", :as => :book_at
+
   resources :entries, :only => %i[show update destroy]
 
   resource :search, :only => %i[show]
