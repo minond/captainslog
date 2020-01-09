@@ -25,7 +25,7 @@ class BookControllerTest < ActionDispatch::IntegrationTest
         :book => {
           :name => "Testing",
           :slug => "testing",
-          :grouping => :none,
+          :grouping => :none
         }
       }
     end
@@ -36,7 +36,7 @@ class BookControllerTest < ActionDispatch::IntegrationTest
       :book => {
         :name => book.name,
         :slug => book.slug,
-        :grouping => book.grouping,
+        :grouping => book.grouping
       }
     }
 
