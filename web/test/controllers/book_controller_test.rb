@@ -52,4 +52,17 @@ class BookControllerTest < ActionDispatch::IntegrationTest
 
     assert_equal book.reload.name, "Updated Name"
   end
+
+  test "failure in updating a book results in an error message" do
+    create(:book, :user => user, :slug => "testing123")
+
+    patch "/book/#{book.slug}", :params => {
+      :book => {
+        :slug => "testing123"
+      }
+    }
+
+    follow_redirect!
+    assert response.body.include? "There was an error updating the book."
+  end
 end
