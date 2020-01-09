@@ -31,7 +31,7 @@ class BookControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
-  test "failure in creating the book results in an error message" do
+  test "failure in creating a book results in an error message" do
     post "/book", :params => {
       :book => {
         :name => book.name,
@@ -41,5 +41,15 @@ class BookControllerTest < ActionDispatch::IntegrationTest
     }
 
     assert response.body.include? "There was an error creating the book."
+  end
+
+  test "succesfully updating a book" do
+    patch "/book/#{book.slug}", :params => {
+      :book => {
+        :name => "Updated Name"
+      }
+    }
+
+    assert_equal book.reload.name, "Updated Name"
   end
 end
