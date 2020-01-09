@@ -6,15 +6,7 @@
 
   <% unless book.collections.empty? %>
     <hr />
-
     <h2><%= t(:collections) %></h2>
-
-    <ul>
-      <% book.collections.each do |collection| %>
-        <li>
-          <%= link_to collection.datetime.to_date, book_at_path(book.slug, collection.datetime.to_i), :class => "link" %>
-        </li>
-      <% end %>
-    </ul>
+    <%= render "collections/list", :collections => book.collections %>
   <% end %>
 </div>
