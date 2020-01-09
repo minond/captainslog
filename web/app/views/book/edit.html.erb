@@ -4,6 +4,18 @@
   <h1><%= t(:edit_book) %></h1>
   <%= render "book/edit_form", :book => book %>
 
+  <% unless book.extractors.empty? %>
+    <hr />
+    <h2><%= t(:extractors) %></h2>
+    <%= render "extractors/list", :extractors => book.extractors %>
+  <% end %>
+
+  <% unless book.shorthands.empty? %>
+    <hr />
+    <h2><%= t(:shorthands) %></h2>
+    <%= render "shorthands/list", :shorthands => book.shorthands %>
+  <% end %>
+
   <% unless book.collections.empty? %>
     <hr />
     <h2><%= t(:collections) %></h2>

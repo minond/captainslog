@@ -1,0 +1,7 @@
+<ul>
+  <% extractors.each do |extractor| %>
+    <li>
+      <%= "\"#{extractor.label}\", \"#{extractor.match}\"" %>
+    </li>
+  <% end %>
+</ul>

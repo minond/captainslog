@@ -1,0 +1,7 @@
+<ul>
+  <% shorthands.sort_by(&:priority).reverse.each do |shorthand| %>
+    <li>
+      <%= "[#{shorthand.priority}] \"#{shorthand.match}\" | \"#{shorthand.text}\" -> \"#{shorthand.expansion}\"" %>
+    </li>
+  <% end %>
+</ul>

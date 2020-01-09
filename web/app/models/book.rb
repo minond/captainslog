@@ -4,6 +4,8 @@ class Book < ApplicationRecord
   belongs_to :user
   has_many :collections
   has_many :entries
+  has_many :shorthands
+  has_many :extractors
 
   after_initialize :constructor
 
