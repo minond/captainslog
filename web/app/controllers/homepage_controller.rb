@@ -1,9 +1,9 @@
-class PagesController < ApplicationController
+class HomepageController < ApplicationController
   def home
     if current_user
       locals :books => books
     else
-      render "pages/welcome"
+      render "homepage/welcome"
     end
   end
 end

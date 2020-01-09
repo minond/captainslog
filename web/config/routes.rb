@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  root :to => "pages#home"
+  root :to => "homepage#home"
 
   devise_for :users, :skip => %i[registrations sessions]
   as :user do

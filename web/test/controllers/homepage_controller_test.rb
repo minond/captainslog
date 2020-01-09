@@ -1,6 +1,6 @@
 require "test_helper"
 
-class PagesControllerTest < ActionDispatch::IntegrationTest
+class HomepageControllerTest < ActionDispatch::IntegrationTest
   test "renders the welcome page when there is no session" do
     get "/"
     assert response.body.include? "is an application for logging"
