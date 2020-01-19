@@ -11,8 +11,9 @@ Rails.application.routes.draw do
   post "/book/:book_slug/entry", :to => "entries#create", :as => :book_entry
   get "/book/:book_slug/:requested_time", :to => "book#show", :as => :book_at
 
-  resources :entries, :only => %i[show update destroy]
-
   resource :search, :only => %i[show]
   resource :user, :only => %i[show update]
+  resources :entries, :only => %i[show update destroy]
+  resources :extractors, :only => %i[show]
+  resources :shorthands, :only => %i[show]
 end

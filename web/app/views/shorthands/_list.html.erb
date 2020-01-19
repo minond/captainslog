@@ -1,7 +1,7 @@
 <ul>
   <% shorthands.sort_by(&:priority).reverse.each do |shorthand| %>
     <li>
-      <%= "[#{shorthand.priority}] \"#{shorthand.match}\" | \"#{shorthand.text}\" -> \"#{shorthand.expansion}\"" %>
+      <%= link_to "[#{shorthand.priority}] \"#{shorthand.match}\" | \"#{shorthand.text}\" -> \"#{shorthand.expansion}\"", shorthand, :class => "link" %>
     </li>
   <% end %>
 </ul>
