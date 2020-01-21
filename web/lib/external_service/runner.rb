@@ -23,5 +23,10 @@ module ExternalService
     def response
       @response ||= client.request(request)
     end
+
+    # @return [ExternalService::Request]
+    def request
+      raise NotImplementedError.new
+    end
   end
 end
