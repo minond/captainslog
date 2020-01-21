@@ -10,6 +10,7 @@ private
   # @return [Extractor]
   def extractor
     Extractor.new(:book => create(:book),
+                  :user => create(:user),
                   :label => "a",
                   :match => "/b/",
                   :type => 1)
