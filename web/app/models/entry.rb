@@ -7,6 +7,7 @@ class Entry < ApplicationRecord
 
   after_initialize :constructor
   after_save :schedule_processing, :if => :saved_change_to_original_text?
+  before_save :reset_processed_text_and_data, :if => :will_save_change_to_original_text?
 
   validates :book, :collection, :user, :original_text, :presence => true
 
@@ -40,5 +41,10 @@ private
 
   def schedule_processing
     ProcessEntryJob.perform_later self
+  end
+
+  def reset_processed_text_and_data
+    self.processed_text = nil
+    self.processed_data = nil
   end
 end

@@ -77,17 +77,12 @@ private
   #
   # @return [Boolean]
   def update_entry
-    current_entry.update(entry_update_attributes)
+    current_entry.update(permitted_entry_params)
     current_entry.errors.empty?
   end
 
   # @return [ActionController::Parameters]
   def permitted_entry_params
     params.permit(:original_text)
-  end
-
-  # @return [Hash]
-  def entry_update_attributes
-    permitted_entry_params.to_hash.merge(:processed_text => nil)
   end
 end
