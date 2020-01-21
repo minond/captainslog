@@ -1,6 +1,12 @@
 class ExtractorsController < ApplicationController
   before_action :require_login
 
+  # === URL
+  #   GET /extractors/:id
+  #
+  # === Sample request
+  #   /extractors/1
+  #
   def show
     locals :extractor => current_extractor
   end
@@ -14,7 +20,7 @@ class ExtractorsController < ApplicationController
   #   [Integer] extractor[type] - the extractor type
   #
   # === Sample request
-  #   /extractors/:id?
+  #   /extractors/1?label=mylabel
   #
   def update
     ok = update_extractor

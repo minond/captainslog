@@ -13,6 +13,7 @@ private
     Entry.by_user(current_user).by_text(query)
   end
 
+  # @return [String]
   def query
     params[:query]
   end

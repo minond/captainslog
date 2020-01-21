@@ -21,7 +21,7 @@ class ShorthandsController < ApplicationController
   #   [String] shorthand[text] - the shorthand text
   #
   # === Sample request
-  #   /shorthands/:id?
+  #   /shorthands/1?expansion=ok
   #
   def update
     ok = update_shorthand

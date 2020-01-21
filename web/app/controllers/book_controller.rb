@@ -19,9 +19,9 @@ class BookController < ApplicationController
   #   /book
   #
   def create
-    book, ok = create_book
-    notify(ok, :successful_book_create, :failure_in_book_create)
-    ok ? redirect_to(book_path(book.slug)) : locals(:new, :book => book)
+    book = create_book
+    notify(book.persisted?, :successful_book_create, :failure_in_book_create)
+    book.persisted? ? redirect_to(book_path(book.slug)) : locals(:new, :book => book)
   end
 
   # === URL
@@ -87,10 +87,9 @@ private
     @entries ||= current_book.find_entries(requested_time)
   end
 
-  # @return [Tuple<Book, Boolean>]
+  # @return [Book]
   def create_book
-    book = Book.create(permitted_book_params.to_hash.merge(:user => current_user))
-    [book, book.errors.empty?]
+    Book.create(permitted_book_params.to_hash.merge(:user => current_user))
   end
 
   # Update the book and return true if there were not errors doing so.
