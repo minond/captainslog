@@ -20,8 +20,9 @@ class BookController < ApplicationController
   #
   def create
     book = create_book
-    notify(book.persisted?, :successful_book_create, :failure_in_book_create)
-    book.persisted? ? redirect_to(book_path(book.slug)) : locals(:new, :book => book)
+    ok = book.persisted?
+    notify(ok, :successful_book_create, :failure_in_book_create)
+    ok ? redirect_to(book.path) : locals(:new, :book => book)
   end
 
   # === URL

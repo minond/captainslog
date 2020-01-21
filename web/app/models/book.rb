@@ -14,6 +14,11 @@ class Book < ApplicationRecord
 
   enum :grouping => %i[none day week month year], :_prefix => :group_by
 
+  # @return [String]
+  def path
+    Rails.application.routes.url_helpers.book_path(slug)
+  end
+
   # @param [String] text
   # @param [Time] time, defaults to `Time.current`. Use a time in the user's
   #   timezone for best results.
