@@ -84,11 +84,7 @@ private
 
   # @return [Array<Entry>]
   def entries
-    @entries ||=
-      begin
-        collection = current_book.find_collection(requested_time)
-        collection.present? ? collection.entries.order("created_at desc") : []
-      end
+    @entries ||= current_book.find_entries(requested_time)
   end
 
   # @return [Tuple<Book, Boolean>]

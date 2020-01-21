@@ -28,6 +28,14 @@ class Book < ApplicationRecord
 
   # @param [Time] time, defaults to `Time.current`. Use a time in the user's
   #   timezone for best results.
+  # @return [Array<Entry>]
+  def find_entries(time = Time.current)
+    collection = find_collection(time)
+    collection.present? ? collection.entries.order("created_at desc") : []
+  end
+
+  # @param [Time] time, defaults to `Time.current`. Use a time in the user's
+  #   timezone for best results.
   # @return [Collection, Nil]
   def find_collection(time = Time.current)
     start_time, end_time = grouping_time_range(time)
