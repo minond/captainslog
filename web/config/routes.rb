@@ -14,6 +14,6 @@ Rails.application.routes.draw do
   resource :search, :only => %i[show]
   resource :user, :only => %i[show update]
   resources :entries, :only => %i[show update destroy]
-  resources :extractors, :only => %i[show]
-  resources :shorthands, :only => %i[show]
+  resources :extractors, :only => %i[show update]
+  resources :shorthands, :only => %i[show update]
 end
