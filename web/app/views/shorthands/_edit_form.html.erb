@@ -1,0 +1,7 @@
+<%= form_for(shorthand, :url => shorthand_path(shorthand)) do |f| %>
+  <%= render "form/field", :f => f, :field => :priority %>
+  <%= render "form/field", :f => f, :field => :expansion %>
+  <%= render "form/field", :f => f, :field => :match %>
+  <%= render "form/field", :f => f, :field => :text %>
+  <%= render "form/actions", :f => f, :back_url => edit_book_path(shorthand.book.slug) %>
+<% end %>

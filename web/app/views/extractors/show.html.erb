@@ -1,1 +1,6 @@
 <%= render "layouts/header" %>
+
+<div class="content-view">
+  <h1><%= t(:edit_extractor) %></h1>
+  <%= render "extractors/edit_form", :extractor => extractor %>
+</div>

@@ -1,0 +1,5 @@
+<div class="field">
+  <%= f.label field, t(field) %>
+  <%= f.text_field field %>
+  <%= render "layouts/field_error", :resource => f.object, :field => field %>
+</div>

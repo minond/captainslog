@@ -23,6 +23,16 @@ en:
   extractors: "Extractors"
   entries: "Entries"
 
+  edit_shorthand: "Edit shorthand"
+  priority: "Priority"
+  expansion: "Expansion"
+  text: "Text"
+
+  edit_extractor: "Edit extractor"
+  label: "Label"
+  match: "Match"
+  type: "Type"
+
   edit_user: "Edit user"
 
   edit_book: "Edit book"

@@ -1,0 +1,6 @@
+<%= form_for(extractor, :url => extractor_path(extractor)) do |f| %>
+  <%= render "form/field", :f => f, :field => :label %>
+  <%= render "form/field", :f => f, :field => :match %>
+  <%= render "form/field", :f => f, :field => :type %>
+  <%= render "form/actions", :f => f, :back_url => edit_book_path(extractor.book.slug) %>
+<% end %>
