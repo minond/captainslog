@@ -12,7 +12,7 @@ class UsersController < ApplicationController
   end
 
   # === URL
-  #   GET /user
+  #   PATCH /user
   #
   # === Request fields
   #   [String] user[name] - the name

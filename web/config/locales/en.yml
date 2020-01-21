@@ -17,6 +17,8 @@ en:
   failure_in_book_update: "There was an error updating the book."
   successful_book_create: "Your book was successfully created!"
   failure_in_book_create: "There was an error creating the book."
+  successful_shorthand_update: "Your shorthand was successfully updated!"
+  failure_in_shorthand_update: "There was an error updating the shorthand."
 
   collections: "Collections"
   shorthands: "Shorthands"
