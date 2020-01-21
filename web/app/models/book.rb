@@ -35,8 +35,7 @@ class Book < ApplicationRecord
   #   timezone for best results.
   # @return [Array<Entry>]
   def find_entries(time = Time.current)
-    collection = find_collection(time)
-    collection.present? ? collection.entries.order("created_at desc") : []
+    find_collection(time)&.entries&.order("created_at desc") || []
   end
 
   # @param [Time] time, defaults to `Time.current`. Use a time in the user's
