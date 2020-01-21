@@ -5,6 +5,23 @@ class ExtractorsController < ApplicationController
     locals :extractor => current_extractor
   end
 
+  # === URL
+  #   PATCH /extractors/:id
+  #
+  # === Request fields
+  #   [String] extractor[label] - the extractor label
+  #   [String] extractor[match] - the extractor match
+  #   [Integer] extractor[type] - the extractor type
+  #
+  # === Sample request
+  #   /extractors/:id?
+  #
+  def update
+    ok = update_extractor
+    notify(ok, :successful_extractor_update, :failure_in_extractor_update)
+    ok ? redirect_to(current_extractor) : locals(:show, :extractor => current_extractor)
+  end
+
 private
 
   # Find and return the current "active" extractor. This is scopes to the
@@ -14,5 +31,19 @@ private
   def current_extractor
     @current_extractor ||= Extractor.find_by!(:user => current_user,
                                               :id => params[:id])
+  end
+
+  # Update the extractor and return true if there were not errors doing so.
+  #
+  # @return [Boolean]
+  def update_extractor
+    current_extractor.update(permitted_extractor_params)
+    current_extractor.errors.empty?
+  end
+
+  # @return [ActionController::Parameters]
+  def permitted_extractor_params
+    params.require(:extractor)
+          .permit(:label, :match, :type)
   end
 end
