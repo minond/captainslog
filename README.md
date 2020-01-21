@@ -11,18 +11,7 @@ application](web). Note that the web application is itself made up of a web
 server and a background worker.
 
 Code and documentation for each service can be found in the appropriate
-directory, however below you will find diagrams that give a high level overview
-of how a request flows through the system.
-
-#### Entry processing flow
-
-![Entry processing flow](web/docs/entry_processing_flow.svg)
-
-<br>
-
-#### Entry querying flow
-
-![Entry querying flow](web/docs/entry_querying_flow.svg)
+directory and in the `docs` directory.
 
 ---
 
