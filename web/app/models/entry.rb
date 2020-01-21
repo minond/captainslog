@@ -34,7 +34,7 @@ class Entry < ApplicationRecord
   #
   # @return [String]
   def collection_path
-    book_at_path(book.slug, collection.datetime.to_i)
+    Rails.application.routes.url_helpers.book_at_path(book.slug, collection.datetime.to_i)
   end
 
 private
