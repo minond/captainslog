@@ -1,6 +1,4 @@
-<%= render "layouts/header" %>
-
-<div class="content-view">
-  <h1><%= t(:edit_shorthand) %></h1>
+<%= render "layouts/content-view" do %>
+  <%= render "form/title", :key => :edit_shorthand %>
   <%= render "shorthands/edit_form", :shorthand => shorthand %>
-</div>
+<% end %>
