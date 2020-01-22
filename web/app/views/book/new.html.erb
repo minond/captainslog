@@ -1,6 +1,4 @@
-<%= render "layouts/header" %>
-
-<div class="content-view">
-  <h1><%= t(:new_book) %></h1>
+<%= render "layouts/content-view" do %>
+  <%= render "form/title", :key => :new_book %>
   <%= render "book/edit_form", :book => book %>
-</div>
+<% end %>

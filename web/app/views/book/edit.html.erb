@@ -1,24 +1,22 @@
-<%= render "layouts/header" %>
-
-<div class="content-view">
-  <h1><%= t(:edit_book) %></h1>
+<%= render "layouts/content-view" do %>
+  <%= render "form/title", :key => :edit_book %>
   <%= render "book/edit_form", :book => book %>
 
   <% unless book.extractors.empty? %>
     <hr />
-    <h2><%= t(:extractors) %></h2>
+    <%= render "form/subtitle", :key => :extractors %>
     <%= render "extractors/list", :extractors => book.extractors %>
   <% end %>
 
   <% unless book.shorthands.empty? %>
     <hr />
-    <h2><%= t(:shorthands) %></h2>
+    <%= render "form/subtitle", :key => :shorthands %>
     <%= render "shorthands/list", :shorthands => book.shorthands %>
   <% end %>
 
   <% unless book.collections.empty? %>
     <hr />
-    <h2><%= t(:collections) %></h2>
+    <%= render "form/subtitle", :key => :collections %>
     <%= render "collections/list", :collections => book.collections %>
   <% end %>
-</div>
+<% end %>
