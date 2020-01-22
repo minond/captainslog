@@ -1,44 +1,27 @@
 <%= form_for(entry, :url => entry_path, :method => :patch) do |f| %>
   <%= render "entry/input", :config => { :text => entry.text, :name => "original_text", :rows => 5 } %>
 
-  <!-- <div class="field"> -->
-  <!--   <%= f.label :url, t(:url) %> -->
-  <!--   <%= link_to book_at_path(entry.book.slug, entry.collection.datetime.to_i) %> -->
-  <!-- </div> -->
-
-  <div class="field">
-    <%= f.label :processed_data, t(:processed_data) %>
+  <%= render "form/field", :f => f, :field => :processed_data do %>
     <%= render "entry/datum", :entry => entry %>
-  </div>
-
-  <div class="field">
-    <%= f.label :processed_text, t(:processed_text) %>
-    <%= f.text_field :processed_text, :readonly => true %>
-    <%= render "layouts/field_error", :resource => entry, :field => :processed_text %>
-  </div>
-
-  <div class="field">
-    <%= f.label :original_text, t(:original_text) %>
-    <%= f.text_field :original_text, :readonly => true %>
-    <%= render "layouts/field_error", :resource => entry, :field => :original_text %>
-  </div>
-
-  <% if entry.persisted? %>
-    <div class="field">
-      <%= f.label :created_at, t(:created_at) %>
-      <%= f.text_field :created_at, :readonly => true %>
-      <%= render "layouts/field_error", :resource => entry, :field => :created_at %>
-    </div>
-
-    <div class="field">
-      <%= f.label :updated_at, t(:updated_at) %>
-      <%= f.text_field :updated_at, :readonly => true %>
-      <%= render "layouts/field_error", :resource => entry, :field => :updated_at %>
-    </div>
   <% end %>
 
-  <div class="field btns">
-    <%= f.submit t(:save), :class => "w1 btn" %>
-    <%= link_to t(:cancel), :back %>
-  </div>
+  <%= render "form/field", :f => f, :field => :processed_text do %>
+    <%= f.text_field :processed_text, :readonly => true %>
+  <% end %>
+
+  <%= render "form/field", :f => f, :field => :original_text do %>
+    <%= f.text_field :original_text, :readonly => true %>
+  <% end %>
+
+  <% if entry.persisted? %>
+    <%= render "form/field", :f => f, :field => :created_at do %>
+      <%= f.text_field :created_at, :readonly => true %>
+    <% end %>
+
+    <%= render "form/field", :f => f, :field => :updated_at do %>
+      <%= f.text_field :updated_at, :readonly => true %>
+    <% end %>
+  <% end %>
+
+  <%= render "form/actions", :f => f, :back_url => :back %>
 <% end %>
