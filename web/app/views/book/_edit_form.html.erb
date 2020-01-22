@@ -1,18 +1,8 @@
 <%= form_for(book, :url => book.id.present? ? book_path(book.slug) : book_index_path) do |f| %>
-  <div class="field">
-    <%= f.label :name, t(:name) %>
-    <%= f.text_field :name %>
-    <%= render "layouts/field_error", :resource => book, :field => :name %>
-  </div>
+  <%= render "form/field", :f => f, :field => :name %>
+  <%= render "form/field", :f => f, :field => :slug %>
 
-  <div class="field">
-    <%= f.label :slug, t(:slug) %>
-    <%= f.text_field :slug %>
-    <%= render "layouts/field_error", :resource => book, :field => :slug %>
-  </div>
-
-  <div class="field">
-    <%= f.label :grouping, t(:grouping) %>
+  <%= render "form/field", :f => f, :field => :grouping do %>
     <%= select(:book, :grouping, {
       t(:group_by_none) => :none,
       t(:group_by_day) => :day,
@@ -20,25 +10,17 @@
       t(:group_by_month) => :month,
       t(:group_by_year) => :year,
     }, :object => book) %>
-    <%= render "layouts/field_error", :resource => book, :field => :grouping %>
-  </div>
-
-  <% if book.persisted? %>
-    <div class="field">
-      <%= f.label :created_at, t(:created_at) %>
-      <%= f.text_field :created_at, :readonly => true %>
-      <%= render "layouts/field_error", :resource => book, :field => :created_at %>
-    </div>
-
-    <div class="field">
-      <%= f.label :updated_at, t(:updated_at) %>
-      <%= f.text_field :updated_at, :readonly => true %>
-      <%= render "layouts/field_error", :resource => book, :field => :updated_at %>
-    </div>
   <% end %>
 
-  <div class="field btns">
-    <%= f.submit t(:save), :class => "w1 btn" %>
-    <%= link_to t(:cancel), user_path %>
-  </div>
+  <% if book.persisted? %>
+    <%= render "form/field", :f => f, :field => :created_at do %>
+      <%= f.text_field :created_at, :readonly => true %>
+    <% end %>
+
+    <%= render "form/field", :f => f, :field => :updated_at do %>
+      <%= f.text_field :updated_at, :readonly => true %>
+    <% end %>
+  <% end %>
+
+  <%= render "form/actions", :f => f, :back_url => user_path %>
 <% end %>
