@@ -1,24 +1,10 @@
 <%= form_for(user, :url => user_path, :method => :patch) do |f| %>
-  <div class="field">
-    <%= f.label :name, t(:name) %>
-    <%= f.text_field :name %>
-    <%= render "layouts/field_error", :resource => user, :field => :name %>
-  </div>
+  <%= render "form/field", :f => f, :field => :name %>
+  <%= render "form/field", :f => f, :field => :email %>
 
-  <div class="field">
-    <%= f.label :email, t(:email) %>
-    <%= f.email_field :email %>
-    <%= render "layouts/field_error", :resource => user, :field => :email %>
-  </div>
-
-  <div class="field">
-    <%= f.label :timezone, t(:timezone) %>
+  <%= render :layout => "form/field", :locals => { :f => f, :field => :timezone } do %>
     <%= select(:user, :timezone, TZInfo::Timezone.all_identifiers, :object => user) %>
-    <%= render "layouts/field_error", :resource => user, :field => :timezone %>
-  </div>
+  <% end %>
 
-  <div class="field btns">
-    <%= f.submit t(:save), :class => "w1 btn" %>
-    <%= link_to t(:cancel), user_path %>
-  </div>
+  <%= render "form/actions", :f => f, :back_url => user_path %>
 <% end %>
