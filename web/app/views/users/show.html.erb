@@ -1,12 +1,10 @@
-<%= render "layouts/header" %>
-
-<div class="content-view">
-  <h1><%= t(:edit_user) %></h1>
+<%= render "layouts/content-view" do %>
+  <%= render "form/title", :key => :edit_user %>
   <%= render "users/edit_form", :user => user %>
 
   <hr />
 
-  <h2><%= t(:books) %></h2>
+  <%= render "form/subtitle", :key => :books %>
   <%= render "book/list", :books => user.books %>
   <div class="field btns">
     <%= link_to t(:add_new_book), new_book_path, :class => "btn" %>
@@ -18,4 +16,4 @@
     :method => :delete,
     :class => "btn destructive"
   %>
-</div>
+<% end %>
