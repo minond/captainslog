@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "outDir": "./public/assets/",
+    "sourceMap": true,
+
+    "module": "commonjs",
+    "target": "ES6",
+    "jsx": "react",
+    "lib": ["es2015", "dom"],
+    "pretty": true,
+    "incremental": true,
+
+    "alwaysStrict": true,
+    "noImplicitAny": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": false,
+    "removeComments": true,
+    "strict": true,
+    "strictNullChecks": true
+  },
+  "include": [
+    "./app/client/*",
+    "./app/client/**/*"
+  ]
+}

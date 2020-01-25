@@ -519,3 +519,173 @@ header .books-nav {
   margin-left: 5px;
   content: '-';
 }
+
+/* REPORT BUILDER *********************************************************/
+
+.report-variable-fields {
+  margin-bottom: 30px;
+}
+
+.report-variable-fields label span {
+  padding-right: 5px;
+}
+
+.report-variable-fields label select {
+  position: relative;
+  top: -1px;
+}
+
+.report-edit-form {
+  padding: 20px 0;
+  background: #fafafa40;
+  border-top: 1px solid #d9d9d9;
+  border-bottom: 1px solid #d9d9d9;
+  margin-bottom: 20px;
+}
+
+.report-edit-form .report-edit-form-label {
+  display: block;
+}
+
+.report-edit-form .report-edit-form-label span {
+  display: block;
+  margin-bottom: 2px;
+}
+
+.report-edit-form table {
+  width: 100%;
+}
+
+.report-edit-form td {
+  vertical-align: top;
+}
+
+.report-edit-form tr:first-child td:first-child {
+  width: 30%;
+  padding-right: 20px;
+}
+
+.report-edit-form tr:first-child td + td {
+  width: 70%;
+}
+
+.report-edit-form select,
+.report-edit-form input {
+  width: 100%;
+}
+
+.report-edit-form textarea {
+  height: 200px;
+  width: 100%;
+}
+
+.report-edit-form-label + .report-edit-form-label {
+  margin-top: 15px;
+}
+
+.report-edit-form-actions {
+  padding-top: 10px;
+  text-align: right;
+}
+
+.output {
+  margin-bottom: 20px;
+}
+
+.output.value-output {
+  margin-right: 20px;
+  width: 150px;
+}
+
+.output-header {
+  position: relative;
+}
+
+.output-header:hover .output-edit {
+  display: block;
+}
+
+.output-edit {
+  cursor: pointer;
+  display: none;
+  font-size: .1rem;
+  position: absolute;
+  right: 2px;
+  top: 2px;
+}
+
+.output .output-label {
+  font-family: baskerville, serif;
+  font-weight: 500;
+  padding: 10px 0 10px 0;
+  text-align: center;
+}
+
+.output .output-no-data {
+  border: 1px solid #f2f2f2e6;
+  padding: 25px;
+  text-align: center;
+}
+
+.value-output {
+  display: inline-block;
+  border: 1px solid #f2f2f2e6;
+}
+
+.value-output-wrapper {
+  padding: 0px 0px 10px 0px;
+  text-align: center;
+  width: 100%;
+}
+
+.value-output .value-output-value {
+  font-size: 2rem;
+}
+
+.table-output .output-label {
+  border-left: 1px solid #f2f2f2e6;
+  border-right: 1px solid #f2f2f2e6;
+  border-top: 1px solid #f2f2f2e6;
+}
+
+.table-output-table {
+  width: 100%;
+}
+
+.table-output-table,
+.table-output-table tr,
+.table-output-table td {
+  border-collapse: collapse;
+}
+
+.table-output-table td {
+  border: 1px solid #e1e1e1;
+  padding: 2px 5px;
+}
+
+.table-output-table thead td {
+  text-align: center;
+}
+
+.table-output-type-timestamp,
+.table-output-type-number {
+  text-align: right;
+}
+
+.table-output-type-boolean {}
+.table-output-type-null {}
+.table-output-type-string {}
+.table-output-type-unknown {}
+
+.query .table-output {
+  margin-bottom: 0;
+  margin-top: 10px;
+}
+
+.chart-output {
+  border: 1px solid #f2f2f2e6;
+}
+
+.chart-output-wrapper {
+  padding: 10px;
+}

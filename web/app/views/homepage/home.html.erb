@@ -1,1 +1,4 @@
-<%= render "layouts/header" %>
+<%= render "layouts/content-view" do %>
+  <div id="report-builder-mount"></div>
+  <%= javascript_include_tag "/assets/report_builder.bundle.js" %>
+<% end %>
