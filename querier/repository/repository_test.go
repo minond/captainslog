@@ -1,10 +1,12 @@
-package main
+package repository
 
 import (
 	"context"
 	"database/sql/driver"
 	"encoding/json"
 	"testing"
+
+	internaltesting "github.com/minond/captainslog/querier/testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
 )
@@ -35,7 +37,7 @@ func TestRepository_Handle_ReturnsTheRightColumns(t *testing.T) {
 		t.Fatalf("unexpected error from repo.Execute: %v", err)
 	}
 
-	assertEqual(t, tableCols, returnedCols)
+	internaltesting.AssertEqual(t, tableCols, returnedCols)
 }
 
 func TestRepository_Handle_ReturnsTheRightRows(t *testing.T) {
@@ -60,5 +62,5 @@ func TestRepository_Handle_ReturnsTheRightRows(t *testing.T) {
 		t.Fatalf("unexpected error while marshaling returned rows: %v", err)
 	}
 
-	assertEqual(t, string(data), `[[{"String":"one","Valid":true},{"String":"two","Valid":true}],[{"String":"one","Valid":true},{"String":"two","Valid":true}]]`)
+	internaltesting.AssertEqual(t, string(data), `[[{"String":"one","Valid":true},{"String":"two","Valid":true}],[{"String":"one","Valid":true},{"String":"two","Valid":true}]]`)
 }

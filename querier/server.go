@@ -12,6 +12,8 @@ import (
 	"os"
 	"os/signal"
 	"time"
+
+	"github.com/minond/captainslog/querier/repository"
 )
 
 type Response struct {
@@ -56,7 +58,7 @@ func NewServerFromConfig(config ServerConfig) (*Server, error) {
 		return nil, fmt.Errorf("unable to open database connection: %v", err)
 	}
 
-	repo := NewRepository(db)
+	repo := repository.New(db)
 	service := NewService(repo)
 	server, err := NewServer(service)
 	if err != nil {

@@ -4,6 +4,9 @@ import (
 	"database/sql"
 	"os"
 
+	"github.com/minond/captainslog/querier/repl"
+	"github.com/minond/captainslog/querier/repository"
+
 	_ "github.com/lib/pq"
 )
 
@@ -13,5 +16,5 @@ func main() {
 		panic(err)
 	}
 
-	newRepl(db).run()
+	repl.New(repository.New(db)).Run()
 }

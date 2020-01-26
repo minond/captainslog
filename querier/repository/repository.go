@@ -1,4 +1,4 @@
-package main
+package repository
 
 import (
 	"context"
@@ -19,7 +19,7 @@ type repository struct {
 	db *sql.DB
 }
 
-func NewRepository(db *sql.DB) Repository {
+func New(db *sql.DB) Repository {
 	return &repository{
 		db: db,
 	}

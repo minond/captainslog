@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/minond/captainslog/querier/repository"
 	"github.com/minond/captainslog/querier/sqlparse"
 	"github.com/minond/captainslog/querier/sqlrewrite"
 )
@@ -29,10 +30,10 @@ func (e *QueryExecutionError) Unwrap() error {
 }
 
 type Service struct {
-	repo Repository
+	repo repository.Repository
 }
 
-func NewService(repo Repository) *Service {
+func NewService(repo repository.Repository) *Service {
 	return &Service{
 		repo: repo,
 	}

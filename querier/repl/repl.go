@@ -1,4 +1,4 @@
-package main
+package repl
 
 import (
 	"bufio"
@@ -12,13 +12,14 @@ import (
 	"strings"
 
 	"github.com/k0kubun/pp"
+	"github.com/minond/captainslog/querier/repository"
 	"github.com/minond/captainslog/querier/sqlparse"
 	"github.com/minond/captainslog/querier/sqlrewrite"
 	"github.com/olekukonko/tablewriter"
 )
 
 type repl struct {
-	repo   Repository
+	repo   repository.Repository
 	buff   strings.Builder
 	input  io.Reader
 	output io.Writer
@@ -28,15 +29,15 @@ type repl struct {
 	debug   bool
 }
 
-func newRepl(db *sql.DB) *repl {
+func New(repo repository.Repository) *repl {
 	return &repl{
-		repo:   NewRepository(db),
+		repo:   repo,
 		output: os.Stdout,
 		input:  os.Stdin,
 	}
 }
 
-func (r *repl) run() {
+func (r *repl) Run() {
 	r.running = true
 
 	for r.running {
@@ -204,7 +205,7 @@ func (r *repl) printData(cols []string, rows [][]interface{}) {
 				} else {
 					ss[i] = "f"
 				}
-			case *NullTime:
+			case *repository.NullTime:
 				if v.Valid {
 					ss[i] = fmt.Sprintf("%s", v.Time)
 				} else {
