@@ -31,17 +31,17 @@ func makeRequest(t *testing.T, rawBody string, repo repository.Repository) *http
 }
 
 func TestNewServer_Error_MissingDBConn(t *testing.T) {
-	_, err := NewServerFromConfig(ServerConfig{})
+	_, err := NewServerFromConfig(Config{})
 	internaltesting.AssertEqual(t, errors.New("missing database connection value (QUERIER_DB_CONN)"), err)
 }
 
 func TestNewServer_Error_MissingHTTPListen(t *testing.T) {
-	_, err := NewServerFromConfig(ServerConfig{dbConn: "A"})
+	_, err := NewServerFromConfig(Config{dbConn: "A"})
 	internaltesting.AssertEqual(t, errors.New("missing http listen value (QUERIER_HTTP_LISTEN)"), err)
 }
 
 func TestNewServer_HappyPath_OpenDatabase(t *testing.T) {
-	_, err := NewServerFromConfig(ServerConfig{
+	_, err := NewServerFromConfig(Config{
 		dbDriver:   "txdb",
 		dbConn:     "testconn",
 		httpListen: ":8080",
