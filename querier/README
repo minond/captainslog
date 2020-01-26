@@ -15,7 +15,7 @@ the query for the appropriate user and book.
 
 === Development
 
-    go generate./...    # execute code generators
+    go generate ./...   # execute code generators
     go build            # build the service
     go run .            # run the service locally
     go test ./...       # run all tests
