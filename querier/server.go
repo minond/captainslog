@@ -21,12 +21,6 @@ type Response struct {
 	Data  interface{} `json:"data,omitempty"`
 }
 
-type ServerConfig struct {
-	dbConn     string
-	dbDriver   string
-	httpListen string
-}
-
 type Server struct {
 	service *Service
 	server  *http.Server
@@ -39,7 +33,7 @@ func NewServer(service *Service) (*Server, error) {
 	return s, nil
 }
 
-func NewServerFromConfig(config ServerConfig) (*Server, error) {
+func NewServerFromConfig(config Config) (*Server, error) {
 	if config.dbConn == "" {
 		return nil, errors.New("missing database connection value (QUERIER_DB_CONN)")
 	}
@@ -70,10 +64,7 @@ func NewServerFromConfig(config ServerConfig) (*Server, error) {
 }
 
 func NewServerFromEnv() (*Server, error) {
-	return NewServerFromConfig(ServerConfig{
-		dbConn:     os.Getenv("QUERIER_DB_CONN"),
-		httpListen: os.Getenv("QUERIER_HTTP_LISTEN"),
-	})
+	return NewServerFromConfig(ConfigFromEnv())
 }
 
 func (s *Server) SetAddr(addr string) {
