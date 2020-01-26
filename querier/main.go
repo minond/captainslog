@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"flag"
 	"log"
 
 	"github.com/minond/captainslog/querier/repl"
@@ -11,16 +10,16 @@ import (
 	_ "github.com/lib/pq"
 )
 
-var (
-	replMode = flag.Bool("repl", false, "start repl instead of server")
-)
-
-func init() {
-	flag.Parse()
-}
+// var (
+// 	replMode = flag.Bool("repl", false, "start repl instead of server")
+// )
+//
+// func init() {
+// 	flag.Parse()
+// }
 
 func main() {
-	if *replMode {
+	if false {
 		runRepl()
 	} else {
 		runServer()
