@@ -17,6 +17,7 @@ func TestParse_PossibleQueries(t *testing.T) {
 	tests := []struct {
 		label, sql string
 	}{
+		{"empty select", `select `},
 		{"select with columns", `select name, age, color`},
 		{"select with columns with aliases", `select name as n, age as a, color as c`},
 		{"select and from", `select name, age, color from users`},

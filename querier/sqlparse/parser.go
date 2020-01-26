@@ -290,7 +290,9 @@ func (p *parser) parseColumns() ([]Expr, error) {
 			return nil, err
 		}
 
-		cols = append(cols, val)
+		if val != nil {
+			cols = append(cols, val)
+		}
 
 		if !cont() {
 			break
