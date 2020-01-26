@@ -6,7 +6,7 @@ import * as ReactDOM from "react-dom"
 // import { cachedExecuteQuery } from "./remote"
 const cachedExecuteQuery = (query: string): Promise<QueryResults> =>
   new Promise((resolve, reject) => {
-    let xhr = new XMLHttpRequest()
+    const xhr = new XMLHttpRequest()
     xhr.open("POST", "/query/execute")
     xhr.setRequestHeader("Content-Type", "application/json")
     xhr.setRequestHeader("Accept", "application/json")
