@@ -50,7 +50,11 @@ func (r *repl) Run() {
 }
 
 func (r *repl) prompt() {
-	fmt.Fprintf(r.output, "user(%v)> ", r.userID)
+	if r.buff.Len() == 0 {
+		fmt.Fprintf(r.output, "user(%v)> ", r.userID)
+	} else {
+		fmt.Fprintf(r.output, "user(%v)* ", r.userID)
+	}
 }
 
 func (r *repl) read() {
