@@ -5,27 +5,6 @@ module ProcessorTestHelper
     end
   end
 
-  class Poster
-    attr_reader :res, :err, :calls
-
-    def initialize(res = ProcessorTestHelper.new_ok_response, err = nil)
-      @res = res
-      @err = err
-      @calls = []
-    end
-
-    def post(uri, body)
-      @calls << { :uri => uri, :body => body }
-      raise err if err
-
-      res
-    end
-
-    def [](index)
-      calls[index]
-    end
-  end
-
   # @param [String] text, defaults to an empty string
   # @param [Hash] data, defaults to an empty hash
   # @return [ExternalServiceTestHelper::HTTPResponse]
@@ -43,7 +22,7 @@ module ProcessorTestHelper
   # @param [ExternalServiceTestHelper::HTTPResponse] http_res
   # @return [Processor::Runner]
   def self.new_runner_with_response(http_res)
-    poster = ProcessorTestHelper::Poster.new(http_res)
+    poster = ExternalServiceTestHelper::Poster.new(http_res)
     client = Processor::Client.new(poster)
     Processor::Runner.new(FactoryBot.create(:entry), client)
   end
