@@ -31,8 +31,8 @@ export const stringValueOf = (val: QueryResult): scalar => {
 
 type dict = { [index: string]: scalar }
 export const flattenResultsHash = (results: QueryResults): dict[] =>
-  !results.data ? [] : results.data.map((row) =>
-    results.cols.reduce((acc, col, i) => {
+  !results.results ? [] : results.results.map((row) =>
+    results.columns.reduce((acc, col, i) => {
       acc[col] = valueOf(row[i])
       return acc
     }, {} as dict))

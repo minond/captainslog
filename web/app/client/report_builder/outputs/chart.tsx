@@ -49,7 +49,7 @@ export const ChartRawOutput = ({ definition, results, onEdit }: ChartRawOutputPr
 
   return <div className="output chart-output" style={{width: definition.width}}>
     <Header definition={definition} onEdit={onEdit} />
-    {results && results.data && results.data.length ?
+    {results && results.results && results.results.length ?
       <div className="chart-output-wrapper">
         <LineChart
           data={flattenResultsHash(results)}

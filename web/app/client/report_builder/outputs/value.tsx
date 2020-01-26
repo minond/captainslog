@@ -9,7 +9,7 @@ import { valueOf } from "./utils"
 const DEFAULT_VALUE = "N/A"
 
 const getValue = (res: QueryResults) =>
-  res.data && res.data[0] ? valueOf(res.data[0][0]) : undefined
+  res.results && res.results[0] ? valueOf(res.results[0][0]) : undefined
 
 type ValueOutputProps = {
   definition: Definition

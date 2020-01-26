@@ -5,11 +5,15 @@ import * as ReactDOM from "react-dom"
 // TODO implement cachedExecuteQuery
 // import { cachedExecuteQuery } from "./remote"
 const cachedExecuteQuery = (query: string): Promise<QueryResults> =>
-  new Promise((resolve, _) =>
-    resolve({
-      cols: [],
-      data: [],
-    }))
+  new Promise((resolve, reject) => {
+    let xhr = new XMLHttpRequest()
+    xhr.open("POST", "/query/execute")
+    xhr.setRequestHeader("Content-Type", "application/json")
+    xhr.setRequestHeader("Accept", "application/json")
+    xhr.send(JSON.stringify({query}))
+    xhr.onload = () => resolve(JSON.parse(xhr.responseText))
+    xhr.onerror = () => reject(new Error(`query execution request error: ${xhr.responseText}`))
+  })
 
 import {
   Input,
@@ -66,11 +70,11 @@ const dummy = {
       label: "Weight Trends",
       width: "100%",
       query:
-        "select cast(created_at as integer) as x,\n  cast(weight as float) as y\n" +
+        "select cast(_created_at as integer) as x,\n  cast(weight as float) as y\n" +
         "from workouts\n" +
         "where exercise ilike '{{Exercise}}'\n" +
         "and weight is not null\n" +
-        "order by created_at asc",
+        "order by _created_at asc",
       type: OutputType.ChartOutput,
     },
     {
@@ -78,11 +82,11 @@ const dummy = {
       label: "Last 20 Entries",
       width: "100%",
       query:
-        "select exercise, cast(weight as float) as weight,\n  to_timestamp(cast(created_at as integer)) as date\n" +
+        "select exercise, cast(weight as float) as weight,\n  to_timestamp(cast(_created_at as integer)) as date\n" +
         "from workouts\n" +
         "where exercise ilike '{{Exercise}}'\n" +
         "and weight is not null\n" +
-        "order by created_at desc\n" +
+        "order by _created_at desc\n" +
         "limit 20",
       type: OutputType.TableOutput,
     },
@@ -103,7 +107,7 @@ const dummy = {
 }
 
 const valuesOf = (res: QueryResults): string[] =>
-  !res.data ? [] : res.data.map((row) => {
+  !res.results ? [] : res.results.map((row) => {
     const val = valueOf(row[0])
     return val !== undefined ? val.toString() : "undefined"
   })

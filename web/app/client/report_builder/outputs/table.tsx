@@ -42,16 +42,16 @@ export const TableRawOutput = ({ definition, results, onEdit }: TableRawOutputPr
     {definition ?
       <Header definition={definition} onEdit={onEdit} /> :
       null}
-    {results && results.data && results.data.length ?
+    {results && results.results && results.results.length ?
       <table className="table-output-table">
         <thead>
           <tr>
-            {results.cols.map((col, i) =>
+            {results.columns.map((col, i) =>
               <td key={col + i}>{col}</td>)}
           </tr>
         </thead>
         <tbody>
-          {results.data && results.data.map((row, ridx) =>
+          {results.results && results.results.map((row, ridx) =>
             <tr key={ridx}>
               {row.map((val, vidx) =>
                 <td key={vidx} className={classOf(val)}>{stringValueOf(val)}</td>)}
