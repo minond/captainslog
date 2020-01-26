@@ -1,7 +1,4 @@
 module ProcessorTestHelper
-  HTTPResponse =
-    Struct.new(:code, :body)
-
   class Runner
     def run(_entry)
       ["updated text", { :a => :b }]
@@ -31,7 +28,7 @@ module ProcessorTestHelper
 
   # @param [String] text, defaults to an empty string
   # @param [Hash] data, defaults to an empty hash
-  # @return [ProcessorTestHelper::HTTPResponse]
+  # @return [ExternalServiceTestHelper::HTTPResponse]
   def self.new_ok_response(text = "", data = {})
     response = {
       :data => {
@@ -40,10 +37,10 @@ module ProcessorTestHelper
       }
     }
 
-    ProcessorTestHelper::HTTPResponse.new("200", response.to_json)
+    ExternalServiceTestHelper::HTTPResponse.new("200", response.to_json)
   end
 
-  # @param [ProcessorTestHelper::HTTPResponse] http_res
+  # @param [ExternalServiceTestHelper::HTTPResponse] http_res
   # @return [Processor::Runner]
   def self.new_runner_with_response(http_res)
     poster = ProcessorTestHelper::Poster.new(http_res)
@@ -54,7 +51,7 @@ module ProcessorTestHelper
   # Creates a succssful test http response and returns this along with the used
   # text and data.
   #
-  # @return [Tuple<ProcessorTestHelper::HTTPResponse, String, Hash>]
+  # @return [Tuple<ExternalServiceTestHelper::HTTPResponse, String, Hash>]
   def self.new_sample_response
     expected_text = "hi"
     expected_data = { "a" => "b" }
