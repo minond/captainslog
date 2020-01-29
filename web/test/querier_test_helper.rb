@@ -26,7 +26,7 @@ module QuerierTestHelper
   #
   # @return [Tuple<ExternalServiceTestHelper::HTTPResponse, Array<String>, Array<Array<Hash>>>]
   def self.new_sample_response
-    columns = ["col1", "col2", "col3"]
+    columns = %w[col1 col2 col3]
     results = [[[], [], []], [[], [], []]]
     response = new_ok_response(columns, results)
     [response, columns, results]

@@ -2,8 +2,8 @@ require "test_helper"
 
 class QuerierResponseTest < ActiveSupport::TestCase
   test "#columns" do
-    response = QuerierTestHelper.new_ok_response(["col1", "col2"], nil)
-    assert_equal ["col1", "col2"], Querier::Response.new(response).columns
+    response = QuerierTestHelper.new_ok_response(%w[col1 col2], nil)
+    assert_equal %w[col1 col2], Querier::Response.new(response).columns
   end
 
   test "#results" do
