@@ -36,14 +36,18 @@ module ExternalServiceTestHelper
   end
 
   class DummyRunner < ExternalService::Runner
+    # rubocop:disable Style/ClassVars
     @@ran = false
+    # rubocop:enable Style/ClassVars
 
     def self.ran
       @@ran
     end
 
     def run
+      # rubocop:disable Style/ClassVars
       @@ran = true
+      # rubocop:enable Style/ClassVars
     end
 
     def response

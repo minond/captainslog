@@ -3,6 +3,9 @@ detectors:
     enabled: false
   ControlParameter:
     enabled: false
+  ClassVariable:
+    exclude:
+      - ExternalServiceTestHelper::DummyRunner # defines "ran" as a class variable
   NilCheck:
     enabled: false
   UncommunicativeVariableName:
