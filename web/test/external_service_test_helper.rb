@@ -34,4 +34,20 @@ module ExternalServiceTestHelper
 
     attr_reader :res, :err, :calls
   end
+
+  class DummyRunner < ExternalService::Runner
+    @@ran = false
+
+    def self.ran
+      @@ran
+    end
+
+    def run
+      @@ran = true
+    end
+
+    def response
+      super
+    end
+  end
 end
