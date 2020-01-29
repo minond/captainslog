@@ -16,6 +16,7 @@ detectors:
       - ApplicationController#requested_time
       - Grouping#grouping_prev_next_times
       - Grouping#grouping_time_range
+      - QueryControllerTest#stubbed_value_wrapper # callback
   UtilityFunction:
     exclude:
       - ProcessEntryJob#perform

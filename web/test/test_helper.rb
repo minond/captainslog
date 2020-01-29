@@ -5,6 +5,7 @@ SimpleCov.start "rails"
 
 require_relative "../config/environment"
 require "rails/test_help"
+require "minitest/mock"
 
 require_relative "./external_service_test_helper"
 require_relative "./processor_test_helper"
