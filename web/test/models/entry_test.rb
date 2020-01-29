@@ -1,6 +1,8 @@
 require "test_helper"
 
 class EntryTest < ActiveSupport::TestCase
+  setup { travel_to "2019-05-21 14:32:53" }
+
   test "save happy path" do
     assert entry.save
   end
@@ -18,6 +20,10 @@ class EntryTest < ActiveSupport::TestCase
     assert_equal entry.processed_text, "test"
     entry.update(:original_text => "test")
     assert_nil entry.processed_text
+  end
+
+  test ".collection_path includes slug and collection time" do
+    assert_equal "/book/testing/1558396800", entry.collection_path
   end
 
 private
