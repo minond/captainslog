@@ -29,3 +29,15 @@ variables:
 
     QUERIER_DB_CONN     # database connection url, example "postgres://ro_user@localhost:5432/captainslog"
     QUERIER_HTTP_LISTEN # http host/port string, example ":8082"
+
+
+=== Container
+
+    # build image with querier binary
+    docker build -t minond/captainslog-querier -f Dockerfile .
+
+    # run it using local configuration and binding to the correct host and container port
+    docker run -d --env-file .env --name cl-querier -p 8082:8082 minond/captainslog-querier
+
+    # push to container repo
+    docker push minond/captainslog-querier:latest
