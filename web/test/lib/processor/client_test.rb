@@ -2,7 +2,7 @@ require "test_helper"
 
 class ProcessorClientTest < ActiveSupport::TestCase
   test "it makes an http post request to the configured url" do
-    poster = ExternalServiceTestHelper::Poster.new
+    poster = ExternalServiceTestHelper::Poster.new(ProcessorTestHelper.new_ok_response)
     client = Processor::Client.new(poster, :address => "http://addr")
     client.request(Processor::Request.new(create(:entry)))
     assert_equal URI("http://addr"), poster[0][:uri]

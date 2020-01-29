@@ -1,5 +1,6 @@
 module ProcessorTestHelper
   class Runner
+    # @see Processor::Runner#run
     def run(_entry)
       ["updated text", { :a => :b }]
     end
