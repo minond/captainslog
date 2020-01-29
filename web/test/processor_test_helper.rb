@@ -27,14 +27,14 @@ module ProcessorTestHelper
     Processor::Runner.new(FactoryBot.create(:entry), client)
   end
 
-  # Creates a succssful test http response and returns this along with the used
-  # text and data.
+  # Creates a sample successful test http response and returns this along with
+  # the used text and data.
   #
   # @return [Tuple<ExternalServiceTestHelper::HTTPResponse, String, Hash>]
   def self.new_sample_response
     expected_text = "hi"
     expected_data = { "a" => "b" }
-    response = ProcessorTestHelper.new_ok_response(expected_text, expected_data)
+    response = new_ok_response(expected_text, expected_data)
     [response, expected_text, expected_data]
   end
 end
