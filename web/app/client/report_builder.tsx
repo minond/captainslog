@@ -70,11 +70,11 @@ const dummy = {
       label: "Weight Trends",
       width: "100%",
       query:
-        "select cast(_created_at as integer) as x,\n  cast(weight as float) as y\n" +
+        "select cast(_collected_at as integer) as x,\n  cast(weight as float) as y\n" +
         "from workouts\n" +
         "where exercise ilike '{{Exercise}}'\n" +
         "and weight is not null\n" +
-        "order by _created_at asc",
+        "order by _collected_at asc",
       type: OutputType.ChartOutput,
     },
     {
@@ -82,11 +82,11 @@ const dummy = {
       label: "Last 20 Entries",
       width: "100%",
       query:
-        "select exercise, cast(weight as float) as weight,\n  to_timestamp(cast(_created_at as integer)) as date\n" +
+        "select exercise, cast(weight as float) as weight,\n  to_timestamp(cast(_collected_at as integer)) as date\n" +
         "from workouts\n" +
         "where exercise ilike '{{Exercise}}'\n" +
         "and weight is not null\n" +
-        "order by _created_at desc\n" +
+        "order by _collected_at desc\n" +
         "limit 20",
       type: OutputType.TableOutput,
     },
