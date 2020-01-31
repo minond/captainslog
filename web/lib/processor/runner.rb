@@ -43,6 +43,7 @@ module Processor
     def data
       (response.data || {}).merge(:_processed => true,
                                   :_processed_at => Time.now.utc.to_i,
+                                  :_collected_at => entry.collection.datetime.to_i,
                                   :_created_at => entry.created_at.to_i,
                                   :_updated_at => entry.updated_at.to_i)
     end

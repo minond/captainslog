@@ -37,14 +37,14 @@ class Entry < ApplicationRecord
     Rails.application.routes.url_helpers.book_at_path(book.slug, collection.datetime.to_i)
   end
 
+  def schedule_processing
+    ProcessEntryJob.perform_later self
+  end
+
 private
 
   def constructor
     self.processed_data ||= {}
-  end
-
-  def schedule_processing
-    ProcessEntryJob.perform_later self
   end
 
   def reset_processed_text
