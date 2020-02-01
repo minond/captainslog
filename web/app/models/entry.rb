@@ -30,6 +30,11 @@ class Entry < ApplicationRecord
     @user_data ||= processed_data.filter { |key, _val| !key.starts_with?("_") }.sort
   end
 
+  # @return [Boolean]
+  def has_user_data?
+    !user_data.empty?
+  end
+
   # Returns the book/collection URL in which this entry can be loaded.
   #
   # @return [String]

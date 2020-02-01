@@ -14,9 +14,11 @@
               %>
             </span>
           </td>
-          <td>
-            <%= render "entry/datum", :entry => entry %>
-          </td>
+          <% if entry.has_user_data? %>
+            <td>
+              <%= render "entry/datum", :entry => entry %>
+            </td>
+          <% end %>
         </tr>
       </table>
     </div>
