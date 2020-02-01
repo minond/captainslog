@@ -1,7 +1,6 @@
 import * as React from "react"
 
 import { QueryResult, QueryResults } from "../../definitions"
-import { Definition, Header } from "./output"
 
 import {
   NO_RESULTS,
@@ -23,40 +22,31 @@ const classOf = (val: QueryResult): string =>
     "table-output-type-unknown"
 
 type TableOutputProps = {
-  definition?: Definition
   results: QueryResults
-  onEdit?: (def: Definition) => void
 }
 
 export const TableOutput = (props: TableOutputProps) =>
   <TableRawOutput {...props} />
 
 type TableRawOutputProps = {
-  definition?: Definition
   results?: QueryResults
-  onEdit?: (def: Definition) => void
 }
 
-export const TableRawOutput = ({ definition, results, onEdit }: TableRawOutputProps) =>
-  <div className="output table-output" style={{width: definition ? definition.width : "100%"}}>
-    {definition ?
-      <Header definition={definition} onEdit={onEdit} /> :
-      null}
-    {results && results.results && results.results.length ?
-      <table className="table-output-table">
-        <thead>
-          <tr>
-            {results.columns.map((col, i) =>
-              <td key={col + i}>{col}</td>)}
-          </tr>
-        </thead>
-        <tbody>
-          {results.results && results.results.map((row, ridx) =>
-            <tr key={ridx}>
-              {row.map((val, vidx) =>
-                <td key={vidx} className={classOf(val)}>{stringValueOf(val)}</td>)}
-            </tr>)}
-        </tbody>
-      </table> :
-      <div className="output-no-data">{NO_RESULTS}</div>}
-  </div>
+export const TableRawOutput = ({ results }: TableRawOutputProps) =>
+  results && results.results && results.results.length ?
+    <table className="table-output-table">
+      <thead>
+        <tr>
+          {results.columns.map((col, i) =>
+            <td key={col + i}>{col}</td>)}
+        </tr>
+      </thead>
+      <tbody>
+        {results.results && results.results.map((row, ridx) =>
+          <tr key={ridx}>
+            {row.map((val, vidx) =>
+              <td key={vidx} className={classOf(val)}>{stringValueOf(val)}</td>)}
+          </tr>)}
+      </tbody>
+    </table> :
+    <div className="output-no-data">{NO_RESULTS}</div>

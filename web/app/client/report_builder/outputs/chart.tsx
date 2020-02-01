@@ -10,8 +10,6 @@ import {
 } from "recharts"
 
 import { QueryResults } from "../../definitions"
-import { Definition, Header } from "./output"
-
 import { flattenResultsHash, NO_RESULTS } from "./utils"
 
 const MAX_WIDTH = 680
@@ -21,21 +19,17 @@ const calcWidth = () =>
   Math.min(outerWidth - PADDING_OFFSET, MAX_WIDTH)
 
 type ChartOutputProps = {
-  definition: Definition
   results: QueryResults
-  onEdit?: (def: Definition) => void
 }
 
 export const ChartOutput = (props: ChartOutputProps) =>
   <ChartRawOutput {...props} />
 
 type ChartRawOutputProps = {
-  definition: Definition
   results?: QueryResults
-  onEdit?: (def: Definition) => void
 }
 
-export const ChartRawOutput = ({ definition, results, onEdit }: ChartRawOutputProps) => {
+export const ChartRawOutput = ({ results }: ChartRawOutputProps) => {
   const [width, setWidth] = useState(calcWidth())
 
   const onResize = () =>
@@ -47,22 +41,19 @@ export const ChartRawOutput = ({ definition, results, onEdit }: ChartRawOutputPr
       window.removeEventListener("resize", onResize)
   })
 
-  return <div className="output chart-output" style={{width: definition.width}}>
-    <Header definition={definition} onEdit={onEdit} />
-    {results && results.results && results.results.length ?
-      <div className="chart-output-wrapper">
-        <LineChart
-          data={flattenResultsHash(results)}
-          width={width}
-          height={200}
-          margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
-        >
-          <Tooltip />
-          <XAxis dataKey="x" />
-          <YAxis dataKey="y" width={40} />
-          <Line type="monotone" dataKey="y" stroke="#82ca9d" isAnimationActive={false} />
-        </LineChart>
-      </div> :
-      <div className="output-no-data">{NO_RESULTS}</div>}
-  </div>
+  return results && results.results && results.results.length ?
+    <div className="chart-output-wrapper">
+      <LineChart
+        data={flattenResultsHash(results)}
+        width={width}
+        height={200}
+        margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
+      >
+        <Tooltip />
+        <XAxis dataKey="x" />
+        <YAxis dataKey="y" width={40} />
+        <Line type="monotone" dataKey="y" stroke="#82ca9d" isAnimationActive={false} />
+      </LineChart>
+    </div> :
+    <div className="output-no-data">{NO_RESULTS}</div>
 }

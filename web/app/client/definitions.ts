@@ -116,6 +116,7 @@ export type Output = {
   query: string
   width: string
   reload?: boolean
+  loading?: boolean
   results?: QueryResults
 }
 

@@ -261,13 +261,13 @@ const outputReducer: OutputReducer = (outputs, action) => {
     case "setResults": {
       const { output, results } = action
       return outputs.map((o) =>
-        o.id !== output.id ? o : { ...o, results })
+        o.id !== output.id ? o : { ...o, results, loading: false })
     }
 
     case "isLoading": {
       const { output } = action
       return outputs.map((o) =>
-        o.id !== output.id ? o : { ...o, reload: false })
+        o.id !== output.id ? o : { ...o, loading: true, reload: false })
     }
 
     case "updateDefinition": {
@@ -275,6 +275,7 @@ const outputReducer: OutputReducer = (outputs, action) => {
       return outputs.map((o) =>
         o.id !== output.id ? o : {
           ...o,
+          loading: false,
           reload: o.query !== output.query,
           type: output.type,
           label: output.label,
@@ -400,7 +401,7 @@ const Outputs = ({ outputs, onEdit: onEditOutput }: OutputsProps) =>
     const props = { definition, onEdit }
     const elem = !results ?
       <IncompleteOutput {...props} /> :
-      <LookupOutput {...props} results={results} />
+      <LookupOutput {...props} loading={output.loading} results={results} />
 
     return <span key={i} className="report-output">{elem}</span>
   })}

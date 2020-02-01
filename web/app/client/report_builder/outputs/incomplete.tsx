@@ -1,6 +1,6 @@
 import * as React from "react"
 
-import { Definition } from "./output"
+import { Definition, OutputWrapper } from "./output"
 import { OutputType } from "../../definitions"
 
 import { ChartRawOutput } from "./chart"
@@ -15,13 +15,19 @@ type IncompleteOutputProps = {
 export const IncompleteOutput = (props: IncompleteOutputProps) => {
   switch (props.definition.type) {
     case OutputType.TableOutput:
-      return <TableRawOutput {...props} />
+      return <OutputWrapper {...props} outputName="table">
+        <TableRawOutput />
+      </OutputWrapper>
 
     case OutputType.ChartOutput:
-      return <ChartRawOutput {...props} />
+      return <OutputWrapper {...props} outputName="chart">
+        <ChartRawOutput />
+      </OutputWrapper>
 
     case OutputType.ValueOutput:
-      return <ValueRawOutput {...props} />
+      return <OutputWrapper {...props} outputName="value">
+        <ValueRawOutput />
+      </OutputWrapper>
 
     case OutputType.InvalidOutput:
     default:

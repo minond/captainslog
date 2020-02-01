@@ -1,4 +1,5 @@
 import * as React from "react"
+import { FunctionComponent } from "react"
 
 import { Output, OutputType, QueryResult, QueryResults } from "../../definitions"
 
@@ -22,22 +23,48 @@ export type Definition = {
   width: string
 }
 
+type OutputWrapperProps = {
+  definition: Definition
+  outputName: string
+  onEdit?: (def: Definition) => void
+  loading?: boolean
+}
+
+const outputClassName = (props: { loading?: boolean, outputName: string }): string =>
+  `output ${props.outputName}-output ${props.loading ? "output-loading" : ""}`
+
+const outputStyle = ({ definition }: { definition: Definition }) =>
+  ({width: definition ? definition.width : "100%"})
+
+export const OutputWrapper: FunctionComponent<OutputWrapperProps> = (props) =>
+  <div className={outputClassName(props)} style={outputStyle(props)}>
+    <Header definition={props.definition} onEdit={props.onEdit} />
+    {props.children}
+  </div>
+
 type LookupOutputProps = {
   definition: Definition
   results: QueryResults
   onEdit?: (def: Definition) => void
+  loading?: boolean
 }
 
 export const LookupOutput = (props: LookupOutputProps) => {
   switch (props.definition.type) {
     case OutputType.TableOutput:
-      return <TableOutput {...props} />
+      return <OutputWrapper {...props} outputName="table">
+        <TableOutput {...props} />
+      </OutputWrapper>
 
     case OutputType.ChartOutput:
-      return <ChartOutput {...props} />
+      return <OutputWrapper {...props} outputName="chart">
+        <ChartOutput {...props} />
+      </OutputWrapper>
 
     case OutputType.ValueOutput:
-      return <ValueOutput {...props} />
+      return <OutputWrapper {...props} outputName="value">
+        <ValueOutput {...props} />
+      </OutputWrapper>
 
     case OutputType.InvalidOutput:
     default:
