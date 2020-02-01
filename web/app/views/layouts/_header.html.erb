@@ -1,13 +1,10 @@
 <header>
   <table>
     <tr>
-      <td>
+      <td class="header-logo">
         <%= link_to image_tag("logo.png"), root_path, :class => "logo" %>
       </td>
-      <td>
-        <%= render "book/nav", :books => current_user.books %>
-      </td>
-      <td>
+      <td class="header-actions">
         <% if current_user %>
           <form action="<%= search_path %>" class="search">
             <label>
@@ -25,6 +22,4 @@
   </table>
 </header>
 
-<div class="standalone">
-  <%= render "book/nav", :books => current_user.books %>
-</div>
+<%= render "book/nav", :books => current_user.books %>

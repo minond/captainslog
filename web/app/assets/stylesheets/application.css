@@ -274,11 +274,11 @@ header tbody {
   width: 100%;
 }
 
-header td:nth-child(1) {
+header .header-logo {
   width: 1%;
 }
 
-header td:nth-child(3) {
+header .header-actions {
   text-align: right;
 }
 
@@ -373,21 +373,9 @@ header .books-nav {
   margin-left: 1rem;
 }
 
-.standalone .books-nav {
+.books-nav {
   border-bottom: 1px solid #c2c2c2;
   padding: .8rem;
-}
-
-@media screen and (min-width: 801px) {
-  .standalone .books-nav {
-    display: none;
-  }
-}
-
-@media screen and (max-width: 800px) {
-  header .books-nav {
-    display: none;
-  }
 }
 
 .books-nav a {
