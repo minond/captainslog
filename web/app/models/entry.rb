@@ -31,7 +31,7 @@ class Entry < ApplicationRecord
   end
 
   # @return [Boolean]
-  def has_user_data?
+  def user_data?
     !user_data.empty?
   end
 

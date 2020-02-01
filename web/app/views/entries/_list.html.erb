@@ -14,7 +14,7 @@
               %>
             </span>
           </td>
-          <% if entry.has_user_data? %>
+          <% if entry.user_data? %>
             <td class="entry-item-data">
               <%= render "entry/datum", :entry => entry %>
             </td>
