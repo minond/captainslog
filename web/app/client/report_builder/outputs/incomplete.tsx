@@ -9,6 +9,7 @@ import { ValueRawOutput } from "./value"
 
 type IncompleteOutputProps = {
   definition: Definition
+  loading?: boolean
   onEdit?: (def: Definition) => void
 }
 

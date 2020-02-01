@@ -583,6 +583,20 @@ header .books-nav {
 
 .output {
   margin-bottom: 20px;
+  transition: opacity .2s;
+}
+
+.output-loading .output-header::after {
+  content: '[loading]';
+  position: absolute;
+  right: 2px;
+  top: 2px;
+  font-size: .1rem;
+}
+
+.output-loading .output-label,
+.output-loading .output-content {
+  opacity: .3;
 }
 
 .output.value-output {

@@ -39,7 +39,7 @@ const outputStyle = ({ definition }: { definition: Definition }) =>
 export const OutputWrapper: FunctionComponent<OutputWrapperProps> = (props) =>
   <div className={outputClassName(props)} style={outputStyle(props)}>
     <Header definition={props.definition} onEdit={props.onEdit} />
-    {props.children}
+    <div className="output-content">{props.children}</div>
   </div>
 
 type LookupOutputProps = {

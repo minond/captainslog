@@ -397,11 +397,12 @@ const Outputs = ({ outputs, onEdit: onEditOutput }: OutputsProps) =>
   {outputs.map((output, i) => {
     const definition = output
     const results = output.results
+    const loading = output.loading
     const onEdit = (_: Definition) => onEditOutput(output)
-    const props = { definition, onEdit }
+    const props = { definition, onEdit, loading }
     const elem = !results ?
       <IncompleteOutput {...props} /> :
-      <LookupOutput {...props} loading={output.loading} results={results} />
+      <LookupOutput {...props} results={results} />
 
     return <span key={i} className="report-output">{elem}</span>
   })}
