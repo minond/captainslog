@@ -79,7 +79,7 @@ input[type=email] {
   width: 100%;
 }
 
-select {
+.field select {
   border: 1px solid black;
   background: white;
   font-size: 100%;
@@ -102,6 +102,7 @@ hr {
 
 .link,
 .link:visited {
+  word-break: break-all;
   color: #357edd; /* blue */
 }
 
@@ -334,7 +335,7 @@ img.captains-log-logo {
 .content-view {
   margin: 0 auto;
   max-width: 50rem;
-  padding: 2rem 10px 0 10px;
+  padding: 2rem 10px 4rem 10px;
 }
 
 .content-view.slim {

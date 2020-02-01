@@ -437,12 +437,12 @@ export const ReportView = (props: {}) => {
 
   loadReportData(inputs, outputs, dispatchInput, dispatchOutput)
 
-  return <div className="report">
+  return <>
     <h1>{report ? report.label : " "}</h1>
     {editForm}
     <VariablesForm variables={variables} inputs={inputs} onSelect={setInput} />
     <Outputs outputs={outputs} onEdit={(output) => setEditing(output)} />
-  </div>
+  </>
 }
 
-ReactDOM.render(<ReportView />, document.getElementById("report-builder-mount"))
+ReactDOM.render(<ReportView />, document.querySelector(".content-view"))
