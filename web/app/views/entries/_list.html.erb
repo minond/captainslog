@@ -3,7 +3,7 @@
     <div class="entry-item">
       <table>
         <tr class="controlled">
-          <td>
+          <td class="entry-item-text">
             <span class="entry-text"><%= entry.text %></span>
             <span class="controls">
               <%= link_to image_tag("edit.svg"), entry, :class => "control" %>
@@ -15,7 +15,7 @@
             </span>
           </td>
           <% if entry.has_user_data? %>
-            <td>
+            <td class="entry-item-data">
               <%= render "entry/datum", :entry => entry %>
             </td>
           <% end %>

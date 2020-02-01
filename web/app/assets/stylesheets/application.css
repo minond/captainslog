@@ -426,31 +426,31 @@ header .books-nav {
   width: 100%;
 }
 
-.entry-list .entry-item td:nth-child(1) {
+.entry-list .entry-item .entry-item-text {
   padding: 5px 10px 5px 0;
 }
 
-.entry-list .entry-item td:nth-child(2) {
+.entry-list .entry-item .entry-item-data {
   padding-bottom: 4px;
 }
 
 @media screen and (min-width: 801px) {
-  .entry-list .entry-item td:nth-child(1) {
+  .entry-list .entry-item .entry-item-text {
     width: 45%;
   }
 
-  .entry-list .entry-item td:nth-child(2) {
+  .entry-list .entry-item .entry-item-data {
     width: 55%;
     text-align: right;
   }
 }
 
 @media screen and (max-width: 800px) {
-  .entry-list .entry-item td:nth-child(1) {
+  .entry-list .entry-item .entry-item-text {
     display: block;
   }
 
-  .entry-list .entry-item td:nth-child(2) {
+  .entry-list .entry-item .entry-item-data {
     display: block;
   }
 }
