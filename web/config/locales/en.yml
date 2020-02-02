@@ -10,11 +10,6 @@ en:
   cancel: "Cancel"
   delete: "Delete"
 
-  yes: "Yes"
-  no: "No"
-
-  dirty_q: "Dirty?"
-
   successful_user_update: "Successfully updated!"
   failure_in_user_update: "There was an error updating the user."
   successful_entry_update: "The entry was successfully updated!"
@@ -42,6 +37,7 @@ en:
   shorthands: "Shorthands"
   extractors: "Extractors"
   entries: "Entries"
+  dirty_entries: "Dirty entries"
 
   new_shorthand: "New shorthand"
   add_new_shorthand: "Add new shorthand"

@@ -23,6 +23,19 @@ class Book < ApplicationRecord
     entries.exists? && latest_shorthand_or_extractor_update > earliest_entry_processing
   end
 
+  # Returns all entries that were processed before the latest shorthand or
+  # processesor updates.
+  #
+  # @return [Array<Entry>]
+  def dirty_entries
+    entries.where("processed_at < ?", Time.at(latest_shorthand_or_extractor_update))
+  end
+
+  # Schedules a dirty entry reprocessor
+  def schedule_reprocessing
+    ScheduleDirtyEntriesReprocessingJob.perform_later self
+  end
+
   # @return [String]
   def path
     Rails.application.routes.url_helpers.book_path(slug)

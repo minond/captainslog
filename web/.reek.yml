@@ -15,7 +15,9 @@ detectors:
     enabled: false
   UtilityFunction:
     exclude:
+      - Book#first_datetime_field
       - ProcessEntryJob#perform
+      - ScheduleDirtyEntriesReprocessingJob#perform
   TooManyStatements:
     exclude:
       - ExternalService#self.client
