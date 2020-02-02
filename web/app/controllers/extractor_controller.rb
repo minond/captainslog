@@ -2,17 +2,40 @@ class ExtractorController < ApplicationController
   before_action :require_login
 
   # === URL
-  #   GET /book/:book_slug/extractors/:id
+  #   GET /book/:book_slug/extractor/new
   #
   # === Sample request
-  #   /book/workouts/extractors/1
+  #   /book/workouts/extractor/new
+  #
+  def new
+    locals :extractor => Extractor.new(:book => current_book)
+  end
+
+  # === URL
+  #   POST /book/:book_slug/extractor
+  #
+  # === Sample request
+  #   /book/workouts/extractor
+  #
+  def create
+    extractor = create_extractor
+    ok = extractor.persisted?
+    notify(ok, :successful_extractor_create, :failure_in_extractor_create)
+    ok ? redirect_to(edit_book_path(current_book.slug)) : locals(:new, :extractor => extractor)
+  end
+
+  # === URL
+  #   GET /book/:book_slug/extractor/:id
+  #
+  # === Sample request
+  #   /book/workouts/extractor/1
   #
   def show
     locals :extractor => current_extractor
   end
 
   # === URL
-  #   PATCH /book/:book_slug/extractors/:id
+  #   PATCH /book/:book_slug/extractor/:id
   #
   # === Request fields
   #   [String] extractor[label] - the extractor label
@@ -20,7 +43,7 @@ class ExtractorController < ApplicationController
   #   [Integer] extractor[type] - the extractor type
   #
   # === Sample request
-  #   /book/workouts/extractors/1?label=mylabel
+  #   /book/workouts/extractor/1?label=mylabel
   #
   def update
     ok = update_extractor
@@ -29,6 +52,17 @@ class ExtractorController < ApplicationController
   end
 
 private
+
+  # @return [Extractor]
+  def create_extractor
+    extra = {
+      :user => current_user,
+      :book => current_book
+    }
+
+    attrs = permitted_extractor_params.to_hash.merge(extra)
+    Extractor.create(attrs)
+  end
 
   # Find and return the current "active" extractor. This is scopes to the
   # user's extractors.

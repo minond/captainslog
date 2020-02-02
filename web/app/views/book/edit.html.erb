@@ -2,17 +2,19 @@
   <%= render "form/title", :key => :edit_book %>
   <%= render "book/edit_form", :book => book %>
 
-  <% unless book.extractors.empty? %>
-    <hr />
-    <%= render "form/subtitle", :key => :extractors %>
-    <%= render "extractors/list", :extractors => book.extractors %>
-  <% end %>
+  <hr />
+  <%= render "form/subtitle", :key => :extractors %>
+  <%= render "extractor/list", :extractors => book.extractors %>
+  <div class="field btns">
+    <%= link_to t(:add_new_extractor), new_book_extractor_path(book.slug), :class => "btn" %>
+  </div>
 
-  <% unless book.shorthands.empty? %>
-    <hr />
-    <%= render "form/subtitle", :key => :shorthands %>
-    <%= render "shorthands/list", :shorthands => book.shorthands %>
-  <% end %>
+  <hr />
+  <%= render "form/subtitle", :key => :shorthands %>
+  <%= render "shorthand/list", :shorthands => book.shorthands %>
+  <div class="field btns">
+    <%= link_to t(:add_new_shorthand), new_book_shorthand_path(book.slug), :class => "btn" %>
+  </div>
 
   <% unless book.collections.empty? %>
     <hr />

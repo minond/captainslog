@@ -2,6 +2,29 @@ class ShorthandController < ApplicationController
   before_action :require_login
 
   # === URL
+  #   GET /book/:book_slug/shorthand/new
+  #
+  # === Sample request
+  #   /book/workouts/shorthand/new
+  #
+  def new
+    locals :shorthand => Shorthand.new(:book => current_book)
+  end
+
+  # === URL
+  #   POST /book/:book_slug/shorthand
+  #
+  # === Sample request
+  #   /book/workouts/shorthand
+  #
+  def create
+    shorthand = create_shorthand
+    ok = shorthand.persisted?
+    notify(ok, :successful_shorthand_create, :failure_in_shorthand_create)
+    ok ? redirect_to(edit_book_path(current_book.slug)) : locals(:new, :shorthand => shorthand)
+  end
+
+  # === URL
   #   GET /book/:book_slug/shorthand/:id
   #
   # === Sample request
@@ -30,6 +53,17 @@ class ShorthandController < ApplicationController
   end
 
 private
+
+  # @return [Shorthand]
+  def create_shorthand
+    extra = {
+      :user => current_user,
+      :book => current_book
+    }
+
+    attrs = permitted_shorthand_params.to_hash.merge(extra)
+    Shorthand.create(attrs)
+  end
 
   # Find and return the current "active" shorthand. This is scopes to the
   # user's shorthands.
