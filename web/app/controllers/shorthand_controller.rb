@@ -1,18 +1,18 @@
-class ShorthandsController < ApplicationController
+class ShorthandController < ApplicationController
   before_action :require_login
 
   # === URL
-  #   GET /shorthands/:id
+  #   GET /book/:book_slug/shorthand/:id
   #
   # === Sample request
-  #   /shorthands/1
+  #   /book/workouts/shorthand/1
   #
   def show
     locals :shorthand => current_shorthand
   end
 
   # === URL
-  #   PATCH /shorthands/:id
+  #   PATCH /book/:book_slug/shorthand/:id
   #
   # === Request fields
   #   [Integer] shorthand[priority] - priority number
@@ -21,7 +21,7 @@ class ShorthandsController < ApplicationController
   #   [String] shorthand[text] - the shorthand text
   #
   # === Sample request
-  #   /shorthands/1?expansion=ok
+  #   /book/workouts/shorthand/1?expansion=ok
   #
   def update
     ok = update_shorthand
@@ -52,5 +52,11 @@ private
   def permitted_shorthand_params
     params.require(:shorthand)
           .permit(:priority, :expansion, :match, :text)
+  end
+
+  # @param [Shorthand] shorthand
+  # @return [String]
+  def shorthand_url(shorthand)
+    book_shorthand_path(shorthand.book.slug, shorthand.id)
   end
 end

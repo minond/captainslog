@@ -1,5 +1,5 @@
 <%= render "layouts/content-view" do %>
-  <form method="post" action="<%= book_entry_path(book.slug) %>">
+  <form method="post" action="<%= book_entry_index_path(book.slug) %>">
     <%= hidden_field_tag :authenticity_token, form_authenticity_token -%>
     <%= hidden_field_tag :requested_time, requested_time.to_i -%>
 
@@ -9,6 +9,6 @@
 
   <br>
 
-  <%= render "entries/list", :entries => entries %>
-  <%= render "entries/fin" %>
+  <%= render "entry/list", :entries => entries %>
+  <%= render "entry/fin" %>
 <% end %>

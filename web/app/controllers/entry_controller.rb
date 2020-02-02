@@ -1,4 +1,4 @@
-class EntriesController < ApplicationController
+class EntryController < ApplicationController
   around_action :user_timezone
   before_action :require_login
 

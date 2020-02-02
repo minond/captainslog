@@ -1,4 +1,4 @@
-<%= form_for(entry, :url => entry_path, :method => :patch) do |f| %>
+<%= form_for(entry, :url => book_entry_path(entry.book.slug, entry.id), :method => :patch) do |f| %>
   <%= render "entry/input", :config => { :text => entry.text, :name => "original_text", :rows => 5 } %>
 
   <%= render "form/field", :f => f, :field => :processed_data do %>

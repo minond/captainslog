@@ -13,7 +13,7 @@
     <div>
   <% else %>
     <h2><%= t(:search_results_for, :query => query) %></h2>
-    <%= render "entries/list", :entries => results %>
-    <%= render "entries/fin" %>
+    <%= render "entry/list", :entries => results %>
+    <%= render "entry/fin" %>
   <% end %>
 <% end %>

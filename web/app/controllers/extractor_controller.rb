@@ -1,18 +1,18 @@
-class ExtractorsController < ApplicationController
+class ExtractorController < ApplicationController
   before_action :require_login
 
   # === URL
-  #   GET /extractors/:id
+  #   GET /book/:book_slug/extractors/:id
   #
   # === Sample request
-  #   /extractors/1
+  #   /book/workouts/extractors/1
   #
   def show
     locals :extractor => current_extractor
   end
 
   # === URL
-  #   PATCH /extractors/:id
+  #   PATCH /book/:book_slug/extractors/:id
   #
   # === Request fields
   #   [String] extractor[label] - the extractor label
@@ -20,7 +20,7 @@ class ExtractorsController < ApplicationController
   #   [Integer] extractor[type] - the extractor type
   #
   # === Sample request
-  #   /extractors/1?label=mylabel
+  #   /book/workouts/extractors/1?label=mylabel
   #
   def update
     ok = update_extractor
@@ -51,5 +51,11 @@ private
   def permitted_extractor_params
     params.require(:extractor)
           .permit(:label, :match, :type)
+  end
+
+  # @param [Extractor] extractor
+  # @return [String]
+  def extractor_url(extractor)
+    book_extractor_path(extractor.book.slug, extractor.id)
   end
 end

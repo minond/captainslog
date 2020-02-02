@@ -1,0 +1,10 @@
+<ul>
+  <% extractors.each do |extractor| %>
+    <li>
+      <%= link_to "\"#{extractor.label}\", \"#{extractor.match}\"",
+        book_extractor_path(extractor.book.slug, extractor),
+        :class => "link"
+      %>
+    </li>
+  <% end %>
+</ul>

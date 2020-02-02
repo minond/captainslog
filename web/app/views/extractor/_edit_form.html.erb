@@ -1,4 +1,4 @@
-<%= form_for(extractor, :url => extractor_path(extractor)) do |f| %>
+<%= form_for(extractor, :url => book_extractor_path(extractor.book.slug, extractor)) do |f| %>
   <%= render "form/field", :f => f, :field => :label %>
   <%= render "form/field", :f => f, :field => :match %>
   <%= render "form/field", :f => f, :field => :type %>

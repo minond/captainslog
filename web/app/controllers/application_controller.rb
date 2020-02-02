@@ -71,7 +71,7 @@ private
   #
   # @return [Book]
   def current_book
-    @current_book ||= books.find_by!(:slug => params[:book_slug])
+    @current_book ||= books.find_by!(:slug => params[:book_slug] || params[:book_book_slug])
   end
 
   # Return all of the current user's books.

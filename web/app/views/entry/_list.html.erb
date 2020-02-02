@@ -6,8 +6,8 @@
           <td class="entry-item-text">
             <span class="entry-text"><%= entry.text %></span>
             <span class="controls">
-              <%= link_to image_tag("edit.svg"), entry, :class => "control" %>
-              <%= link_to image_tag("trash.svg"), entry,
+              <%= link_to image_tag("edit.svg"), book_entry_url(entry.book.slug, entry.id), :class => "control" %>
+              <%= link_to image_tag("trash.svg"), book_entry_url(entry.book.slug, entry.id),
                 :method => :delete,
                 :class => "control",
                 :data => { :confirm => t(:are_you_sure_q) }
