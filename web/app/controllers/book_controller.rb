@@ -15,6 +15,12 @@ class BookController < ApplicationController
   # === URL
   #   POST /book
   #
+  # === Request fields
+  #   [String] slug - the slug for the book to load
+  #   [String] book[name] - book's name
+  #   [String] book[slug] - book's slug, auto generated when empty
+  #   [Integer] book[grouping] - book's grouping type
+  #
   # === Sample request
   #   /book
   #
@@ -29,7 +35,7 @@ class BookController < ApplicationController
   #   GET /book/:slug
   #
   # === Request fields
-  #   [Integer] slug - the slug for the book to load
+  #   [String] slug - the slug for the book to load
   #
   # === Sample request
   #   /book/slugit
@@ -44,7 +50,7 @@ class BookController < ApplicationController
   #   GET /book/:slug/edit
   #
   # === Request fields
-  #   [Integer] slug - the slug for the book to edit
+  #   [String] slug - the slug for the book to edit
   #
   # === Sample request
   #   /book/slugit
@@ -57,7 +63,10 @@ class BookController < ApplicationController
   #   PATCH /book/:slug
   #
   # === Request fields
-  #   [Integer] slug - the slug for the book to update
+  #   [String] slug - the slug for the book to update
+  #   [String] book[name] - book's name
+  #   [String] book[slug] - book's slug
+  #   [Integer] book[grouping] - book's grouping type
   #
   # === Sample request
   #   /book/slugit?name=Updated+Name&grouping=day
@@ -71,7 +80,7 @@ class BookController < ApplicationController
   #   DELETE /book/:slug
   #
   # === Request fields
-  #   [Integer] slug - the slug for the book to delete
+  #   [String] slug - the slug for the book to delete
   #
   # === Sample request
   #   /book/slugit

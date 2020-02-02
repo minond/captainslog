@@ -2,7 +2,10 @@ class ShorthandController < ApplicationController
   before_action :require_login
 
   # === URL
-  #   GET /book/:book_slug/shorthand/new
+  #   GET /book/:slug/shorthand/new
+  #
+  # === Request fields
+  #   [String] slug - the slug for the book the shorthand belongs to
   #
   # === Sample request
   #   /book/workouts/shorthand/new
@@ -12,7 +15,14 @@ class ShorthandController < ApplicationController
   end
 
   # === URL
-  #   POST /book/:book_slug/shorthand
+  #   POST /book/:slug/shorthand
+  #
+  # === Request fields
+  #   [String] slug - the slug for the book the shorthand belongs to
+  #   [Integer] shorthand[priority] - priority number
+  #   [String] shorthand[expansion] - the shorthand expansion
+  #   [String] shorthand[match] - the shorthand match
+  #   [String] shorthand[text] - the shorthand text
   #
   # === Sample request
   #   /book/workouts/shorthand
@@ -25,7 +35,11 @@ class ShorthandController < ApplicationController
   end
 
   # === URL
-  #   GET /book/:book_slug/shorthand/:id
+  #   GET /book/:slug/shorthand/:id
+  #
+  # === Request fields
+  #   [String] slug - the slug for the book the shorthand belongs to
+  #   [Integer] id - the id for the shorthand to show
   #
   # === Sample request
   #   /book/workouts/shorthand/1
@@ -35,9 +49,11 @@ class ShorthandController < ApplicationController
   end
 
   # === URL
-  #   PATCH /book/:book_slug/shorthand/:id
+  #   PATCH /book/:slug/shorthand/:id
   #
   # === Request fields
+  #   [String] slug - the slug for the book the shorthand belongs to
+  #   [Integer] id - the id for the shorthand to update
   #   [Integer] shorthand[priority] - priority number
   #   [String] shorthand[expansion] - the shorthand expansion
   #   [String] shorthand[match] - the shorthand match

@@ -3,10 +3,10 @@ class EntryController < ApplicationController
   before_action :require_login
 
   # === URL
-  #   POST /book/:book_id/entry
+  #   POST /book/:slug/entry
   #
   # === Request fields
-  #   [Integer] book_id - the book id for the book to add the entry to
+  #   [String] slug - the book slug for the book the entry belongs to
   #   [String] text - entry's original text
   #
   # === Sample request
@@ -21,9 +21,10 @@ class EntryController < ApplicationController
   end
 
   # === URL
-  #   GET /entry/:id
+  #   GET /book/:slug/entry/:id
   #
   # === Request fields
+  #   [String] slug - the book slug for the book the entry belongs to
   #   [Integer] id - the entry id for the entry to show
   #
   # === Sample request
@@ -34,10 +35,12 @@ class EntryController < ApplicationController
   end
 
   # === URL
-  #   GET /entry/:id
+  #   GET /book/:slug/entry/:id
   #
   # === Request fields
+  #   [String] slug - the book slug for the book the entry belongs to
   #   [Integer] id - the entry id for the entry to show
+  #   [Integer] entry[original_text] - entry text
   #
   # === Sample request
   #   /entry/1
@@ -48,9 +51,10 @@ class EntryController < ApplicationController
   end
 
   # === URL
-  #   DELETE /entry/:id
+  #   DELETE /book/:slug/entry/:id
   #
   # === Request fields
+  #   [String] slug - the book slug for the book the entry belongs to
   #   [Integer] id - the entry id for the entry to delete
   #
   # === Sample request

@@ -1,6 +1,15 @@
 class SearchesController < ApplicationController
   before_action :require_login
 
+  # === URL
+  #   GET /search
+  #
+  # === Request fields
+  #   [String] query - search query string
+  #
+  # === Sample request
+  #   /search?query=Running
+  #
   def show
     locals :query => query,
            :results => results
