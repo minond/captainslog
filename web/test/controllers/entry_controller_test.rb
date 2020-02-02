@@ -16,13 +16,8 @@ class EntryControllerTest < ActionDispatch::IntegrationTest
 
   test "it redirects to the home page by default" do
     entry = create(:entry, :user => user)
+    redirect = entry.collection_path
     delete "/book/#{entry.book.slug}/entry/#{entry.id}"
-    assert_redirected_to "/"
-  end
-
-  test "it redirects to the referer if there is one" do
-    entry = create(:entry, :user => user)
-    delete "/book/#{entry.book.slug}/entry/#{entry.id}", :headers => { :referer => "/here" }
-    assert_redirected_to "/here"
+    assert_redirected_to redirect
   end
 end
