@@ -1,4 +1,11 @@
 <%= render "layouts/content-view" do %>
   <%= render "form/title", :key => :edit_shorthand %>
   <%= render "shorthand/edit_form", :shorthand => shorthand %>
+
+  <hr />
+  <%= link_to t(:delete), book_shorthand_path(shorthand.book.slug, shorthand.id),
+    :method => :delete,
+    :class => "btn destructive",
+    :data => { :confirm => t(:are_you_sure_q) }
+  %>
 <% end %>

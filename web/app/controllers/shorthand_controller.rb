@@ -68,6 +68,22 @@ class ShorthandController < ApplicationController
     ok ? redirect_to(current_shorthand) : locals(:show, :shorthand => current_shorthand)
   end
 
+  # === URL
+  #   DELETE /book/:slug/shorthand/:id
+  #
+  # === Request fields
+  #   [String] slug - the slug for the book the shorthand belongs to
+  #   [Integer] id - the id for the shorthand to delete
+  #
+  # === Sample request
+  #   /book/slugit/shorthand/12
+  #
+  def destroy
+    current_shorthand.destroy
+    flash.notice = t(:successful_shorthand_delete)
+    redirect_to(edit_book_path(current_book.slug))
+  end
+
 private
 
   # @return [Shorthand]

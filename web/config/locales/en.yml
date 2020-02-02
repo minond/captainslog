@@ -24,6 +24,8 @@ en:
   failure_in_shorthand_update: "There was an error updating the shorthand."
   successful_shorthand_create: "Your shorthand was successfully created!"
   failure_in_shorthand_create: "There was an error creating the shorthand."
+  successful_shorthand_delete: "Your shorthand was successfully deleted!"
+  failure_in_shorthand_delete: "There was an error deleting the shorthand."
   successful_extractor_update: "Your extractor was successfully updated!"
   failure_in_extractor_update: "There was an error updating the extractor."
   successful_extractor_create: "Your extractor was successfully created!"
