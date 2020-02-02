@@ -9,7 +9,7 @@ Rails.application.routes.draw do
 
   resources :book, :only => %i[create new edit show update destroy], :param => :book_slug do
     resources :entry, :only => %i[create show update destroy]
-    resources :extractor, :only => %i[create new show update]
+    resources :extractor, :only => %i[create new show update destroy]
     resources :shorthand, :only => %i[create new show update]
     get "/at/:requested_time", :to => "book#show", :as => :at
   end

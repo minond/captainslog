@@ -66,6 +66,22 @@ class ExtractorController < ApplicationController
     ok ? redirect_to(current_extractor) : locals(:show, :extractor => current_extractor)
   end
 
+  # === URL
+  #   DELETE /book/:slug/extractor/:id
+  #
+  # === Request fields
+  #   [String] slug - the slug for the book the extractor belongs to
+  #   [Integer] id - the id for the extractor to delete
+  #
+  # === Sample request
+  #   /book/slugit/extractor/12
+  #
+  def destroy
+    current_extractor.destroy
+    flash.notice = t(:successful_extractor_delete)
+    redirect_to(edit_book_path(current_book.slug))
+  end
+
 private
 
   # @return [Extractor]

@@ -1,4 +1,11 @@
 <%= render "layouts/content-view" do %>
   <%= render "form/title", :key => :edit_extractor %>
   <%= render "extractor/edit_form", :extractor => extractor %>
+
+  <hr />
+  <%= link_to t(:delete), book_extractor_path(extractor.book.slug, extractor.id),
+    :method => :delete,
+    :class => "btn destructive",
+    :data => { :confirm => t(:are_you_sure_q) }
+  %>
 <% end %>
