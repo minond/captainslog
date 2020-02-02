@@ -14,6 +14,15 @@ class Book < ApplicationRecord
 
   enum :grouping => %i[none day week month year], :_prefix => :group_by
 
+  # Tells you if any entries need to be reprocessed. Returns true when an entry
+  # exists that was processed before a change to the book's shorthands or
+  # extractors.
+  #
+  # @return [Boolean]
+  def dirty?
+    entries.exists? && latest_shorthand_or_extractor_update > earliest_entry_processing
+  end
+
   # @return [String]
   def path
     Rails.application.routes.url_helpers.book_path(slug)
@@ -61,5 +70,35 @@ private
   def constructor
     self.grouping ||= :none
     self.slug = name&.parameterize&.gsub("-", "_") unless slug.present?
+  end
+
+  # @return [Integer]
+  def latest_shorthand_or_extractor_update
+    [latest_shorthand_update, latest_extractor_update].max
+  end
+
+  # @return [Integer]
+  def latest_shorthand_update
+    first_datetime_field(shorthands, :updated_at, :desc)
+  end
+
+  # @return [Integer]
+  def latest_extractor_update
+    first_datetime_field(extractors, :updated_at, :desc)
+  end
+
+  # @return [Integer]
+  def earliest_entry_processing
+    # return 1.day.ago.to_i
+    first_datetime_field(entries, :processed_at, :asc)
+  end
+
+  # @param [ActiveRecord::Relation] rel
+  # @param [Symbol] field
+  # @param [Symbol] order
+  # @return [Integer]
+  def first_datetime_field(rel, field, order)
+    rel.order(field => order)
+       .first&.send(field)&.to_i || 0
   end
 end
