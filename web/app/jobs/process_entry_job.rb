@@ -5,6 +5,6 @@ class ProcessEntryJob < ApplicationJob
   # @param [Processor] processor
   def perform(entry, processor = Processor::Runner)
     text, data = processor.run(entry)
-    entry.update(:processed_text => text, :processed_data => data)
+    entry.update_from_processor(text, data)
   end
 end

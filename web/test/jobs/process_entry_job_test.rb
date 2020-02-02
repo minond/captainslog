@@ -15,6 +15,14 @@ class ProcessEntryJobTest < ActiveJob::TestCase
     assert_equal "b", entry_from_db.data["a"]
   end
 
+  test "updates the processed at timestamp" do
+    entry = create(:entry)
+    original_processed_at = entry.processed_at
+    ProcessEntryJob.new.perform(entry, ProcessorTestHelper::Runner.new)
+    entry_from_db = Entry.find(entry.id)
+    assert_not_equal original_processed_at, entry_from_db.processed_at
+  end
+
   test "saves the entry" do
     entry = create(:entry)
     ProcessEntryJob.new.perform(entry, ProcessorTestHelper::Runner.new)

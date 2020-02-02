@@ -42,6 +42,18 @@ class Entry < ApplicationRecord
     Rails.application.routes.url_helpers.book_at_path(book.slug, collection.datetime.to_i)
   end
 
+  # Update the data from the processor
+  #
+  # @param [String] text
+  # @param [Hash] data
+  # @return [Boolean]
+  def update_from_processor(text, data)
+    update(:processed_text => text,
+           :processed_data => data,
+           :processed_at => Time.now)
+  end
+
+  # Schedules a process entry job to run in a future date
   def schedule_processing
     ProcessEntryJob.perform_later self
   end
