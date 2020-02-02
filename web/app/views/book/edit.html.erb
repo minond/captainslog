@@ -21,4 +21,11 @@
     <%= render "form/subtitle", :key => :collections %>
     <%= render "collections/list", :collections => book.collections %>
   <% end %>
+
+  <hr />
+  <%= link_to t(:delete), book_path(book.slug),
+    :method => :delete,
+    :class => "btn destructive",
+    :data => { :confirm => t(:are_you_sure_q) }
+  %>
 <% end %>

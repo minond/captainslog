@@ -78,7 +78,8 @@ class BookController < ApplicationController
   #
   def destroy
     current_book.destroy
-    redirect_to(request.headers[:referer] || root_path)
+    flash.notice = t(:successful_book_delete)
+    redirect_to(user_path)
   end
 
 private

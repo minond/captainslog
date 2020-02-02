@@ -10,15 +10,7 @@
     <% books.each do |book| %>
       <tr class="controlled">
         <td class="nowrap">
-          <%= book.name %>
-          <span class="controls">
-            <%= link_to image_tag("edit.svg"), edit_book_path(book.slug), :class => "control" %>
-            <%= link_to image_tag("trash.svg"), book_path(book.slug),
-              :method => :delete,
-              :class => "control",
-              :data => { :confirm => t(:are_you_sure_q) }
-            %>
-          </span>
+          <%= link_to book.name, edit_book_path(book.slug), :class => "link" %>
         </td>
         <td><%= book.slug %></td>
         <td><%= t("group_by_#{book.grouping}") %></td>

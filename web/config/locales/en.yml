@@ -8,6 +8,7 @@ en:
 
   save: "Save"
   cancel: "Cancel"
+  delete: "Delete"
 
   successful_user_update: "Successfully updated!"
   failure_in_user_update: "There was an error updating the user."
@@ -17,6 +18,8 @@ en:
   failure_in_book_update: "There was an error updating the book."
   successful_book_create: "Your book was successfully created!"
   failure_in_book_create: "There was an error creating the book."
+  successful_book_delete: "Your book was successfully deleted!"
+  failure_in_book_delete: "There was an error deleting the book."
   successful_shorthand_update: "Your shorthand was successfully updated!"
   failure_in_shorthand_update: "There was an error updating the shorthand."
   successful_shorthand_create: "Your shorthand was successfully created!"
