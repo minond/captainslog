@@ -20,8 +20,7 @@ class Book < ApplicationRecord
   end
 
   # @param [String] text
-  # @param [Time] time, defaults to `Time.current`. Use a time in the user's
-  #   timezone for best results.
+  # @param [Time] time
   # @return [Entry]
   def add_entry(text, time = Time.current)
     collection = find_collection(time) || create_collection(time)
@@ -31,15 +30,13 @@ class Book < ApplicationRecord
                  :original_text => text)
   end
 
-  # @param [Time] time, defaults to `Time.current`. Use a time in the user's
-  #   timezone for best results.
+  # @param [Time] time
   # @return [Array<Entry>]
   def find_entries(time = Time.current)
     find_collection(time)&.entries&.order("created_at desc") || []
   end
 
-  # @param [Time] time, defaults to `Time.current`. Use a time in the user's
-  #   timezone for best results.
+  # @param [Time] time
   # @return [Collection, Nil]
   def find_collection(time = Time.current)
     start_time, end_time = grouping_time_range(time)
@@ -48,8 +45,7 @@ class Book < ApplicationRecord
     res.first
   end
 
-  # @param [Time] time, defaults to `Time.current`. Use user's timezone for
-  #   best results.
+  # @param [Time] time
   # @return [Collection]
   def create_collection(time)
     Collection.create(:book => self, :datetime => time)

@@ -5,8 +5,7 @@ private
 
   # Calculates a book collection's start and end times for any given time.
   #
-  # @param [Time] time, defaults to `Time.current`. Use user's timezone for
-  #   best results.
+  # @param [Time] time
   # @return [Tuple<Time, Time>]
   #
   # rubocop:disable Metrics/AbcSize
@@ -38,8 +37,7 @@ private
   # Calculates the times for the book collection that is before and after a
   # given time.
   #
-  # @param [Time] time, defaults to `Time.current`. Use user's timezone for
-  #   best results.
+  # @param [Time] time
   # @return [Array<Time>]
   def grouping_prev_next_times(time)
     time_unit = grouping_time_unit

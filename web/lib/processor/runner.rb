@@ -1,7 +1,7 @@
 module Processor
   class Runner < ExternalService::Runner
     # @param [Entry] entry
-    # @param [Processor::Client] client, defaults to a new client
+    # @param [Processor::Client] client
     def initialize(entry, client = Processor::Client.new)
       @entry = entry
       super(client)

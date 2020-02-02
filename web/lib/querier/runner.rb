@@ -2,7 +2,7 @@ module Querier
   class Runner < ExternalService::Runner
     # @param [Integer] user_id
     # @param [String] query
-    # @param [Querier::Client] client, defaults to a new client
+    # @param [Querier::Client] client
     def initialize(user_id, query, client = Querier::Client.new)
       @user_id = user_id
       @query = query
