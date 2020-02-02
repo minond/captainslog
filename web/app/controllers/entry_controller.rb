@@ -64,8 +64,9 @@ class EntryController < ApplicationController
   #   Redirect to previous page in session
   #
   def destroy
+    home = current_entry.collection_path
     current_entry.destroy
-    redirect_to(request.headers[:referer] || root_path)
+    redirect_to home
   end
 
 private

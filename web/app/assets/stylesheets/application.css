@@ -156,26 +156,6 @@ hr {
   border: 1px solid gray;
 }
 
-.controls {
-  opacity: 0;
-  transition: opacity .1s;
-}
-
-.controlled:hover .controls,
-.controlled:focus .controls,
-.controlled:active .controls {
-  opacity: 1;
-}
-
-.control {
-  position: relative;
-  cursor: pointer;
-}
-
-.control img {
-  width: .8rem;
-}
-
 /* BUTTON *****************************************************************/
 
 .btns {

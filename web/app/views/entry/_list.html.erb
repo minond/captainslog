@@ -2,16 +2,10 @@
   <% entries.each do |entry| %>
     <div class="entry-item">
       <table>
-        <tr class="controlled">
+        <tr>
           <td class="entry-item-text">
-            <span class="entry-text"><%= entry.text %></span>
-            <span class="controls">
-              <%= link_to image_tag("edit.svg"), book_entry_url(entry.book.slug, entry.id), :class => "control" %>
-              <%= link_to image_tag("trash.svg"), book_entry_url(entry.book.slug, entry.id),
-                :method => :delete,
-                :class => "control",
-                :data => { :confirm => t(:are_you_sure_q) }
-              %>
+            <span class="entry-text">
+              <%= link_to entry.text, book_entry_url(entry.book.slug, entry.id) %>
             </span>
           </td>
           <% if entry.user_data? %>
