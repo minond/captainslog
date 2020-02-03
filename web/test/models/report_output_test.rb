@@ -13,8 +13,7 @@ private
   end
 
   def report_output
-    @report_output ||= ReportOutput.new(:user => report.user,
-                                        :report => report,
+    @report_output ||= ReportOutput.new(:report => report,
                                         :kind => :chart,
                                         :label => "Testing")
   end

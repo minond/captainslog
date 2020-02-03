@@ -13,8 +13,7 @@ private
   end
 
   def report_variable
-    @report_variable ||= ReportVariable.new(:user => report.user,
-                                            :report => report,
+    @report_variable ||= ReportVariable.new(:report => report,
                                             :label => "Testing")
   end
 end
