@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_02_203046) do
+ActiveRecord::Schema.define(version: 2020_02_03_052119) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -77,6 +77,40 @@ ActiveRecord::Schema.define(version: 2020_02_02_203046) do
     t.index ["user_id"], name: "index_extractors_on_user_id"
   end
 
+  create_table "report_outputs", force: :cascade do |t|
+    t.string "label", null: false
+    t.string "width"
+    t.string "height"
+    t.integer "kind", null: false
+    t.text "query"
+    t.bigint "user_id", null: false
+    t.bigint "report_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["report_id"], name: "index_report_outputs_on_report_id"
+    t.index ["user_id"], name: "index_report_outputs_on_user_id"
+  end
+
+  create_table "report_variables", force: :cascade do |t|
+    t.string "label", null: false
+    t.string "default_value"
+    t.text "query"
+    t.bigint "user_id", null: false
+    t.bigint "report_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["report_id"], name: "index_report_variables_on_report_id"
+    t.index ["user_id"], name: "index_report_variables_on_user_id"
+  end
+
+  create_table "reports", force: :cascade do |t|
+    t.string "label", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_reports_on_user_id"
+  end
+
   create_table "shorthands", force: :cascade do |t|
     t.integer "priority", null: false
     t.string "expansion", null: false
@@ -111,6 +145,11 @@ ActiveRecord::Schema.define(version: 2020_02_02_203046) do
   add_foreign_key "entries", "users"
   add_foreign_key "extractors", "books"
   add_foreign_key "extractors", "users"
+  add_foreign_key "report_outputs", "reports"
+  add_foreign_key "report_outputs", "users"
+  add_foreign_key "report_variables", "reports"
+  add_foreign_key "report_variables", "users"
+  add_foreign_key "reports", "users"
   add_foreign_key "shorthands", "books"
   add_foreign_key "shorthands", "users"
 end
