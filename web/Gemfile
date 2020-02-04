@@ -12,6 +12,7 @@ gem "jbuilder", "~> 2.7"                      # Build JSON APIs with ease. Read 
 gem "jquery-rails"                            # A gem to automate using jQuery with Rails
 gem "pg", ">= 0.18", "< 2.0"                  # Use postgresql as the database for Active Record
 gem "puma", "~> 4.1"                          # Use Puma as the app server
+gem "rabl"                                    # JSON view builder
 gem "rails", "~> 6.0.1"                       # Bundle edge Rails instead: gem "rails", github: "rails/rails"
 gem "turbolinks", "~> 5"                      # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem "tzinfo-data", :platforms => %i[mingw mswin x64_mingw jruby] # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
