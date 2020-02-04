@@ -102,7 +102,7 @@ if ENV["CAPTAINS_LOG_USERNAME"]
   ReportVariable.create(:report => weight_trents,
                         :label => "Exercise",
                         :default_value => "Squats",
-                        :query => <<-SQL
+                        :query => <<~SQL
                           select distinct exercise
                           from workouts
                           where exercise is not null
@@ -112,9 +112,9 @@ if ENV["CAPTAINS_LOG_USERNAME"]
                        )
   ReportOutput.create(:report => weight_trents,
                       :label => "Min",
-                      :width => "150%",
+                      :width => "150px",
                       :kind => :value,
-                      :query => <<-SQL
+                      :query => <<~SQL
                           select min(cast(weight as float))
                           from workouts
                           where exercise ilike '{{Exercise}}'
@@ -123,9 +123,9 @@ if ENV["CAPTAINS_LOG_USERNAME"]
                      )
   ReportOutput.create(:report => weight_trents,
                       :label => "Max",
-                      :width => "150%",
+                      :width => "150px",
                       :kind => :value,
-                      :query => <<-SQL
+                      :query => <<~SQL
                           select max(cast(weight as float))
                           from workouts
                           where exercise ilike '{{Exercise}}'
@@ -134,9 +134,9 @@ if ENV["CAPTAINS_LOG_USERNAME"]
                      )
   ReportOutput.create(:report => weight_trents,
                       :label => "Count",
-                      :width => "150%",
+                      :width => "150px",
                       :kind => :value,
-                      :query => <<-SQL
+                      :query => <<~SQL
                           select count(1)
                           from workouts
                           where exercise ilike '{{Exercise}}'
@@ -147,7 +147,7 @@ if ENV["CAPTAINS_LOG_USERNAME"]
                       :label => "Weight Trends",
                       :width => "100%",
                       :kind => :chart,
-                      :query => <<-SQL
+                      :query => <<~SQL
                           select cast(_collected_at as integer) as x,
                             cast(weight as float) as y
                           from workouts
@@ -160,7 +160,7 @@ if ENV["CAPTAINS_LOG_USERNAME"]
                       :label => "Last 20 Entries",
                       :width => "100%",
                       :kind => :table,
-                      :query => <<-SQL
+                      :query => <<~SQL
                           select exercise, cast(weight as float) as weight,
                             to_timestamp(cast(_collected_at as integer)) as date
                           from workouts

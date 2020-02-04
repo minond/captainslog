@@ -1,23 +1,14 @@
 import * as React from "react"
 import { FunctionComponent } from "react"
 
-import { Output, OutputType, QueryResult, QueryResults } from "../../definitions"
+import { Output, OutputKind, QueryResult, QueryResults } from "../../definitions"
 
 import { ChartOutput } from "./chart"
 import { TableOutput } from "./table"
 import { ValueOutput } from "./value"
 
-export const parseOutputType = (x: string) => {
-  switch (x) {
-    case "1": return OutputType.TableOutput
-    case "2": return OutputType.ChartOutput
-    case "3": return OutputType.ValueOutput
-    default:  return OutputType.InvalidOutput
-  }
-}
-
 export type Definition = {
-  type: OutputType
+  kind: OutputKind
   label: string
   query: string
   width: string
@@ -50,23 +41,23 @@ type LookupOutputProps = {
 }
 
 export const LookupOutput = (props: LookupOutputProps) => {
-  switch (props.definition.type) {
-    case OutputType.TableOutput:
+  switch (props.definition.kind) {
+    case OutputKind.TableOutput:
       return <OutputWrapper {...props} outputName="table">
         <TableOutput {...props} />
       </OutputWrapper>
 
-    case OutputType.ChartOutput:
+    case OutputKind.ChartOutput:
       return <OutputWrapper {...props} outputName="chart">
         <ChartOutput {...props} />
       </OutputWrapper>
 
-    case OutputType.ValueOutput:
+    case OutputKind.ValueOutput:
       return <OutputWrapper {...props} outputName="value">
         <ValueOutput {...props} />
       </OutputWrapper>
 
-    case OutputType.InvalidOutput:
+    case OutputKind.InvalidOutput:
     default:
       return null
   }

@@ -6,8 +6,8 @@ attributes :id,
 child :variables => :variables do
   attributes :id,
              :label,
-             :default_value,
              :query
+  attributes :default_value => :defaultValue
 end
 
 child :outputs => :outputs do

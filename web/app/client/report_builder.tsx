@@ -2,8 +2,6 @@ import * as React from "react"
 import { useEffect, useReducer, useState } from "react"
 import * as ReactDOM from "react-dom"
 
-// TODO implement cachedExecuteQuery
-// import { cachedExecuteQuery } from "./remote"
 const cachedExecuteQuery = (query: string): Promise<QueryResults> =>
   new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest()
@@ -15,10 +13,21 @@ const cachedExecuteQuery = (query: string): Promise<QueryResults> =>
     xhr.onerror = () => reject(new Error(`query execution request error: ${xhr.responseText}`))
   })
 
+const loadReports = (): Promise<Report[]> =>
+  new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest()
+    xhr.open("GET", "/reports")
+    xhr.setRequestHeader("Content-Type", "application/json")
+    xhr.setRequestHeader("Accept", "application/json")
+    xhr.send()
+    xhr.onload = () => resolve(JSON.parse(xhr.responseText))
+    xhr.onerror = () => reject(new Error(`request error: ${xhr.responseText}`))
+  })
+
 import {
   Input,
   Output,
-  OutputType,
+  OutputKind,
   QueryResult,
   QueryResults,
   Report,
@@ -26,85 +35,8 @@ import {
 } from "./definitions"
 
 import { IncompleteOutput } from "./report_builder/outputs/incomplete"
-import { Definition, LookupOutput, parseOutputType } from "./report_builder/outputs/output"
+import { Definition, LookupOutput } from "./report_builder/outputs/output"
 import { valueOf } from "./report_builder/outputs/utils"
-
-const dummy = {
-  label: "Weight Trends",
-  outputs: [
-    {
-      id: Math.random().toString(),
-      label: "Min",
-      width: "150px",
-      query:
-        "select min(cast(weight as float))\n" +
-        "from workouts\n" +
-        "where exercise ilike '{{Exercise}}'\n" +
-        "and weight is not null",
-      type: OutputType.ValueOutput,
-    },
-    {
-      id: Math.random().toString(),
-      label: "Max",
-      width: "150px",
-      query:
-        "select max(cast(weight as float))\n" +
-        "from workouts\n" +
-        "where exercise ilike '{{Exercise}}'\n" +
-        "and weight is not null",
-      type: OutputType.ValueOutput,
-    },
-    {
-      id: Math.random().toString(),
-      label: "Count",
-      width: "150px",
-      query:
-        "select count(1)\n" +
-        "from workouts\n" +
-        "where exercise ilike '{{Exercise}}'\n" +
-        "and weight is not null",
-      type: OutputType.ValueOutput,
-    },
-    {
-      id: Math.random().toString(),
-      label: "Weight Trends",
-      width: "100%",
-      query:
-        "select cast(_collected_at as integer) as x,\n  cast(weight as float) as y\n" +
-        "from workouts\n" +
-        "where exercise ilike '{{Exercise}}'\n" +
-        "and weight is not null\n" +
-        "order by _collected_at asc",
-      type: OutputType.ChartOutput,
-    },
-    {
-      id: Math.random().toString(),
-      label: "Last 20 Entries",
-      width: "100%",
-      query:
-        "select exercise, cast(weight as float) as weight,\n  to_timestamp(cast(_collected_at as integer)) as date\n" +
-        "from workouts\n" +
-        "where exercise ilike '{{Exercise}}'\n" +
-        "and weight is not null\n" +
-        "order by _collected_at desc\n" +
-        "limit 20",
-      type: OutputType.TableOutput,
-    },
-  ],
-  variables: [
-    {
-      defaultValue: "Squats",
-      id: Math.random().toString(),
-      label: "Exercise",
-      query:
-        "select distinct exercise\n" +
-        "from workouts\n" +
-        "where exercise is not null\n" +
-        "and weight is not null\n" +
-        "order by exercise",
-    }
-  ],
-}
 
 const valuesOf = (res: QueryResults): string[] =>
   !res.results ? [] : res.results.map((row) => {
@@ -196,12 +128,12 @@ type EditFormProps = {
 }
 
 const EditForm = ({ output, onSave, onCancel }: EditFormProps) => {
-  const [type, setType] = useState<OutputType>(output.type)
+  const [kind, setKind] = useState<OutputKind>(output.kind)
   const [label, setLabel] = useState<string>(output.label)
   const [query, setQuery] = useState<string>(output.query)
   const [width, setWidth] = useState<string>(output.width)
 
-  const updated = { ...output, type, label, query, width }
+  const updated = { ...output, kind, label, query, width }
 
   return <div className="report-edit-form">
     <table>
@@ -217,11 +149,11 @@ const EditForm = ({ output, onSave, onCancel }: EditFormProps) => {
               <input value={width} onChange={(ev) => setWidth(ev.target.value)} />
             </label>
             <label className="report-edit-form-label">
-              <span>Type</span>
-              <select value={type} onChange={(ev) => setType(parseOutputType(ev.target.value))}>
-                <option value={OutputType.TableOutput} label="Table" />
-                <option value={OutputType.ChartOutput} label="Chart" />
-                <option value={OutputType.ValueOutput} label="Value" />
+              <span>Kind</span>
+              <select value={kind} onChange={(ev) => setKind(ev.target.value as OutputKind)}>
+                <option value={OutputKind.TableOutput} label="Table" />
+                <option value={OutputKind.ChartOutput} label="Chart" />
+                <option value={OutputKind.ValueOutput} label="Value" />
               </select>
             </label>
           </td>
@@ -277,7 +209,7 @@ const outputReducer: OutputReducer = (outputs, action) => {
           ...o,
           loading: false,
           reload: o.query !== output.query,
-          type: output.type,
+          kind: output.kind,
           label: output.label,
           query: output.query,
           width: output.width,
@@ -409,7 +341,7 @@ const Outputs = ({ outputs, onEdit: onEditOutput }: OutputsProps) =>
   </>
 
 export const ReportView = (props: {}) => {
-  const [report, setReport] = useState<Report | null>(dummy)
+  const [report, setReport] = useState<Report | null>(null)
   const [variables, dispatchVariable] = useReducer(variableReducer, [], (i) => i)
   const [inputs, dispatchInput] = useReducer(inputReducer, [], (i) => i)
   const [outputs, dispatchOutput] = useReducer(outputReducer, [], (i) => i)
@@ -434,6 +366,12 @@ export const ReportView = (props: {}) => {
   useEffect(() => {
     if (report) {
       loadReportSettings(report, dispatchVariable, dispatchInput, dispatchOutput)
+    } else {
+      loadReports().then(reports => setReport(reports[0] || {
+        label: "",
+        variables: [],
+        outputs: []
+      }))
     }
   }, [report])
 

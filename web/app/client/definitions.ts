@@ -102,17 +102,17 @@ export type Variable = {
   options?: string[]
 }
 
-export enum OutputType {
-  InvalidOutput,
-  TableOutput,
-  ChartOutput,
-  ValueOutput,
+export enum OutputKind {
+  InvalidOutput = -1,
+  TableOutput = "table",
+  ChartOutput = "chart",
+  ValueOutput = "value",
 }
 
 export type Output = {
   id: string
   label: string
-  type: OutputType
+  kind: OutputKind
   query: string
   width: string
   reload?: boolean
