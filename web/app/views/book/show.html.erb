@@ -11,4 +11,6 @@
 
   <%= render "entry/list", :entries => entries %>
   <%= render "entry/fin" %>
+
+  <script><%= EntryHelper.entry_processing_polling_code(entries).html_safe %></script>
 <% end %>

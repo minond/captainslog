@@ -23,7 +23,7 @@ class Entry < ApplicationRecord
     processed_text || original_text
   end
 
-  # Human friendly data
+  # Extracted data excluding data injected by the application.
   #
   # @return [Hash]
   def user_data

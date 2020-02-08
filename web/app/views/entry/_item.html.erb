@@ -1,0 +1,16 @@
+<div class="entry-item" data-entry-item="<%= entry.id %>">
+  <table>
+    <tr>
+      <td class="entry-item-text">
+        <span class="entry-text">
+          <%= link_to entry.text, book_entry_url(entry.book.slug, entry.id) %>
+        </span>
+      </td>
+      <% if entry.user_data? %>
+        <td class="entry-item-data">
+          <%= render "entry/datum", :entry => entry %>
+        </td>
+      <% end %>
+    </tr>
+  </table>
+</div>

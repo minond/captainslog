@@ -31,7 +31,10 @@ class EntryController < ApplicationController
   #   /entry/1
   #
   def show
-    locals :entry => current_entry
+    respond_to do |format|
+      format.html { locals :entry => current_entry }
+      format.js { render :partial => "entry/update", :locals => { :entry => current_entry } }
+    end
   end
 
   # === URL
