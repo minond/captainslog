@@ -1,5 +1,5 @@
 <% if entry.processed_data? %>
   $("[data-entry-item=<%= entry.id %>]").replaceWith("<%=raw escape_javascript(render "entry/item", :entry => entry) %>")
 <% else %>
-  <%= EntryHelper.entry_processing_polling_code([entry], wait_time: 10000).html_safe %>
+  <%= EntryHelper.entry_processing_polling_code([entry], wait_time: 5000).html_safe %>
 <% end %>
