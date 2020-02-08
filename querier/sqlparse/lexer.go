@@ -29,7 +29,7 @@ type Tok uint8
 
 const (
 	tokInvalid Tok = iota
-	tokEof
+	tokEOF
 
 	// Tokens with known lexeme values should go here. If this changes make
 	// sure to update the token.eq method.
@@ -88,7 +88,7 @@ var (
 	tokenCloseParenthesis = Token{Tok: tokCloseParenthesis}
 	tokenComma            = Token{Tok: tokComma}
 	tokenDiv              = Token{Tok: tokDiv}
-	tokenEof              = Token{Tok: tokEof}
+	tokenEOF              = Token{Tok: tokEOF}
 	tokenEq               = Token{Tok: tokEq}
 	tokenGe               = Token{Tok: tokGe}
 	tokenGt               = Token{Tok: tokGt}

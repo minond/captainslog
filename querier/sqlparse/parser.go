@@ -91,7 +91,7 @@ func (p *parser) done() bool {
 
 func (p *parser) peek() Token {
 	if p.done() {
-		return tokenEof
+		return tokenEOF
 	}
 	return p.toks[p.pos]
 }
@@ -118,10 +118,10 @@ func (p *parser) nextToks(ts ...Tok) bool {
 
 func (p *parser) eat() (Token, error) {
 	if p.pos+1 > p.len {
-		return tokenEof, errors.New("unexpected EOF")
+		return tokenEOF, errors.New("unexpected EOF")
 	}
 	prev := p.toks[p.pos]
-	p.pos += 1
+	p.pos++
 	return prev, nil
 }
 
@@ -481,7 +481,7 @@ func (p *parser) parseExpr() (Expr, error) {
 	}
 
 	if p.nextIeqWords(sqlOperators...) {
-		op, err := p.parseSqlOperator()
+		op, err := p.parseSQLOperator()
 		if err != nil {
 			return nil, err
 		}
@@ -551,7 +551,7 @@ func (p *parser) parseExpr() (Expr, error) {
 	return exp, nil
 }
 
-func (p *parser) parseSqlOperator() (Operator, error) {
+func (p *parser) parseSQLOperator() (Operator, error) {
 	t, err := p.expectIeqWords(sqlOperators...)
 	if err != nil {
 		return OpInvalid, err

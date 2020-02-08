@@ -115,7 +115,7 @@ func (p *parser) parseExpr() (lang.Expr, error) {
 	} else if p.currEq(tokenQuote) {
 		return p.parseQuote()
 	} else if p.currIsA(tokWord) {
-		return p.parseId()
+		return p.parseIdentifier()
 	} else if p.currIsA(tokNumber) {
 		return p.parseNumber()
 	} else if p.currIsA(tokString) {
@@ -168,7 +168,7 @@ func (p *parser) parseQuote() (*lang.Quote, error) {
 	return lang.NewQuote(val), nil
 }
 
-func (p *parser) parseId() (*lang.Identifier, error) {
+func (p *parser) parseIdentifier() (*lang.Identifier, error) {
 	if err := p.expectA(tokWord); err != nil {
 		return nil, err
 	}

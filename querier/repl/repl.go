@@ -18,6 +18,10 @@ import (
 	"github.com/olekukonko/tablewriter"
 )
 
+type Repl interface {
+	Run()
+}
+
 type repl struct {
 	repo   repository.Repository
 	buff   strings.Builder
@@ -29,7 +33,7 @@ type repl struct {
 	debug   bool
 }
 
-func New(repo repository.Repository) *repl {
+func New(repo repository.Repository) Repl {
 	return &repl{
 		repo:   repo,
 		output: os.Stdout,
@@ -151,7 +155,7 @@ Help:
 `)
 
 	default:
-		return fmt.Errorf("invalid command: `%s`, try \\? for help.", parts[0])
+		return fmt.Errorf("invalid command: `%s`, try \\? for help", parts[0])
 	}
 
 	return nil

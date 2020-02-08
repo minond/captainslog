@@ -217,9 +217,8 @@ func procedureCar(args []lang.Value) (lang.Value, error) {
 	case *lang.List:
 		if arg.PairQ() {
 			return arg.Head(), nil
-		} else {
-			return nil, errors.New("contract error: expected a pair")
 		}
+		return nil, errors.New("contract error: expected a pair")
 	}
 	return nil, errors.New("contract error: expected a list")
 }
@@ -233,9 +232,8 @@ func procedureCdr(args []lang.Value) (lang.Value, error) {
 	case *lang.List:
 		if arg.PairQ() {
 			return lang.NewList(arg.Tail()), nil
-		} else {
-			return nil, errors.New("contract error: expected a pair")
 		}
+		return nil, errors.New("contract error: expected a pair")
 	}
 	return nil, errors.New("contract error: expected a pair")
 }

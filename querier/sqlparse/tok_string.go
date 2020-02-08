@@ -9,7 +9,7 @@ func _() {
 	// Re-run the stringer command to generate them again.
 	var x [1]struct{}
 	_ = x[tokInvalid-0]
-	_ = x[tokEof-1]
+	_ = x[tokEOF-1]
 	_ = x[tokCloseParenthesis-2]
 	_ = x[tokComma-3]
 	_ = x[tokDiv-4]
@@ -29,7 +29,7 @@ func _() {
 	_ = x[tokSingleQuoteString-18]
 }
 
-const _Tok_name = "tokInvalidtokEoftokCloseParenthesistokCommatokDivtokEqtokGetokGttokLetokLttokMinustokMultokOpenParenthesistokPeriodtokPlustokDoubleQuoteStringtokIdentifiertokNumbertokSingleQuoteString"
+const _Tok_name = "tokInvalidtokEOFtokCloseParenthesistokCommatokDivtokEqtokGetokGttokLetokLttokMinustokMultokOpenParenthesistokPeriodtokPlustokDoubleQuoteStringtokIdentifiertokNumbertokSingleQuoteString"
 
 var _Tok_index = [...]uint8{0, 10, 16, 35, 43, 49, 54, 59, 64, 69, 74, 82, 88, 106, 115, 122, 142, 155, 164, 184}
 
