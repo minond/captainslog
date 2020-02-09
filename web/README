@@ -37,6 +37,7 @@ The application needs to know what database it should read and write from and
 where the external services live:
 
     PROCESSOR_ADDRESS   # example http://host.docker.internal:8081
+    QUERIER_ADDRESS     # example http://host.docker.internal:8082
     DATABASE_URL        # example postgres://postgres@host.docker.internal:5432/captainslog
 
 
