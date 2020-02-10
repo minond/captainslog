@@ -21,6 +21,8 @@ Bundler.require(*Rails.groups)
 
 module Web
   class Application < Rails::Application
+    require_relative Rails.root.join("lib/ext/jwt")
+
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.0
 

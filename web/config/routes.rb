@@ -21,4 +21,10 @@ Rails.application.routes.draw do
 
     post "/query/execute", :to => "query#execute"
   end
+
+  namespace :api do
+    namespace :v1 do
+      post "authenticate" => "authentication#authenticate"
+    end
+  end
 end
