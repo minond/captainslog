@@ -29,14 +29,6 @@ private
     Time.use_zone(current_user.timezone, &block)
   end
 
-  # Redirect request to the login page when there is no active session.
-  #
-  # @example
-  #   before_action :require_login
-  def require_login
-    redirect_to(root_url) unless current_user
-  end
-
   # The requsted time represents the time that a user is requesting entries be
   # loaded for or entries to be added under.
   #

@@ -1,6 +1,5 @@
 class BookController < ApplicationController
   around_action :user_timezone
-  before_action :require_login
 
   # === URL
   #   GET /book/new

@@ -1,6 +1,4 @@
 class ExtractorController < ApplicationController
-  before_action :require_login
-
   # === URL
   #   GET /book/:slug/extractor/new
   #

@@ -1,6 +1,4 @@
 class ShorthandController < ApplicationController
-  before_action :require_login
-
   # === URL
   #   GET /book/:slug/shorthand/new
   #

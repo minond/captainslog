@@ -1,6 +1,4 @@
 class SearchesController < ApplicationController
-  before_action :require_login
-
   # === URL
   #   GET /search
   #
