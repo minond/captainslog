@@ -1,17 +1,17 @@
-class Api::V1::AuthenticationController < ApiController
+class Api::V1::TokenController < ApiController
   skip_before_action :authenticate_request
 
   # === URL
-  #   POST /api/v1/authenticate
+  #   POST /api/v1/token
   #
   # == Request fields
   #   [String] email
   #   [String] password
   #
   # == Sample request
-  #   /api/v1/authenticate?email=...&password=...
+  #   /api/v1/token?email=...&password=...
   #
-  def authenticate
+  def create
     json authentication_response, :status => authentication_response_status
   end
 
