@@ -1,4 +1,16 @@
 class Api::V1::AuthenticationController < ApiController
+  skip_before_action :authenticate_request
+
+  # === URL
+  #   POST /api/v1/authenticate
+  #
+  # == Request fields
+  #   [String] email
+  #   [String] password
+  #
+  # == Sample request
+  #   /api/v1/authenticate?email=...&password=...
+  #
   def authenticate
     json authentication_response, :status => authentication_response_status
   end
@@ -10,9 +22,11 @@ private
   #
   # @return [Hash]
   def authentication_response
-    authenticate_user.success? ?
-      { :token => authenticate_user.result } :
-      { :error => authenticate_user.errors }
+    if authenticate_user.success?
+      { :token => authenticate_user.result }
+    else
+      { :error => :unauthorized }
+    end
   end
 
   # HTTP status header label representing result of authentication request.

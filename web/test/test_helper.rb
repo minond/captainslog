@@ -1,7 +1,10 @@
 ENV["RAILS_ENV"] ||= "test"
 
 require "simplecov"
-SimpleCov.start "rails"
+
+SimpleCov.start "rails" do
+  add_group "Commands", "app/commands"
+end
 
 require_relative "../config/environment"
 require "rails/test_help"

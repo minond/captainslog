@@ -9,9 +9,11 @@ module JWT
   end
 
   # @param [String] token
-  # @return [Hash]
+  # @return [Hash, nil]
   def self.decode_application_token(token)
-    decode(token, secret).first.with_indifferent_access rescue nil
+    decode(token, secret)&.first&.with_indifferent_access
+  rescue JWT::DecodeError
+    nil
   end
 
   # @return [String]
