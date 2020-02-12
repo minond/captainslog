@@ -148,8 +148,8 @@ if ENV["CAPTAINS_LOG_USERNAME"]
                       :width => "100%",
                       :kind => :chart,
                       :query => <<~SQL
-                        select cast(_collected_at as integer) as x,
-                          cast(weight as float) as y
+                        select to_timestamp(cast(_collected_at as integer)),
+                          cast(weight as float)
                         from workouts
                         where exercise ilike '{{Exercise}}'
                         and weight is not null
