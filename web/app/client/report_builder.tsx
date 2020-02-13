@@ -1,5 +1,5 @@
 import * as React from "react"
-import { useEffect, useReducer, useState } from "react"
+import { FunctionComponent, useEffect, useReducer, useState } from "react"
 import * as ReactDOM from "react-dom"
 
 import {
@@ -12,7 +12,6 @@ import {
   Variable,
 } from "./definitions"
 
-import { Definition, LookupOutput } from "./report_builder/outputs/output"
 import { valuesOf } from "./report_builder/outputs/utils"
 
 namespace Network {
@@ -176,13 +175,22 @@ namespace Editor {
   }
 }
 
-import { OutputWrapper } from "./report_builder/outputs/output"
-
 import { ChartRawOutput } from "./report_builder/outputs/chart"
 import { TableRawOutput } from "./report_builder/outputs/table"
 import { ValueRawOutput } from "./report_builder/outputs/value"
 
+import { ChartOutput } from "./report_builder/outputs/chart"
+import { TableOutput } from "./report_builder/outputs/table"
+import { ValueOutput } from "./report_builder/outputs/value"
+
 namespace Outputs {
+  export type Definition = {
+    kind: OutputKind
+    label: string
+    query: string
+    width: string
+  }
+
   type ViewProps = {
     outputs: Output[]
     onEdit: (output: Output) => void
@@ -232,6 +240,72 @@ namespace Outputs {
         return null
     }
   }
+
+  type OutputWrapperProps = {
+    definition: Definition
+    outputName: string
+    onEdit?: (def: Definition) => void
+    loading?: boolean
+  }
+
+  const outputClassName = (props: { loading?: boolean, outputName: string }): string =>
+    `output ${props.outputName}-output ${props.loading ? "output-loading" : ""}`
+
+  const outputStyle = ({ definition }: { definition: Definition }) =>
+    ({width: definition ? definition.width : "100%"})
+
+  const OutputWrapper: FunctionComponent<OutputWrapperProps> = (props) =>
+    <div className={outputClassName(props)} style={outputStyle(props)}>
+      <Header definition={props.definition} onEdit={props.onEdit} />
+      <div className="output-content">{props.children}</div>
+    </div>
+
+  type LookupOutputProps = {
+    definition: Definition
+    results: QueryResults
+    onEdit?: (def: Definition) => void
+    loading?: boolean
+  }
+
+  const LookupOutput = (props: LookupOutputProps) => {
+    switch (props.definition.kind) {
+      case OutputKind.TableOutput:
+        return <OutputWrapper {...props} outputName="table">
+          <TableOutput {...props} />
+        </OutputWrapper>
+
+      case OutputKind.ChartOutput:
+        return <OutputWrapper {...props} outputName="chart">
+          <ChartOutput {...props} />
+        </OutputWrapper>
+
+      case OutputKind.ValueOutput:
+        return <OutputWrapper {...props} outputName="value">
+          <ValueOutput {...props} />
+        </OutputWrapper>
+
+      case OutputKind.InvalidOutput:
+      default:
+        return null
+    }
+  }
+
+  type HeaderProps = {
+    definition: Definition
+    onEdit?: (def: Definition) => void
+  }
+
+  export const Header = ({ definition, onEdit }: HeaderProps) =>
+    <div className="output-header">
+      <div className="output-label" title={definition.query}>
+        {definition.label}
+      </div>
+      {onEdit ?
+        <div className="output-edit" onClick={() => onEdit(definition)}>
+          [edit]
+        </div> :
+        null}
+    </div>
 }
 
 namespace Reducer {
