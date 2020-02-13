@@ -12,7 +12,7 @@ import {
   Variable,
 } from "./definitions"
 
-import { valuesOf } from "./report_builder/outputs/utils"
+import { scalar, valueOf, valuesOf } from "./report_builder/outputs/utils"
 
 namespace Network {
   export const cachedExecuteQuery = (query: string): Promise<QueryResults> =>
@@ -177,11 +177,11 @@ namespace Editor {
 
 import { ChartRawOutput } from "./report_builder/outputs/chart"
 import { TableRawOutput } from "./report_builder/outputs/table"
-import { ValueRawOutput } from "./report_builder/outputs/value"
+// import { ValueRawOutput } from "./report_builder/outputs/value"
 
 import { ChartOutput } from "./report_builder/outputs/chart"
 import { TableOutput } from "./report_builder/outputs/table"
-import { ValueOutput } from "./report_builder/outputs/value"
+// import { ValueOutput } from "./report_builder/outputs/value"
 
 namespace Outputs {
   export type Definition = {
@@ -305,6 +305,27 @@ namespace Outputs {
           [edit]
         </div> :
         null}
+    </div>
+
+  const DEFAULT_VALUE = "N/A"
+
+  const getValue = (res: QueryResults) =>
+    res.results && res.results[0] ? valueOf(res.results[0][0]) : undefined
+
+  type ValueOutputProps = {
+    results: QueryResults
+  }
+
+  export const ValueOutput = ({ results }: ValueOutputProps) =>
+    <ValueRawOutput raw={getValue(results)} />
+
+  type ValueRawOutputProps = {
+    raw?: scalar
+  }
+
+  export const ValueRawOutput = ({ raw }: ValueRawOutputProps) =>
+    <div className="value-output-wrapper">
+      <span className="value-output-value">{raw || DEFAULT_VALUE}</span>
     </div>
 }
 
