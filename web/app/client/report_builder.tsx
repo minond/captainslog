@@ -13,7 +13,6 @@ import {
 } from "./definitions"
 
 import {
-  NO_RESULTS,
   isBool,
   isFloat64,
   isInt64,
@@ -190,6 +189,9 @@ namespace Editor {
 }
 
 namespace Outputs {
+  const NO_RESULTS = "No Results"
+  const NOT_AVAILABLE = "N/A"
+
   export type Definition = {
     kind: OutputKind
     label: string
@@ -313,8 +315,6 @@ namespace Outputs {
         null}
     </div>
 
-  const DEFAULT_VALUE = "N/A"
-
   const getValue = (res: QueryResults) =>
     res.results && res.results[0] ? valueOf(res.results[0][0]) : undefined
 
@@ -331,7 +331,7 @@ namespace Outputs {
 
   const ValueRawOutput = ({ raw }: ValueRawOutputProps) =>
     <div className="value-output-wrapper">
-      <span className="value-output-value">{raw || DEFAULT_VALUE}</span>
+      <span className="value-output-value">{raw || NOT_AVAILABLE}</span>
     </div>
 
   const classOf = (val: QueryResult): string =>
