@@ -19,6 +19,12 @@ export const valueOf = (val: QueryResult): scalar =>
     isTime(val) ? (val.Time ? new Date(val.Time) : undefined) :
     undefined
 
+export const valuesOf = (res: QueryResults): string[] =>
+  !res.results ? [] : res.results.map((row) => {
+    const val = valueOf(row[0])
+    return val !== undefined ? val.toString() : "undefined"
+  })
+
 export const stringValueOf = (val: QueryResult): scalar => {
   const inner = valueOf(val)
   if (inner === undefined) {

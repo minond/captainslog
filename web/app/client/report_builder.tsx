@@ -2,28 +2,6 @@ import * as React from "react"
 import { useEffect, useReducer, useState } from "react"
 import * as ReactDOM from "react-dom"
 
-const cachedExecuteQuery = (query: string): Promise<QueryResults> =>
-  new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest()
-    xhr.open("POST", "/query/execute")
-    xhr.setRequestHeader("Content-Type", "application/json")
-    xhr.setRequestHeader("Accept", "application/json")
-    xhr.send(JSON.stringify({query}))
-    xhr.onload = () => resolve(JSON.parse(xhr.responseText))
-    xhr.onerror = () => reject(new Error(`query execution request error: ${xhr.responseText}`))
-  })
-
-const loadReports = (): Promise<Report[]> =>
-  new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest()
-    xhr.open("GET", "/reports")
-    xhr.setRequestHeader("Content-Type", "application/json")
-    xhr.setRequestHeader("Accept", "application/json")
-    xhr.send()
-    xhr.onload = () => resolve(JSON.parse(xhr.responseText))
-    xhr.onerror = () => reject(new Error(`request error: ${xhr.responseText}`))
-  })
-
 import {
   Input,
   Output,
@@ -36,353 +14,383 @@ import {
 
 import { IncompleteOutput } from "./report_builder/outputs/incomplete"
 import { Definition, LookupOutput } from "./report_builder/outputs/output"
-import { valueOf } from "./report_builder/outputs/utils"
+import { valuesOf } from "./report_builder/outputs/utils"
 
-const valuesOf = (res: QueryResults): string[] =>
-  !res.results ? [] : res.results.map((row) => {
-    const val = valueOf(row[0])
-    return val !== undefined ? val.toString() : "undefined"
-  })
+namespace Network {
+  export const cachedExecuteQuery = (query: string): Promise<QueryResults> =>
+    new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest()
+      xhr.open("POST", "/query/execute")
+      xhr.setRequestHeader("Content-Type", "application/json")
+      xhr.setRequestHeader("Accept", "application/json")
+      xhr.onload = () => resolve(JSON.parse(xhr.responseText))
+      xhr.onerror = () => reject(new Error(`query execution request error: ${xhr.responseText}`))
+      xhr.send(JSON.stringify({query}))
+    })
 
-const getInputForMergeField = (field: string, inputs: Input[]): Input | null => {
-  for (let i = 0, len = inputs.length; i < len; i++) {
-    if (inputs[i].variable.label === field) {
-      return inputs[i]
-    }
-  }
-  return null
+  export const loadReports = (): Promise<Report[]> =>
+    new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest()
+      xhr.open("GET", "/reports")
+      xhr.setRequestHeader("Content-Type", "application/json")
+      xhr.setRequestHeader("Accept", "application/json")
+      xhr.onload = () => resolve(JSON.parse(xhr.responseText))
+      xhr.onerror = () => reject(new Error(`request error: ${xhr.responseText}`))
+      xhr.send()
+    })
 }
 
-const cleanMergeField = (field: string): string =>
-  field.replace(/^{{/, "").replace(/}}$/, "")
-
-const getMergeFields = (query: string): string[] =>
-  query.match(/{{.+?}}/g) || []
-
-const getCleanMergeFields = (query: string): string[] =>
-  getMergeFields(query).map(cleanMergeField)
-
-const mergeFields = (query: string, inputs: Input[]): string => {
-  const fields = getMergeFields(query)
-  const selected = inputs.reduce((acc, input) => {
-    acc[input.variable.label] = input.value
-    return acc
-  }, {} as { [index: string]: string })
-
-  for (let i = 0, len = fields.length; i < len; i++) {
-    query = query.replace(new RegExp(fields[i], "g"),
-      selected[cleanMergeField(fields[i])])
-  }
-
-  return query
-}
-
-const isReadyToExecute = (query: string, inputs: Input[]): boolean => {
-  const fields = getCleanMergeFields(query)
-  const selected = inputs.reduce((acc, input) => {
-    acc[input.variable.label] = true
-    return acc
-  }, {} as { [index: string]: boolean })
-
-  for (let i = 0, len = fields.length; i < len; i++) {
-    if (!selected[fields[i]]) {
-      return false
-    }
-  }
-
-  return true
-}
-
-type VariableInputsProps = {
-  variables: Variable[]
-  inputs: Input[]
-  onSelect: (val: string, v: Variable) => void
-}
-
-const VariablesForm = ({ variables, inputs, onSelect }: VariableInputsProps) => {
-  const variableFields = variables.map((variable) => {
-    const val = inputs.reduce((def, input) =>
-      input.variable.id === variable.id ? input.value : def, variable.defaultValue)
-
-    return <div title={variable.query} key={variable.label} className="report-variable-field">
-      <label>
-        <span>{variable.label}</span>
-        <select value={val} onChange={(ev) => onSelect(ev.target.value, variable)}>
-          <option key="blank" value="" label="Select a value" />
-          {!variable.options ? null : variable.options.map((option, i) =>
-            <option key={i + option} value={option} label={option}>{option}</option>)}
-        </select>
-      </label>
-    </div>
-  })
-
-  return <div className="report-variable-fields">
-    {variableFields}
-  </div>
-}
-
-type EditFormProps = {
-  output: Output,
-  onSave: (output: Output) => void
-  onCancel: () => void
-}
-
-const EditForm = ({ output, onSave, onCancel }: EditFormProps) => {
-  const [kind, setKind] = useState<OutputKind>(output.kind)
-  const [label, setLabel] = useState<string>(output.label)
-  const [query, setQuery] = useState<string>(output.query)
-  const [width, setWidth] = useState<string>(output.width)
-
-  const updated = { ...output, kind, label, query, width }
-
-  return <div className="report-edit-form">
-    <table>
-      <tbody>
-        <tr>
-          <td>
-            <label className="report-edit-form-label">
-              <span>Label</span>
-              <input value={label} onChange={(ev) => setLabel(ev.target.value)} />
-            </label>
-            <label className="report-edit-form-label">
-              <span>Width</span>
-              <input value={width} onChange={(ev) => setWidth(ev.target.value)} />
-            </label>
-            <label className="report-edit-form-label">
-              <span>Kind</span>
-              <select value={kind} onChange={(ev) => setKind(ev.target.value as OutputKind)}>
-                <option value={OutputKind.TableOutput} label="Table" />
-                <option value={OutputKind.ChartOutput} label="Chart" />
-                <option value={OutputKind.ValueOutput} label="Value" />
-              </select>
-            </label>
-          </td>
-          <td>
-            <label className="report-edit-form-label">
-              <span>Query</span>
-              <textarea value={query} onChange={(ev) => setQuery(ev.target.value)} />
-            </label>
-          </td>
-        </tr>
-        <tr>
-          <td colSpan={2} className="report-edit-form-actions">
-            <button onClick={onCancel}>Cancel</button>
-            <button onClick={() => onSave(updated)}>Save</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-}
-
-type OutputReducerSetOutputsAction = { kind: "setOutputs", outputs: Output[] }
-type OutputReducerSetResultsAction = { kind: "setResults", output: Output, results: QueryResults }
-type OutputReducerUpdateDefinitionAction = { kind: "updateDefinition", output: Output }
-type OutputReducerIsLoadingAction = { kind: "isLoading", output: Output }
-type OutputReducerAction
-  = OutputReducerSetOutputsAction
-  | OutputReducerSetResultsAction
-  | OutputReducerUpdateDefinitionAction
-  | OutputReducerIsLoadingAction
-type OutputReducer = (outputs: Output[], action: OutputReducerAction) => Output[]
-const outputReducer: OutputReducer = (outputs, action) => {
-  switch (action.kind) {
-    case "setOutputs":
-      return action.outputs
-
-    case "setResults": {
-      const { output, results } = action
-      return outputs.map((o) =>
-        o.id !== output.id ? o : { ...o, results, loading: false })
-    }
-
-    case "isLoading": {
-      const { output } = action
-      return outputs.map((o) =>
-        o.id !== output.id ? o : { ...o, loading: true, reload: false })
-    }
-
-    case "updateDefinition": {
-      const { output } = action
-      return outputs.map((o) =>
-        o.id !== output.id ? o : {
-          ...o,
-          loading: false,
-          reload: o.query !== output.query,
-          kind: output.kind,
-          label: output.label,
-          query: output.query,
-          width: output.width,
-        })
-    }
-  }
-}
-
-type InputReducerChangeHandledAction = { kind: "changeHandled", input: Input }
-type InputReducerSetInputAction = { kind: "setInput", input: Input }
-type InputReducerAction = InputReducerChangeHandledAction | InputReducerSetInputAction
-type InputReducer = (inputs: Input[], action: InputReducerAction) => Input[]
-const inputReducer: InputReducer = (inputs, action) => {
-  switch (action.kind) {
-    case "changeHandled":
-      return inputs.map((i) =>
-        i.variable.id !== action.input.variable.id ? i :
-          { ...i, changeHandled: true })
-
-    case "setInput":
-      const newInputs = inputs
-        .filter((i) => i.variable.id !== action.input.variable.id)
-      newInputs.push(action.input)
-      return newInputs
-  }
-}
-
-type VariableReducerSetVariablesAction = { kind: "setVariables", variables: Variable[] }
-type VariableReducerSetOptionsAction = { kind: "setOptions", variable: Variable, options: string[] }
-type VariableReducerAction = VariableReducerSetVariablesAction | VariableReducerSetOptionsAction
-type VariableReducer = (variables: Variable[], action: VariableReducerAction) => Variable[]
-const variableReducer: VariableReducer = (variables, action) => {
-  switch (action.kind) {
-    case "setVariables":
-      return action.variables
-
-    case "setOptions":
-      const { variable, options } = action
-      return variables.map((v) =>
-        v.id !== variable.id ? v : { ...v, options })
-  }
-}
-
-const loadReportSettings = (
-  report: Report,
-  dispatchVariable: (_: VariableReducerAction) => void,
-  dispatchInput: (_: InputReducerAction) => void,
-  dispatchOutput: (_: OutputReducerAction) => void,
-) => {
-  dispatchOutput({
-    kind: "setOutputs",
-    outputs: report.outputs,
-  })
-
-  dispatchVariable({
-    kind: "setVariables",
-    variables: report.variables
-  })
-
-  report.variables.map((variable) =>
-    cachedExecuteQuery(variable.query).then((res) => {
-      const options = valuesOf(res)
-      dispatchVariable({ kind: "setOptions", options, variable })
-
-      if (!!variable.defaultValue && options.indexOf(variable.defaultValue) !== -1) {
-        const value = variable.defaultValue
-        const input = { variable, value }
-        dispatchInput({ kind: "setInput", input })
+namespace Query {
+  export const getInputForMergeField = (field: string, inputs: Input[]): Input | null => {
+    for (let i = 0, len = inputs.length; i < len; i++) {
+      if (inputs[i].variable.label === field) {
+        return inputs[i]
       }
-    }))
-}
-
-const loadReportData = (
-  inputs: Input[],
-  outputs: Output[],
-  dispatchInput: (_: InputReducerAction) => void,
-  dispatchOutput: (_: OutputReducerAction) => void,
-) => {
-  outputs.map((output) => {
-    if (!isReadyToExecute(output.query, inputs)) {
-      return
     }
-
-    const queryInputs = getCleanMergeFields(output.query)
-      .reduce((acc, field) => {
-        const input = getInputForMergeField(field, inputs)
-        if (input) {
-          acc.push(input)
-        }
-        return acc
-      }, [] as Input[])
-
-    const shouldLoad = queryInputs.reduce((doIt, input) =>
-      !input.changeHandled || doIt, false)
-
-    if (!shouldLoad && !output.reload) {
-      return
-    }
-
-    dispatchOutput({ kind: "isLoading", output })
-
-    queryInputs.map((input) =>
-      dispatchInput({ kind: "changeHandled", input }))
-
-    cachedExecuteQuery(mergeFields(output.query, inputs)).then((results) =>
-      dispatchOutput({ kind: "setResults", output, results }))
-  })
-}
-
-type OutputsProps = {
-  outputs: Output[]
-  onEdit: (output: Output) => void
-}
-
-const Outputs = ({ outputs, onEdit: onEditOutput }: OutputsProps) =>
-  <>
-  {outputs.map((output, i) => {
-    const definition = output
-    const results = output.results
-    const loading = output.loading
-    const onEdit = (_: Definition) => onEditOutput(output)
-    const props = { definition, onEdit, loading }
-    const elem = !results ?
-      <IncompleteOutput {...props} /> :
-      <LookupOutput {...props} results={results} />
-
-    return <span key={i} className="report-output">{elem}</span>
-  })}
-  </>
-
-export const ReportView = (props: {}) => {
-  const [report, setReport] = useState<Report | null>(null)
-  const [variables, dispatchVariable] = useReducer(variableReducer, [], (i) => i)
-  const [inputs, dispatchInput] = useReducer(inputReducer, [], (i) => i)
-  const [outputs, dispatchOutput] = useReducer(outputReducer, [], (i) => i)
-
-  const [editing, setEditing] = useState<Output | null>(null)
-
-  const setInput = (value: string, variable: Variable) =>
-    dispatchInput({ kind: "setInput", input: { value, variable } })
-
-  const saveOutputDefinition = (output: Output) => {
-    setEditing(null)
-    dispatchOutput({ kind: "updateDefinition", output })
+    return null
   }
 
-  const editForm = editing &&
-    <EditForm
-      output={editing}
-      onSave={saveOutputDefinition}
-      onCancel={() => setEditing(null)}
-    />
+  const cleanMergeField = (field: string): string =>
+    field.replace(/^{{/, "").replace(/}}$/, "")
 
-  useEffect(() => {
-    if (report) {
-      loadReportSettings(report, dispatchVariable, dispatchInput, dispatchOutput)
-    } else {
-      loadReports().then((reports) => setReport(reports[0] || {
-        label: "",
-        variables: [],
-        outputs: []
-      }))
+  const getMergeFields = (query: string): string[] =>
+    query.match(/{{.+?}}/g) || []
+
+  export const getCleanMergeFields = (query: string): string[] =>
+    getMergeFields(query).map(cleanMergeField)
+
+  export const mergeFields = (query: string, inputs: Input[]): string => {
+    const fields = getMergeFields(query)
+    const selected = inputs.reduce((acc, input) => {
+      acc[input.variable.label] = input.value
+      return acc
+    }, {} as { [index: string]: string })
+
+    for (let i = 0, len = fields.length; i < len; i++) {
+      query = query.replace(new RegExp(fields[i], "g"),
+        selected[cleanMergeField(fields[i])])
     }
-  }, [report])
 
-  loadReportData(inputs, outputs, dispatchInput, dispatchOutput)
+    return query
+  }
 
-  return <>
-    <h1>{report ? report.label : " "}</h1>
-    {editForm}
-    <VariablesForm variables={variables} inputs={inputs} onSelect={setInput} />
-    <Outputs outputs={outputs} onEdit={(output) => setEditing(output)} />
-  </>
+  export const isReadyToExecute = (query: string, inputs: Input[]): boolean => {
+    const fields = getCleanMergeFields(query)
+    const selected = inputs.reduce((acc, input) => {
+      acc[input.variable.label] = true
+      return acc
+    }, {} as { [index: string]: boolean })
+
+    for (let i = 0, len = fields.length; i < len; i++) {
+      if (!selected[fields[i]]) {
+        return false
+      }
+    }
+
+    return true
+  }
 }
 
-ReactDOM.render(<ReportView />, document.querySelector(".content-view"))
+namespace Variables {
+  type InputsProps = {
+    variables: Variable[]
+    inputs: Input[]
+    onSelect: (val: string, v: Variable) => void
+  }
+
+  export const Form = ({ variables, inputs, onSelect }: InputsProps) => {
+    const variableFields = variables.map((variable) => {
+      const val = inputs.reduce((def, input) =>
+        input.variable.id === variable.id ? input.value : def, variable.defaultValue)
+
+      return <div title={variable.query} key={variable.label} className="report-variable-field">
+        <label>
+          <span>{variable.label}</span>
+          <select value={val} onChange={(ev) => onSelect(ev.target.value, variable)}>
+            <option key="blank" value="" label="Select a value" />
+            {!variable.options ? null : variable.options.map((option, i) =>
+              <option key={i + option} value={option} label={option}>{option}</option>)}
+          </select>
+        </label>
+      </div>
+    })
+
+    return <div className="report-variable-fields">
+      {variableFields}
+    </div>
+  }
+}
+
+namespace Editor {
+  type FormProps = {
+    output: Output,
+    onSave: (output: Output) => void
+    onCancel: () => void
+  }
+
+  export const Form = ({ output, onSave, onCancel }: FormProps) => {
+    const [kind, setKind] = useState<OutputKind>(output.kind)
+    const [label, setLabel] = useState<string>(output.label)
+    const [query, setQuery] = useState<string>(output.query)
+    const [width, setWidth] = useState<string>(output.width)
+
+    const updated = { ...output, kind, label, query, width }
+
+    return <div className="report-edit-form">
+      <table>
+        <tbody>
+          <tr>
+            <td>
+              <label className="report-edit-form-label">
+                <span>Label</span>
+                <input value={label} onChange={(ev) => setLabel(ev.target.value)} />
+              </label>
+              <label className="report-edit-form-label">
+                <span>Width</span>
+                <input value={width} onChange={(ev) => setWidth(ev.target.value)} />
+              </label>
+              <label className="report-edit-form-label">
+                <span>Kind</span>
+                <select value={kind} onChange={(ev) => setKind(ev.target.value as OutputKind)}>
+                  <option value={OutputKind.TableOutput} label="Table" />
+                  <option value={OutputKind.ChartOutput} label="Chart" />
+                  <option value={OutputKind.ValueOutput} label="Value" />
+                </select>
+              </label>
+            </td>
+            <td>
+              <label className="report-edit-form-label">
+                <span>Query</span>
+                <textarea value={query} onChange={(ev) => setQuery(ev.target.value)} />
+              </label>
+            </td>
+          </tr>
+          <tr>
+            <td colSpan={2} className="report-edit-form-actions">
+              <button onClick={onCancel}>Cancel</button>
+              <button onClick={() => onSave(updated)}>Save</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  }
+}
+
+namespace Outputs {
+  type ViewProps = {
+    outputs: Output[]
+    onEdit: (output: Output) => void
+  }
+
+  export const View = ({ outputs, onEdit: onEditOutput }: ViewProps) =>
+    <>
+    {outputs.map((output, i) => {
+      const definition = output
+      const results = output.results
+      const loading = output.loading
+      const onEdit = (_: Definition) => onEditOutput(output)
+      const props = { definition, onEdit, loading }
+      const elem = !results ?
+        <IncompleteOutput {...props} /> :
+        <LookupOutput {...props} results={results} />
+
+      return <span key={i} className="report-output">{elem}</span>
+    })}
+    </>
+}
+
+namespace Reducer {
+  type OutputReducerSetOutputsAction = { kind: "setOutputs", outputs: Output[] }
+  type OutputReducerSetResultsAction = { kind: "setResults", output: Output, results: QueryResults }
+  type OutputReducerUpdateDefinitionAction = { kind: "updateDefinition", output: Output }
+  type OutputReducerIsLoadingAction = { kind: "isLoading", output: Output }
+  export type OutputReducerAction
+    = OutputReducerSetOutputsAction
+    | OutputReducerSetResultsAction
+    | OutputReducerUpdateDefinitionAction
+    | OutputReducerIsLoadingAction
+  export type OutputReducer = (outputs: Output[], action: OutputReducerAction) => Output[]
+  export const outputReducer: OutputReducer = (outputs, action) => {
+    switch (action.kind) {
+      case "setOutputs":
+        return action.outputs
+
+      case "setResults": {
+        const { output, results } = action
+        return outputs.map((o) =>
+          o.id !== output.id ? o : { ...o, results, loading: false })
+      }
+
+      case "isLoading": {
+        const { output } = action
+        return outputs.map((o) =>
+          o.id !== output.id ? o : { ...o, loading: true, reload: false })
+      }
+
+      case "updateDefinition": {
+        const { output } = action
+        return outputs.map((o) =>
+          o.id !== output.id ? o : {
+            ...o,
+            loading: false,
+            reload: o.query !== output.query,
+            kind: output.kind,
+            label: output.label,
+            query: output.query,
+            width: output.width,
+          })
+      }
+    }
+  }
+
+  type InputReducerChangeHandledAction = { kind: "changeHandled", input: Input }
+  type InputReducerSetInputAction = { kind: "setInput", input: Input }
+  export type InputReducerAction = InputReducerChangeHandledAction | InputReducerSetInputAction
+  export type InputReducer = (inputs: Input[], action: InputReducerAction) => Input[]
+  export const inputReducer: InputReducer = (inputs, action) => {
+    switch (action.kind) {
+      case "changeHandled":
+        return inputs.map((i) =>
+          i.variable.id !== action.input.variable.id ? i :
+            { ...i, changeHandled: true })
+
+      case "setInput":
+        const newInputs = inputs
+          .filter((i) => i.variable.id !== action.input.variable.id)
+        newInputs.push(action.input)
+        return newInputs
+    }
+  }
+
+  type VariableReducerSetVariablesAction = { kind: "setVariables", variables: Variable[] }
+  type VariableReducerSetOptionsAction = { kind: "setOptions", variable: Variable, options: string[] }
+  export type VariableReducerAction = VariableReducerSetVariablesAction | VariableReducerSetOptionsAction
+  export type VariableReducer = (variables: Variable[], action: VariableReducerAction) => Variable[]
+  export const variableReducer: VariableReducer = (variables, action) => {
+    switch (action.kind) {
+      case "setVariables":
+        return action.variables
+
+      case "setOptions":
+        const { variable, options } = action
+        return variables.map((v) =>
+          v.id !== variable.id ? v : { ...v, options })
+    }
+  }
+}
+
+namespace Report {
+  const loadReportSettings = (
+    report: Report,
+    dispatchVariable: (_: Reducer.VariableReducerAction) => void,
+    dispatchInput: (_: Reducer.InputReducerAction) => void,
+    dispatchOutput: (_: Reducer.OutputReducerAction) => void,
+  ) => {
+    dispatchOutput({
+      kind: "setOutputs",
+      outputs: report.outputs,
+    })
+
+    dispatchVariable({
+      kind: "setVariables",
+      variables: report.variables
+    })
+
+    report.variables.map((variable) =>
+      Network.cachedExecuteQuery(variable.query).then((res) => {
+        const options = valuesOf(res)
+        dispatchVariable({ kind: "setOptions", options, variable })
+
+        if (!!variable.defaultValue && options.indexOf(variable.defaultValue) !== -1) {
+          const value = variable.defaultValue
+          const input = { variable, value }
+          dispatchInput({ kind: "setInput", input })
+        }
+      }))
+  }
+
+  const loadReportData = (
+    inputs: Input[],
+    outputs: Output[],
+    dispatchInput: (_: Reducer.InputReducerAction) => void,
+    dispatchOutput: (_: Reducer.OutputReducerAction) => void,
+  ) => {
+    outputs.map((output) => {
+      if (!Query.isReadyToExecute(output.query, inputs)) {
+        return
+      }
+
+      const queryInputs = Query.getCleanMergeFields(output.query)
+        .reduce((acc, field) => {
+          const input = Query.getInputForMergeField(field, inputs)
+          if (input) {
+            acc.push(input)
+          }
+          return acc
+        }, [] as Input[])
+
+      const shouldLoad = queryInputs.reduce((doIt, input) =>
+        !input.changeHandled || doIt, false)
+
+      if (!shouldLoad && !output.reload) {
+        return
+      }
+
+      dispatchOutput({ kind: "isLoading", output })
+
+      queryInputs.map((input) =>
+        dispatchInput({ kind: "changeHandled", input }))
+
+      Network.cachedExecuteQuery(Query.mergeFields(output.query, inputs)).then((results) =>
+        dispatchOutput({ kind: "setResults", output, results }))
+    })
+  }
+
+  export const View = (props: {}) => {
+    const [report, setReport] = useState<Report | null>(null)
+    const [variables, dispatchVariable] = useReducer(Reducer.variableReducer, [], (i) => i)
+    const [inputs, dispatchInput] = useReducer(Reducer.inputReducer, [], (i) => i)
+    const [outputs, dispatchOutput] = useReducer(Reducer.outputReducer, [], (i) => i)
+
+    const [editing, setEditing] = useState<Output | null>(null)
+
+    const setInput = (value: string, variable: Variable) =>
+      dispatchInput({ kind: "setInput", input: { value, variable } })
+
+    const saveOutputDefinition = (output: Output) => {
+      setEditing(null)
+      dispatchOutput({ kind: "updateDefinition", output })
+    }
+
+    const editForm = editing &&
+      <Editor.Form
+        output={editing}
+        onSave={saveOutputDefinition}
+        onCancel={() => setEditing(null)}
+      />
+
+    useEffect(() => {
+      if (report) {
+        loadReportSettings(report, dispatchVariable, dispatchInput, dispatchOutput)
+      } else {
+        Network.loadReports().then((reports) => setReport(reports[0] || {
+          label: "",
+          variables: [],
+          outputs: []
+        }))
+      }
+    }, [report])
+
+    loadReportData(inputs, outputs, dispatchInput, dispatchOutput)
+
+    return <>
+      <h1>{report ? report.label : " "}</h1>
+      {editForm}
+      <Variables.Form variables={variables} inputs={inputs} onSelect={setInput} />
+      <Outputs.View outputs={outputs} onEdit={(output) => setEditing(output)} />
+    </>
+  }
+}
+
+ReactDOM.render(<Report.View />, document.querySelector(".content-view"))
