@@ -12,20 +12,77 @@ import {
   Variable,
 } from "./definitions"
 
-import {
-  isBool,
-  isFloat64,
-  isInt64,
-  isNumber,
-  isString,
-  isTime,
-  numberOf,
-  scalar,
-  stringOf,
-  stringValueOf,
-  valueOf,
-  valuesOf,
-} from "./report_builder/outputs/utils"
+namespace Result {
+  export const isBool = (val: QueryResult): boolean => "Bool" in val
+  export const isTime = (val: QueryResult): boolean => "Time" in val
+  export const isString = (val: QueryResult): boolean => "String" in val
+  export const isFloat64 = (val: QueryResult): boolean => "Float64" in val
+  export const isInt64 = (val: QueryResult): boolean => "Int64" in val
+  export const isNumber = (val: QueryResult): boolean => isFloat64(val) || isInt64(val)
+
+  export type scalar = string | number | boolean | Date | undefined
+  export const valueOf = (val: QueryResult): scalar =>
+    !val.Valid ? undefined :
+      isString(val) ? val.String :
+      isFloat64(val) ? val.Float64 :
+      isInt64(val) ? val.Int64 :
+      isBool(val) ? val.Bool :
+      isTime(val) ? (val.Time ? new Date(val.Time) : undefined) :
+      undefined
+
+  export const valuesOf = (res: QueryResults): string[] =>
+    !res.results ? [] : res.results.map((row) => {
+      const val = valueOf(row[0])
+      return val !== undefined ? val.toString() : "undefined"
+    })
+
+  export const stringValueOf = (val: QueryResult): scalar => {
+    const inner = valueOf(val)
+    if (inner === undefined) {
+      return ""
+    } else if (inner instanceof Date) {
+      return inner.toDateString()
+    }
+
+    return inner.toString()
+  }
+
+  export const stringOf = (val: QueryResult): string => {
+    if (!val.Valid) {
+      return ""
+    } else if (isTime(val) && val.Time) {
+      return (new Date(val.Time)).toDateString()
+    }
+
+    return (valueOf(val) || "").toString()
+  }
+
+  export const numberOf = (val: QueryResult): number => {
+    if (!val.Valid) {
+      return 0
+    } else if (isInt64(val) && val.Int64 !== undefined) {
+      return val.Int64
+    } else if (isFloat64(val) && val.Float64 !== undefined) {
+      return val.Float64
+    } else if (isTime(val) && val.Time !== undefined) {
+      return new Date(val.Time).valueOf()
+    } else if (isBool(val) && val.Bool !== undefined) {
+      return val.Bool ? 1 : 0
+    } else if (isString(val) && val.String !== undefined) {
+      return parseFloat(val.String)
+    }
+
+    return 0
+  }
+
+  type dict = { [index: string]: scalar }
+  export const flattenResultsHash = (results: QueryResults): dict[] =>
+    !results.results ? [] : results.results.map((row) =>
+      results.columns.reduce((acc, col, i) => {
+        acc[col] = valueOf(row[i])
+        return acc
+      }, {} as dict))
+}
 
 namespace Network {
   export const cachedExecuteQuery = (query: string): Promise<QueryResults> =>
@@ -316,7 +373,7 @@ namespace Outputs {
     </div>
 
   const getValue = (res: QueryResults) =>
-    res.results && res.results[0] ? valueOf(res.results[0][0]) : undefined
+    res.results && res.results[0] ? Result.valueOf(res.results[0][0]) : undefined
 
   type ValueOutputProps = {
     results: QueryResults
@@ -326,7 +383,7 @@ namespace Outputs {
     <ValueRawOutput raw={getValue(results)} />
 
   type ValueRawOutputProps = {
-    raw?: scalar
+    raw?: Result.scalar
   }
 
   const ValueRawOutput = ({ raw }: ValueRawOutputProps) =>
@@ -336,10 +393,10 @@ namespace Outputs {
 
   const classOf = (val: QueryResult): string =>
     !val.Valid ? "table-output-type-null" :
-      isString(val) ? "table-output-type-string" :
-      isNumber(val) ? "table-output-type-number" :
-      isBool(val) ? "table-output-type-boolean" :
-      isTime(val) ? "table-output-type-timestamp" :
+      Result.isString(val) ? "table-output-type-string" :
+      Result.isNumber(val) ? "table-output-type-number" :
+      Result.isBool(val) ? "table-output-type-boolean" :
+      Result.isTime(val) ? "table-output-type-timestamp" :
       "table-output-type-unknown"
 
   type TableOutputProps = {
@@ -366,7 +423,7 @@ namespace Outputs {
           {results.results && results.results.map((row, ridx) =>
             <tr key={ridx}>
               {row.map((val, vidx) =>
-                <td key={vidx} className={classOf(val)}>{stringValueOf(val)}</td>)}
+                <td key={vidx} className={classOf(val)}>{Result.stringValueOf(val)}</td>)}
             </tr>)}
         </tbody>
       </table> :
@@ -411,10 +468,10 @@ namespace Outputs {
       return {
         id: Math.random().toString(),
         x: {
-          label: stringOf(cell[0]),
-          value: numberOf(cell[0]),
+          label: Result.stringOf(cell[0]),
+          value: Result.numberOf(cell[0]),
         },
-        y: numberOf(cell[1]),
+        y: Result.numberOf(cell[1]),
       }
     }).sort((a, b) => {
       if (a.x.value > b.x.value) {
@@ -631,7 +688,7 @@ namespace Report {
 
     report.variables.map((variable) =>
       Network.cachedExecuteQuery(variable.query).then((res) => {
-        const options = valuesOf(res)
+        const options = Result.valuesOf(res)
         dispatchVariable({ kind: "setOptions", options, variable })
 
         if (!!variable.defaultValue && options.indexOf(variable.defaultValue) !== -1) {
