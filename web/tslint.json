@@ -103,7 +103,7 @@
     "no-internal-module": true,
     "no-invalid-this": false,
     "no-misused-new": true,
-    "no-namespace": true,
+    "no-namespace": false,
     "no-parameter-properties": false,
     "no-reference": true,
     "no-reference-import": true,
