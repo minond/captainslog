@@ -12,7 +12,6 @@ import {
   Variable,
 } from "./definitions"
 
-import { IncompleteOutput } from "./report_builder/outputs/incomplete"
 import { Definition, LookupOutput } from "./report_builder/outputs/output"
 import { valuesOf } from "./report_builder/outputs/utils"
 
@@ -177,6 +176,12 @@ namespace Editor {
   }
 }
 
+import { OutputWrapper } from "./report_builder/outputs/output"
+
+import { ChartRawOutput } from "./report_builder/outputs/chart"
+import { TableRawOutput } from "./report_builder/outputs/table"
+import { ValueRawOutput } from "./report_builder/outputs/value"
+
 namespace Outputs {
   type ViewProps = {
     outputs: Output[]
@@ -198,6 +203,35 @@ namespace Outputs {
       return <span key={i} className="report-output">{elem}</span>
     })}
     </>
+
+  type IncompleteOutputProps = {
+    definition: Definition
+    loading?: boolean
+    onEdit?: (def: Definition) => void
+  }
+
+  const IncompleteOutput = (props: IncompleteOutputProps) => {
+    switch (props.definition.kind) {
+      case OutputKind.TableOutput:
+        return <OutputWrapper {...props} outputName="table">
+          <TableRawOutput />
+        </OutputWrapper>
+
+      case OutputKind.ChartOutput:
+        return <OutputWrapper {...props} outputName="chart">
+          <ChartRawOutput />
+        </OutputWrapper>
+
+      case OutputKind.ValueOutput:
+        return <OutputWrapper {...props} outputName="value">
+          <ValueRawOutput />
+        </OutputWrapper>
+
+      case OutputKind.InvalidOutput:
+      default:
+        return null
+    }
+  }
 }
 
 namespace Reducer {
