@@ -676,3 +676,19 @@ header .books-nav {
 .chart-output-wrapper {
   padding: 10px;
 }
+
+.chart-container {
+  height: 150px;
+  width: 100%;
+  position: relative;
+}
+
+.chart-row {
+  position: absolute;
+  background: #98a8ff;
+  display: inline-block;
+  border-style: solid;
+  bottom: 0;
+  border-color: #5c5c5c;
+  box-sizing: content-box;
+}

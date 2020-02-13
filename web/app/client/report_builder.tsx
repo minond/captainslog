@@ -367,7 +367,7 @@ export const ReportView = (props: {}) => {
     if (report) {
       loadReportSettings(report, dispatchVariable, dispatchInput, dispatchOutput)
     } else {
-      loadReports().then(reports => setReport(reports[0] || {
+      loadReports().then((reports) => setReport(reports[0] || {
         label: "",
         variables: [],
         outputs: []

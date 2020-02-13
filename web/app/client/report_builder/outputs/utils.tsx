@@ -26,7 +26,36 @@ export const stringValueOf = (val: QueryResult): scalar => {
   } else if (inner instanceof Date) {
     return inner.toDateString()
   }
+
   return inner.toString()
+}
+
+export const stringOf = (val: QueryResult): string => {
+  if (!val.Valid) {
+    return ""
+  } else if (isTime(val) && val.Time) {
+    return (new Date(val.Time)).toDateString()
+  }
+
+  return (valueOf(val) || "").toString()
+}
+
+export const numberOf = (val: QueryResult): number => {
+  if (!val.Valid) {
+    return 0
+  } else if (isInt64(val) && val.Int64 !== undefined) {
+    return val.Int64
+  } else if (isFloat64(val) && val.Float64 !== undefined) {
+    return val.Float64
+  } else if (isTime(val) && val.Time !== undefined) {
+    return new Date(val.Time).valueOf()
+  } else if (isBool(val) && val.Bool !== undefined) {
+    return val.Bool ? 1 : 0
+  } else if (isString(val) && val.String !== undefined) {
+    return parseFloat(val.String)
+  }
+
+  return 0
 }
 
 type dict = { [index: string]: scalar }
