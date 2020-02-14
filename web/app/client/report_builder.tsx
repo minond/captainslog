@@ -29,7 +29,8 @@ namespace Definition {
     label: string
     kind: OutputKind
     query: string
-    width: string
+    width?: string
+    height?: string
     reload?: boolean
     loading?: boolean
     results?: QueryResults
@@ -244,9 +245,10 @@ namespace Editor {
     const [kind, setKind] = useState<Definition.OutputKind>(output.kind)
     const [label, setLabel] = useState<string>(output.label)
     const [query, setQuery] = useState<string>(output.query)
-    const [width, setWidth] = useState<string>(output.width)
+    const [width, setWidth] = useState<string>(output.width || "")
+    const [height, setHeight] = useState<string>(output.height || "")
 
-    const updated = { ...output, kind, label, query, width }
+    const updated = { ...output, kind, label, query, width, height }
 
     return <div className="report-edit-form">
       <table>
@@ -256,6 +258,10 @@ namespace Editor {
               <label className="report-edit-form-label">
                 <span>Label</span>
                 <input value={label} onChange={(ev) => setLabel(ev.target.value)} />
+              </label>
+              <label className="report-edit-form-label">
+                <span>Height</span>
+                <input value={height} onChange={(ev) => setHeight(ev.target.value)} />
               </label>
               <label className="report-edit-form-label">
                 <span>Width</span>
@@ -297,7 +303,8 @@ namespace Outputs {
     kind: Definition.OutputKind
     label: string
     query: string
-    width: string
+    width?: string
+    height?: string
   }
 
   type ViewProps = {
@@ -360,8 +367,21 @@ namespace Outputs {
   const outputClassName = (props: { loading?: boolean, outputName: string }): string =>
     `output ${props.outputName}-output ${props.loading ? "output-loading" : ""}`
 
-  const outputStyle = ({ definition }: { definition: Definition }) =>
-    ({width: definition ? definition.width : "100%"})
+  const outputStyle = ({ definition }: { definition: Definition }) => {
+    const styles = {} as { [index: string]: string }
+
+    if (definition.width) {
+      styles.width = definition.width
+    } else {
+      styles.width = "100%"
+    }
+
+    if (definition.height) {
+      styles.height = definition.height
+    }
+
+    return styles
+  }
 
   const OutputWrapper: FunctionComponent<OutputWrapperProps> = (props) =>
     <div className={outputClassName(props)} style={outputStyle(props)}>
@@ -672,6 +692,7 @@ namespace Reducer {
             label: output.label,
             query: output.query,
             width: output.width,
+            height: output.height,
           })
       }
     }
