@@ -499,11 +499,22 @@ header .books-nav {
   margin-bottom: 30px;
 }
 
-.report-variable-fields label span {
-  padding-right: 5px;
+.report-variable-field {
+  display: inline-block;
+  border: 1px solid #f2f2f2e6;
+  padding: 0 15px 15px 15px;
+  margin-right: 10px;
 }
 
-.report-variable-fields label select {
+.report-variable-field label span {
+  display: block;
+  text-align: center;
+  font-family: baskerville, serif;
+  font-weight: 500;
+  padding: 10px 0 10px 0;
+}
+
+.report-variable-field label select {
   position: relative;
   top: -1px;
 }
