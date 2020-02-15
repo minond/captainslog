@@ -698,21 +698,32 @@ header .books-nav {
 
 .chart-y-label {
   position: absolute;
-  left: -30px;
+  left: 0px;
   display: inline-block;
-  width: 25px;
+  width: 100%;
   text-align: right;
   font-size: .25rem;
+  z-index: 2;
+  border-bottom: 1px dashed #494949;
+}
+
+.chart-y-label-label {
+  position: absolute;
+  left: -29px;
+  top: -5px;
+  display: block;
+  text-align: right;
+  width: 25px;
 }
 
 .chart-y-label-max {
-  bottom: 80%;
+  top: 6px;
 }
 
 .chart-y-label-med {
-  bottom: 40%;
+  top: calc(50% + 2px);
 }
 
 .chart-y-label-min {
-  bottom: 0%;
+  bottom: -1px;
 }

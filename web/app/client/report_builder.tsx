@@ -483,10 +483,14 @@ namespace Outputs {
       <div className="output-no-data">{NO_RESULTS}</div>
 
   const CHART_ROW_HORIZONTAL_PADDING = 10 // Should always match the left/right margin of the .chart-rows element.
+  const CHART_ROW_VERTICAL_PADDING = 10
+  const CHART_ROW_VALUE_BOTTOM_PADDING = 0
+
   const TIGHT_FIT_CONTAINER_WIDTH_MAX = 400 // A container that is this wide or less is considered to be "small".
   const TIGHT_FIT_DATUM_LENGTH_MIN = 50 // There must be at least this many items before the "tight fit" is used.
   const TIGHT_FIT_BORDER_WIDTH = 1
   const TIGHT_FIT_ITEM_PADDING = 4
+
   const CONFY_FIT_BORDER_WIDTH = 2
   const CONFY_FIT_ITEM_PADDING = 6
 
@@ -539,16 +543,13 @@ namespace Outputs {
       return 0
     })
 
-    const X_PADDING = 10
-    const Y_PADDING = X_PADDING
-
     const xs = datum.map((row) => row.x.value)
     const ys = datum.map((row) => row.y)
 
-    const minX = Math.round(Math.min.apply(Math, xs) - X_PADDING)
-    const maxX = Math.round(Math.max.apply(Math, xs) + X_PADDING)
-    const minY = Math.round(Math.min.apply(Math, ys) - Y_PADDING)
-    const maxY = Math.round(Math.max.apply(Math, ys) + Y_PADDING)
+    const minX = Math.round(Math.min.apply(Math, xs))
+    const maxX = Math.round(Math.max.apply(Math, xs))
+    const minY = Math.round(Math.min.apply(Math, ys) - CHART_ROW_VALUE_BOTTOM_PADDING)
+    const maxY = Math.round(Math.max.apply(Math, ys))
 
     const medX = Math.round((maxX + minX) / 2)
     const medY = Math.round((maxY + minY) / 2)
@@ -559,8 +560,14 @@ namespace Outputs {
     return { datum, diffX, diffY, minX, medX, maxX, minY, medY, maxY }
   }
 
-  const buildChartRow = (containerWidth: number, index: number, row: ChartRow, chartData: ChartData) => {
+  const buildChartLabel = (loc: string, value: string | number) =>
+    <div className={`chart-y-label chart-y-label-${loc}`}>
+      <span className="chart-y-label-label">{value}</span>
+    </div>
+
+  const buildChartRow = (containerWidth: number, containerHeight: number, index: number, row: ChartRow, chartData: ChartData) => {
     let width
+    let height
     let left
     let borderWidth
     let itemPadding
@@ -586,9 +593,21 @@ namespace Outputs {
       left = index * maxWidth
     }
 
-    const height = row.y
+    if (row.y === chartData.maxY) {
+      height = containerHeight
+    } else if (row.y === chartData.minY) {
+      height = CHART_ROW_VALUE_BOTTOM_PADDING
+    } else {
+      height = (row.y - chartData.minY) / (chartData.maxY - chartData.minY) * containerHeight
+    }
+
+    if (isNaN(height) || !isFinite(height)) {
+      height = containerHeight
+    }
+
     const style = { height, width, left, borderWidth }
     const title = `${row.x.label}: ${row.y}`
+
     return <div
       className="chart-row"
       key={row.id}
@@ -611,14 +630,16 @@ namespace Outputs {
   const ChartRawOutput = ({ results }: ChartRawOutputProps) => {
     const chartContainerRef = useRef(null)
     const [width, setWidth] = useState(0)
+    const [height, setHeight] = useState(0)
 
     const setWidthUsingContainer = () => {
       if (chartContainerRef.current) {
         // XXX need to do `as any` since the compiler is complaining about a
         // possible null value, but why?
         const container = chartContainerRef.current as any
-        const { width: containerWidth } = container.getBoundingClientRect()
+        const { width: containerWidth, height: containerHeight } = container.getBoundingClientRect()
         setWidth(containerWidth - (CHART_ROW_HORIZONTAL_PADDING * 2))
+        setHeight(containerHeight - CHART_ROW_VERTICAL_PADDING)
       }
     }
 
@@ -642,11 +663,11 @@ namespace Outputs {
 
     return <div className="chart-output-wrapper">
       <div className="chart-container" ref={chartContainerRef}>
-        <div className="chart-y-label chart-y-label-max">{chartData.maxY}</div>
-        <div className="chart-y-label chart-y-label-med">{chartData.medY}</div>
-        <div className="chart-y-label chart-y-label-min">{chartData.minY}</div>
+        {buildChartLabel("max", chartData.maxY)}
+        {chartData.maxY !== chartData.medY ? buildChartLabel("med", chartData.medY) : null}
+        {chartData.maxY !== chartData.minY ? buildChartLabel("min", chartData.minY) : null}
         <div className="chart-rows">
-          {chartData.datum.map((row, i) => buildChartRow(width, i, row, chartData))}
+          {chartData.datum.map((row, i) => buildChartRow(width, height, i, row, chartData))}
         </div>
       </div>
     </div>
