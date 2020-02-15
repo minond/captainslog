@@ -2,7 +2,7 @@ import * as React from "react"
 import { FunctionComponent, useEffect, useReducer, useState, useRef } from "react"
 import * as ReactDOM from "react-dom"
 
-namespace Definition {
+namespace Definitions {
   export type Report = {
     label: string
     outputs: Output[]
@@ -58,15 +58,15 @@ namespace Definition {
 }
 
 namespace Result {
-  export const isBool = (val: Definition.QueryResult): boolean => "Bool" in val
-  export const isTime = (val: Definition.QueryResult): boolean => "Time" in val
-  export const isString = (val: Definition.QueryResult): boolean => "String" in val
-  export const isFloat64 = (val: Definition.QueryResult): boolean => "Float64" in val
-  export const isInt64 = (val: Definition.QueryResult): boolean => "Int64" in val
-  export const isNumber = (val: Definition.QueryResult): boolean => isFloat64(val) || isInt64(val)
+  export const isBool = (val: Definitions.QueryResult): boolean => "Bool" in val
+  export const isTime = (val: Definitions.QueryResult): boolean => "Time" in val
+  export const isString = (val: Definitions.QueryResult): boolean => "String" in val
+  export const isFloat64 = (val: Definitions.QueryResult): boolean => "Float64" in val
+  export const isInt64 = (val: Definitions.QueryResult): boolean => "Int64" in val
+  export const isNumber = (val: Definitions.QueryResult): boolean => isFloat64(val) || isInt64(val)
 
   export type scalar = string | number | boolean | Date | undefined
-  export const valueOf = (val: Definition.QueryResult): scalar =>
+  export const valueOf = (val: Definitions.QueryResult): scalar =>
     !val.Valid ? undefined :
       isString(val) ? val.String :
       isFloat64(val) ? val.Float64 :
@@ -75,13 +75,13 @@ namespace Result {
       isTime(val) ? (val.Time ? new Date(val.Time) : undefined) :
       undefined
 
-  export const valuesOf = (res: Definition.QueryResults): string[] =>
+  export const valuesOf = (res: Definitions.QueryResults): string[] =>
     !res.results ? [] : res.results.map((row) => {
       const val = valueOf(row[0])
       return val !== undefined ? val.toString() : "undefined"
     })
 
-  export const stringValueOf = (val: Definition.QueryResult): scalar => {
+  export const stringValueOf = (val: Definitions.QueryResult): scalar => {
     const inner = valueOf(val)
     if (inner === undefined) {
       return ""
@@ -92,7 +92,7 @@ namespace Result {
     return inner.toString()
   }
 
-  export const stringOf = (val: Definition.QueryResult): string => {
+  export const stringOf = (val: Definitions.QueryResult): string => {
     if (!val.Valid) {
       return ""
     } else if (isTime(val) && val.Time) {
@@ -102,7 +102,7 @@ namespace Result {
     return (valueOf(val) || "").toString()
   }
 
-  export const numberOf = (val: Definition.QueryResult): number => {
+  export const numberOf = (val: Definitions.QueryResult): number => {
     if (!val.Valid) {
       return 0
     } else if (isInt64(val) && val.Int64 !== undefined) {
@@ -121,7 +121,7 @@ namespace Result {
   }
 
   type dict = { [index: string]: scalar }
-  export const flattenResultsHash = (results: Definition.QueryResults): dict[] =>
+  export const flattenResultsHash = (results: Definitions.QueryResults): dict[] =>
     !results.results ? [] : results.results.map((row) =>
       results.columns.reduce((acc, col, i) => {
         acc[col] = valueOf(row[i])
@@ -130,7 +130,7 @@ namespace Result {
 }
 
 namespace Network {
-  export const cachedExecuteQuery = (query: string): Promise<Definition.QueryResults> =>
+  export const cachedExecuteQuery = (query: string): Promise<Definitions.QueryResults> =>
     new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest()
       xhr.open("POST", "/query/execute")
@@ -141,7 +141,7 @@ namespace Network {
       xhr.send(JSON.stringify({query}))
     })
 
-  export const loadReports = (): Promise<Definition.Report[]> =>
+  export const loadReports = (): Promise<Definitions.Report[]> =>
     new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest()
       xhr.open("GET", "/reports")
@@ -154,7 +154,7 @@ namespace Network {
 }
 
 namespace Query {
-  export const getInputForMergeField = (field: string, inputs: Definition.Input[]): Definition.Input | null => {
+  export const getInputForMergeField = (field: string, inputs: Definitions.Input[]): Definitions.Input | null => {
     for (let i = 0, len = inputs.length; i < len; i++) {
       if (inputs[i].variable.label === field) {
         return inputs[i]
@@ -172,7 +172,7 @@ namespace Query {
   export const getCleanMergeFields = (query: string): string[] =>
     getMergeFields(query).map(cleanMergeField)
 
-  export const mergeFields = (query: string, inputs: Definition.Input[]): string => {
+  export const mergeFields = (query: string, inputs: Definitions.Input[]): string => {
     const fields = getMergeFields(query)
     const selected = inputs.reduce((acc, input) => {
       acc[input.variable.label] = input.value
@@ -187,7 +187,7 @@ namespace Query {
     return query
   }
 
-  export const isReadyToExecute = (query: string, inputs: Definition.Input[]): boolean => {
+  export const isReadyToExecute = (query: string, inputs: Definitions.Input[]): boolean => {
     const fields = getCleanMergeFields(query)
     const selected = inputs.reduce((acc, input) => {
       acc[input.variable.label] = true
@@ -206,9 +206,9 @@ namespace Query {
 
 namespace Variables {
   type InputsProps = {
-    variables: Definition.Variable[]
-    inputs: Definition.Input[]
-    onSelect: (val: string, v: Definition.Variable) => void
+    variables: Definitions.Variable[]
+    inputs: Definitions.Input[]
+    onSelect: (val: string, v: Definitions.Variable) => void
   }
 
   export const Form = ({ variables, inputs, onSelect }: InputsProps) => {
@@ -236,13 +236,13 @@ namespace Variables {
 
 namespace Editor {
   type FormProps = {
-    output: Definition.Output,
-    onSave: (output: Definition.Output) => void
+    output: Definitions.Output,
+    onSave: (output: Definitions.Output) => void
     onCancel: () => void
   }
 
   export const Form = ({ output, onSave, onCancel }: FormProps) => {
-    const [kind, setKind] = useState<Definition.OutputKind>(output.kind)
+    const [kind, setKind] = useState<Definitions.OutputKind>(output.kind)
     const [label, setLabel] = useState<string>(output.label)
     const [query, setQuery] = useState<string>(output.query)
     const [width, setWidth] = useState<string>(output.width || "")
@@ -253,10 +253,10 @@ namespace Editor {
     return <div className="report-edit-form">
       <label className="report-edit-form-label">
         <span>Kind</span>
-        <select value={kind} onChange={(ev) => setKind(ev.target.value as Definition.OutputKind)}>
-          <option value={Definition.OutputKind.TableOutput} label="Table" />
-          <option value={Definition.OutputKind.ChartOutput} label="Chart" />
-          <option value={Definition.OutputKind.ValueOutput} label="Value" />
+        <select value={kind} onChange={(ev) => setKind(ev.target.value as Definitions.OutputKind)}>
+          <option value={Definitions.OutputKind.TableOutput} label="Table" />
+          <option value={Definitions.OutputKind.ChartOutput} label="Chart" />
+          <option value={Definitions.OutputKind.ValueOutput} label="Value" />
         </select>
       </label>
       <label className="report-edit-form-label">
@@ -289,7 +289,7 @@ namespace Outputs {
   const NOT_AVAILABLE = "N/A"
 
   export type Definition = {
-    kind: Definition.OutputKind
+    kind: Definitions.OutputKind
     label: string
     query: string
     width?: string
@@ -297,8 +297,8 @@ namespace Outputs {
   }
 
   type ViewProps = {
-    outputs: Definition.Output[]
-    onEdit: (output: Definition.Output) => void
+    outputs: Definitions.Output[]
+    onEdit: (output: Definitions.Output) => void
   }
 
   export const View = ({ outputs, onEdit: onEditOutput }: ViewProps) =>
@@ -325,22 +325,22 @@ namespace Outputs {
 
   const IncompleteOutput = (props: IncompleteOutputProps) => {
     switch (props.definition.kind) {
-      case Definition.OutputKind.TableOutput:
+      case Definitions.OutputKind.TableOutput:
         return <OutputWrapper {...props} outputName="table">
           <TableRawOutput />
         </OutputWrapper>
 
-      case Definition.OutputKind.ChartOutput:
+      case Definitions.OutputKind.ChartOutput:
         return <OutputWrapper {...props} outputName="chart">
           <ChartRawOutput />
         </OutputWrapper>
 
-      case Definition.OutputKind.ValueOutput:
+      case Definitions.OutputKind.ValueOutput:
         return <OutputWrapper {...props} outputName="value">
           <ValueRawOutput />
         </OutputWrapper>
 
-      case Definition.OutputKind.InvalidOutput:
+      case Definitions.OutputKind.InvalidOutput:
       default:
         return null
     }
@@ -380,29 +380,29 @@ namespace Outputs {
 
   type LookupOutputProps = {
     definition: Definition
-    results: Definition.QueryResults
+    results: Definitions.QueryResults
     onEdit?: (def: Definition) => void
     loading?: boolean
   }
 
   const LookupOutput = (props: LookupOutputProps) => {
     switch (props.definition.kind) {
-      case Definition.OutputKind.TableOutput:
+      case Definitions.OutputKind.TableOutput:
         return <OutputWrapper {...props} outputName="table">
           <TableOutput {...props} />
         </OutputWrapper>
 
-      case Definition.OutputKind.ChartOutput:
+      case Definitions.OutputKind.ChartOutput:
         return <OutputWrapper {...props} outputName="chart">
           <ChartOutput {...props} />
         </OutputWrapper>
 
-      case Definition.OutputKind.ValueOutput:
+      case Definitions.OutputKind.ValueOutput:
         return <OutputWrapper {...props} outputName="value">
           <ValueOutput {...props} />
         </OutputWrapper>
 
-      case Definition.OutputKind.InvalidOutput:
+      case Definitions.OutputKind.InvalidOutput:
       default:
         return null
     }
@@ -425,11 +425,11 @@ namespace Outputs {
         null}
     </div>
 
-  const getValue = (res: Definition.QueryResults) =>
+  const getValue = (res: Definitions.QueryResults) =>
     res.results && res.results[0] ? Result.valueOf(res.results[0][0]) : undefined
 
   type ValueOutputProps = {
-    results: Definition.QueryResults
+    results: Definitions.QueryResults
   }
 
   const ValueOutput = ({ results }: ValueOutputProps) =>
@@ -444,7 +444,7 @@ namespace Outputs {
       <span className="value-output-value">{raw || NOT_AVAILABLE}</span>
     </div>
 
-  const classOf = (val: Definition.QueryResult): string =>
+  const classOf = (val: Definitions.QueryResult): string =>
     !val.Valid ? "table-output-type-null" :
       Result.isString(val) ? "table-output-type-string" :
       Result.isNumber(val) ? "table-output-type-number" :
@@ -453,14 +453,14 @@ namespace Outputs {
       "table-output-type-unknown"
 
   type TableOutputProps = {
-    results: Definition.QueryResults
+    results: Definitions.QueryResults
   }
 
   const TableOutput = (props: TableOutputProps) =>
     <TableRawOutput {...props} />
 
   type TableRawOutputProps = {
-    results?: Definition.QueryResults
+    results?: Definitions.QueryResults
   }
 
   const TableRawOutput = ({ results }: TableRawOutputProps) =>
@@ -515,7 +515,7 @@ namespace Outputs {
     minY: number
   }
 
-  const normalizeResults = (results: Definition.QueryResults): ChartData | undefined => {
+  const normalizeResults = (results: Definitions.QueryResults): ChartData | undefined => {
     if (!results.results) {
       return
     }
@@ -524,7 +524,7 @@ namespace Outputs {
       return
     }
 
-    const datum = results.results.map((cell: Definition.QueryResult[], i) => {
+    const datum = results.results.map((cell: Definitions.QueryResult[], i) => {
       return {
         id: Math.random().toString(),
         x: {
@@ -565,7 +565,13 @@ namespace Outputs {
       <span className="chart-y-label-label">{value}</span>
     </div>
 
-  const buildChartRow = (containerWidth: number, containerHeight: number, index: number, row: ChartRow, chartData: ChartData) => {
+  const buildChartRow = (
+    containerWidth: number,
+    containerHeight: number,
+    index: number,
+    row: ChartRow,
+    chartData: ChartData
+  ) => {
     let width
     let height
     let left
@@ -598,7 +604,9 @@ namespace Outputs {
     } else if (Math.round(row.y) === Math.round(chartData.minY)) {
       height = CHART_ROW_VALUE_BOTTOM_PADDING
     } else {
-      height = (Math.round(row.y) - Math.round(chartData.minY)) / (Math.round(chartData.maxY) - Math.round(chartData.minY)) * containerHeight
+      height = (Math.round(row.y) - Math.round(chartData.minY)) /
+        (Math.round(chartData.maxY) - Math.round(chartData.minY)) *
+        containerHeight
     }
 
     if (isNaN(height) || !isFinite(height)) {
@@ -617,14 +625,14 @@ namespace Outputs {
   }
 
   type ChartOutputProps = {
-    results: Definition.QueryResults
+    results: Definitions.QueryResults
   }
 
   const ChartOutput = (props: ChartOutputProps) =>
     <ChartRawOutput {...props} />
 
   type ChartRawOutputProps = {
-    results?: Definition.QueryResults
+    results?: Definitions.QueryResults
   }
 
   const ChartRawOutput = ({ results }: ChartRawOutputProps) => {
@@ -675,16 +683,20 @@ namespace Outputs {
 }
 
 namespace Reducer {
-  type OutputReducerSetOutputsAction = { kind: "setOutputs", outputs: Definition.Output[] }
-  type OutputReducerSetResultsAction = { kind: "setResults", output: Definition.Output, results: Definition.QueryResults }
-  type OutputReducerUpdateDefinitionAction = { kind: "updateDefinition", output: Definition.Output }
-  type OutputReducerIsLoadingAction = { kind: "isLoading", output: Definition.Output }
+  type OutputReducerSetOutputsAction = { kind: "setOutputs", outputs: Definitions.Output[] }
+  type OutputReducerSetResultsAction = {
+    kind: "setResults",
+    output: Definitions.Output,
+    results: Definitions.QueryResults,
+  }
+  type OutputReducerUpdateDefinitionAction = { kind: "updateDefinition", output: Definitions.Output }
+  type OutputReducerIsLoadingAction = { kind: "isLoading", output: Definitions.Output }
   export type OutputReducerAction
     = OutputReducerSetOutputsAction
     | OutputReducerSetResultsAction
     | OutputReducerUpdateDefinitionAction
     | OutputReducerIsLoadingAction
-  export type OutputReducer = (outputs: Definition.Output[], action: OutputReducerAction) => Definition.Output[]
+  export type OutputReducer = (outputs: Definitions.Output[], action: OutputReducerAction) => Definitions.Output[]
   export const outputReducer: OutputReducer = (outputs, action) => {
     switch (action.kind) {
       case "setOutputs":
@@ -719,10 +731,10 @@ namespace Reducer {
     }
   }
 
-  type InputReducerChangeHandledAction = { kind: "changeHandled", input: Definition.Input }
-  type InputReducerSetInputAction = { kind: "setInput", input: Definition.Input }
+  type InputReducerChangeHandledAction = { kind: "changeHandled", input: Definitions.Input }
+  type InputReducerSetInputAction = { kind: "setInput", input: Definitions.Input }
   export type InputReducerAction = InputReducerChangeHandledAction | InputReducerSetInputAction
-  export type InputReducer = (inputs: Definition.Input[], action: InputReducerAction) => Definition.Input[]
+  export type InputReducer = (inputs: Definitions.Input[], action: InputReducerAction) => Definitions.Input[]
   export const inputReducer: InputReducer = (inputs, action) => {
     switch (action.kind) {
       case "changeHandled":
@@ -738,10 +750,11 @@ namespace Reducer {
     }
   }
 
-  type VariableReducerSetVariablesAction = { kind: "setVariables", variables: Definition.Variable[] }
-  type VariableReducerSetOptionsAction = { kind: "setOptions", variable: Definition.Variable, options: string[] }
+  type VariableReducerSetVariablesAction = { kind: "setVariables", variables: Definitions.Variable[] }
+  type VariableReducerSetOptionsAction = { kind: "setOptions", variable: Definitions.Variable, options: string[] }
   export type VariableReducerAction = VariableReducerSetVariablesAction | VariableReducerSetOptionsAction
-  export type VariableReducer = (variables: Definition.Variable[], action: VariableReducerAction) => Definition.Variable[]
+  export type VariableReducer =
+    (variables: Definitions.Variable[], action: VariableReducerAction) => Definitions.Variable[]
   export const variableReducer: VariableReducer = (variables, action) => {
     switch (action.kind) {
       case "setVariables":
@@ -755,9 +768,9 @@ namespace Reducer {
   }
 }
 
-namespace Report {
+namespace Reports {
   const loadReportSettings = (
-    report: Definition.Report,
+    report: Definitions.Report,
     dispatchVariable: (_: Reducer.VariableReducerAction) => void,
     dispatchInput: (_: Reducer.InputReducerAction) => void,
     dispatchOutput: (_: Reducer.OutputReducerAction) => void,
@@ -786,8 +799,8 @@ namespace Report {
   }
 
   const loadReportData = (
-    inputs: Definition.Input[],
-    outputs: Definition.Output[],
+    inputs: Definitions.Input[],
+    outputs: Definitions.Output[],
     dispatchInput: (_: Reducer.InputReducerAction) => void,
     dispatchOutput: (_: Reducer.OutputReducerAction) => void,
   ) => {
@@ -803,7 +816,7 @@ namespace Report {
             acc.push(input)
           }
           return acc
-        }, [] as Definition.Input[])
+        }, [] as Definitions.Input[])
 
       const shouldLoad = queryInputs.reduce((doIt, input) =>
         !input.changeHandled || doIt, false)
@@ -823,17 +836,17 @@ namespace Report {
   }
 
   export const View = (props: {}) => {
-    const [report, setReport] = useState<Definition.Report | null>(null)
+    const [report, setReport] = useState<Definitions.Report | null>(null)
     const [variables, dispatchVariable] = useReducer(Reducer.variableReducer, [], (i) => i)
     const [inputs, dispatchInput] = useReducer(Reducer.inputReducer, [], (i) => i)
     const [outputs, dispatchOutput] = useReducer(Reducer.outputReducer, [], (i) => i)
 
-    const [editing, setEditing] = useState<Definition.Output | null>(null)
+    const [editing, setEditing] = useState<Definitions.Output | null>(null)
 
-    const setInput = (value: string, variable: Definition.Variable) =>
+    const setInput = (value: string, variable: Definitions.Variable) =>
       dispatchInput({ kind: "setInput", input: { value, variable } })
 
-    const saveOutputDefinition = (output: Definition.Output) => {
+    const saveOutputDefinition = (output: Definitions.Output) => {
       setEditing(null)
       dispatchOutput({ kind: "updateDefinition", output })
     }
@@ -868,4 +881,4 @@ namespace Report {
   }
 }
 
-ReactDOM.render(<Report.View />, document.querySelector(".content-view"))
+ReactDOM.render(<Reports.View />, document.querySelector(".content-view"))
