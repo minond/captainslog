@@ -482,6 +482,7 @@ namespace Outputs {
       </table> :
       <div className="output-no-data">{NO_RESULTS}</div>
 
+  const CHART_ROW_HORIZONTAL_PADDING = 10 // Should always match the left/right margin of the .chart-rows element.
   const TIGHT_FIT_CONTAINER_WIDTH_MAX = 400 // A container that is this wide or less is considered to be "small".
   const TIGHT_FIT_DATUM_LENGTH_MIN = 50 // There must be at least this many items before the "tight fit" is used.
   const TIGHT_FIT_BORDER_WIDTH = 1
@@ -503,8 +504,10 @@ namespace Outputs {
     diffX: number
     diffY: number
     maxX: number
+    medX: number
     minX: number
     maxY: number
+    medY: number
     minY: number
   }
 
@@ -542,15 +545,18 @@ namespace Outputs {
     const xs = datum.map((row) => row.x.value)
     const ys = datum.map((row) => row.y)
 
-    const minX = Math.min.apply(Math, xs) - X_PADDING
-    const maxX = Math.max.apply(Math, xs) + X_PADDING
-    const minY = Math.min.apply(Math, ys) - Y_PADDING
-    const maxY = Math.max.apply(Math, ys) + Y_PADDING
+    const minX = Math.round(Math.min.apply(Math, xs) - X_PADDING)
+    const maxX = Math.round(Math.max.apply(Math, xs) + X_PADDING)
+    const minY = Math.round(Math.min.apply(Math, ys) - Y_PADDING)
+    const maxY = Math.round(Math.max.apply(Math, ys) + Y_PADDING)
+
+    const medX = Math.round((maxX + minX) / 2)
+    const medY = Math.round((maxY + minY) / 2)
 
     const diffX = maxX - minX
     const diffY = maxY - minY
 
-    return { datum, diffX, diffY, minX, maxX, minY, maxY }
+    return { datum, diffX, diffY, minX, medX, maxX, minY, medY, maxY }
   }
 
   const buildChartRow = (containerWidth: number, index: number, row: ChartRow, chartData: ChartData) => {
@@ -612,7 +618,7 @@ namespace Outputs {
         // possible null value, but why?
         const container = chartContainerRef.current as any
         const { width: containerWidth } = container.getBoundingClientRect()
-        setWidth(containerWidth)
+        setWidth(containerWidth - (CHART_ROW_HORIZONTAL_PADDING * 2))
       }
     }
 
@@ -636,7 +642,12 @@ namespace Outputs {
 
     return <div className="chart-output-wrapper">
       <div className="chart-container" ref={chartContainerRef}>
-        {chartData.datum.map((row, i) => buildChartRow(width, i, row, chartData))}
+        <div className="chart-y-label chart-y-label-max">{chartData.maxY}</div>
+        <div className="chart-y-label chart-y-label-med">{chartData.medY}</div>
+        <div className="chart-y-label chart-y-label-min">{chartData.minY}</div>
+        <div className="chart-rows">
+          {chartData.datum.map((row, i) => buildChartRow(width, i, row, chartData))}
+        </div>
       </div>
     </div>
   }

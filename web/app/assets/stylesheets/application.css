@@ -666,8 +666,15 @@ header .books-nav {
 
 .chart-container {
   height: 150px;
-  width: 100%;
+  width: calc(100% - 20px);
   position: relative;
+  margin-left: 20px;
+}
+
+.chart-rows {
+  left: 10px;
+  position: absolute;
+  bottom: 0;
 }
 
 .chart-row {
@@ -675,7 +682,37 @@ header .books-nav {
   background: #98a8ff;
   display: inline-block;
   border-style: solid;
-  bottom: 0;
+  bottom: -2px;
   border-color: #5c5c5c;
   box-sizing: content-box;
+}
+
+.chart-container {
+  border-bottom: 2px solid #393939;
+  border-left: 2px solid #393939;
+}
+
+.chart-row {
+  border-bottom-color: #393939;
+}
+
+.chart-y-label {
+  position: absolute;
+  left: -30px;
+  display: inline-block;
+  width: 25px;
+  text-align: right;
+  font-size: .25rem;
+}
+
+.chart-y-label-max {
+  bottom: 80%;
+}
+
+.chart-y-label-med {
+  bottom: 40%;
+}
+
+.chart-y-label-min {
+  bottom: 0%;
 }
