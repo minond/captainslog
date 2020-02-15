@@ -483,8 +483,8 @@ namespace Outputs {
       <div className="output-no-data">{NO_RESULTS}</div>
 
   const CHART_ROW_HORIZONTAL_PADDING = 10 // Should always match the left/right margin of the .chart-rows element.
-  const CHART_ROW_VERTICAL_PADDING = 10
-  const CHART_ROW_VALUE_BOTTOM_PADDING = 0
+  const CHART_ROW_VERTICAL_PADDING = 10 // Should always match the bottom margin of the last y label element.
+  const CHART_ROW_VALUE_BOTTOM_PADDING = CHART_ROW_VERTICAL_PADDING
 
   const TIGHT_FIT_CONTAINER_WIDTH_MAX = 400 // A container that is this wide or less is considered to be "small".
   const TIGHT_FIT_DATUM_LENGTH_MIN = 50 // There must be at least this many items before the "tight fit" is used.
@@ -548,7 +548,7 @@ namespace Outputs {
 
     const minX = Math.round(Math.min.apply(Math, xs))
     const maxX = Math.round(Math.max.apply(Math, xs))
-    const minY = Math.round(Math.min.apply(Math, ys) - CHART_ROW_VALUE_BOTTOM_PADDING)
+    const minY = Math.round(Math.min.apply(Math, ys))
     const maxY = Math.round(Math.max.apply(Math, ys))
 
     const medX = Math.round((maxX + minX) / 2)
@@ -593,12 +593,12 @@ namespace Outputs {
       left = index * maxWidth
     }
 
-    if (row.y === chartData.maxY) {
+    if (Math.round(row.y) === Math.round(chartData.maxY)) {
       height = containerHeight
-    } else if (row.y === chartData.minY) {
+    } else if (Math.round(row.y) === Math.round(chartData.minY)) {
       height = CHART_ROW_VALUE_BOTTOM_PADDING
     } else {
-      height = (row.y - chartData.minY) / (chartData.maxY - chartData.minY) * containerHeight
+      height = (Math.round(row.y) - Math.round(chartData.minY)) / (Math.round(chartData.maxY) - Math.round(chartData.minY)) * containerHeight
     }
 
     if (isNaN(height) || !isFinite(height)) {

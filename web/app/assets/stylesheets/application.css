@@ -725,5 +725,5 @@ header .books-nav {
 }
 
 .chart-y-label-min {
-  bottom: -1px;
+  bottom: 10px;
 }
