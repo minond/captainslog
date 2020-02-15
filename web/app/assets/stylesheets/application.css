@@ -529,36 +529,23 @@ header .books-nav {
   width: 100%;
 }
 
-.report-edit-form td {
-  vertical-align: top;
-}
-
-.report-edit-form tr:first-child td:first-child {
-  width: 30%;
-  padding-right: 20px;
-}
-
-.report-edit-form tr:first-child td + td {
-  width: 70%;
-}
-
 .report-edit-form select,
 .report-edit-form input {
   width: 100%;
+  max-width: 300px;
 }
 
 .report-edit-form textarea {
-  height: 200px;
+  height: 230px;
   width: 100%;
+}
+
+.report-edit-form-label {
+  display: block;
 }
 
 .report-edit-form-label + .report-edit-form-label {
   margin-top: 15px;
-}
-
-.report-edit-form-actions {
-  padding-top: 10px;
-  text-align: right;
 }
 
 .output {

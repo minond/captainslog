@@ -251,46 +251,35 @@ namespace Editor {
     const updated = { ...output, kind, label, query, width, height }
 
     return <div className="report-edit-form">
-      <table>
-        <tbody>
-          <tr>
-            <td>
-              <label className="report-edit-form-label">
-                <span>Label</span>
-                <input value={label} onChange={(ev) => setLabel(ev.target.value)} />
-              </label>
-              <label className="report-edit-form-label">
-                <span>Height</span>
-                <input value={height} onChange={(ev) => setHeight(ev.target.value)} />
-              </label>
-              <label className="report-edit-form-label">
-                <span>Width</span>
-                <input value={width} onChange={(ev) => setWidth(ev.target.value)} />
-              </label>
-              <label className="report-edit-form-label">
-                <span>Kind</span>
-                <select value={kind} onChange={(ev) => setKind(ev.target.value as Definition.OutputKind)}>
-                  <option value={Definition.OutputKind.TableOutput} label="Table" />
-                  <option value={Definition.OutputKind.ChartOutput} label="Chart" />
-                  <option value={Definition.OutputKind.ValueOutput} label="Value" />
-                </select>
-              </label>
-            </td>
-            <td>
-              <label className="report-edit-form-label">
-                <span>Query</span>
-                <textarea value={query} onChange={(ev) => setQuery(ev.target.value)} />
-              </label>
-            </td>
-          </tr>
-          <tr>
-            <td colSpan={2} className="report-edit-form-actions">
-              <button onClick={onCancel}>Cancel</button>
-              <button onClick={() => onSave(updated)}>Save</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <label className="report-edit-form-label">
+        <span>Kind</span>
+        <select value={kind} onChange={(ev) => setKind(ev.target.value as Definition.OutputKind)}>
+          <option value={Definition.OutputKind.TableOutput} label="Table" />
+          <option value={Definition.OutputKind.ChartOutput} label="Chart" />
+          <option value={Definition.OutputKind.ValueOutput} label="Value" />
+        </select>
+      </label>
+      <label className="report-edit-form-label">
+        <span>Label</span>
+        <input value={label} onChange={(ev) => setLabel(ev.target.value)} />
+      </label>
+      <label className="report-edit-form-label">
+        <span>Width</span>
+        <input value={width} onChange={(ev) => setWidth(ev.target.value)} />
+      </label>
+      <label className="report-edit-form-label">
+        <span>Height</span>
+        <input value={height} onChange={(ev) => setHeight(ev.target.value)} />
+      </label>
+      <label className="report-edit-form-label">
+        <span>Query</span>
+        <textarea value={query} onChange={(ev) => setQuery(ev.target.value)} />
+      </label>
+
+      <div>
+        <button onClick={onCancel}>Cancel</button>
+        <button onClick={() => onSave(updated)}>Save</button>
+      </div>
     </div>
   }
 }
