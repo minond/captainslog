@@ -1,6 +1,6 @@
 enum Header {
   Accept = "Accept",
-  ContentType = "Content-Type",
+  ContentType = "Content-Type"
 }
 
 enum MimeType {

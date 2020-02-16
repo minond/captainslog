@@ -6,7 +6,7 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "lint": "tslint *.ts *.tsx",
+    "lint": "tslint *.js *.ts src/**/*.ts src/**/*.tsx",
     "compile": "tsc",
     "test": "exit 1"
   },
