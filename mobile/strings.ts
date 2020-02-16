@@ -4,7 +4,7 @@ const enUS = {
   password: "Password",
 
   invalidLogin: "Invalid login",
-  missingValues: (...vals) => `Missing required values: ${vals.join(", ")}`,
+  missingValues: (...vals: string[]) => `Missing required values: ${vals.join(", ")}`,
 }
 
 export default enUS
