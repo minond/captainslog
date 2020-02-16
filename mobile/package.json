@@ -6,7 +6,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "eject": "expo eject",
-    "lint": "tslint *.ts *.tsx"
+    "lint": "tslint *.ts *.tsx",
+    "compile": "tsc"
   },
   "dependencies": {
     "expo": "~36.0.0",

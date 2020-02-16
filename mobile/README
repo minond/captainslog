@@ -1,0 +1,15 @@
+Mobile application for Captain's Log. This is a React Native application that's
+fairly fresh as far as development goes.
+
+
+=== Requirements
+
+- Node ~10.13.0
+- Npm ~6.10.2
+
+
+=== Development
+
+    npm run start   # start expo application server
+    npm run lint    # lint application code
+    npm run compile # run compilers
