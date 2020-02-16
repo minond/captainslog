@@ -18,6 +18,6 @@ module JWT
 
   # @return [String]
   def self.secret
-    Rails.application.secrets.secret_key_base
+    Rails.application.credentials.secret_key_base
   end
 end
