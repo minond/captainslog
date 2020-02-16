@@ -45,4 +45,8 @@ export default StyleSheet.create({
   formField: {
     marginTop: 10,
   },
+  errorMessage: {
+    color: "red",
+    fontWeight: "500",
+  },
 })

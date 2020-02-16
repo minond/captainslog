@@ -37,11 +37,26 @@ const AppView: FunctionComponent<{}> = (props) =>
 const LoginForm = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [errorMessage, setErrorMessage] = useState("")
 
-  const login = () =>
-    createToken(email, password)
-      .then((token) => console.log("token:", token))
-      .catch((err) => console.log("error:", err))
+  const login = () => {
+    setErrorMessage("")
+
+    if (!email && !password) {
+      setErrorMessage(strings.missingValues(strings.email, strings.password))
+    } else if (!email) {
+      setErrorMessage(strings.missingValues(strings.email))
+    } else if (!password) {
+      setErrorMessage(strings.missingValues(strings.password))
+    } else {
+      createToken(email, password)
+        .then((token) => console.log("token:", token))
+        .catch((err) => {
+          console.log("login error:", err)
+          setErrorMessage(strings.invalidLogin)
+        })
+    }
+  }
 
   return <AppView>
     <Header>{strings.login}</Header>
@@ -62,6 +77,11 @@ const LoginForm = () => {
         secureTextEntry={true}
       />
     </FormField>
+
+    {!errorMessage ? null :
+      <FormField>
+        <Text style={styles.errorMessage}>{errorMessage}</Text>
+      </FormField>}
 
     <FormField>
       <Button label={strings.login} onPress={login} />
