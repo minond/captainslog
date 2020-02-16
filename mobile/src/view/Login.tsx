@@ -1,16 +1,16 @@
 import React, { useState } from "react"
 import { Text, TextInput } from "react-native"
 
-import { createToken } from "./network"
-import styles from "./styles"
-import strings from "./strings"
+import { createToken } from "../network"
+import styles from "../styles"
+import strings from "../strings"
 
-import AppView from "./AppView"
-import Button from "./Button"
-import FormField from "./FormField"
-import Header from "./Header"
+import AppView from "../component/AppView"
+import Button from "../component/Button"
+import FormField from "../component/FormField"
+import Header from "../component/Header"
 
-export default function LoginForm() {
+export default function Login() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [errorMessage, setErrorMessage] = useState("")

@@ -1,13 +1,13 @@
 import React from "react"
 import { View } from "react-native"
 
-import LoginForm from "./LoginForm"
-import styles from "./styles"
+import Login from "./src/view/Login"
+import styles from "./src/styles"
 
 export default function App() {
   return (
     <View style={styles.containerWrapper}>
-      <LoginForm />
+      <Login />
     </View>
   )
 }
