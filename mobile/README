@@ -10,6 +10,8 @@ fairly fresh as far as development goes.
 
 === Development
 
+    npm install     # install application dependencies
     npm run start   # start expo application server
-    npm run lint    # lint application code
+    npm run lint    # run linters
     npm run compile # run compilers
+    npm run test    # run tests
