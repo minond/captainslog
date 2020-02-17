@@ -10,6 +10,43 @@ import Button from "../component/Button"
 import FormField from "../component/FormField"
 import Header from "../component/Header"
 
+const login = (
+  email: string,
+  password: string,
+  setErrorMessage: (_: string) => void,
+  createToken: CreateToken,
+  setToken: SetToken
+) => {
+  setErrorMessage("")
+
+  if (!email && !password) {
+    setErrorMessage(strings.missingValues(strings.email, strings.password))
+    return
+  } else if (!email) {
+    setErrorMessage(strings.missingValues(strings.email))
+    return
+  } else if (!password) {
+    setErrorMessage(strings.missingValues(strings.password))
+    return
+  }
+
+  createToken(email, password)
+    .then((token) => {
+      setToken(token)
+        .then(() => {
+          console.log("saved token to secure store")
+        })
+        .catch((err) => {
+          console.log("storage error:", err)
+          setErrorMessage(strings.loginError)
+        })
+    })
+    .catch((err) => {
+      console.log("login error:", err)
+      setErrorMessage(strings.invalidLogin)
+    })
+}
+
 type LoginProps = {
   setToken: SetToken
   createToken: CreateToken
@@ -20,34 +57,14 @@ export default function Login(props: LoginProps) {
   const [password, setPassword] = useState("")
   const [errorMessage, setErrorMessage] = useState("")
 
-  const login = () => {
-    setErrorMessage("")
-
-    if (!email && !password) {
-      setErrorMessage(strings.missingValues(strings.email, strings.password))
-    } else if (!email) {
-      setErrorMessage(strings.missingValues(strings.email))
-    } else if (!password) {
-      setErrorMessage(strings.missingValues(strings.password))
-    } else {
-      props.createToken(email, password)
-        .then((token) => {
-          console.log("token:", token)
-          props.setToken(token)
-            .then(() => {
-              console.log("saved token to secure store")
-            })
-            .catch((err) => {
-              console.log("storage error:", err)
-              setErrorMessage(strings.invalidLogin)
-            })
-        })
-        .catch((err) => {
-          console.log("login error:", err)
-          setErrorMessage(strings.invalidLogin)
-        })
-    }
-  }
+  const onLoginButtonPress = () =>
+    login(
+      email,
+      password,
+      setErrorMessage,
+      props.createToken,
+      props.setToken
+    )
 
   return <AppView>
     <Header>{strings.login}</Header>
@@ -75,7 +92,7 @@ export default function Login(props: LoginProps) {
       </FormField>}
 
     <FormField>
-      <Button label={strings.login} onPress={login} />
+      <Button label={strings.login} onPress={onLoginButtonPress} />
     </FormField>
   </AppView>
 }
