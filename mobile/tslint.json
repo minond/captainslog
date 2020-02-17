@@ -137,12 +137,7 @@
         "ignore-for-loop"
       ]
     },
-    "only-arrow-functions": {
-      "options": [
-        "allow-declarations",
-        "allow-named-functions"
-      ]
-    },
+    "only-arrow-functions": false,
     "ordered-imports": false,
     "prefer-const": true,
     "prefer-for-of": true,

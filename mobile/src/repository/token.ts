@@ -17,8 +17,7 @@ export const getToken: GetToken = () =>
 export const clearToken: ClearToken = () =>
   SecureStore.deleteItemAsync(TOKEN)
 
-const _: CreateToken = createToken
-export async function createToken(email: string, password: string): Promise<string> {
+export const createToken: CreateToken = async function(email, password) {
   const response = await jsonPost("token", { email, password })
   if (!response) {
     throw new Error("empty response")
