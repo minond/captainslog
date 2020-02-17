@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { Text, TextInput } from "react-native"
 
-import { createToken } from "../network"
+import { CreateToken, SetToken } from "../repository/token"
 import styles from "../styles"
 import strings from "../strings"
 
@@ -10,7 +10,12 @@ import Button from "../component/Button"
 import FormField from "../component/FormField"
 import Header from "../component/Header"
 
-export default function Login() {
+type LoginProps = {
+  setToken: SetToken
+  createToken: CreateToken
+}
+
+export default function Login(props: LoginProps) {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [errorMessage, setErrorMessage] = useState("")
@@ -25,8 +30,18 @@ export default function Login() {
     } else if (!password) {
       setErrorMessage(strings.missingValues(strings.password))
     } else {
-      createToken(email, password)
-        .then((token) => console.log("token:", token))
+      props.createToken(email, password)
+        .then((token) => {
+          console.log("token:", token)
+          props.setToken(token)
+            .then(() => {
+              console.log("saved token to secure store")
+            })
+            .catch((err) => {
+              console.log("storage error:", err)
+              setErrorMessage(strings.invalidLogin)
+            })
+        })
         .catch((err) => {
           console.log("login error:", err)
           setErrorMessage(strings.invalidLogin)
