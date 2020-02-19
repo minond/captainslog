@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Captain's Log",
-    "slug": "mobile",
+    "slug": "captainslog",
     "privacy": "public",
     "sdkVersion": "36.0.0",
     "platforms": [
@@ -24,7 +24,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.minond.captainslog"
     }
   }
 }
