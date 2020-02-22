@@ -10,12 +10,15 @@ import Button from "../component/Button"
 import FormField from "../component/FormField"
 import Header from "../component/Header"
 
+type AfterLogin = (token: string) => void
+
 const login = (
   email: string,
   password: string,
   setErrorMessage: (_: string) => void,
   createToken: CreateToken,
-  setToken: SetToken
+  setToken: SetToken,
+  afterLogin: AfterLogin
 ) => {
   setErrorMessage("")
 
@@ -31,25 +34,17 @@ const login = (
   }
 
   createToken(email, password)
-    .then((token) => {
+    .then((token) =>
       setToken(token)
-        .then(() => {
-          console.log("saved token to secure store")
-        })
-        .catch((err) => {
-          console.log("storage error:", err)
-          setErrorMessage(strings.loginError)
-        })
-    })
-    .catch((err) => {
-      console.log("login error:", err)
-      setErrorMessage(strings.invalidLogin)
-    })
+        .then(() => afterLogin(token))
+        .catch((err) => setErrorMessage(strings.loginError)))
+    .catch((err) => setErrorMessage(strings.invalidLogin))
 }
 
 type LoginProps = {
   setToken: SetToken
   createToken: CreateToken
+  afterLogin: AfterLogin
 }
 
 export default function Login(props: LoginProps) {
@@ -63,7 +58,8 @@ export default function Login(props: LoginProps) {
       password,
       setErrorMessage,
       props.createToken,
-      props.setToken
+      props.setToken,
+      props.afterLogin,
     )
 
   return <AppView>
