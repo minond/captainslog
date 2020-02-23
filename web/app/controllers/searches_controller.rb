@@ -9,8 +9,12 @@ class SearchesController < ApplicationController
   #   /search?query=Running
   #
   def show
-    locals :query => query,
-           :results => results
+    if query_long_enough?
+      locals :query => query, :results => results
+    else
+      flash.alert = t(:query_not_long_enough)
+      locals :query => query, :results => []
+    end
   end
 
 private
@@ -23,5 +27,10 @@ private
   # @return [String]
   def query
     params[:query]
+  end
+
+  # @return [Boolean]
+  def query_long_enough?
+    query.size >= 3
   end
 end

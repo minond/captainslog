@@ -26,7 +26,7 @@ function entryUpdateScriptUrl(slug, id) {
 function setupSubmitFormOnTextareaPressEnter() {
   $("textarea[data-enter-to-submit=true]").on("keypress", function(ev) {
     if (ev.keyCode === 13) {
-      $("form").submit()
+      $(this).parent("form").submit()
       ev.preventDefault()
       return false
     }

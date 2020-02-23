@@ -90,5 +90,6 @@ en:
   search_results_for: "Search results for \"%{query}\":"
   no_search_results_for: "There were no results for \"%{query}\"."
   search_again_q: "Would you like to search for something else?"
+  query_not_long_enough: "The search query is not long enough."
 
   are_you_sure_q: "Are you sure?"
