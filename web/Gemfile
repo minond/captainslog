@@ -8,6 +8,7 @@ gem "daemons"                                 # Provides an easy way to wrap rub
 gem "delayed_job"                             # Database based asynchronous priority queue system
 gem "delayed_job_active_record"               # AR bindings for Delayed Job
 gem "devise"                                  # Flexible authentication solution for Rails with Warden.
+gem "fitbit_api"                              # Fitbit API client
 gem "jbuilder", "~> 2.7"                      # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem "jquery-rails"                            # A gem to automate using jQuery with Rails
 gem "jwt"                                     # JSON Web Token encoder/decoder
