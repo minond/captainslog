@@ -19,6 +19,9 @@ jobs:
     env:
       DATABASE_USERNAME: postgres
       RAILS_ENV: test
+      FITBIT_CLIENT_ID: sample
+      FITBIT_CLIENT_SECRET: sample
+      FITBIT_REDIRECT_URL: http://localhost:3000/oauth/fitbit
 
     steps:
     - uses: actions/checkout@v1
