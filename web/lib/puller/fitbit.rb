@@ -31,35 +31,35 @@ class Puller::Fitbit < Puller::OauthClient
   def code=(code)
     client.get_token(code)
     @user_id = client.token["user_id"]
-    nil
   end
 
   # @return [Hash]
   def serialize_token
+    token = client.token
     {
       :user_id => user_id,
-      :access_token => client.token.token,
-      :refresh_token => client.token.refresh_token,
-      :expires_at => client.token.expires_at,
+      :access_token => token.token,
+      :refresh_token => token.refresh_token,
+      :expires_at => token.expires_at,
     }
   end
 
   # @param [Date] start_date
   # @param [Date] end_date
   # @return [Array<HeartRate>]
-  def heart_rate_time_series(start_date: Date.today, end_date: Date.today)
+  def heart_rate_time_series(start_date: Date.today, end_date: start_date)
     client.heart_rate_time_series(:start_date => start_date, :end_date => end_date)
-      .filter { |result| result["value"]["restingHeartRate"] }
-      .map { |result| HeartRate.from_result(result) }
+          .filter { |result| result["value"]["restingHeartRate"] }
+          .map { |result| HeartRate.from_result(result) }
   end
 
   # @param [Date] start_date
   # @param [Date] end_date
   # @return [Array<Steps>]
-  def steps_time_series(start_date: Date.today, end_date: Date.today)
+  def steps_time_series(start_date: Date.today, end_date: start_date)
     client.activity_time_series("tracker/steps", :start_date => start_date, :end_date => end_date)
-      .filter { |result| result["value"] && result["value"] != "0" }
-      .map { |result| Steps.from_result(result) }
+          .filter { |result| result["value"] && result["value"] != "0" }
+          .map { |result| Steps.from_result(result) }
   end
 
 private

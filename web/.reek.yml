@@ -11,12 +11,15 @@ detectors:
   UncommunicativeVariableName:
     exclude:
       - ExternalService#self.client # has the variable name 'e', ok since it's in a rescue block
+  DuplicateMethodCall:
+    enabled: false
   FeatureEnvy:
     enabled: false
   UtilityFunction:
     exclude:
       - Book#first_datetime_field
       - ProcessEntryJob#perform
+      - Puller::Fitbit#config
       - ScheduleDirtyEntriesReprocessingJob#perform
   TooManyStatements:
     exclude:

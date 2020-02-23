@@ -10,7 +10,7 @@ class Puller::OauthClient
   # load an oauth token which it will continue to use in subseqent API calls.
   #
   # @param [String] code
-  def code=(code)
+  def code=(_code)
     raise NotImplementedError.new, "#code= is not implemented"
   end
 

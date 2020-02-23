@@ -13,6 +13,9 @@ Style/StringLiterals:
 Style/FrozenStringLiteralComment:
   Enabled: false
 
+Style/TrailingCommaInHashLiteral:
+  Enabled: false
+
 Style/ClassAndModuleChildren:
   Enabled: false
 
