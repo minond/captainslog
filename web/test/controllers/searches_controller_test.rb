@@ -3,9 +3,9 @@ require "test_helper"
 class SearchesControllerTest < ActionDispatch::IntegrationTest
   setup { sign_in user }
 
-  test "should get show page" do
+  test "query not long enough error" do
     get "/search"
-    assert_response :success
+    assert response.body.include? "query is not long enough"
   end
 
   test "no results message" do

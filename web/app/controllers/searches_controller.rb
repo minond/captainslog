@@ -31,6 +31,6 @@ private
 
   # @return [Boolean]
   def query_long_enough?
-    query.size >= 3
+    query.present? && query.size >= 3
   end
 end
