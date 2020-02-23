@@ -17,3 +17,4 @@ directory and in the `docs` directory.
 [![Processor Service](https://github.com/minond/captainslog/workflows/Processor%20Service/badge.svg)](https://github.com/minond/captainslog/actions?query=workflow%3A%22Processor+Service%22)
 [![Querier Service](https://github.com/minond/captainslog/workflows/Querier%20Service/badge.svg)](https://github.com/minond/captainslog/actions?query=workflow%3A%22Querier+Service%22)
 [![Web App](https://github.com/minond/captainslog/workflows/Web%20App/badge.svg)](https://github.com/minond/captainslog/actions?query=workflow%3A%22Web+App%22)
+[![Mobile App](https://github.com/minond/captainslog/workflows/Mobile%20App/badge.svg)](https://github.com/minond/captainslog/actions?query=workflow%3A%22Mobile+App%22)
