@@ -6,6 +6,12 @@ class Puller::Fitbit < Puller::OauthClient
       new(:date => Date.parse(result["dateTime"]),
           :value => result["value"].to_i)
     end
+
+    # @param [Hash] result
+    # @return [Boolean]
+    def self.valid?(result)
+      result["value"] && result["value"] != "0"
+    end
   end
 
   HeartRate = Struct.new(:date, :value, :keyword_init => true) do
@@ -13,7 +19,13 @@ class Puller::Fitbit < Puller::OauthClient
     # @return [HeartRate]
     def self.from_result(result)
       new(:date => Date.parse(result["dateTime"]),
-          :value => result["value"]["restingHeartRate"])
+          :value => result["value"]["restingHeartRate"].to_i)
+    end
+
+    # @param [Hash] result
+    # @return [Boolean]
+    def self.valid?(result)
+      result.dig("value", "restingHeartRate").present?
     end
   end
 
@@ -49,7 +61,7 @@ class Puller::Fitbit < Puller::OauthClient
   # @return [Array<HeartRate>]
   def heart_rate_time_series(start_date: Date.today, end_date: start_date)
     client.heart_rate_time_series(:start_date => start_date, :end_date => end_date)
-          .filter { |result| result["value"]["restingHeartRate"] }
+          .filter { |result| HeartRate.valid?(result) }
           .map { |result| HeartRate.from_result(result) }
   end
 
@@ -58,7 +70,7 @@ class Puller::Fitbit < Puller::OauthClient
   # @return [Array<Steps>]
   def steps_time_series(start_date: Date.today, end_date: start_date)
     client.activity_time_series("tracker/steps", :start_date => start_date, :end_date => end_date)
-          .filter { |result| result["value"] && result["value"] != "0" }
+          .filter { |result| Steps.valid?(result) }
           .map { |result| Steps.from_result(result) }
   end
 
