@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_24_044241) do
+ActiveRecord::Schema.define(version: 2020_02_24_045353) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -34,6 +34,16 @@ ActiveRecord::Schema.define(version: 2020_02_24_044241) do
     t.index ["book_id"], name: "index_collections_on_book_id"
   end
 
+  create_table "connections", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "book_id", null: false
+    t.string "data_source"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["book_id"], name: "index_connections_on_book_id"
+    t.index ["user_id"], name: "index_connections_on_user_id"
+  end
+
   create_table "credential_options", force: :cascade do |t|
     t.bigint "credential_id", null: false
     t.string "label", null: false
@@ -47,6 +57,8 @@ ActiveRecord::Schema.define(version: 2020_02_24_044241) do
     t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "connection_id", null: false
+    t.index ["connection_id"], name: "index_credentials_on_connection_id"
     t.index ["user_id"], name: "index_credentials_on_user_id"
   end
 
@@ -157,7 +169,10 @@ ActiveRecord::Schema.define(version: 2020_02_24_044241) do
 
   add_foreign_key "books", "users"
   add_foreign_key "collections", "books"
+  add_foreign_key "connections", "books"
+  add_foreign_key "connections", "users"
   add_foreign_key "credential_options", "credentials"
+  add_foreign_key "credentials", "connections"
   add_foreign_key "credentials", "users"
   add_foreign_key "entries", "books"
   add_foreign_key "entries", "collections"
