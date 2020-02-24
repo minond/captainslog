@@ -14,6 +14,8 @@ class Book < ApplicationRecord
 
   enum :grouping => %i[none day week month year], :_prefix => :group_by
 
+  scope :by_slug, ->(slug) { find_by(:slug => slug) }
+
   # Tells you if any entries need to be reprocessed. Returns true when an entry
   # exists that was processed before a change to the book's shorthands or
   # extractors.
