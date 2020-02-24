@@ -1,8 +1,9 @@
 class Puller::OauthClient < Puller::Client
   # Generates an authentication URL that grants an oauth code.
   #
+  # @param [Hash] state
   # @return [String]
-  def auth_url
+  def auth_url(_state)
     raise NotImplementedError.new, "#auth_url is not implemented"
   end
 

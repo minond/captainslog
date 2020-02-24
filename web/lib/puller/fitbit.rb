@@ -36,9 +36,11 @@ class Puller::Fitbit < Puller::OauthClient
     client(options)
   end
 
+  # @param [Hash] state
   # @return [String]
-  def auth_url
-    client.auth_url
+  def auth_url(state)
+    state_hash = Base64.urlsafe_encode64(state.to_json)
+    client.auth_url + "&state=#{state_hash}"
   end
 
   # @param [String] code
