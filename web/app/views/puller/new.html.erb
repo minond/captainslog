@@ -1,0 +1,8 @@
+<%= render "layouts/content-view" do %>
+  <% pullers.each do |puller| %>
+      <a href="<%= puller[:redirect] %>" class="puller">
+        <%= image_tag(puller[:logo], :class => "puller-logo") %>
+        <span><%= puller[:description] %></span>
+      </a>
+  <% end %>
+<% end %>

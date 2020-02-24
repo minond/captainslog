@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/BlockLength
 Rails.application.routes.draw do
   root :to => "homepage#home"
 
@@ -19,6 +20,16 @@ Rails.application.routes.draw do
     resource :search, :only => %i[show]
     resource :user, :only => %i[show update]
 
+    resources :puller, :only => %i[new] do
+      collection do
+        get :fitbit
+      end
+    end
+
+    namespace :oauth do
+      get :fitbit
+    end
+
     post "/query/execute", :to => "query#execute"
   end
 
@@ -29,3 +40,4 @@ Rails.application.routes.draw do
     end
   end
 end
+# rubocop:enable Metrics/BlockLength

@@ -493,6 +493,50 @@ header .books-nav {
   content: '-';
 }
 
+/* PULLER *****************************************************************/
+
+.puller:first-child {
+  padding-top: 0;
+}
+
+.puller {
+  transition: background-color .2s;
+  display: block;
+  padding: 2rem .5rem;
+}
+
+.puller-logo {
+  width: 10rem;
+  display: block;
+  margin-bottom: 1.5rem;
+}
+
+.puller + .puller {
+  border-top: 1px solid #d9d9d9;
+}
+
+@media screen and (min-width: 801px) {
+  .puller {
+    display: flex;
+    align-items: center;
+    padding: 2rem;
+    transition: background-color .2s;
+  }
+
+  .puller:first-child {
+    padding-top: 2rem;
+  }
+
+  .puller:hover {
+    background-color: #f7f7f7;
+  }
+
+  .puller-logo {
+    margin-right: 2rem;
+    margin-bottom: 0;
+  }
+}
+
 /* REPORT BUILDER *********************************************************/
 
 .report-variable-fields {
