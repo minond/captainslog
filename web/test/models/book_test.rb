@@ -100,6 +100,28 @@ class BookTest < ActiveSupport::TestCase
     assert build(:book, :user => second_user, :slug => "slug").valid?
   end
 
+  test "dirty flag when there are no entries" do
+    book = create(:book)
+    assert !book.dirty?
+  end
+
+  test "dirty flag when there are entries" do
+    book = create(:book)
+    entry = create(:entry, :book => book)
+    extractor = create(:extractor, :book => book)
+    assert book.dirty?
+  end
+
+  test "dirty entries are correctly returned" do
+    book = create(:book)
+    dirty_entry = create(:entry, :processed_at => 1.minute.ago, :book => book)
+    extractor = create(:extractor, :book => book)
+    not_dirty_entry = create(:entry, :processed_at => Time.now, :book => book)
+    dirty_entries = book.dirty_entries
+    assert dirty_entries.size == 1
+    assert dirty_entries.first.id == dirty_entry.id
+  end
+
 private
 
   def book(overrides = {})
