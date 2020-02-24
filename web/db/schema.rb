@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_03_052119) do
+ActiveRecord::Schema.define(version: 2020_02_24_034314) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -32,6 +32,23 @@ ActiveRecord::Schema.define(version: 2020_02_03_052119) do
     t.datetime "updated_at", precision: 6, null: false
     t.datetime "datetime", null: false
     t.index ["book_id"], name: "index_collections_on_book_id"
+  end
+
+  create_table "credential_options", force: :cascade do |t|
+    t.bigint "credential_id", null: false
+    t.string "label", null: false
+    t.text "value", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["credential_id"], name: "index_credential_options_on_credential_id"
+  end
+
+  create_table "credentials", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "data_source", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_credentials_on_user_id"
   end
 
   create_table "delayed_jobs", force: :cascade do |t|
@@ -134,12 +151,15 @@ ActiveRecord::Schema.define(version: 2020_02_03_052119) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "timezone"
     t.string "name"
+    t.text "salt"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
   add_foreign_key "books", "users"
   add_foreign_key "collections", "books"
+  add_foreign_key "credential_options", "credentials"
+  add_foreign_key "credentials", "users"
   add_foreign_key "entries", "books"
   add_foreign_key "entries", "collections"
   add_foreign_key "entries", "users"
