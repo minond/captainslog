@@ -19,7 +19,7 @@ private
 
   # @param [Symbol] data_source
   def save_credentials(data_source)
-    Credential.create_with_options(current_user, data_source, serialize_token(data_source))
+    Credential.create_with_options(current_user, serialize_token(data_source))
   end
 
   # @param [Symbol] data_source
