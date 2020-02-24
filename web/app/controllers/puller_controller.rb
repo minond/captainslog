@@ -24,6 +24,13 @@ class PullerController < ApplicationController
   #   /puller/fitbit
   #
   def fitbit
-    redirect_to Puller::Fitbit.new.auth_url
+    redirect_to_auth_url :fitbit
+  end
+
+private
+
+  # @param [Symbol] data_source
+  def redirect_to_auth_url(data_source)
+    redirect_to Puller::Client.for_data_source(data_source).new.auth_url
   end
 end

@@ -1,4 +1,6 @@
 class Puller::Fitbit < Puller::OauthClient
+  frequency! :daily
+
   Steps = Struct.new(:date, :value, :keyword_init => true) do
     # @param [Hash] result
     # @return [Steps]
@@ -81,9 +83,11 @@ private
   # @param [Hash] options
   # @return [::FitbitAPI::Client]
   def client(options = {})
-    conf = config(options)
-    @user_id = conf["user_id"]
-    @client ||= ::FitbitAPI::Client.new(conf)
+    @client ||= begin
+                  conf = config(options)
+                  @user_id = conf["user_id"]
+                  ::FitbitAPI::Client.new(conf)
+                end
   end
 
   # @param [Hash] options
