@@ -32,9 +32,8 @@ class Credential < ApplicationRecord
   #
   # @return [Hash]
   def options
-    credential_options.reduce({}) do |options, option|
-      options[option.label] = option.decrypted_value
-      options
+    credential_options.each_with_object({}) do |option, container|
+      container[option.label] = option.decrypted_value
     end
   end
 end
