@@ -1,19 +1,22 @@
 class Credential < ApplicationRecord
   belongs_to :user
+  belongs_to :connection
   has_many :credential_options, :dependent => :destroy
 
-  validates :user, :presence => true
+  validates :user, :connection, :presence => true
 
   # Creates a credential record with all of its associated credential options.
   # Each credential option is encrypted using the user that is associated with
   # the credential.
   #
   # @param [User] user
+  # @param [Connection] connection
   # @param [Hash] options
   # @return [Credential]
-  def self.create_with_options(user, options)
+  def self.create_with_options(user, connection, options)
     Credential.transaction do
-      credential = create(:user => user)
+      credential = create(:user => user,
+                          :connection => connection)
 
       options.each do |label, value|
         CredentialOption.create(:credential => credential,
