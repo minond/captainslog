@@ -21,6 +21,7 @@ detectors:
       - ProcessEntryJob#perform
       - Puller::Fitbit#config
       - ScheduleDirtyEntriesReprocessingJob#perform
+      - SetSaltsOnUsers#up
   TooManyStatements:
     exclude:
       - ExternalService#self.client
