@@ -22,12 +22,10 @@ private
 
   attr_reader :user, :data_source, :code
 
-  # rubocop:disable Metrics/AbcSize
   def validate
     errors.add :missing_user, "a user is required" unless user.present?
     errors.add :missing_code, "an oath code is required" unless code.present?
   end
-  # rubocop:enable Metrics/AbcSize
 
   # @return [Connection, nil]
   def connection_with_credentials
