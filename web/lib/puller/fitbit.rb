@@ -37,7 +37,7 @@ class Puller::Fitbit < Puller::OauthClient
   end
 
   # @return [String]
-  def base_auth_url
+  def auth_url
     client.auth_url
   end
 

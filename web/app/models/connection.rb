@@ -1,6 +1,5 @@
 class Connection < ApplicationRecord
   belongs_to :user
-  belongs_to :book
   has_many :credentials, :dependent => :destroy
 
   validates :data_source, :user, :presence => true

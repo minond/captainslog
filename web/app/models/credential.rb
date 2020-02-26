@@ -14,18 +14,16 @@ class Credential < ApplicationRecord
   # @param [Hash] options
   # @return [Credential]
   def self.create_with_options(user, connection, options)
-    Credential.transaction do
-      credential = create(:user => user,
-                          :connection => connection)
+    credential = create(:user => user,
+                        :connection => connection)
 
-      options.each do |label, value|
-        CredentialOption.create(:credential => credential,
-                                :label => label,
-                                :value => value)
-      end
-
-      credential
+    options.each do |label, value|
+      CredentialOption.create(:credential => credential,
+                              :label => label,
+                              :value => value)
     end
+
+    credential
   end
 
   # Loads all credential options associated with this credential and decrypts
