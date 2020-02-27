@@ -2,7 +2,7 @@ en:
   captains_log: "Captain‘s Log"
   intro_message: "Captain‘s Log is an application for logging anything you want. The intent is to have an application that someone can use to log anything in relatively free form, but while still being able to extract (or inject) important information from each log entry and, more importantly, from aggregated logs."
 
-  fitbit_puller_description: "Fitbit is a wearable device designed to track physical activity, including heart rate, sleep quality, and the number of steps walked. The Fitbit puller is able to download and synchronize daily step count and resting heart rates."
+  fitbit_connection_description: "Fitbit is a wearable device designed to track physical activity, including heart rate, sleep quality, and the number of steps walked. The Fitbit puller is able to download and synchronize daily step count and resting heart rates."
 
   sign_out: "Sign out"
   sign_up: "Sign up"

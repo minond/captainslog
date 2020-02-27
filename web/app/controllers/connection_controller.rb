@@ -1,27 +1,27 @@
-class PullerController < ApplicationController
-  PULLERS = [
+class ConnectionController < ApplicationController
+  CONNECTIONS = [
     {
       :logo => "fitbit-logo.png",
-      :redirect => "/puller/fitbit",
-      :description => I18n.t(:fitbit_puller_description),
+      :redirect => "/connection/fitbit",
+      :description => I18n.t(:fitbit_connection_description),
     },
   ].freeze
 
   # === URL
-  #   GET /puller/new
+  #   GET /connection/new
   #
   # === Sample request
-  #   /puller/new
+  #   /connection/new
   #
   def new
-    locals :pullers => PULLERS
+    locals :connections => CONNECTIONS
   end
 
   # === URL
-  #   GET /puller/fitbit
+  #   GET /connection/fitbit
   #
   # === Sample request
-  #   /puller/fitbit
+  #   /connection/fitbit
   #
   def fitbit
     redirect_to_auth_url :fitbit

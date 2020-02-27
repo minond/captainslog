@@ -493,45 +493,45 @@ header .books-nav {
   content: '-';
 }
 
-/* PULLER *****************************************************************/
+/* CONNECTION *************************************************************/
 
-.puller:first-child {
+.connection:first-child {
   padding-top: 0;
 }
 
-.puller {
+.connection {
   transition: background-color .2s;
   display: block;
   padding: 2rem .5rem;
 }
 
-.puller-logo {
+.connection-logo {
   width: 10rem;
   display: block;
   margin-bottom: 1.5rem;
 }
 
-.puller + .puller {
+.connection + .connection {
   border-top: 1px solid #d9d9d9;
 }
 
 @media screen and (min-width: 801px) {
-  .puller {
+  .connection {
     display: flex;
     align-items: center;
     padding: 2rem;
     transition: background-color .2s;
   }
 
-  .puller:first-child {
+  .connection:first-child {
     padding-top: 2rem;
   }
 
-  .puller:hover {
+  .connection:hover {
     background-color: #f7f7f7;
   }
 
-  .puller-logo {
+  .connection-logo {
     margin-right: 2rem;
     margin-bottom: 0;
   }
