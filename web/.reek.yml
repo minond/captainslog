@@ -19,7 +19,7 @@ detectors:
     exclude:
       - Book#first_datetime_field
       - ProcessEntryJob#perform
-      - Puller::Fitbit#config
+      - DataSource::Fitbit#config
       - ScheduleDirtyEntriesReprocessingJob#perform
       - SetSaltsOnUsers#up
   TooManyStatements:

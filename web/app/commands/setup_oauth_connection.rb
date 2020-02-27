@@ -48,8 +48,8 @@ private
 
   # @return [Hash]
   def serialized_token
-    puller = Puller::Client.for_data_source(data_source).new
-    puller.code = code
-    puller.serialize_token
+    client = DataSource::Client.for_data_source(data_source).new
+    client.code = code
+    client.serialize_token
   end
 end

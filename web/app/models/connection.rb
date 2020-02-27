@@ -6,11 +6,11 @@ class Connection < ApplicationRecord
 
   scope :by_data_source, ->(ds) { find_by(:data_source => ds) }
 
-  # @return [Puller::Client]
-  def puller
-    @puller ||=
+  # @return [DataSource::Client]
+  def client
+    @client ||=
       begin
-        klass = Puller::Client.for_data_source(data_source)
+        klass = DataSource::Client.for_data_source(data_source)
         klass.new(newest_credentials.options)
       end
   end

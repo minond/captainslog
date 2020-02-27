@@ -1,4 +1,4 @@
-class Puller::OauthClient < Puller::Client
+class DataSource::OauthClient < DataSource::Client
   # Generates an authentication URL that grants an oauth code.
   #
   # @return [String]

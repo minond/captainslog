@@ -1,4 +1,4 @@
-class Puller::Fitbit < Puller::OauthClient
+class DataSource::Fitbit < DataSource::OauthClient
   frequency! :daily
 
   Steps = Struct.new(:date, :value, :keyword_init => true) do

@@ -1,4 +1,4 @@
-class Puller::Client
+class DataSource::Client
   FREQUENCIES = %i[daily].freeze
 
   class << self
@@ -8,7 +8,7 @@ class Puller::Client
   # @param [Symbol] data_source
   # @return [Class]
   def self.for_data_source(data_source)
-    "Puller::#{data_source.to_s.camelcase}".safe_constantize
+    "DataSource::#{data_source.to_s.camelcase}".safe_constantize
   end
 
   # @return [Symbol]
