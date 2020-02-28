@@ -2,7 +2,7 @@ class ConnectionController < ApplicationController
   CONNECTIONS = [
     {
       :logo => "fitbit-logo.png",
-      :redirect => "/connection/fitbit",
+      :redirect => Rails.application.routes.url_helpers.fitbit_connection_index_path,
       :description => I18n.t(:fitbit_connection_description),
     },
   ].freeze
