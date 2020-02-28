@@ -23,11 +23,11 @@ Rails.application.routes.draw do
     resources :connection, :only => %i[new] do
       collection do
         get :fitbit
-      end
-    end
 
-    namespace :oauth do
-      get :fitbit
+        namespace :oauth, :module => nil do
+          get :fitbit, :action => :fitbit_oauth
+        end
+      end
     end
 
     post "/query/execute", :to => "query#execute"
