@@ -1,13 +1,15 @@
 <div class="table">
   <table class="table">
     <tr>
+      <th><%= t(:id) %></td>
       <th><%= t(:data_source) %></td>
       <th><%= t(:book) %></td>
     </tr>
     <% connections.each do |connection| %>
       <tr>
+        <td><%= connection.id %></td>
         <td><%= connection.data_source %></td>
-        <td><%= connection&.book&.slug %></td>
+        <td><%= connection&.book&.name %></td>
       </tr>
     <% end %>
   </table>
