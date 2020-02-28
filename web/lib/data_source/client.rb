@@ -24,4 +24,16 @@ class DataSource::Client
 
     @frequency = frequency
   end
+
+  # Path to page where user can start the authentication process for this data source.
+  #
+  # @return [String]
+  def auth_url
+    raise NotImplementedError.new, "#auth_url is not implemented"
+  end
+
+  # @return [Hash]
+  def credential_options
+    raise NotImplementedError.new, "#credential_options is not implemented"
+  end
 end

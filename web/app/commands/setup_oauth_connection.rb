@@ -43,13 +43,13 @@ private
 
   # @return [Credential]
   def credential_with_options
-    Credential.create_with_options(user, connection, serialized_token)
+    Credential.create_with_options(user, connection, credential_options)
   end
 
   # @return [Hash]
-  def serialized_token
+  def credential_options
     client = DataSource::Client.for_data_source(data_source).new
     client.code = code
-    client.serialize_token
+    client.credential_options
   end
 end

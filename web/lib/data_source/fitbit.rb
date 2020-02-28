@@ -48,7 +48,7 @@ class DataSource::Fitbit < DataSource::OauthClient
   end
 
   # @return [Hash]
-  def serialize_token
+  def credential_options
     token = client.token
     {
       :user_id => user_id,
