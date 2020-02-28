@@ -58,6 +58,11 @@ en:
 
   edit_user: "Edit user"
 
+  connections: "Connections"
+  add_new_connection: "Add new connection"
+  data_source: "Data source"
+
+  book: "Book"
   edit_book: "Edit book"
   new_book: "New book"
   books: "Books"

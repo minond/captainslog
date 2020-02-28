@@ -12,6 +12,14 @@
 
   <hr />
 
+  <%= render "form/subtitle", :key => :connections %>
+  <%= render "connection/list", :connections => user.connections %>
+  <div class="field btns">
+    <%= link_to t(:add_new_connection), new_connection_path, :class => "btn" %>
+  </div>
+
+  <hr />
+
   <%= link_to t(:sign_out), destroy_user_session_path,
     :method => :delete,
     :class => "btn destructive"
