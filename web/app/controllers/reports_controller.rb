@@ -1,3 +1,4 @@
+# rubocop:disable Lint/UselessAccessModifier
 class ReportsController < ApplicationController
   respond_to :json
 
@@ -28,3 +29,4 @@ private
 
   param_reader :id
 end
+# rubocop:enable Lint/UselessAccessModifier
