@@ -17,6 +17,9 @@ class Api::V1::TokenController < ApiController
 
 private
 
+  param_reader :email
+  param_reader :password
+
   # Results from authentication request. Includes a "token" key if successful,
   # or an "error" key on failure.
   #
@@ -39,15 +42,5 @@ private
   # @return [AuthenticateUser]
   def authenticate_user
     @authenticate_user ||= AuthenticateUser.call(email, password)
-  end
-
-  # @return [String]
-  def email
-    params[:email]
-  end
-
-  # @return [String]
-  def password
-    params[:password]
   end
 end

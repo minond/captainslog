@@ -1,6 +1,27 @@
 class ApiController < ActionController::API
   before_action :authenticate_request
 
+  # Generates a getter method for a request parameter
+  #
+  # @example call
+  #
+  #   param_reader :code
+  #
+  #
+  # @example result
+  #
+  #   def code
+  #     params[:code]
+  #   end
+  #
+  #
+  # @param [Symbol] param
+  def self.param_reader(param)
+    define_method(param) do
+      params[param]
+    end
+  end
+
 private
 
   # JSON rendering helper method

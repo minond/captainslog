@@ -46,10 +46,7 @@ class ConnectionController < ApplicationController
 
 private
 
-  # @return [String, nil]
-  def code
-    params[:code]
-  end
+  param_reader :code
 
   # @param [Symbol] data_source
   def redirect_to_auth_url(data_source)
