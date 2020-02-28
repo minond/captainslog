@@ -8,7 +8,7 @@ class ReportsController < ApplicationController
   #   /reports
   #
   def index
-    locals :reports => user_reports
+    locals :reports => current_user.reports
   end
 
   # === URL
@@ -21,24 +21,10 @@ class ReportsController < ApplicationController
   #   /reports/1
   #
   def show
-    locals :report => current_report
+    locals :report => current_user.reports.find(id)
   end
 
 private
 
-  # @return [Array<Report>]
-  def user_reports
-    Report.by_user(current_user)
-  end
-
-  # @return [Report]
-  def current_report
-    Report.by_user(current_user)
-          .by_id(current_report_id)
-  end
-
-  # @return [Integer]
-  def current_report_id
-    params[:id]
-  end
+  param_reader :id
 end

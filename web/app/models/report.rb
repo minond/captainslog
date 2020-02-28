@@ -7,7 +7,4 @@ class Report < ApplicationRecord
   alias_attribute :variables, :report_variables
 
   validates :label, :user, :presence => true
-
-  scope :by_user, ->(user) { where(:user => user) }
-  scope :by_id, ->(id) { find(id) }
 end
