@@ -9,8 +9,10 @@ private
 
   # @return [Shorthand]
   def shorthand
-    Shorthand.new(:book => create(:book),
-                  :user => create(:user),
+    user = create(:user)
+    book = create(:book, :user => user)
+    Shorthand.new(:book => book,
+                  :user => user,
                   :priority => 1,
                   :expansion => "a")
   end

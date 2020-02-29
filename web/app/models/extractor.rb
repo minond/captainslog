@@ -1,23 +1,14 @@
 class Extractor < ApplicationRecord
+  include Scheduling
+  include OwnerValidation
+
   self.inheritance_column = :_type_disabled
 
   belongs_to :user
   belongs_to :book
 
-  after_initialize :constructor
-  after_commit :schedule_reprocessing
+  after_commit :schedule_book_reprocessing
 
   validates :label, :match, :book, :user, :type, :presence => true
-
-private
-
-  def constructor
-    self.user ||= book&.user
-  end
-
-  # Reprocess all of the book's entries to take into account this recent
-  # change.
-  def schedule_reprocessing
-    book.schedule_reprocessing
-  end
+  validate :book_is_owned_by_user
 end

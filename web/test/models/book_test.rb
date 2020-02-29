@@ -106,16 +106,18 @@ class BookTest < ActiveSupport::TestCase
   end
 
   test "dirty flag when there are entries" do
-    book = create(:book)
+    user = create(:user)
+    book = create(:book, :user => user)
     create(:entry, :book => book)
-    create(:extractor, :book => book)
+    create(:extractor, :book => book, :user => user)
     assert book.dirty?
   end
 
   test "dirty entries are correctly returned" do
-    book = create(:book)
+    user = create(:user)
+    book = create(:book, :user => user)
     dirty_entry = create(:entry, :processed_at => 1.minute.ago, :book => book)
-    create(:extractor, :book => book)
+    create(:extractor, :book => book, :user => user)
     create(:entry, :processed_at => Time.now, :book => book)
     dirty_entries = book.dirty_entries
     assert dirty_entries.size == 1

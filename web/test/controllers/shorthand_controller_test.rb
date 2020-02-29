@@ -4,7 +4,8 @@ class ShorthandControllerTest < ActionDispatch::IntegrationTest
   setup { sign_in user }
 
   test "it is able to load a resouce" do
-    shorthand = create(:shorthand, :user => user)
+    book = create(:book, :user => user)
+    shorthand = create(:shorthand, :user => user, :book => book)
     get "/book/#{shorthand.book.slug}/shorthand/#{shorthand.id}"
     assert_response :success
   end

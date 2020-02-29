@@ -1,4 +1,5 @@
 class Book < ApplicationRecord
+  include Scheduling
   include Grouping
 
   belongs_to :user
@@ -31,11 +32,6 @@ class Book < ApplicationRecord
   # @return [Array<Entry>]
   def dirty_entries
     entries.where("processed_at < ?", Time.at(latest_shorthand_or_extractor_update))
-  end
-
-  # Schedules a dirty entry reprocessor
-  def schedule_reprocessing
-    ScheduleDirtyEntriesReprocessingJob.perform_later self
   end
 
   # @return [String]
@@ -104,7 +100,6 @@ private
 
   # @return [Integer]
   def earliest_entry_processing
-    # return 1.day.ago.to_i
     first_datetime_field(entries, :processed_at, :asc)
   end
 

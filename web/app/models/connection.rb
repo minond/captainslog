@@ -1,10 +1,12 @@
 class Connection < ApplicationRecord
+  include OwnerValidation
+
   belongs_to :user
   belongs_to :book, :optional => true
   has_many :credentials, :dependent => :destroy
 
   validates :data_source, :user, :presence => true
-  validate :ensure_book_owner
+  validate :book_is_owned_by_user, :if => :book_id
 
   scope :by_data_source, ->(ds) { find_by(:data_source => ds) }
 
@@ -21,11 +23,5 @@ private
 
   def newest_credentials
     credentials.order("created_at desc").first
-  end
-
-  def ensure_book_owner
-    user.books.find(book_id)
-  rescue ActiveRecord::RecordNotFound
-    errors.add(:book, "not found")
   end
 end
