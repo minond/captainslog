@@ -1,5 +1,4 @@
 class Book < ApplicationRecord
-  include Scheduling
   include Grouping
 
   belongs_to :user
@@ -74,6 +73,11 @@ class Book < ApplicationRecord
   # @see `Grouping.grouping_prev_next_times`
   def grouping_prev_next_times(time)
     super
+  end
+
+  # Schedules a dirty entry reprocessor
+  def schedule_processing
+    ScheduleDirtyEntriesReprocessingJob.perform_later self
   end
 
 private

@@ -1,5 +1,5 @@
 class Extractor < ApplicationRecord
-  include Scheduling
+  include BookProcessingScheduling
   include OwnerValidation
 
   self.inheritance_column = :_type_disabled

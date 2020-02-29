@@ -1,9 +1,4 @@
-module Scheduling
-  # Schedules a dirty entry reprocessor
-  def schedule_processing
-    ScheduleDirtyEntriesReprocessingJob.perform_later self
-  end
-
+module BookProcessingScheduling
 private
 
   # Reprocess all of the book's entries to take into account this recent

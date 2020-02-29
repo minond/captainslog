@@ -1,5 +1,5 @@
 class Shorthand < ApplicationRecord
-  include Scheduling
+  include BookProcessingScheduling
   include OwnerValidation
 
   belongs_to :user
