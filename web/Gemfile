@@ -14,7 +14,7 @@ gem "jbuilder", "~> 2.7"                      # Build JSON APIs with ease. Read 
 gem "jquery-rails"                            # A gem to automate using jQuery with Rails
 gem "jwt"                                     # JSON Web Token encoder/decoder
 gem "pg", ">= 0.18", "< 2.0"                  # Use postgresql as the database for Active Record
-gem "puma", "~> 4.1"                          # Use Puma as the app server
+gem "puma", "~> 4.3"                          # Use Puma as the app server
 gem "rabl"                                    # JSON view builder
 gem "rails", "~> 6.0.1"                       # Bundle edge Rails instead: gem "rails", github: "rails/rails"
 gem "simple_command"                          # A simple, standardized way to build and use Service Objects (aka Commands) in Ruby
