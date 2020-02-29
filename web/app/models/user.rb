@@ -4,7 +4,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :rememberable, :validatable
 
   has_many :books
-  has_many :reports
+  has_many :reports, :dependent => :destroy
   has_many :connections, :dependent => :destroy
 
   after_initialize :constructor
