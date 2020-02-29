@@ -148,12 +148,12 @@ if ENV["CAPTAINS_LOG_USERNAME"]
                       :width => "100%",
                       :kind => :chart,
                       :query => <<~SQL
-                        select to_timestamp(cast(_collected_at as integer)),
+                        select to_timestamp(cast(_date as integer)),
                           cast(weight as float)
                         from workouts
                         where exercise ilike '{{Exercise}}'
                         and weight is not null
-                        order by _collected_at asc
+                        order by _date asc
                       SQL
                      )
   ReportOutput.create(:report => weight_trents,
@@ -162,11 +162,11 @@ if ENV["CAPTAINS_LOG_USERNAME"]
                       :kind => :table,
                       :query => <<~SQL
                         select exercise, cast(weight as float) as weight,
-                          to_timestamp(cast(_collected_at as integer)) as date
+                          to_timestamp(cast(_date as integer)) as date
                         from workouts
                         where exercise ilike '{{Exercise}}'
                         and weight is not null
-                        order by _collected_at desc
+                        order by _date desc
                         limit 20
                       SQL
                      )

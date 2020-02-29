@@ -45,6 +45,7 @@ class Book < ApplicationRecord
     collection = find_collection(time) || create_collection(time)
     Entry.create(:book => self,
                  :user => user,
+                 :date => time,
                  :collection => collection,
                  :original_text => text)
   end

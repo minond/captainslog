@@ -16,7 +16,7 @@ private
   def call
     log.puts "pulling data for connection id #{args.connection_id}"
     pull.each do |item|
-      log.puts "  - #{item.to_s}"
+      log.puts "  - #{item}"
     end
   end
 
