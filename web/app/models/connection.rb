@@ -21,6 +21,7 @@ class Connection < ApplicationRecord
 
 private
 
+  # @return [Credential, nil]
   def newest_credentials
     credentials.order("created_at desc").first
   end
