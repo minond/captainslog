@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_29_183633) do
+ActiveRecord::Schema.define(version: 2020_02_29_195337) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -105,6 +105,17 @@ ActiveRecord::Schema.define(version: 2020_02_29_183633) do
     t.index ["user_id"], name: "index_extractors_on_user_id"
   end
 
+  create_table "jobs", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.integer "status"
+    t.integer "kind"
+    t.text "args"
+    t.text "logs"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_jobs_on_user_id"
+  end
+
   create_table "report_outputs", force: :cascade do |t|
     t.string "label", null: false
     t.string "width"
@@ -175,6 +186,7 @@ ActiveRecord::Schema.define(version: 2020_02_29_183633) do
   add_foreign_key "entries", "users"
   add_foreign_key "extractors", "books"
   add_foreign_key "extractors", "users"
+  add_foreign_key "jobs", "users"
   add_foreign_key "report_outputs", "reports"
   add_foreign_key "report_variables", "reports"
   add_foreign_key "reports", "users"

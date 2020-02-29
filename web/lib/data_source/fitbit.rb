@@ -60,6 +60,17 @@ class DataSource::Fitbit < DataSource::OauthClient
 
   # @param [Date] start_date
   # @param [Date] end_date
+  # @return [Array<HeartRate | Steps>]
+  def pull(**args)
+    heart_rate_time_series(args) + steps_time_series(args)
+  end
+
+private
+
+  attr_accessor :user_id
+
+  # @param [Date] start_date
+  # @param [Date] end_date
   # @return [Array<HeartRate>]
   def heart_rate_time_series(start_date: Date.today, end_date: start_date)
     client.heart_rate_time_series(:start_date => start_date, :end_date => end_date)
@@ -75,10 +86,6 @@ class DataSource::Fitbit < DataSource::OauthClient
           .filter { |result| Steps.valid?(result) }
           .map { |result| Steps.from_result(result) }
   end
-
-private
-
-  attr_accessor :user_id
 
   # @param [Hash] options
   # @return [::FitbitAPI::Client]

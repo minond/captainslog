@@ -112,6 +112,7 @@ GEM
       railties (>= 4.2.0)
     faraday (1.0.0)
       multipart-post (>= 1.2, < 3)
+    fast_attributes (0.9.0)
     ffi (1.12.2)
     fitbit_api (0.9.0)
       oauth2 (~> 1.0)
@@ -309,6 +310,7 @@ DEPENDENCIES
   devise
   factory_bot
   factory_bot_rails
+  fast_attributes
   fitbit_api
   jbuilder (~> 2.7)
   jquery-rails
