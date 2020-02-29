@@ -44,9 +44,50 @@ class ConnectionController < ApplicationController
     end
   end
 
+  # === URL
+  #   GET /connection/:id
+  #
+  # === Request fields
+  #   [Integer] id - connection id
+  #
+  # === Sample request
+  #   /connection/12
+  #
+  def show
+    locals :connection => current_connection,
+           :books => current_user.books
+  end
+
+  # === URL
+  #   PATCH /connection/:id
+  #
+  # === Request fields
+  #   [Integer] id - connection id
+  #   [Integer] connection[book_id] - connection's book id
+  #
+  # === Sample request
+  #   /connection/12
+  #
+  def update
+    if update_connection
+      flash.notice = t(:successful_connection_update)
+      redirect_to user_path
+    else
+      flash.alert = t(:failure_in_connection_update)
+      locals :show, :connection => current_connection,
+                    :books => current_user.books
+    end
+  end
+
 private
 
+  param_reader :id
   param_reader :code
+
+  # @return [Connection]
+  def current_connection
+    @current_connection ||= current_user.connections.find(id)
+  end
 
   # @param [Symbol] data_source
   def redirect_to_auth_url(data_source)
@@ -57,5 +98,19 @@ private
   # @return [SetupOauthConnection]
   def setup_oauth_connection(data_source)
     @setup_oauth_connection ||= SetupOauthConnection.call(current_user, data_source, code)
+  end
+
+  # Update the connection and return true if there were not errors doing so.
+  #
+  # @return [Boolean]
+  def update_connection
+    current_connection.update(permitted_connection_params)
+    current_connection.errors.empty?
+  end
+
+  # @return [ActionController::Parameters]
+  def permitted_connection_params
+    params.require(:connection)
+          .permit(:book_id)
   end
 end

@@ -1,0 +1,19 @@
+<%= form_for(connection) do |f| %>
+  <%= render "form/field", :f => f, :field => :book do %>
+    <%= f.select(:book_id, books.map { |book| [book.name, book.id] }, :include_blank => true) %>
+  <% end %>
+
+  <%= render "form/field", :f => f, :field => :data_source do %>
+    <%= f.text_field :data_source, :readonly => true %>
+  <% end %>
+
+  <%= render "form/field", :f => f, :field => :created_at do %>
+    <%= f.text_field :created_at, :readonly => true %>
+  <% end %>
+
+  <%= render "form/field", :f => f, :field => :updated_at do %>
+    <%= f.text_field :updated_at, :readonly => true %>
+  <% end %>
+
+  <%= render "form/actions", :f => f, :back_url => user_path %>
+<% end %>

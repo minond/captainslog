@@ -4,6 +4,7 @@ class Connection < ApplicationRecord
   has_many :credentials, :dependent => :destroy
 
   validates :data_source, :user, :presence => true
+  validate :ensure_book_owner
 
   scope :by_data_source, ->(ds) { find_by(:data_source => ds) }
 
@@ -20,5 +21,11 @@ private
 
   def newest_credentials
     credentials.order("created_at desc").first
+  end
+
+  def ensure_book_owner
+    user.books.find(book_id)
+  rescue ActiveRecord::RecordNotFound
+    errors.add(:book, "not found")
   end
 end

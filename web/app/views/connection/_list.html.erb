@@ -7,7 +7,9 @@
     </tr>
     <% connections.each do |connection| %>
       <tr>
-        <td><%= connection.id %></td>
+        <td>
+          <%= link_to connection.id, connection_path(connection), :class => "link" %>
+        </td>
         <td><%= connection.data_source %></td>
         <td><%= connection&.book&.name %></td>
       </tr>

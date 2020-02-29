@@ -20,7 +20,7 @@ Rails.application.routes.draw do
     resource :search, :only => %i[show]
     resource :user, :only => %i[show update]
 
-    resources :connection, :only => %i[new] do
+    resources :connection, :only => %i[new show update] do
       collection do
         get :fitbit
 
