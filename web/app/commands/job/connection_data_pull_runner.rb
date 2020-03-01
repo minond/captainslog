@@ -23,21 +23,29 @@ private
     log.puts "done"
   end
 
-  # rubocop:disable Metrics/AbcSize
   def create_or_update_entries
     proto_entries.each do |proto_entry|
-      entry = book.new_entry(proto_entry.text, proto_entry.date, proto_entry.digest)
-      entry.connection = connection
-      entry.save!
-      log.puts "creating new entry with digest #{proto_entry.digest}"
+      create_entry(proto_entry)
     rescue ActiveRecord::RecordInvalid
-      book.update_entry(proto_entry.digest, proto_entry.text)
-      log.puts "updating existing entry with digest #{proto_entry.digest}"
+      update_entry(proto_entry)
     end
   end
-  # rubocop:enable Metrics/AbcSize
 
-  # @return [Array<Object>]
+  # @param [ProtoEntry]
+  def create_entry(proto_entry)
+    entry = book.new_entry(proto_entry.text, proto_entry.date, proto_entry.digest)
+    entry.connection = connection
+    entry.save!
+    log.puts "creating new entry with digest #{proto_entry.digest}"
+  end
+
+  # @param [ProtoEntry]
+  def update_entry(proto_entry)
+    book.update_entry(proto_entry.digest, proto_entry.text)
+    log.puts "updating existing entry with digest #{proto_entry.digest}"
+  end
+
+  # @return [Array<ProtoEntry>]
   def proto_entries
     @proto_entries ||= connection.client.pull(:start_date => args.start_date,
                                               :end_date => args.end_date)
