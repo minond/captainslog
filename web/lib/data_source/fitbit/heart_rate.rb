@@ -5,7 +5,7 @@ class DataSource::Fitbit::HeartRate < ProtoEntry
     text = "Resting heart rate: #{result['value']['restingHeartRate']}"
     date = Date.parse(result["dateTime"])
 
-    new(text, data)
+    new(text, date)
   end
 
   # @param [Hash] result
