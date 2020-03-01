@@ -6,6 +6,8 @@ class Job < ApplicationRecord
   enum :kind => %i[connection_data_pull]
   enum :status => %i[initiated running errored done]
 
+  after_commit :schedule_run
+
   RUNNABLE_STATUSES = %i[initiated errored].freeze
 
   RUNNERS = {
@@ -50,6 +52,10 @@ private
            :logs => log.string)
 
     @log = nil
+  end
+
+  def schedule_run
+    RunJob.perform_later self
   end
 
   # @return [Tuple<SimpleCommand, Error>]
