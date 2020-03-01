@@ -14,9 +14,11 @@ class Entry < ApplicationRecord
                                      :unless => :will_save_change_to_processed_data?
 
   validates :book, :collection, :user, :original_text, :presence => true
+  validates :digest, :uniqueness => { :scope => :book }, :if => :digest?
 
   scope :by_user, ->(user) { where(:user => user) }
   scope :by_text, ->(text) { where("processed_text ilike ?", "%#{text}%") }
+  scope :by_digest, ->(digest) { where(:digest => digest) }
 
   # @return [String]
   def text

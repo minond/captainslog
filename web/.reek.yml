@@ -21,6 +21,12 @@ detectors:
   TooManyStatements:
     exclude:
       - ExternalService#self.client
+  TooManyMethods:
+    exclude:
+      - Book
+  DataClump:
+    exclude:
+      - Book
 
 directories:
   db/migrate:

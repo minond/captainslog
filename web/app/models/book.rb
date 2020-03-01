@@ -41,14 +41,35 @@ class Book < ApplicationRecord
 
   # @param [String] text
   # @param [Time] time
+  # @param [String] digest
   # @return [Entry]
-  def add_entry(text, time = Time.current)
+  def new_entry(text, time = Time.current, digest = "")
     collection = find_collection(time) || create_collection(time)
-    Entry.create(:book => self,
-                 :user => user,
-                 :date => time,
-                 :collection => collection,
-                 :original_text => text)
+    Entry.new(:book => self,
+              :user => user,
+              :date => time,
+              :digest => digest,
+              :collection => collection,
+              :original_text => text)
+  end
+
+  # @param [String] text
+  # @param [Time] time
+  # @param [String] digest
+  # @return [Entry]
+  def add_entry(text, time = Time.current, digest = "")
+    entry = new_entry(text, time, digest)
+    entry.save
+    entry
+  end
+
+  # @param [String] digest
+  # @param [String] text
+  # @return [Entry, nil]
+  def update_entry(digest, text)
+    entry = entries.by_digest(digest)
+    entry&.update(:original_text => text)
+    entry
   end
 
   # @param [Time] time
