@@ -1,4 +1,11 @@
 <%= render "layouts/content-view" do %>
   <%= render "form/title", :key => :edit_connection %>
   <%= render "connection/edit_form", :connection => connection, :books => books %>
+
+  <hr />
+  <%= link_to t(:delete), connection_path(connection),
+    :method => :delete,
+    :class => "btn destructive",
+    :data => { :confirm => t(:are_you_sure_q) }
+  %>
 <% end %>

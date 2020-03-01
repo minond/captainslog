@@ -80,6 +80,23 @@ class ConnectionController < ApplicationController
     end
   end
 
+  # === URL
+  #   DELETE /connection/:id
+  #
+  # === Request fields
+  #   [Integer] id - the connection id for the connection to delete
+  #
+  # === Sample request
+  #   /connection/1
+  #
+  # === Sample response (HTML)
+  #   Redirect to previous page in session
+  #
+  def destroy
+    current_connection.destroy
+    redirect_to user_path
+  end
+
 private
 
   param_reader :id
