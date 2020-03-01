@@ -22,6 +22,15 @@ class Connection < ApplicationRecord
       end
   end
 
+  # @param [Date] start_date
+  # @return [Job]
+  def schedule_data_pull(start_date = 2.days.ago.to_date)
+    Connection.transaction do
+      update(:last_update_attempted_at => Time.now)
+      Job.schedule!(user, :connection_data_pull, data_pull_job_args(start_date))
+    end
+  end
+
 private
 
   # @return [Credential, nil]
@@ -31,13 +40,14 @@ private
 
   # @return [Job]
   def schedule_initial_data_pull
-    Job.schedule!(user, :connection_data_pull, initial_data_pull_args)
+    schedule_data_pull(2.years.ago.to_date)
   end
 
+  # @param [Date] start_date
   # @return [Job::ConnectionDataPullArgs]
-  def initial_data_pull_args
+  def data_pull_job_args(start_date)
     Job::ConnectionDataPullArgs.new(:connection_id => id,
-                                    :start_date => 2.years.ago.to_date,
+                                    :start_date => start_date,
                                     :end_date => Date.current)
   end
 
