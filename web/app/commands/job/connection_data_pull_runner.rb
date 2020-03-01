@@ -26,7 +26,9 @@ private
   # rubocop:disable Metrics/AbcSize
   def create_or_update_entries
     proto_entries.each do |proto_entry|
-      book.new_entry(proto_entry.text, proto_entry.date, proto_entry.digest).save!
+      entry = book.new_entry(proto_entry.text, proto_entry.date, proto_entry.digest)
+      entry.connection = connection
+      entry.save!
       log.puts "creating new entry with digest #{proto_entry.digest}"
     rescue ActiveRecord::RecordInvalid
       book.update_entry(proto_entry.digest, proto_entry.text)

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_01_020034) do
+ActiveRecord::Schema.define(version: 2020_03_01_035133) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -90,8 +90,10 @@ ActiveRecord::Schema.define(version: 2020_03_01_020034) do
     t.datetime "processed_at"
     t.datetime "date"
     t.text "digest"
+    t.bigint "connection_id"
     t.index ["book_id"], name: "index_entries_on_book_id"
     t.index ["collection_id"], name: "index_entries_on_collection_id"
+    t.index ["connection_id"], name: "index_entries_on_connection_id"
     t.index ["user_id"], name: "index_entries_on_user_id"
   end
 
@@ -185,6 +187,7 @@ ActiveRecord::Schema.define(version: 2020_03_01_020034) do
   add_foreign_key "credentials", "users"
   add_foreign_key "entries", "books"
   add_foreign_key "entries", "collections"
+  add_foreign_key "entries", "connections"
   add_foreign_key "entries", "users"
   add_foreign_key "extractors", "books"
   add_foreign_key "extractors", "users"

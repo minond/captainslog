@@ -4,6 +4,7 @@ class Connection < ApplicationRecord
   belongs_to :user
   belongs_to :book, :optional => true
   has_many :credentials, :dependent => :destroy
+  has_many :entries, :dependent => :destroy
 
   after_commit :schedule_initial_data_pull, :if => :needs_initial_data_pull?
 
