@@ -1,10 +1,10 @@
 class DataSource::Fitbit < DataSource::OauthClient
   frequency! :daily
 
-  DATA_PULL_BACKFILL_SYNC_PERIOD_START = 2.years
-  DATA_PULL_BACKFILL_SYNC_PERIOD_END = 1.day
-  DATA_PULL_STANDARD_SYNC_PERIOD_START = 2.days
-  DATA_PULL_STANDARD_SYNC_PERIOD_END = 1.day
+  DATA_PULL_BACKFILL_PERIOD_START = 2.years
+  DATA_PULL_BACKFILL_PERIOD_END = 1.day
+  DATA_PULL_STANDARD_PERIOD_START = 2.days
+  DATA_PULL_STANDARD_PERIOD_END = 1.day
 
   # @param [Hash] options
   def initialize(options = {})

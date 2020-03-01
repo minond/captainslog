@@ -2,7 +2,7 @@ class ScheduleConnectionDataPullsJob < ApplicationJob
   queue_as :default
 
   def perform
-    connections.find_each(&:schedule_data_pull)
+    connections.find_each(&:schedule_data_pull_standard)
   end
 
 private

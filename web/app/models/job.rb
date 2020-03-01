@@ -3,15 +3,16 @@ class Job < ApplicationRecord
 
   validates :args, :status, :kind, :user, :presence => true
 
-  enum :kind => %i[connection_data_pull]
+  enum :kind => %i[connection_data_pull_standard connection_data_pull_backfill]
   enum :status => %i[initiated running errored done]
 
-  after_commit :schedule_run
+  after_create :schedule_run
 
   RUNNABLE_STATUSES = %i[initiated errored].freeze
 
   RUNNERS = {
-    :connection_data_pull => [Job::ConnectionDataPullArgs, Job::ConnectionDataPullRunner],
+    :connection_data_pull_backfill => [Job::ConnectionDataPullBackfillArgs, Job::ConnectionDataPullRunner],
+    :connection_data_pull_standard => [Job::ConnectionDataPullStandardArgs, Job::ConnectionDataPullRunner],
   }.freeze
 
   # @param [User] user

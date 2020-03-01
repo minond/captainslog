@@ -6,7 +6,7 @@ class Connection < ApplicationRecord
   has_many :credentials, :dependent => :destroy
   has_many :entries, :dependent => :destroy
 
-  after_commit :schedule_initial_data_pull, :if => :needs_initial_data_pull?
+  after_commit :schedule_data_pull_backfill, :if => :needs_initial_data_pull?
 
   validates :data_source, :user, :presence => true
   validate :book_is_owned_by_user, :if => :book_id
@@ -25,13 +25,16 @@ class Connection < ApplicationRecord
       end
   end
 
-  # @param [Date] start_date
   # @return [Job]
-  def schedule_data_pull(start_date = 2.days.ago.to_date)
-    Connection.transaction do
-      update(:last_update_attempted_at => Time.now)
-      Job.schedule!(user, :connection_data_pull, data_pull_job_args(start_date))
-    end
+  def schedule_data_pull_backfill
+    schedule_data_pull(:connection_data_pull_backfill,
+                       Job::ConnectionDataPullBackfillArgs.new(:connection_id => id))
+  end
+
+  # @return [Job]
+  def schedule_data_pull_standard
+    schedule_data_pull(:connection_data_pull_standard,
+                       Job::ConnectionDataPullStandardArgs.new(:connection_id => id))
   end
 
 private
@@ -41,21 +44,16 @@ private
     credentials.order("created_at desc").first
   end
 
-  # @return [Job]
-  def schedule_initial_data_pull
-    schedule_data_pull(2.years.ago.to_date)
-  end
-
-  # @param [Date] start_date
-  # @return [Job::ConnectionDataPullArgs]
-  def data_pull_job_args(start_date)
-    Job::ConnectionDataPullArgs.new(:connection_id => id,
-                                    :start_date => start_date,
-                                    :end_date => Date.current)
-  end
-
   # @return [Boolean]
   def needs_initial_data_pull?
     book_id? && book_id_previously_changed?
+  end
+
+  # @return [Job]
+  def schedule_data_pull(kind, args)
+    Connection.transaction do
+      update(:last_update_attempted_at => Time.now)
+      Job.schedule!(user, kind, args)
+    end
   end
 end

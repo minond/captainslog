@@ -47,8 +47,12 @@ private
 
   # @return [Array<ProtoEntry>]
   def proto_entries
-    @proto_entries ||= connection.client.pull(:start_date => args.start_date,
-                                              :end_date => args.end_date)
+    @proto_entries ||=
+      if args.is_a?(Job::ConnectionDataPullBackfillArgs)
+        connection.client.data_pull_backfill
+      else
+        connection.client.data_pull_standard
+      end
   end
 
   # @return [Book]
