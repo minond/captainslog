@@ -1,6 +1,11 @@
 class DataSource::Fitbit < DataSource::OauthClient
   frequency! :daily
 
+  DATA_PULL_BACKFILL_SYNC_PERIOD_START = 2.years
+  DATA_PULL_BACKFILL_SYNC_PERIOD_END = 1.day
+  DATA_PULL_STANDARD_SYNC_PERIOD_START = 2.days
+  DATA_PULL_STANDARD_SYNC_PERIOD_END = 1.day
+
   # @param [Hash] options
   def initialize(options = {})
     client(options)
@@ -28,16 +33,16 @@ class DataSource::Fitbit < DataSource::OauthClient
     }
   end
 
-  # @param [Date] start_date
-  # @param [Date] end_date
-  # @return [Array<ProtoEntry>]
-  def pull(**args)
-    heart_rate_time_series(args) + steps_time_series(args)
-  end
-
 private
 
   attr_accessor :user_id
+
+  # @param [Date] start_date
+  # @param [Date] end_date
+  # @return [Array<ProtoEntry>]
+  def data_pull(**args)
+    heart_rate_time_series(args) + steps_time_series(args)
+  end
 
   # @param [Date] start_date
   # @param [Date] end_date

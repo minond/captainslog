@@ -38,7 +38,23 @@ class DataSource::Client
   end
 
   # @return [Array<ProtoEntry>]
-  def pull
-    raise NotImplementedError, "#pull is not implemented"
+  def data_pull_backfill_sync
+    data_pull(:start_date => self.class::DATA_PULL_BACKFILL_PERIOD_START.ago.to_date,
+              :end_date => self.class::DATA_PULL_BACKFILL_PERIOD_END.from_now.to_date)
+  end
+
+  # @return [Array<ProtoEntry>]
+  def data_pull_standard_sync
+    data_pull(:start_date => self.class::DATA_PULL_SYNC_PERIOD_START.ago.to_date,
+              :end_date => self.class::DATA_PULL_SYNC_PERIOD_END.from_now.to_date)
+  end
+
+private
+
+  # @param [Date] start_date
+  # @param [Date] end_date
+  # @return [Array<ProtoEntry>]
+  def data_pull(_args)
+    raise NotImplementedError, "#data_pull is not implemented"
   end
 end
