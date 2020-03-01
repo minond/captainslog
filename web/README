@@ -11,16 +11,16 @@ querying.
 
 === Development
 
-    bundle                                # install dependencies
-    bundle exec rake db:setup             # setup database
-    bundle exec rake test                 # run tests
-    bundle exec rake lint                 # run linters
+    bundle                        # install dependencies
+    bundle exec rake db:setup     # setup database
+    bundle exec rake test         # run tests
+    bundle exec rake lint         # run linters
 
-    bundle exec rake test:system          # run e2e tests
-    bundle exec rake lint:all             # run all linters
+    bundle exec rake test:system  # run e2e tests
+    bundle exec rake lint:all     # run all linters
 
-    bundle exec rails s                   # start the web server process
-    bundle exec ./bin/delayed_job start   # start the background worker process
+    bundle exec rails s           # start the web server process
+    bundle exec rake jobs:work    # start the worker process
 
 
 === Database
