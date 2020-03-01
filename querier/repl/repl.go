@@ -105,6 +105,8 @@ func (r *repl) query(input string) error {
 
 	if r.debug {
 		pp.Println(sql)
+		fmt.Printf("\noriginal sql:\n\n%v\n", input)
+		fmt.Printf("\nupdated sql:\n\n%v\n\n", sql)
 		return nil
 	}
 
