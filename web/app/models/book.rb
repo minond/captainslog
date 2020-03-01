@@ -2,10 +2,11 @@ class Book < ApplicationRecord
   include Grouping
 
   belongs_to :user
-  has_many :collections
-  has_many :entries
-  has_many :shorthands
-  has_many :extractors
+  has_many :collections, :dependent => :destroy
+  has_many :entries, :dependent => :destroy
+  has_many :shorthands, :dependent => :destroy
+  has_many :extractors, :dependent => :destroy
+  has_many :connections, :dependent => :destroy
 
   after_initialize :constructor
 

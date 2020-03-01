@@ -1,6 +1,6 @@
 class Collection < ApplicationRecord
   belongs_to :book
-  has_many :entries
+  has_many :entries, :dependent => :destroy
 
   validates :book, :presence => true
 

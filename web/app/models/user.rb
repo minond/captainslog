@@ -3,7 +3,7 @@ class User < ApplicationRecord
   # :registerable, :recoverable
   devise :database_authenticatable, :rememberable, :validatable
 
-  has_many :books
+  has_many :books, :dependent => :destroy
   has_many :reports, :dependent => :destroy
   has_many :connections, :dependent => :destroy
 
