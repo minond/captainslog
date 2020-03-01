@@ -36,4 +36,9 @@ class DataSource::Client
   def credential_options
     raise NotImplementedError, "#credential_options is not implemented"
   end
+
+  # @return [Array<ProtoEntry>]
+  def pull
+    raise NotImplementedError, "#pull is not implemented"
+  end
 end
