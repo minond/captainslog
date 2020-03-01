@@ -37,8 +37,9 @@ class ConnectionController < ApplicationController
   #   /connection/oauth/fitbit?code=3j4k3lj4k3l2j32#_=_
   #
   def fitbit_oauth
-    if setup_oauth_connection(:fitbit).success?
-      redirect_to "/user#ok"
+    cmd = setup_oauth_connection(:fitbit)
+    if cmd.success?
+      redirect_to cmd.result
     else
       redirect_to "/user#error"
     end
