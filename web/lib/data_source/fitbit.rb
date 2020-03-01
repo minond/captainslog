@@ -1,36 +1,6 @@
 class DataSource::Fitbit < DataSource::OauthClient
   frequency! :daily
 
-  Steps = Struct.new(:date, :text, :keyword_init => true) do
-    # @param [Hash] result
-    # @return [Steps]
-    def self.from_result(result)
-      new(:date => Date.parse(result["dateTime"]),
-          :text => "Steps: #{result['value']}")
-    end
-
-    # @param [Hash] result
-    # @return [Boolean]
-    def self.valid?(result)
-      result["value"] && result["value"] != "0"
-    end
-  end
-
-  HeartRate = Struct.new(:date, :text, :keyword_init => true) do
-    # @param [Hash] result
-    # @return [HeartRate]
-    def self.from_result(result)
-      new(:date => Date.parse(result["dateTime"]),
-          :text => "Heart rate: #{result['value']['restingHeartRate']}")
-    end
-
-    # @param [Hash] result
-    # @return [Boolean]
-    def self.valid?(result)
-      result.dig("value", "restingHeartRate").present?
-    end
-  end
-
   # @param [Hash] options
   def initialize(options = {})
     client(options)
@@ -60,7 +30,7 @@ class DataSource::Fitbit < DataSource::OauthClient
 
   # @param [Date] start_date
   # @param [Date] end_date
-  # @return [Array<HeartRate | Steps>]
+  # @return [Array<ProtoEntry>]
   def pull(**args)
     heart_rate_time_series(args) + steps_time_series(args)
   end
