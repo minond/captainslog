@@ -12,6 +12,9 @@ class Connection < ApplicationRecord
   validate :book_is_owned_by_user, :if => :book_id
 
   scope :by_data_source, ->(ds) { find_by(:data_source => ds) }
+  scope :last_update_attempted_over, ->(datetime) { where("last_update_attempted_at < ?", datetime) }
+  scope :is_active, -> { where.not(:book_id => nil) }
+  scope :in_random_order, -> { order("random()") }
 
   # @return [DataSource::Client]
   def client
