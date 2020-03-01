@@ -20,7 +20,7 @@ class DataSource::Client
   # @raise [ArgumentError] when an invalid frequency is passed
   def self.frequency!(frequency)
     message = "#{frequency} is not a valid frequency, must be one of: #{FREQUENCIES.join(', ')}"
-    raise ArgumentError.new, message unless FREQUENCIES.include?(frequency)
+    raise ArgumentError, message unless FREQUENCIES.include?(frequency)
 
     @frequency = frequency
   end
@@ -29,11 +29,11 @@ class DataSource::Client
   #
   # @return [String]
   def auth_url
-    raise NotImplementedError.new, "#auth_url is not implemented"
+    raise NotImplementedError, "#auth_url is not implemented"
   end
 
   # @return [Hash]
   def credential_options
-    raise NotImplementedError.new, "#credential_options is not implemented"
+    raise NotImplementedError, "#credential_options is not implemented"
   end
 end

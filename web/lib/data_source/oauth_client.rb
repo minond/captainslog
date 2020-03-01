@@ -4,6 +4,6 @@ class DataSource::OauthClient < DataSource::Client
   #
   # @param [String] code
   def code=(_code)
-    raise NotImplementedError.new, "#code= is not implemented"
+    raise NotImplementedError, "#code= is not implemented"
   end
 end

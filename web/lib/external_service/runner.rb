@@ -26,7 +26,7 @@ module ExternalService
 
     # @return [ExternalService::Request]
     def request
-      raise NotImplementedError.new, "#request is not implemented"
+      raise NotImplementedError, "#request is not implemented"
     end
   end
 end
