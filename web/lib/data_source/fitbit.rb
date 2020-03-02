@@ -41,7 +41,7 @@ private
   # @param [Date] end_date
   # @return [Array<ProtoEntry>]
   def data_pull(**args)
-    heart_rate_time_series(args) + steps_time_series(args)
+    heart_rate_time_series(args) + steps_time_series(args) + weight_time_series(args)
   end
 
   # @param [Date] start_date
@@ -60,6 +60,39 @@ private
     client.activity_time_series("tracker/steps", :start_date => start_date, :end_date => end_date)
           .filter { |result| Steps.valid?(result) }
           .map { |result| Steps.from_result(result) }
+  end
+
+  # @param [Date] start_date
+  # @param [Date] end_date
+  # @return [Array<Weight>]
+  def weight_time_series(start_date: Date.today, end_date: start_date)
+    # The weight API can only retrieve a maximum of 31 days at a time.
+    results = map_over_date_range(start_date, end_date, 30.days) do |sub_start_date, sub_end_date|
+      client.weight_log_period(sub_start_date, sub_end_date)
+    end
+
+    results.filter { |result| Weight.valid?(result) }
+           .map { |result| Weight.from_result(result) }
+  end
+
+  # Helper method for iterating over date ranges with a step.
+  #
+  # @param [Date] start_date
+  # @param [Date] end_date
+  # @param [ActiveSupport::Duration] step
+  # @yieldparam [Date] sub_start_date
+  # @yieldparam [Date] sub_end_date
+  # @yieldreturn [Object]
+  # @return [Array<Object>]
+  def map_over_date_range(start_date, end_date, step)
+    results = []
+
+    (start_date.to_datetime.to_i..end_date.to_datetime.to_i).step(step).each do |sub_start_timestamp|
+      sub_start_date = Time.at(sub_start_timestamp)
+      results += yield(sub_start_date, sub_start_date + step)
+    end
+
+    results
   end
 
   # @param [Hash] options

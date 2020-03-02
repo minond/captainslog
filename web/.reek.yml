@@ -25,8 +25,7 @@ detectors:
     exclude:
       - Book
   DataClump:
-    exclude:
-      - Book
+    enabled: false
 
 directories:
   db/migrate:
