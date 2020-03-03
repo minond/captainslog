@@ -66,6 +66,21 @@ class ReportController < ApplicationController
     ok ? redirect_to(edit_report_path(current_report)) : locals(:edit, :report => current_report)
   end
 
+  # === URL
+  #   DELETE /report/:id
+  #
+  # === Request fields
+  #   [Integer] id - the id for the report to delete
+  #
+  # === Sample request
+  #   /book/12
+  #
+  def destroy
+    current_report.destroy
+    flash.notice = t(:successful_report_delete)
+    redirect_to(user_path)
+  end
+
 private
 
   param_reader :id

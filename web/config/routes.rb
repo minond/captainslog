@@ -19,9 +19,9 @@ Rails.application.routes.draw do
     resource :search, :only => %i[show]
     resource :user, :only => %i[show update]
 
-    resources :report, :only => %i[new edit show update create] do
-      resources :report_variable, :only => %i[new edit update create]
-      resources :report_output, :only => %i[new edit update create]
+    resources :report, :only => %i[new edit show update create destroy] do
+      resources :report_variable, :only => %i[new edit update create destroy]
+      resources :report_output, :only => %i[new edit update create destroy]
     end
 
     resources :connection, :only => %i[new show update destroy] do
