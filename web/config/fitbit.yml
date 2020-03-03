@@ -1,3 +1,3 @@
-client_id: <%= ENV.fetch("FITBIT_CLIENT_ID") %>
-client_secret: <%= ENV.fetch("FITBIT_CLIENT_SECRET") %>
-redirect_uri: <%= ENV.fetch("FITBIT_REDIRECT_URL") %>
+client_id: <%= ENV.fetch("FITBIT_CLIENT_ID", "") %>
+client_secret: <%= ENV.fetch("FITBIT_CLIENT_SECRET", "") %>
+redirect_uri: <%= ENV.fetch("FITBIT_REDIRECT_URL", "") %>
