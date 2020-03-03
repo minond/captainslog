@@ -20,8 +20,8 @@ Rails.application.routes.draw do
     resource :user, :only => %i[show update]
 
     resources :report, :only => %i[new edit show update create] do
-      resources :report_variable, :only => %i[new show]
-      resources :report_output, :only => %i[new show]
+      resources :report_variable, :only => %i[new edit update create]
+      resources :report_output, :only => %i[new edit update create]
     end
 
     resources :connection, :only => %i[new show update destroy] do

@@ -9,7 +9,7 @@
     <% variables.each do |variable| %>
       <tr>
         <td>
-          <%= link_to variable.id, report_report_variable_path(report, variable), :class => "link" %>
+          <%= link_to variable.id, edit_report_report_variable_path(report, variable), :class => "link" %>
         </td>
         <td class="nowrap"><%= variable.label %></td>
         <td><%= variable.default_value %></td>

@@ -11,7 +11,7 @@
     <% outputs.each do |output| %>
       <tr>
         <td>
-          <%= link_to output.id, report_report_output_path(report, output), :class => "link" %>
+          <%= link_to output.id, edit_report_report_output_path(report, output), :class => "link" %>
         </td>
         <td class="nowrap"><%= output.label %></td>
         <td><%= output.kind %></td>

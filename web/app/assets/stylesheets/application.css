@@ -88,6 +88,19 @@ input[type=email] {
   width: 100%;
 }
 
+.field textarea {
+  display: block;
+  border-style: solid;
+  border-width: 1px;
+  box-sizing: border-box;
+  font-size: 100%;
+  line-height: 1.15;
+  margin: 0;
+  padding: .5rem;
+  width: 100%;
+  border-color: black;
+}
+
 table, tr, td {
   padding: 0;
   margin: 0;
