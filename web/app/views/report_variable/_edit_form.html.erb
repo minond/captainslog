@@ -1,4 +1,4 @@
-<%= form_for(report_variable, :url => report_variable.id.present? ? report_report_variable_path(report_variable) : report_report_variable_index) do |f| %>
+<%= form_for(report_variable, :url => report_variable.id.present? ? report_report_variable_path(report_variable) : report_report_variable_index_path) do |f| %>
   <%= render "form/field", :f => f, :field => :label %>
   <%= render "form/field", :f => f, :field => :default_value %>
   <%= render "form/field", :f => f, :field => :query do %>

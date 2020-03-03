@@ -113,6 +113,8 @@ en:
   new_report_output: "Add new output"
   add_new_report_variable: "Add new variable"
   add_new_report_output: "Add new output"
+  add_report_variable: "Add variable"
+  add_report_output: "Add output"
   edit_report_variable: "Edit variable"
   edit_report_output: "Edit output"
   reports: "Reports"
