@@ -47,8 +47,23 @@ class ReportController < ApplicationController
   def create
     report = create_report
     ok = report.persisted?
-    notify(ok, :successful_extractor_create, :failure_in_extractor_create)
+    notify(ok, :successful_report_create, :failure_in_report_create)
     ok ? redirect_to(edit_report_path(report)) : locals(:new, :report => report)
+  end
+
+  # === URL
+  #   PATCH /report/:id
+  #
+  # === Request fields
+  #   [String] report[label] - the report label
+  #
+  # === Sample request
+  #   /report/12
+  #
+  def update
+    ok = update_report
+    notify(ok, :successful_report_update, :failure_in_report_update)
+    locals(:edit, :report => current_report)
   end
 
 private
@@ -65,6 +80,14 @@ private
     extra = { :user => current_user }
     attrs = permitted_report_params.to_hash.merge(extra)
     Report.create(attrs)
+  end
+
+  # Update the report and return true if there were not errors doing so.
+  #
+  # @return [Boolean]
+  def update_report
+    current_report.update(permitted_report_params)
+    current_report.errors.empty?
   end
 
   # @return [ActionController::Parameters]

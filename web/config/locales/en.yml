@@ -39,6 +39,8 @@ en:
   failure_in_connection_update: "There was an error updating the connection."
   successful_report_create: "Your report was successfully created!"
   failure_in_report_create: "There was an error creating the report."
+  successful_report_update: "Your report was successfully updated!"
+  failure_in_report_update: "There was an error updating the report."
 
   id: "ID"
 
