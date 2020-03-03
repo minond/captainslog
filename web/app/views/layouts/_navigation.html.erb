@@ -1,0 +1,8 @@
+<div class="navigation">
+  <% reports.each do |report| %>
+    <%= link_to report.label, report_path(report) %>
+  <% end %>
+  <% books.each do |book| %>
+    <%= link_to book.name, book_path(book.slug) %>
+  <% end %>
+</div>
