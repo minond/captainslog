@@ -125,3 +125,6 @@ en:
   kind: "Kind"
   query: "Query"
   default_value: "Default value"
+  report_output_kind_table: "Table"
+  report_output_kind_value: "Value"
+  report_output_kind_chart: "Chart"

@@ -1,0 +1,29 @@
+<%= form_for(report_output, :url => report_output.id.present? ? report_report_output_path(report_output) : report_report_output_index_path) do |f| %>
+  <%= render "form/field", :f => f, :field => :label %>
+  <%= render "form/field", :f => f, :field => :width %>
+  <%= render "form/field", :f => f, :field => :height %>
+
+  <%= render "form/field", :f => f, :field => :kind do %>
+    <%= select(:report_output, :kind, {
+      t(:report_output_kind_table) => :table,
+      t(:report_output_kind_value) => :value,
+      t(:report_output_kind_chart) => :chart,
+    }, :object => report_output) %>
+  <% end %>
+
+  <%= render "form/field", :f => f, :field => :query do %>
+    <textarea name="report_output[query]" rows="5"><%= report_output.query %></textarea>
+  <% end %>
+
+  <% if report_output.persisted? %>
+    <%= render "form/field", :f => f, :field => :created_at do %>
+      <%= f.text_field :created_at, :readonly => true %>
+    <% end %>
+
+    <%= render "form/field", :f => f, :field => :updated_at do %>
+      <%= f.text_field :updated_at, :readonly => true %>
+    <% end %>
+  <% end %>
+
+  <%= render "form/actions", :f => f, :back_url => user_path %>
+<% end %>
