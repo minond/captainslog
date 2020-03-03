@@ -1,0 +1,24 @@
+<div class="table">
+  <table class="table">
+    <tr>
+      <th><%= t(:id) %></td>
+      <th><%= t(:label) %></td>
+      <th><%= t(:kind) %></td>
+      <th><%= t(:height) %></td>
+      <th><%= t(:width) %></td>
+      <th><%= t(:query) %></td>
+    </tr>
+    <% outputs.each do |output| %>
+      <tr>
+        <td>
+          <%= link_to output.id, report_report_output_path(report, output), :class => "link" %>
+        </td>
+        <td class="nowrap"><%= output.label %></td>
+        <td><%= output.kind %></td>
+        <td><%= output.height %></td>
+        <td><%= output.width %></td>
+        <td class="codesnippet"><%= output.query %></td>
+      </tr>
+    <% end %>
+  </table>
+</div>

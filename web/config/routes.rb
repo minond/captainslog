@@ -16,9 +16,13 @@ Rails.application.routes.draw do
       get "/at/:requested_time", :to => "book#show", :as => :at
     end
 
-    resources :report, :only => %i[new edit show update create]
     resource :search, :only => %i[show]
     resource :user, :only => %i[show update]
+
+    resources :report, :only => %i[new edit show update create] do
+      resources :report_variable, :only => %i[new show]
+      resources :report_output, :only => %i[new show]
+    end
 
     resources :connection, :only => %i[new show update destroy] do
       collection do
