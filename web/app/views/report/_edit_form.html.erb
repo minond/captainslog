@@ -1,25 +1,25 @@
 <%= form_for(report, :url => report.id.present? ? report_path(report) : report_index_path) do |f| %>
   <%= render "form/field", :f => f, :field => :label %>
 
-  <hr />
-
-  <%= render "form/subtitle", :key => :variables %>
-  <%= render "report_variable/list", :report => report, :variables => report.variables %>
-  <div class="field btns">
-    <%= link_to t(:add_new_report_variable), new_report_report_variable_path(report.id), :class => "btn" %>
-  </div>
-
-  <hr />
-
-  <%= render "form/subtitle", :key => :outputs %>
-  <%= render "report_output/list", :report => report, :outputs => report.outputs %>
-  <div class="field btns">
-    <%= link_to t(:add_new_report_output), new_report_report_output_path(report.id), :class => "btn" %>
-  </div>
-
-  <hr />
-
   <% if report.persisted? %>
+    <hr />
+
+    <%= render "form/subtitle", :key => :variables %>
+    <%= render "report_variable/list", :report => report, :variables => report.variables %>
+    <div class="field btns">
+      <%= link_to t(:add_new_report_variable), new_report_report_variable_path(report.id), :class => "btn" %>
+    </div>
+
+    <hr />
+
+    <%= render "form/subtitle", :key => :outputs %>
+    <%= render "report_output/list", :report => report, :outputs => report.outputs %>
+    <div class="field btns">
+      <%= link_to t(:add_new_report_output), new_report_report_output_path(report.id), :class => "btn" %>
+    </div>
+
+    <hr />
+
     <%= render "form/field", :f => f, :field => :created_at do %>
       <%= f.text_field :created_at, :readonly => true %>
     <% end %>
