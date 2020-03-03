@@ -16,7 +16,7 @@ Rails.application.routes.draw do
       get "/at/:requested_time", :to => "book#show", :as => :at
     end
 
-    resources :report, :only => %i[new show update create]
+    resources :report, :only => %i[new edit show update create]
     resource :search, :only => %i[show]
     resource :user, :only => %i[show update]
 

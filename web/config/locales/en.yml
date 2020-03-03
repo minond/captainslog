@@ -108,6 +108,7 @@ en:
   are_you_sure_q: "Are you sure?"
 
   new_report: "New report"
+  edit_report: "Edit report"
   reports: "Reports"
   variables: "Variables"
   outputs: "Outputs"

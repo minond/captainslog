@@ -22,6 +22,19 @@ class ReportController < ApplicationController
     locals :report => current_report
   end
 
+  # === URL
+  #   GET /report/:id/edit
+  #
+  # === Request fields
+  #   [Integer] id - the id of the report to show
+  #
+  # === Sample request
+  #   /report/4/edit
+  #
+  def edit
+    locals :report => current_report
+  end
+
 private
 
   param_reader :id
