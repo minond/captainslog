@@ -2,6 +2,10 @@ import * as React from "react"
 import { FunctionComponent, useEffect, useReducer, useState, useRef } from "react"
 import * as ReactDOM from "react-dom"
 
+declare global {
+  const REPORT: Definitions.Report
+}
+
 namespace Definitions {
   export type Report = {
     label: string
@@ -139,17 +143,6 @@ namespace Network {
       xhr.onload = () => resolve(JSON.parse(xhr.responseText))
       xhr.onerror = () => reject(new Error(`query execution request error: ${xhr.responseText}`))
       xhr.send(JSON.stringify({query}))
-    })
-
-  export const loadReports = (): Promise<Definitions.Report[]> =>
-    new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest()
-      xhr.open("GET", "/reports")
-      xhr.setRequestHeader("Content-Type", "application/json")
-      xhr.setRequestHeader("Accept", "application/json")
-      xhr.onload = () => resolve(JSON.parse(xhr.responseText))
-      xhr.onerror = () => reject(new Error(`request error: ${xhr.responseText}`))
-      xhr.send()
     })
 }
 
@@ -836,7 +829,8 @@ namespace Reports {
   }
 
   export const View = (props: {}) => {
-    const [report, setReport] = useState<Definitions.Report | null>(null)
+    const report = REPORT
+
     const [variables, dispatchVariable] = useReducer(Reducer.variableReducer, [], (i) => i)
     const [inputs, dispatchInput] = useReducer(Reducer.inputReducer, [], (i) => i)
     const [outputs, dispatchOutput] = useReducer(Reducer.outputReducer, [], (i) => i)
@@ -859,16 +853,8 @@ namespace Reports {
       />
 
     useEffect(() => {
-      if (report) {
-        loadReportSettings(report, dispatchVariable, dispatchInput, dispatchOutput)
-      } else {
-        Network.loadReports().then((reports) => setReport(reports[0] || {
-          label: "",
-          variables: [],
-          outputs: []
-        }))
-      }
-    }, [report])
+      loadReportSettings(report, dispatchVariable, dispatchInput, dispatchOutput)
+    }, [])
 
     loadReportData(inputs, outputs, dispatchInput, dispatchOutput)
 

@@ -1,0 +1,5 @@
+<%= render "layouts/content-view" %>
+<script>
+const REPORT = <%= report.dump.to_json.html_safe %>
+</script>
+<%= javascript_include_tag "/assets/report_builder.bundle.js" %>

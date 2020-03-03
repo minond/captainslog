@@ -1,0 +1,20 @@
+<div class="table">
+  <table class="table">
+    <tr>
+      <th><%= t(:id) %></td>
+      <th><%= t(:label) %></td>
+      <th><%= t(:variables) %></td>
+      <th><%= t(:outputs) %></td>
+    </tr>
+    <% reports.each do |report| %>
+      <tr>
+        <td>
+          <%= link_to report.id, report_path(report), :class => "link" %>
+        </td>
+        <td class="nowrap"><%= report.label %></td>
+        <td><%= report.variables.count %></td>
+        <td><%= report.outputs.count %></td>
+      </tr>
+    <% end %>
+  </table>
+</div>

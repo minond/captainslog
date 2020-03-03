@@ -20,6 +20,14 @@
 
   <hr />
 
+  <%= render "form/subtitle", :key => :reports %>
+  <%= render "report/list", :reports => user.reports %>
+  <div class="field btns">
+    <%= link_to t(:add_new_report), new_report_path, :class => "btn" %>
+  </div>
+
+  <hr />
+
   <%= link_to t(:sign_out), destroy_user_session_path,
     :method => :delete,
     :class => "btn destructive"

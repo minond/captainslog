@@ -106,3 +106,7 @@ en:
   query_not_long_enough: "The search query is not long enough."
 
   are_you_sure_q: "Are you sure?"
+
+  reports: "Reports"
+  variables: "Variables"
+  outputs: "Outputs"
