@@ -1,5 +1,15 @@
 class ReportController < ApplicationController
   # === URL
+  #   GET /report/new
+  #
+  # === Sample request
+  #   /report/new
+  #
+  def new
+    locals :report => Report.new
+  end
+
+  # === URL
   #   GET /report/:id
   #
   # === Request fields
