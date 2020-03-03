@@ -63,7 +63,7 @@ class ReportController < ApplicationController
   def update
     ok = update_report
     notify(ok, :successful_report_update, :failure_in_report_update)
-    locals(:edit, :report => current_report)
+    ok ? redirect_to(edit_report_path(current_report)) : locals(:edit, :report => current_report)
   end
 
 private
