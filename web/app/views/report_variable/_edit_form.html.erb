@@ -1,0 +1,19 @@
+<%= form_for(report_variable, :url => report_variable.id.present? ? report_report_variable_path(report_variable) : report_report_variable_index) do |f| %>
+  <%= render "form/field", :f => f, :field => :label %>
+  <%= render "form/field", :f => f, :field => :default_value %>
+  <%= render "form/field", :f => f, :field => :query do %>
+    <textarea name="report_variable[query]" rows="5"><%= report_variable.query %></textarea>
+  <% end %>
+
+  <% if report_variable.persisted? %>
+    <%= render "form/field", :f => f, :field => :created_at do %>
+      <%= f.text_field :created_at, :readonly => true %>
+    <% end %>
+
+    <%= render "form/field", :f => f, :field => :updated_at do %>
+      <%= f.text_field :updated_at, :readonly => true %>
+    <% end %>
+  <% end %>
+
+  <%= render "form/actions", :f => f, :back_url => user_path %>
+<% end %>
