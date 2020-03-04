@@ -14,13 +14,17 @@ private
   attr_reader :log
 
   def call
+    print_job_information
+    create_or_update_entries
+    update_connection_credentials
+
+    log.puts "done"
+  end
+
+  def print_job_information
     log.puts "pulling data for connection id #{connection.id}"
     log.puts "adding entries to book id #{book.id}"
     log.puts "creating #{proto_entries.size} new entries"
-
-    create_or_update_entries
-
-    log.puts "done"
   end
 
   def create_or_update_entries
@@ -29,6 +33,11 @@ private
     rescue ActiveRecord::RecordInvalid
       update_entry(proto_entry)
     end
+  end
+
+  def update_connection_credentials
+    log.puts "updating connection credentials"
+    UpdateConnectionCredentials.call(connection)
   end
 
   # @param [ProtoEntry]
