@@ -811,10 +811,18 @@ namespace Reports {
           return acc
         }, [] as Definitions.Input[])
 
+      if (output.loading) {
+        return
+      }
+
       const shouldLoad = queryInputs.reduce((doIt, input) =>
         !input.changeHandled || doIt, false)
 
-      if (!shouldLoad && !output.reload) {
+      if (queryInputs.length && !shouldLoad && !output.reload) {
+        return
+      }
+
+      if (!queryInputs.length && output.results) {
         return
       }
 
