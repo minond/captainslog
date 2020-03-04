@@ -43,6 +43,18 @@ en:
   failure_in_report_update: "There was an error updating the report."
   successful_report_delete: "Your report was successfully deleted!"
   failure_in_report_delete: "There was an error deleting the report."
+  successful_report_variable_create: "Your report variable was successfully created!"
+  failure_in_report_variable_create: "There was an error creating the report variable."
+  successful_report_variable_update: "Your report variable was successfully updated!"
+  failure_in_report_variable_update: "There was an error updating the report variable."
+  successful_report_variable_delete: "Your report variable was successfully deleted!"
+  failure_in_report_variable_delete: "There was an error deleting the report variable."
+  successful_report_output_create: "Your report output was successfully created!"
+  failure_in_report_output_create: "There was an error creating the report output."
+  successful_report_output_update: "Your report output was successfully updated!"
+  failure_in_report_output_update: "There was an error updating the report output."
+  successful_report_output_delete: "Your report output was successfully deleted!"
+  failure_in_report_output_delete: "There was an error deleting the report output."
 
   id: "ID"
 
