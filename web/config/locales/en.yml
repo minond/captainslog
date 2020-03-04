@@ -35,7 +35,7 @@ en:
   failure_in_extractor_create: "There was an error creating the extractor."
   successful_extractor_delete: "Your extractor was successfully deleted!"
   failure_in_extractor_delete: "There was an error deleting the extractor."
-  successful_connection_update: "Your connectionwas successfully updated!"
+  successful_connection_update: "Your connection was successfully updated!"
   failure_in_connection_update: "There was an error updating the connection."
   successful_report_create: "Your report was successfully created!"
   failure_in_report_create: "There was an error creating the report."
