@@ -6,6 +6,7 @@ class User < ApplicationRecord
   has_many :books, :dependent => :destroy
   has_many :reports, :dependent => :destroy
   has_many :connections, :dependent => :destroy
+  has_many :jobs, :dependent => :destroy
 
   after_initialize :constructor
 

@@ -28,6 +28,11 @@
 
   <hr />
 
+  <%= render "form/subtitle", :key => :jobs %>
+  <%= render "job/list", :jobs => user.jobs %>
+
+  <hr />
+
   <%= link_to t(:sign_out), destroy_user_session_path,
     :method => :delete,
     :class => "btn destructive"

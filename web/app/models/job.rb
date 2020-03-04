@@ -41,6 +41,13 @@ class Job < ApplicationRecord
     status
   end
 
+  # @return [Job::Args]
+  def decoded_args
+    # rubocop:disable Security/MarshalLoad
+    Marshal.load(Base64.decode64(args))
+    # rubocop:enable Security/MarshalLoad
+  end
+
 private
 
   def run
@@ -61,9 +68,7 @@ private
 
   # @return [Tuple<SimpleCommand, Error>]
   def safe_run
-    # rubocop:disable Security/MarshalLoad
-    [runner.call(Marshal.load(Base64.decode64(args)), log), nil]
-    # rubocop:enable Security/MarshalLoad
+    [runner.call(decoded_args, log), nil]
   rescue StandardError => e
     [nil, e]
   end

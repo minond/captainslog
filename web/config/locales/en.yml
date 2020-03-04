@@ -146,3 +146,9 @@ en:
   report_output_kind_table: "Table"
   report_output_kind_value: "Value"
   report_output_kind_chart: "Chart"
+
+  jobs: "Jobs"
+  status: "Status"
+  arguments: "Arguments"
+  job_details: "Job details"
+  logs: "Logs"
