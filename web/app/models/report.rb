@@ -17,6 +17,8 @@ class Report < ApplicationRecord
     }
   end
 
+private
+
   def dump_variables
     variables.map do |variable|
       {
