@@ -14,6 +14,18 @@ class ConnectionTest < ActiveSupport::TestCase
     assert connection.client
   end
 
+  test "schedule_data_pull_backfill" do
+    assert_not Job.first
+    connection.schedule_data_pull_backfill
+    assert_equal "connection_data_pull_backfill", Job.first.kind
+  end
+
+  test "schedule_data_pull_standard" do
+    assert_not Job.first
+    connection.schedule_data_pull_standard
+    assert_equal "connection_data_pull_standard", Job.first.kind
+  end
+
 private
 
   def connection
