@@ -66,7 +66,7 @@ class BookTest < ActiveSupport::TestCase
   test "updating an existng entry by its digest" do
     book(:grouping => :day).save
     entry = book.add_entry("hi1", Date.tomorrow, "123==")
-    updated_entry = book.update_entry("123==", "hi2")
+    book.update_entry("123==", "hi2")
     entry.reload
     assert_equal "hi2", entry.original_text
   end
