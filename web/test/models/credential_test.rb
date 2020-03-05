@@ -26,7 +26,7 @@ class CredentialTest < ActiveSupport::TestCase
     options = credential.options
     keys = options.keys
 
-    assert_equal ["name1", "name2"].sort, keys.sort
+    assert_equal %w[name1 name2].sort, keys.sort
   end
 
   test "options returns decrypted values" do
@@ -39,7 +39,7 @@ class CredentialTest < ActiveSupport::TestCase
     options = credential.options
     values = options.values
 
-    assert_equal ["Marcos1", "Marcos2"].sort, values.sort
+    assert_equal %w[Marcos1 Marcos2].sort, values.sort
   end
 
 private
