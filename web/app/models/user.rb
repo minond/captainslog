@@ -29,10 +29,35 @@ class User < ApplicationRecord
     encryptor.decrypt_and_verify(value)
   end
 
+  # Used to build the user's homepage dropdown field.
+  #
+  # @return <Tuple<String, String>>
+  def homepage_options
+    homepage_report_options + homepage_book_options
+  end
+
 private
 
   def constructor
     self.salt ||= SecureRandom.hex(ActiveSupport::MessageEncryptor.key_len)
+  end
+
+  # Used to build the user's homepage options.
+  #
+  # @return <Tuple<String, String>>
+  def homepage_book_options
+    books.map do |book|
+      [book.name, Rails.application.routes.url_helpers.book_path(book)]
+    end
+  end
+
+  # Used to build the user's homepage options.
+  #
+  # @return <Tuple<String, String>>
+  def homepage_report_options
+    reports.map do |report|
+      [report.label, Rails.application.routes.url_helpers.report_path(report)]
+    end
   end
 
   # @return [String]

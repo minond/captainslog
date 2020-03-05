@@ -6,5 +6,9 @@
     <%= select(:user, :timezone, TZInfo::Timezone.all_identifiers, :object => user) %>
   <% end %>
 
+  <%= render "form/field", :f => f, :field => :homepage do %>
+    <%= select(:user, :homepage, user.homepage_options, :object => user) %>
+  <% end %>
+
   <%= render "form/actions", :f => f, :back_url => user_path %>
 <% end %>

@@ -39,6 +39,6 @@ private
   # @return [ActionController::Parameters]
   def permitted_user_params
     params.require(:user)
-          .permit(:name, :email, :timezone)
+          .permit(:name, :email, :timezone, :homepage)
   end
 end
