@@ -16,8 +16,12 @@ class Connection < ApplicationRecord
   scope :is_active, -> { where.not(:book_id => nil) }
   scope :in_random_order, -> { order("random()") }
 
+  class MissingCredentialsError < StandardError; end
+
   # @return [DataSource::Client]
   def client
+    raise MissingCredentialsError, "no credentials found for connection" unless newest_credentials
+
     @client ||=
       begin
         klass = DataSource::Client.for_data_source(data_source)
