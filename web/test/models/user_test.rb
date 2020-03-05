@@ -1,17 +1,6 @@
 require "test_helper"
 
 class UserTest < ActiveSupport::TestCase
-  @original_secret_key_base = nil
-
-  setup do
-    @original_secret_key_base = Rails.application.credentials.secret_key_base
-    Rails.application.credentials.secret_key_base = "1" * 32
-  end
-
-  teardown do
-    Rails.application.credentials.secret_key_base = @original_secret_key_base
-  end
-
   test "save happy path" do
     user = User.new(:email => "test1@test.com", :password => "xsj3k2lj4k3l2hio23321")
     assert user.save

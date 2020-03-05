@@ -14,6 +14,8 @@ require_relative "./external_service_test_helper"
 require_relative "./processor_test_helper"
 require_relative "./querier_test_helper"
 
+Rails.application.credentials.secret_key_base = "1" * 32
+
 class ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
 
