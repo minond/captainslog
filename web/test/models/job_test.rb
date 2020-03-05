@@ -30,6 +30,15 @@ class JobTest < ActiveSupport::TestCase
     assert_equal job.decoded_args.connection_id, args.connection_id
   end
 
+  test "run! immediatelly return on non-runnable statuses" do
+    job = Job.new(:user => create(:user),
+                  :status => :running,
+                  :args => "null",
+                  :kind => :connection_data_pull_standard)
+
+    assert_equal "running", job.run!
+  end
+
 private
 
   def user
