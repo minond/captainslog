@@ -42,16 +42,16 @@ private
 
   # @param [ProtoEntry]
   def create_entry(proto_entry)
+    log.puts "creating new entry with digest #{proto_entry.digest}"
     entry = book.new_entry(proto_entry.text, proto_entry.date, proto_entry.digest)
     entry.connection = connection
     entry.save!
-    log.puts "creating new entry with digest #{proto_entry.digest}"
   end
 
   # @param [ProtoEntry]
   def update_entry(proto_entry)
-    book.update_entry(proto_entry.digest, proto_entry.text)
     log.puts "updating existing entry with digest #{proto_entry.digest}"
+    book.update_entry(proto_entry.digest, proto_entry.text)
   end
 
   # @return [Array<ProtoEntry>]
