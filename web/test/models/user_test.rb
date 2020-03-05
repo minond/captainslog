@@ -24,4 +24,11 @@ class UserTest < ActiveSupport::TestCase
     decrypted = user.decrypt_value(encrypted)
     assert_equal decrypted, original
   end
+
+  test "homepage_options" do
+    user = create(:user)
+    create(:report, :user => user)
+    create(:book, :user => user)
+    assert_equal user.homepage_options.size, 2
+  end
 end
