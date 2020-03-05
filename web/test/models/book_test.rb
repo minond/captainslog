@@ -63,6 +63,14 @@ class BookTest < ActiveSupport::TestCase
     assert_equal Date.tomorrow, entry.collection.datetime
   end
 
+  test "updating an existng entry by its digest" do
+    book(:grouping => :day).save
+    entry = book.add_entry("hi1", Date.tomorrow, "123==")
+    updated_entry = book.update_entry("123==", "hi2")
+    entry.reload
+    assert_equal "hi2", entry.original_text
+  end
+
   test "expected collection is retrieved when multiple exist" do
     book(:grouping => :day)
     expected = collections_for(book)[:present]
