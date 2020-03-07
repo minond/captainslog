@@ -37,6 +37,8 @@ class Connection < ApplicationRecord
 
   # @return [Job]
   def schedule_data_pull_standard
+    return last_update_job if scheduled_data_pull_within(15.minutes)
+
     schedule_data_pull(:connection_data_pull_standard,
                        Job::ConnectionDataPullStandardArgs.new(:connection_id => id))
   end
@@ -51,6 +53,21 @@ private
   # @return [Boolean]
   def needs_initial_data_pull?
     book_id? && book_id_previously_changed?
+  end
+
+  # @return [Job, nil]
+  def last_update_job
+    return nil unless last_update_job_id
+
+    user.jobs.find(last_update_job_id)
+  end
+
+  # @param [ActiveSupport::Duration] duration
+  # @return [Boolean]
+  def scheduled_data_pull_within(duration)
+    return false unless last_update_attempted_at
+
+    duration.ago < last_update_attempted_at
   end
 
   # @return [Job]

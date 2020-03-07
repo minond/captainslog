@@ -10,8 +10,9 @@ class ConnectionTest < ActiveSupport::TestCase
   end
 
   test "client with credentials" do
-    Credential.create_with_options(user, connection, {})
-    assert connection.client
+    conn = connection
+    Credential.create_with_options(user, conn, {})
+    assert conn.client
   end
 
   test "schedule_data_pull_backfill" do
@@ -26,6 +27,14 @@ class ConnectionTest < ActiveSupport::TestCase
     assert_equal "connection_data_pull_standard", Job.first.kind
   end
 
+  test "schedule_data_pull_standard return previous job when scheduled within 15 min" do
+    conn = connection
+    conn.save!
+    original_job = conn.schedule_data_pull_standard
+    same_job = conn.schedule_data_pull_standard
+    assert_equal original_job.id, same_job.id
+  end
+
   test "book and connection must be owned by same user" do
     assert_raises(ActiveRecord::RecordInvalid) do
       create(:connection, :user => create(:user),
@@ -36,9 +45,9 @@ class ConnectionTest < ActiveSupport::TestCase
 private
 
   def connection
-    @connection ||= Connection.new(:book => book,
-                                   :user => user,
-                                   :data_source => :fitbit)
+    Connection.new(:book => book,
+                   :user => user,
+                   :data_source => :fitbit)
   end
 
   def user
