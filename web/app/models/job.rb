@@ -27,7 +27,7 @@ class Job < ApplicationRecord
   # @return [Job]
   # @raise [ArgumentError] on invalid kind of argument class
   def self.schedule!(user, kind, args)
-    arg_class, _runner = lookup_registration(kind)
+    arg_class, _runner = Job.lookup_registration(kind)
     raise InvalidKind, "invalid kind: #{kind}" unless arg_class
     raise InvalidArguments, "expected #{arg_class} for #{kind} job but got #{args.class}" unless args.is_a?(arg_class)
 
@@ -97,7 +97,7 @@ private
 
   # @return [Class, nil]
   def runner
-    _arg_class, runner = lookup_registration(kind)
+    _arg_class, runner = Job.lookup_registration(kind)
     runner
   end
 
