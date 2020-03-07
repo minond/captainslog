@@ -9,34 +9,29 @@ class JobTest < ActiveSupport::TestCase
   end
 
   class TestLogRunner < Job::Runner
+    prepend SimpleCommand
     def call
       log.puts "running job"
     end
   end
 
   class TestErrorRunner < Job::Runner
+    prepend SimpleCommand
     def call
       errors.add :xs, "ys"
     end
   end
 
   class TestExceptionRunner < Job::Runner
+    prepend SimpleCommand
     def call
       raise StandardError, "err"
     end
   end
 
-  setup do
-    Job.register :test_log, TestArgs, TestLogRunner
-    Job.register :test_error, TestArgs, TestErrorRunner
-    Job.register :test_exception, TestArgs, TestExceptionRunner
-  end
-
-  teardown do
-    Job.unregister :test_log
-    Job.unregister :test_error
-    Job.unregister :test_exception
-  end
+  Job.register :test_log, TestArgs, TestLogRunner
+  Job.register :test_error, TestArgs, TestErrorRunner
+  Job.register :test_exception, TestArgs, TestExceptionRunner
 
   test "save happy path" do
     job = Job.new(:user => user,
@@ -82,6 +77,12 @@ class JobTest < ActiveSupport::TestCase
 
   test "an exception is raised when an invalid argument class is used" do
     assert_raises(Job::InvalidArguments) { Job.schedule!(user, :test_log, User.new) }
+  end
+
+  test "logs are accessible after the job has ran" do
+    job = Job.schedule!(user, :test_log, TestArgs.new)
+    job.run!
+    assert_equal job.logs, "running job\n"
   end
 
 private

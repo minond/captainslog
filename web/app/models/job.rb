@@ -5,8 +5,9 @@ class Job < ApplicationRecord
 
   validates :args, :status, :kind, :user, :presence => true
 
-  enum :kind => %i[connection_data_pull_standard connection_data_pull_backfill]
   enum :status => %i[initiated running errored done]
+  enum :kind => %i[connection_data_pull_standard connection_data_pull_backfill] +
+    (Rails.env.test? ? %i[test_log test_error test_exception] : [])
 
   after_create :schedule_run
 
