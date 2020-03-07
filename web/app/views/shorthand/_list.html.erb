@@ -1,5 +1,5 @@
 <ul>
-  <% shorthands.sort_by(&:priority).reverse.each do |shorthand| %>
+  <% shorthands.each do |shorthand| %>
     <li>
       <%= link_to "[#{shorthand.priority}] \"#{shorthand.match}\" | \"#{shorthand.text}\" -> \"#{shorthand.expansion}\"",
         book_shorthand_path(shorthand.book.slug, shorthand),

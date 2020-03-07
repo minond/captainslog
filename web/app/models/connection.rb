@@ -13,6 +13,7 @@ class Connection < ApplicationRecord
   validates :data_source, :user, :presence => true
   validate :book_is_owned_by_user, :if => :book_id
 
+  default_scope { order(:created_at => :asc) }
   scope :by_data_source, ->(ds) { find_by(:data_source => ds) }
   scope :last_update_attempted_over, ->(datetime) { where("last_update_attempted_at < ?", datetime) }
   scope :is_active, -> { where.not(:book_id => nil) }

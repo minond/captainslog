@@ -24,7 +24,7 @@ class ConnectionTest < ActiveSupport::TestCase
   test "schedule_data_pull_standard" do
     assert_not Job.first
     connection.schedule_data_pull_standard
-    assert_equal "connection_data_pull_standard", Job.first.kind
+    assert_equal "connection_data_pull_standard", Job.last.kind
   end
 
   test "schedule_data_pull_standard return previous job when scheduled within 15 min" do

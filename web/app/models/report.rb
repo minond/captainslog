@@ -8,6 +8,8 @@ class Report < ApplicationRecord
 
   validates :label, :user, :presence => true
 
+  default_scope { order(:created_at => :asc) }
+
   def dump
     {
       :id => id,

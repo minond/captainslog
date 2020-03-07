@@ -15,6 +15,7 @@ class Book < ApplicationRecord
 
   enum :grouping => %i[none day week month year], :_prefix => :group_by
 
+  default_scope { order(:created_at => :asc) }
   scope :by_slug, ->(slug) { find_by(:slug => slug) }
 
   # Tells you if any entries need to be reprocessed. Returns true when an entry

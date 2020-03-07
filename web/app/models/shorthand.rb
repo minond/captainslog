@@ -9,4 +9,6 @@ class Shorthand < ApplicationRecord
 
   validates :priority, :expansion, :book, :user, :presence => true
   validate :book_is_owned_by_user
+
+  default_scope { order(:priority => :desc) }
 end
