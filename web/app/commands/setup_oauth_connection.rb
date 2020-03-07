@@ -15,7 +15,7 @@ class SetupOauthConnection
     validate
     return unless errors.empty?
 
-    connection_with_credentials
+    create_connection_with_credentials
   end
 
 private
@@ -28,10 +28,10 @@ private
   end
 
   # @return [Connection, nil]
-  def connection_with_credentials
+  def create_connection_with_credentials
     Connection.transaction do
       conn = connection
-      credential_with_options
+      create_credential_with_options
       conn
     end
   end
@@ -42,7 +42,7 @@ private
   end
 
   # @return [Credential]
-  def credential_with_options
+  def create_credential_with_options
     Credential.create_with_options(user, connection, credential_options)
   end
 

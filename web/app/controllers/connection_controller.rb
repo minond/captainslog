@@ -37,7 +37,7 @@ class ConnectionController < ApplicationController
   #   /connection/oauth/fitbit?code=3j4k3lj4k3l2j32#_=_
   #
   def fitbit_oauth
-    cmd = setup_oauth_connection(:fitbit)
+    cmd = handle_oauth_connection(:fitbit)
     if cmd.success?
       redirect_to cmd.result
     else
@@ -115,10 +115,27 @@ class ConnectionController < ApplicationController
     redirect_to job
   end
 
+  # === URL
+  #   GET /connection/:id/authenticate
+  #
+  # === Request fields
+  #   [Integer] id - the connection id for the connection to authenticate
+  #
+  # === Sample request
+  #   /connection/1/authenticate
+  #
+  # === Sample response
+  #   Redirect to job
+  #
+  def authenticate
+    redirect_to_auth_url(current_connection.data_source, current_connection)
+  end
+
 private
 
   param_reader :id
   param_reader :code
+  param_reader :state
 
   # @return [Connection]
   def current_connection
@@ -126,14 +143,34 @@ private
   end
 
   # @param [Symbol] data_source
-  def redirect_to_auth_url(data_source)
-    redirect_to DataSource::Client.for_data_source(data_source).new.auth_url
+  # @param [Connection, nil] connection
+  def redirect_to_auth_url(data_source, connection = nil)
+    redirect_to DataSource::Client.for_data_source(data_source).new.auth_url(connection)
+  end
+
+  # @param [Symbol] data_source
+  # @return [SetupOauthConnection, UpdateOauthConnection]
+  def handle_oauth_connection(data_source)
+    connection_id, _rest = DataSource::Client.decode_state(state) if state
+
+    if connection_id
+      update_oauth_connection(connection_id)
+    else
+      setup_oauth_connection(data_source)
+    end
+  end
+
+  # @param [Integer] connection_id
+  # @return [UpdateOauthConnection]
+  def update_oauth_connection(connection_id)
+    connection = current_user.connections.find(connection_id)
+    UpdateOauthConnection.call(current_user, connection, code)
   end
 
   # @param [Symbol] data_source
   # @return [SetupOauthConnection]
   def setup_oauth_connection(data_source)
-    @setup_oauth_connection ||= SetupOauthConnection.call(current_user, data_source, code)
+    SetupOauthConnection.call(current_user, data_source, code)
   end
 
   # Update the connection and return true if there were not errors doing so.

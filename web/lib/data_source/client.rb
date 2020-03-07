@@ -25,11 +25,35 @@ class DataSource::Client
     @frequency = frequency
   end
 
+  # @param [Connection, nil] connection
+  # @return [String]
+  def self.encode_state(connection = nil)
+    state = {}
+    state[:connection_id] = connection.id if connection
+    Base64.urlsafe_encode64(state.to_json)
+  end
+
+  # @param [String] encode_state
+  # @param [Tuple<Integer>]
+  def self.decode_state(encode_state)
+    decoded_state = Base64.urlsafe_decode64(encode_state)
+    state = JSON.parse(decoded_state).with_indifferent_access
+    [state[:connection_id]]
+  end
+
+  # Path to page where user can start the authentication process for this data source.
+  #
+  # @param [Connection, nil] connection
+  # @return [String]
+  def auth_url(connection = nil)
+    base_auth_url + "&state=#{self.class.encode_state(connection)}"
+  end
+
   # Path to page where user can start the authentication process for this data source.
   #
   # @return [String]
-  def auth_url
-    raise NotImplementedError, "#auth_url is not implemented"
+  def base_auth_url
+    raise NotImplementedError, "#base_auth_url is not implemented"
   end
 
   # @return [Hash]

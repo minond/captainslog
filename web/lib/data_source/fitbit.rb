@@ -12,7 +12,7 @@ class DataSource::Fitbit < DataSource::OauthClient
   end
 
   # @return [String]
-  def auth_url
+  def base_auth_url
     client.auth_url
   end
 

@@ -27,6 +27,7 @@ Rails.application.routes.draw do
 
     resources :connection, :only => %i[new show update destroy] do
       member do
+        get :authenticate
         get :schedule_data_pull
       end
 
