@@ -1,4 +1,6 @@
 class Job::ConnectionDataPullRunner < Job::Runner
+  prepend SimpleCommand
+
   def call
     print_job_information
     create_or_update_entries

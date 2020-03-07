@@ -1,6 +1,4 @@
 class Job::Runner
-  prepend SimpleCommand
-
   def initialize(args, log)
     @args = args
     @log = log
