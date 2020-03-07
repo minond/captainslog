@@ -84,18 +84,7 @@ private
 
   # @return [StringIO]
   def log
-    @log ||=
-      begin
-        log = StringIO.new
-
-        if logs.present?
-          log.puts logs
-          log.write("\n\n")
-          log.puts "-----------------------------------------------"
-        end
-
-        log
-      end
+    @log ||= StringIO.new
   end
 
   # @return [Class, nil]
@@ -113,7 +102,6 @@ private
 
   # @param [SimpleCommand, nil] cmd
   # @param [Error, nil] err
-  # rubocop:disable Metrics/AbcSize
   def capture_errors(cmd, err)
     unless err.nil?
       log.puts "error: #{err.class}"
@@ -124,5 +112,4 @@ private
       log.puts "error: #{msg}"
     end
   end
-  # rubocop:enable Metrics/AbcSize
 end
