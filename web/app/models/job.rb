@@ -21,6 +21,8 @@ class Job < ApplicationRecord
            Job::ConnectionDataPullStandardArgs,
            Job::ConnectionDataPullRunner
 
+  default_scope { order(:created_at => :desc) }
+
   class InvalidKind < ArgumentError; end
   class InvalidArguments < ArgumentError; end
 

@@ -29,7 +29,7 @@
   <hr />
 
   <%= render "form/subtitle", :key => :jobs %>
-  <%= render "job/list", :jobs => user.jobs.order(:created_at => :desc) %>
+  <%= render "job/list", :jobs => user.jobs %>
 
   <hr />
 
