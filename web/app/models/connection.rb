@@ -16,6 +16,16 @@ class Connection < ApplicationRecord
   scope :is_active, -> { where.not(:book_id => nil) }
   scope :in_random_order, -> { order("random()") }
 
+  # @param [Integer] n, number of connections to retrieve
+  # @param [ActiveSupport::TimeWithZone] last_update_attempted_over_datetime
+  # @return [Array<Connection>]
+  scope :in_need_of_data_pull, ->(n = 10, last_update_attempted_over_datetime = 6.hours.ago) do
+    is_active
+      .last_update_attempted_over(last_update_attempted_over_datetime)
+      .in_random_order
+      .limit(n)
+  end
+
   class MissingCredentialsError < StandardError; end
 
   # @return [DataSource::Client]
