@@ -1,25 +1,12 @@
-class Job::ConnectionDataPullRunner
-  prepend SimpleCommand
-
-  # @param [Job::ConnectionDataPullArgs] args
-  # @param [StringIO] log
-  def initialize(args, log)
-    @args = args
-    @log = log
-  end
-
-private
-
-  attr_reader :args
-  attr_reader :log
-
+class Job::ConnectionDataPullRunner < Job::Runner
   def call
     print_job_information
     create_or_update_entries
     update_connection_credentials
-
     log.puts "done"
   end
+
+private
 
   def print_job_information
     log.puts "pulling data for connection id #{connection.id}"
