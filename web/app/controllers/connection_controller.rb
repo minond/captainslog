@@ -32,6 +32,7 @@ class ConnectionController < ApplicationController
   #
   # === Request fields
   #   [String] code - oauth code
+  #   [String] state - encoded state string. see `DataSource::Client.encode_state`
   #
   # === Sample request
   #   /connection/oauth/fitbit?code=3j4k3lj4k3l2j32#_=_
