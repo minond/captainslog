@@ -15,7 +15,7 @@
         <td><%= job.status %></td>
         <td><%= job.kind %></td>
         <td><%= job.decoded_args.to_json %></td>
-        <td><%= job.created_at %></td>
+        <td class="nowrap"><%= job.created_at %></td>
       </tr>
     <% end %>
   </table>
