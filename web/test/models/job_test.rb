@@ -18,7 +18,8 @@ class JobTest < ActiveSupport::TestCase
   class TestErrorRunner < Job::Runner
     prepend SimpleCommand
     def call
-      errors.add :xs, "ys"
+      errors.add :err1, "error1"
+      errors.add :err2, "error2"
     end
   end
 
@@ -83,6 +84,12 @@ class JobTest < ActiveSupport::TestCase
     job = Job.schedule!(user, :test_log, TestArgs.new)
     job.run!
     assert_equal job.logs, "running job\n"
+  end
+
+  test "errors are accessible after the job has ran" do
+    job = Job.schedule!(user, :test_error, TestArgs.new)
+    job.run!
+    assert_equal job.logs, "error: Err1 error1\nerror: Err2 error2\n"
   end
 
 private
