@@ -84,6 +84,7 @@ en:
   add_new_connection: "Add new connection"
   edit_connection: "Edit connection"
   data_source: "Data source"
+  last_update_attempted_at: "Last update attempted at"
 
   book: "Book"
   edit_book: "Edit book"

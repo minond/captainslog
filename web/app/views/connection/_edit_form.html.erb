@@ -7,6 +7,10 @@
     <%= f.text_field :data_source, :readonly => true %>
   <% end %>
 
+  <%= render "form/field", :f => f, :field => :last_update_attempted_at do %>
+    <%= f.text_field :last_update_attempted_at, :readonly => true %>
+  <% end %>
+
   <%= render "form/field", :f => f, :field => :created_at do %>
     <%= f.text_field :created_at, :readonly => true %>
   <% end %>
