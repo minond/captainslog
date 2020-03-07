@@ -271,6 +271,20 @@ hr {
   font-weight: bold;
 }
 
+/* JOBS *******************************************************************/
+
+.job_initiated, .job_running {
+  background: #f0f0f0;
+}
+
+.job_done {
+  background: #e7ffe7;
+}
+
+.job_errored {
+  background: #ffeaea;
+}
+
 /* HEADER *****************************************************************/
 
 header {

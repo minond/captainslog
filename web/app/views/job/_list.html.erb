@@ -8,7 +8,7 @@
       <th><%= t(:created_at) %></td>
     </tr>
     <% jobs.each do |job| %>
-      <tr>
+      <tr class="job_<%= job.status %>">
         <td>
           <%= link_to job.id, job_path(job), :class => "link" %>
         </td>
