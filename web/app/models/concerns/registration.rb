@@ -7,10 +7,6 @@ module Registration
     REGISTRATIONS[kind] = args
   end
 
-  def unregister(kind)
-    REGISTRATIONS.delete(kind)
-  end
-
   def lookup_registration(kind)
     REGISTRATIONS[kind.to_sym]
   end
