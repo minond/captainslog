@@ -27,11 +27,10 @@ class ConnectionTest < ActiveSupport::TestCase
   end
 
   test "book and connection must be owned by same user" do
-    user1 = create(:user)
-    user2 = create(:user)
-
-    book = create(:book, :user => user1)
-    assert_raises(ActiveRecord::RecordInvalid) { create(:connection, :user => user2, :book => book) }
+    assert_raises(ActiveRecord::RecordInvalid) do
+      create(:connection, :user => create(:user),
+                          :book => create(:book, :user => create(:user)))
+    end
   end
 
 private
