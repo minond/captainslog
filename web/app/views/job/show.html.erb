@@ -1,28 +1,30 @@
 <%= render "layouts/content-view" do %>
   <%= render "form/title", :key => :job_details %>
 
-  <table class="table">
-    <tr>
-      <td><%= t(:status) %></td>
-      <td><%= job.status %></td>
-    </tr>
-    <tr>
-      <td><%= t(:kind) %></td>
-      <td><%= job.kind %></td>
-    </tr>
-    <tr>
-      <td><%= t(:arguments) %></td>
-      <td><%= job.decoded_args.to_json %></td>
-    </tr>
-    <tr>
-      <td><%= t(:created_at) %></td>
-      <td><%= job.created_at %></td>
-    </tr>
-    <tr>
-      <td><%= t(:updated_at) %></td>
-      <td><%= job.updated_at %></td>
-    </tr>
-  </table>
+  <div class="table">
+    <table class="table">
+      <tr>
+        <td><%= t(:status) %></td>
+        <td><%= job.status %></td>
+      </tr>
+      <tr>
+        <td><%= t(:kind) %></td>
+        <td><%= job.kind %></td>
+      </tr>
+      <tr>
+        <td><%= t(:arguments) %></td>
+        <td><%= job.decoded_args.to_json %></td>
+      </tr>
+      <tr>
+        <td><%= t(:created_at) %></td>
+        <td><%= job.created_at %></td>
+      </tr>
+      <tr>
+        <td><%= t(:updated_at) %></td>
+        <td><%= job.updated_at %></td>
+      </tr>
+    </table>
+  </div>
 
   <hr />
 
