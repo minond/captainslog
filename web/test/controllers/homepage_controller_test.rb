@@ -11,4 +11,11 @@ class HomepageControllerTest < ActionDispatch::IntegrationTest
     get "/"
     assert_not response.body.include? "is an application for logging"
   end
+
+  test "regirects to user's homepage" do
+    user.update(:homepage => "/report/1")
+    sign_in user
+    get "/"
+    assert_redirected_to "/report/1"
+  end
 end
