@@ -118,7 +118,6 @@ private
     unless err.nil?
       log.puts "error: #{err.class}"
       log.puts "message: #{err.message}"
-      log.puts err.backtrace.join("\n").indent(4)
     end
 
     cmd&.errors&.full_messages&.each do |msg|

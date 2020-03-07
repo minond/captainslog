@@ -80,16 +80,45 @@ class JobTest < ActiveSupport::TestCase
     assert_raises(Job::InvalidArguments) { Job.schedule!(user, :test_log, User.new) }
   end
 
+  test "status is set to initiated before it runs" do
+    job = Job.schedule!(user, :test_log, TestArgs.new)
+    assert_equal job.status, "initiated"
+  end
+
+  test "status is set to done after it runs without errors" do
+    job = Job.schedule!(user, :test_log, TestArgs.new)
+    job.run!
+    assert_equal job.status, "done"
+  end
+
+  test "status is set to errored after it runs with errors" do
+    job = Job.schedule!(user, :test_error, TestArgs.new)
+    job.run!
+    assert_equal job.status, "errored"
+  end
+
+  test "status is set to errored after it runs with exception" do
+    job = Job.schedule!(user, :test_exception, TestArgs.new)
+    job.run!
+    assert_equal job.status, "errored"
+  end
+
   test "logs are accessible after the job has ran" do
     job = Job.schedule!(user, :test_log, TestArgs.new)
     job.run!
     assert_equal job.logs, "running job\n"
   end
 
-  test "errors are accessible after the job has ran" do
+  test "errors are printed to the logs after the job has ran" do
     job = Job.schedule!(user, :test_error, TestArgs.new)
     job.run!
     assert_equal job.logs, "error: Err1 error1\nerror: Err2 error2\n"
+  end
+
+  test "exception is pronted to th elogs after the job has ran" do
+    job = Job.schedule!(user, :test_exception, TestArgs.new)
+    job.run!
+    assert_equal job.logs, "error: StandardError\nmessage: err\n"
   end
 
 private
