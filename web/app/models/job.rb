@@ -18,6 +18,9 @@ class Job < ApplicationRecord
            Job::ConnectionDataPullStandardArgs,
            Job::ConnectionDataPullRunner
 
+  class InvalidKind < ArgumentError; end
+  class InvalidArguments < ArgumentError; end
+
   # @param [User] user
   # @param [Symbol] kind
   # @param [Job::Args] args
@@ -25,8 +28,8 @@ class Job < ApplicationRecord
   # @raise [ArgumentError] on invalid kind of argument class
   def self.schedule!(user, kind, args)
     arg_class, _runner = lookup_registration(kind)
-    raise ArgumentError, "invalid kind: #{kind}" unless arg_class
-    raise ArgumentError, "expected #{arg_class} for #{kind} job but got #{args.class}" unless args.is_a?(arg_class)
+    raise InvalidKind, "invalid kind: #{kind}" unless arg_class
+    raise InvalidArguments, "expected #{arg_class} for #{kind} job but got #{args.class}" unless args.is_a?(arg_class)
 
     create(:user => user,
            :status => :initiated,

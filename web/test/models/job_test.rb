@@ -1,8 +1,45 @@
 require "test_helper"
 
 class JobTest < ActiveSupport::TestCase
+  class TestArgs < Job::Args
+    define_attributes :initialize => true, :attributes => true do
+      attribute :int, Integer
+      attribute :str, String
+    end
+  end
+
+  class TestLogRunner < Job::Runner
+    def call
+      log.puts "running job"
+    end
+  end
+
+  class TestErrorRunner < Job::Runner
+    def call
+      errors.add :xs, "ys"
+    end
+  end
+
+  class TestExceptionRunner < Job::Runner
+    def call
+      raise StandardError, "err"
+    end
+  end
+
+  setup do
+    Job.register :test_log, TestArgs, TestLogRunner
+    Job.register :test_error, TestArgs, TestErrorRunner
+    Job.register :test_exception, TestArgs, TestExceptionRunner
+  end
+
+  teardown do
+    Job.unregister :test_log
+    Job.unregister :test_error
+    Job.unregister :test_exception
+  end
+
   test "save happy path" do
-    job = Job.new(:user => create(:user),
+    job = Job.new(:user => user,
                   :status => :initiated,
                   :args => "null",
                   :kind => :connection_data_pull_standard)
@@ -31,12 +68,20 @@ class JobTest < ActiveSupport::TestCase
   end
 
   test "run! immediatelly return on non-runnable statuses" do
-    job = Job.new(:user => create(:user),
+    job = Job.new(:user => user,
                   :status => :running,
                   :args => "null",
                   :kind => :connection_data_pull_standard)
 
     assert_equal "running", job.run!
+  end
+
+  test "an exception is raised when an invalid job kind is used" do
+    assert_raises(Job::InvalidKind) { Job.schedule!(user, :invalid, TestArgs.new) }
+  end
+
+  test "an exception is raised when an invalid argument class is used" do
+    assert_raises(Job::InvalidArguments) { Job.schedule!(user, :test_log, User.new) }
   end
 
 private
