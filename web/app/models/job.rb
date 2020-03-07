@@ -1,4 +1,6 @@
 class Job < ApplicationRecord
+  extend Registration
+
   belongs_to :user
 
   validates :args, :status, :kind, :user, :presence => true
@@ -8,12 +10,13 @@ class Job < ApplicationRecord
 
   after_create :schedule_run
 
-  RUNNABLE_STATUSES = %i[initiated errored].freeze
+  register :connection_data_pull_backfill,
+           Job::ConnectionDataPullBackfillArgs,
+           Job::ConnectionDataPullRunner
 
-  RUNNERS = {
-    :connection_data_pull_backfill => [Job::ConnectionDataPullBackfillArgs, Job::ConnectionDataPullRunner],
-    :connection_data_pull_standard => [Job::ConnectionDataPullStandardArgs, Job::ConnectionDataPullRunner],
-  }.freeze
+  register :connection_data_pull_standard,
+           Job::ConnectionDataPullStandardArgs,
+           Job::ConnectionDataPullRunner
 
   # @param [User] user
   # @param [Symbol] kind
@@ -21,7 +24,7 @@ class Job < ApplicationRecord
   # @return [Job]
   # @raise [ArgumentError] on invalid kind of argument class
   def self.schedule!(user, kind, args)
-    arg_class, _runner = RUNNERS[kind.to_sym]
+    arg_class, _runner = lookup_registration(kind)
     raise ArgumentError, "invalid kind: #{kind}" unless arg_class
     raise ArgumentError, "expected #{arg_class} for #{kind} job but got #{args.class}" unless args.is_a?(arg_class)
 
@@ -33,7 +36,7 @@ class Job < ApplicationRecord
 
   # @return [String] status
   def run!
-    return status unless status.to_sym.in?(RUNNABLE_STATUSES)
+    return status unless status.to_sym.in? %i[initiated errored]
     raise "invalid kind #{kind}" unless runner
 
     run
@@ -91,7 +94,7 @@ private
 
   # @return [Class, nil]
   def runner
-    _arg_class, runner = RUNNERS[kind.to_sym]
+    _arg_class, runner = lookup_registration(kind)
     runner
   end
 
