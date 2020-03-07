@@ -5,9 +5,11 @@ class Job < ApplicationRecord
 
   validates :args, :status, :kind, :user, :presence => true
 
+  MAIN_KINDS = %i[connection_data_pull_standard connection_data_pull_backfill].freeze
+  TEST_KINDS = %i[test_log test_error test_exception].freeze
+
+  enum :kind => Rails.env.test? ? MAIN_KINDS + TEST_KINDS : MAIN_KINDS
   enum :status => %i[initiated running errored done]
-  enum :kind => %i[connection_data_pull_standard connection_data_pull_backfill] +
-    (Rails.env.test? ? %i[test_log test_error test_exception] : [])
 
   after_create :schedule_run
 
