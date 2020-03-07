@@ -56,8 +56,9 @@ private
   # @return [Job]
   def schedule_data_pull(kind, args)
     Connection.transaction do
-      update(:last_update_attempted_at => Time.now)
-      Job.schedule!(user, kind, args)
+      job = Job.schedule!(user, kind, args)
+      update(:last_update_attempted_at => Time.now, :last_update_job_id => job.id)
+      job
     end
   end
 end

@@ -152,3 +152,6 @@ en:
   arguments: "Arguments"
   job_details: "Job details"
   logs: "Logs"
+
+  schedule_data_pull: "Schedule data pull"
+  scheduled_data_pull: "A data pull job has been successfully scheduled to run"

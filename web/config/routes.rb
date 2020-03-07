@@ -26,6 +26,10 @@ Rails.application.routes.draw do
     end
 
     resources :connection, :only => %i[new show update destroy] do
+      member do
+        get :schedule_data_pull
+      end
+
       collection do
         get :fitbit
 

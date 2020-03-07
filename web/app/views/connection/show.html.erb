@@ -2,6 +2,11 @@
   <%= render "form/title", :key => :edit_connection %>
   <%= render "connection/edit_form", :connection => connection, :books => books %>
 
+  <% if connection.book.present? %>
+    <hr />
+    <%= link_to t(:schedule_data_pull), schedule_data_pull_connection_path(connection), :class => "btn" %>
+  <% end %>
+
   <hr />
   <%= link_to t(:delete), connection_path(connection),
     :method => :delete,

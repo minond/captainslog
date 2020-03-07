@@ -97,6 +97,24 @@ class ConnectionController < ApplicationController
     redirect_to user_path
   end
 
+  # === URL
+  #   GET /connection/:id/schedule_data_pull
+  #
+  # === Request fields
+  #   [Integer] id - the connection id for the connection to schedule a data pull for
+  #
+  # === Sample request
+  #   /connection/1/schedule_data_pull
+  #
+  # === Sample response
+  #   Redirect to job
+  #
+  def schedule_data_pull
+    job = current_connection.schedule_data_pull_standard
+    flash.notice = t(:scheduled_data_pull)
+    redirect_to job
+  end
+
 private
 
   param_reader :id
