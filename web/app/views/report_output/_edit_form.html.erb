@@ -1,5 +1,6 @@
 <%= form_for(report_output, :url => report_output.id.present? ? report_report_output_path(report_output.report, report_output) : report_report_output_index_path) do |f| %>
   <%= render "form/field", :f => f, :field => :label %>
+  <%= render "form/field", :f => f, :field => :order %>
   <%= render "form/field", :f => f, :field => :width %>
   <%= render "form/field", :f => f, :field => :height %>
 

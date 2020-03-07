@@ -110,6 +110,6 @@ private
   # @return [ActionController::Parameters]
   def permitted_report_output_params
     params.require(:report_output)
-          .permit(:label, :width, :height, :kind, :query)
+          .permit(:label, :width, :height, :kind, :query, :order)
   end
 end

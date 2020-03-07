@@ -2,6 +2,7 @@
   <table class="table">
     <tr>
       <th><%= t(:id) %></td>
+      <th><%= t(:order) %></td>
       <th><%= t(:label) %></td>
       <th><%= t(:kind) %></td>
       <th><%= t(:height) %></td>
@@ -13,6 +14,7 @@
         <td>
           <%= link_to output.id, edit_report_report_output_path(report, output), :class => "link" %>
         </td>
+        <td><%= output.order %></td>
         <td class="nowrap"><%= output.label %></td>
         <td><%= output.kind %></td>
         <td><%= output.height %></td>
