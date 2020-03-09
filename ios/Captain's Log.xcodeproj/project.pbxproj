@@ -15,6 +15,7 @@
 		1D01E54C2414767C000800C6 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1D01E54B2414767C000800C6 /* Preview Assets.xcassets */; };
 		1D01E55A2414767C000800C6 /* Captain_s_LogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D01E5592414767C000800C6 /* Captain_s_LogTests.swift */; };
 		1D01E5652414767C000800C6 /* Captain_s_LogUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D01E5642414767C000800C6 /* Captain_s_LogUITests.swift */; };
+		1DD1BE0E2415D0A800649216 /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DD1BE0D2415D0A800649216 /* Network.swift */; };
 		1DD49FF32415BA0D006D786D /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1DD49FF22415BA0D006D786D /* Launch Screen.storyboard */; };
 /* End PBXBuildFile section */
 
@@ -37,8 +38,8 @@
 
 /* Begin PBXFileReference section */
 		1D01E53C2414767B000800C6 /* Captain's Log.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Captain's Log.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		1D01E53F2414767B000800C6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		1D01E5412414767B000800C6 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		1D01E53F2414767B000800C6 /* AppDelegate.swift */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; tabWidth = 2; };
+		1D01E5412414767B000800C6 /* SceneDelegate.swift */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; tabWidth = 2; };
 		1D01E5442414767B000800C6 /* Captain_s_Log.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Captain_s_Log.xcdatamodel; sourceTree = "<group>"; };
 		1D01E5462414767B000800C6 /* ContentView.swift */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; tabWidth = 2; };
 		1D01E5482414767C000800C6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -50,6 +51,7 @@
 		1D01E5602414767C000800C6 /* Captain's LogUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Captain's LogUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1D01E5642414767C000800C6 /* Captain_s_LogUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Captain_s_LogUITests.swift; sourceTree = "<group>"; };
 		1D01E5662414767C000800C6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1DD1BE0D2415D0A800649216 /* Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
 		1DD49FF22415BA0D006D786D /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -104,6 +106,7 @@
 				1D01E53F2414767B000800C6 /* AppDelegate.swift */,
 				1D01E5412414767B000800C6 /* SceneDelegate.swift */,
 				1D01E5462414767B000800C6 /* ContentView.swift */,
+				1DD1BE0D2415D0A800649216 /* Network.swift */,
 				1D01E5482414767C000800C6 /* Assets.xcassets */,
 				1D01E5502414767C000800C6 /* Info.plist */,
 				1D01E5432414767B000800C6 /* Captain_s_Log.xcdatamodeld */,
@@ -270,6 +273,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1DD1BE0E2415D0A800649216 /* Network.swift in Sources */,
 				1D01E5452414767B000800C6 /* Captain_s_Log.xcdatamodeld in Sources */,
 				1D01E5402414767B000800C6 /* AppDelegate.swift in Sources */,
 				1D01E5472414767B000800C6 /* ContentView.swift in Sources */,

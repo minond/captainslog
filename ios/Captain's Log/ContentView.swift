@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import Network
 
 let lightGreyColor = Color(
   red: 239.0/255.0,
@@ -16,6 +17,8 @@ let lightGreyColor = Color(
 struct ContentView: View {
   @State private var email: String = ""
   @State private var password: String = ""
+
+  var login = Login()
 
   var body: some View {
     VStack {
@@ -32,7 +35,9 @@ struct ContentView: View {
         .background(lightGreyColor)
         .cornerRadius(5.0)
         .padding(.bottom, 20)
-      Button(action: {print("Button tapped \(self.email) \(self.password)")}) {
+      Button(action: {
+        self.login.run(email: self.email, password: self.password)
+      }) {
          Text("Continue")
            .foregroundColor(.blue)
            .padding()
