@@ -17,8 +17,7 @@ let lightGreyColor = Color(
 struct ContentView: View {
   @State private var email: String = ""
   @State private var password: String = ""
-
-  var login = Login()
+  @ObservedObject private var session = Session()
 
   var body: some View {
     VStack {
@@ -36,12 +35,17 @@ struct ContentView: View {
         .cornerRadius(5.0)
         .padding(.bottom, 20)
       Button(action: {
-        self.login.run(email: self.email, password: self.password)
+        self.session.login(email: self.email, password: self.password)
       }) {
          Text("Continue")
            .foregroundColor(.blue)
            .padding()
       }
+
+      if self.session.authenticated {
+        Text("authenticated")
+      }
+
       Spacer()
     }
       .padding()

@@ -51,7 +51,7 @@
 		1D01E5602414767C000800C6 /* Captain's LogUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Captain's LogUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1D01E5642414767C000800C6 /* Captain_s_LogUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Captain_s_LogUITests.swift; sourceTree = "<group>"; };
 		1D01E5662414767C000800C6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		1DD1BE0D2415D0A800649216 /* Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
+		1DD1BE0D2415D0A800649216 /* Network.swift */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; tabWidth = 2; };
 		1DD49FF22415BA0D006D786D /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
