@@ -9,7 +9,7 @@
     </tr>
     <% jobs.each do |job| %>
       <tr class="job_<%= job.status %>">
-        <td>
+        <td class="nowrap">
           <%= link_to job.id, job_path(job), :class => "link" %>
         </td>
         <td><%= job.status %></td>

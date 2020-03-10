@@ -18,6 +18,7 @@ private
 
   def create_or_update_entries
     proto_entries.each do |proto_entry|
+      log.write "handling entry with digest #{proto_entry.digest.strip} ... "
       create_entry(proto_entry)
     rescue ActiveRecord::RecordInvalid
       update_entry(proto_entry)
@@ -31,16 +32,16 @@ private
 
   # @param [ProtoEntry]
   def create_entry(proto_entry)
-    log.puts "creating new entry with digest #{proto_entry.digest}"
     entry = book.new_entry(proto_entry.text, proto_entry.date, proto_entry.digest)
     entry.connection = connection
     entry.save!
+    log.puts "created"
   end
 
   # @param [ProtoEntry]
   def update_entry(proto_entry)
-    log.puts "updating existing entry with digest #{proto_entry.digest}"
     book.update_entry(proto_entry.digest, proto_entry.text)
+    log.puts "updated"
   end
 
   # @return [Array<ProtoEntry>]
