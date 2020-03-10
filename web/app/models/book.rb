@@ -136,7 +136,7 @@ private
   # @param [Symbol] order
   # @return [Integer]
   def first_datetime_field(rel, field, order)
-    rel.order(field => order)
+    rel.unscope(:order).order(field => order)
        .first&.send(field)&.to_i || 0
   end
 end
