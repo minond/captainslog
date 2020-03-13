@@ -13,6 +13,7 @@ require "minitest/mock"
 require_relative "./external_service_test_helper"
 require_relative "./processor_test_helper"
 require_relative "./querier_test_helper"
+require_relative "./jobs_setup"
 
 Rails.application.credentials.secret_key_base = "1" * 32
 
