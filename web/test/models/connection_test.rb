@@ -42,6 +42,24 @@ class ConnectionTest < ActiveSupport::TestCase
     end
   end
 
+  test "in_need_of_data_pull excludes inactive connections" do
+    connection.save!
+    assert_empty Connection.in_need_of_data_pull
+  end
+
+  test "in_need_of_data_pull excludes active connections that were recently updated" do
+    connection.update!(:book => book, :last_update_attempted_at => Time.now)
+    assert_empty Connection.in_need_of_data_pull
+  end
+
+  test "in_need_of_data_pull includes active connections that were not recently updated" do
+    conn = connection
+    conn.save!
+    conn.update(:book => book)
+    conn.update(:last_update_attempted_at => 1.day.ago)
+    assert_includes Connection.in_need_of_data_pull, conn
+  end
+
 private
 
   def connection
