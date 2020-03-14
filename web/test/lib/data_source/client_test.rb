@@ -11,6 +11,10 @@ class DataSourceClientTest < ActiveSupport::TestCase
     assert_equal connection.id, connection_id
   end
 
+  test "needs base_auth_url override for auth_url" do
+    assert_raises(NotImplementedError) { DataSource::Client.new.auth_url }
+  end
+
   test "needs base_auth_url override" do
     assert_raises(NotImplementedError) { DataSource::Client.new.base_auth_url }
   end
