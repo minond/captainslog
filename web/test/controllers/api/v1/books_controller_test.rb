@@ -7,4 +7,9 @@ class ApiV1BooksControllerTest < ActionDispatch::IntegrationTest
     get "/api/v1/books", as_user(user)
     assert_equal 3, JSON.parse(response.body).size
   end
+
+  test "getting books without authentication" do
+    get "/api/v1/books"
+    assert_response :unauthorized
+  end
 end
