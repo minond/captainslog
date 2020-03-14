@@ -1,7 +1,8 @@
 require "test_helper"
 
 class DataSourceFibitTest < ActiveSupport::TestCase
-  setup do
+  test "data source" do
+    assert_equal :fitbit, DataSource::Fitbit.data_source
   end
 
   test "standard data pull with no results" do
