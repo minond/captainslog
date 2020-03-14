@@ -23,7 +23,7 @@ class EntryTest < ActiveSupport::TestCase
   end
 
   test ".collection_path includes slug and collection time" do
-    assert_equal "/book/testing/at/1558396800", entry.collection_path
+    assert_equal "/book/#{entry.book.slug}/at/1558396800", entry.collection_path
   end
 
 private
