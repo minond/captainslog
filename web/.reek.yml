@@ -26,6 +26,9 @@ detectors:
       - Book
   DataClump:
     enabled: false
+  LongParameterList:
+    exclude:
+      - DataSourceFibitTest#weight_result
 
 directories:
   db/migrate:
