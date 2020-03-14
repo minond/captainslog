@@ -20,6 +20,14 @@ Rails.application.credentials.secret_key_base = "1" * 32
 class ActionDispatch::IntegrationTest
   include Devise::Test::IntegrationHelpers
 
+  # @param [User] user
+  # @return [String]
+  def get_jwt(user)
+    params = { :email => user.email, :password => user.password }
+    post "/api/v1/token", :params => params
+    JSON.parse(response.body)["token"]
+  end
+
   def user(*attrs)
     @user ||= create(:user, *attrs)
   end
