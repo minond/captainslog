@@ -4,6 +4,7 @@ require "simplecov"
 
 SimpleCov.start "rails" do
   add_group "Commands", "app/commands"
+  add_group "Data Source", "lib/data_source"
 end
 
 require_relative "../config/environment"
