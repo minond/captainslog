@@ -1,4 +1,9 @@
 class FakeFitbitAPIClient
+  attr_reader :heart_rate_results
+  attr_reader :activity_results
+  attr_reader :weight_results
+  attr_reader :token
+
   def initialize(results = {})
     @heart_rate_results = results[:heart_rate_results] || []
     @activity_results = results[:activity_results] || []
@@ -17,9 +22,7 @@ class FakeFitbitAPIClient
     weight_results
   end
 
-private
-
-  attr_reader :heart_rate_results
-  attr_reader :activity_results
-  attr_reader :weight_results
+  def get_token(_code)
+    @token = FakeToken.new("user_id" => "54353")
+  end
 end

@@ -14,6 +14,33 @@ class DataSourceFibitTest < ActiveSupport::TestCase
     client.data_pull_backfill
   end
 
+  test "authentication url" do
+    assert DataSource::Fitbit.new.auth_url
+  end
+
+  test "authentication url with state" do
+    user = create(:user)
+    book = create(:book, :user => user)
+    connection = create(:connection, :user => user, :book => book)
+    assert_includes DataSource::Fitbit.new.auth_url(connection), "&state="
+  end
+
+  test "sets user_id after getting a token" do
+    client.code = "123"
+    token = client.instance_variable_get(:@client).token
+    assert token["user_id"]
+    assert_equal token["user_id"], client.instance_variable_get(:@user_id)
+  end
+
+  test "credential options" do
+    client.code = "123"
+    options = client.credential_options
+    assert options[:user_id]
+    assert options[:access_token]
+    assert options[:refresh_token]
+    assert options[:expires_at]
+  end
+
   test "parse valid heart rate results" do
     heart_rate_results = [
       heart_rate_result(2.days.ago, 80),
