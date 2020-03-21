@@ -10,9 +10,11 @@ gem "delayed_job_active_record"               # AR bindings for Delayed Job
 gem "devise"                                  # Flexible authentication solution for Rails with Warden.
 gem "fast_attributes"                         # FastAttributes adds attributes with their types to the class
 gem "fitbit_api"                              # Fitbit API client
+gem "jaeger-client"                           # OpenTracing Tracer implementation for Jaeger in Ruby
 gem "jbuilder", "~> 2.7"                      # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem "jquery-rails"                            # A gem to automate using jQuery with Rails
 gem "jwt"                                     # JSON Web Token encoder/decoder
+gem "opentracing"                             # OpenTracing API for Ruby
 gem "pg", ">= 0.18", "< 2.0"                  # Use postgresql as the database for Active Record
 gem "puma", "~> 4.1"                          # Use Puma as the app server
 gem "rabl"                                    # JSON view builder

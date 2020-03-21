@@ -21,6 +21,8 @@ Bundler.require(*Rails.groups)
 
 module Web
   class Application < Rails::Application
+    require_relative Rails.root.join("lib/tracing")
+    require_relative Rails.root.join("lib/tracing/rack")
     require_relative Rails.root.join("lib/ext/jwt")
     require_relative Rails.root.join("lib/ext/fitbit_api/client")
 
@@ -32,6 +34,9 @@ module Web
     # -- all .rb files in that directory are automatically loaded after loading
     # the framework and any gems in your application.
     config.autoload_paths += %w[lib]
+
+    # OpenTracing instrumentation.
+    config.middleware.use ::Tracing::Rack
 
     # https://guides.rubyonrails.org/active_job_basics.html
     # https://github.com/collectiveidea/delayed_job#active-job

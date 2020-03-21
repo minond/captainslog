@@ -13,7 +13,8 @@ module Querier
   # executing the query.
   QueryingError = Class.new(Error)
 
-  Client = ExternalService.client(Querier::Response,
-                                  Querier::RequestError,
-                                  Rails.application.config.querier)
+  Client = ExternalService.client(:label => "querier",
+                                  :response_class => Querier::Response,
+                                  :error_class => Querier::RequestError,
+                                  :default_config => Rails.application.config.querier)
 end

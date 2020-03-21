@@ -1,0 +1,4 @@
+host: localhost
+port: 6831
+flush_interval: 10
+max_packet_size: 8000

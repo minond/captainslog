@@ -29,6 +29,7 @@ detectors:
   LongParameterList:
     exclude:
       - DataSourceFibitTest#weight_result
+      - ExternalService#self.client
 
 directories:
   db/migrate:

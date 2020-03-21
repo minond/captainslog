@@ -18,7 +18,7 @@ module ExternalService
   #
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
-  def self.client(response_class, error_class, default_config = {})
+  def self.client(label:, response_class:, error_class:, default_config: {})
     Class.new do
       # @param [HTTPPostClient] poster, defaults to `Net::HTTP`. This should be
       #   anything that responds to `post` with a uri and request body. This is
@@ -34,9 +34,19 @@ module ExternalService
       # @param [request_class?] req
       # @return [response_class]
       def request(req)
-        response_class.new(poster.post(uri, req.to_json))
-      rescue StandardError => e
-        raise error_class, "unable to make request: #{e}"
+        OpenTracing.start_active_span("ExternalService.#{label}") do |scope|
+          scope.span.set_tag("peer.address", uri)
+          scope.span.set_tag("span.kind", "client")
+          response_class.new(poster.post(uri, req.to_json))
+        rescue StandardError => e
+          scope.span.set_tag("error", true)
+          scope.span.log_kv(:"error.kind" => e.class,
+                            :"error.object" => e.class,
+                            :message => e.message,
+                            :stack => e.backtrace)
+
+          raise error_class, "unable to make request: #{e}"
+        end
       end
 
     private
@@ -46,6 +56,10 @@ module ExternalService
       # @return [URI]
       def uri
         URI(config[:address])
+      end
+
+      define_method :label do
+        label
       end
 
       define_method :default_config do

@@ -13,7 +13,8 @@ module Processor
   # text.
   ProcessingError = Class.new(Error)
 
-  Client = ExternalService.client(Processor::Response,
-                                  Processor::RequestError,
-                                  Rails.application.config.processor)
+  Client = ExternalService.client(:label => "processor",
+                                  :response_class => Processor::Response,
+                                  :error_class => Processor::RequestError,
+                                  :default_config => Rails.application.config.processor)
 end
