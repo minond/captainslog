@@ -5,16 +5,19 @@ class Tracing::Rack
     @app = app
   end
 
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
   def call(env)
     method = env["REQUEST_METHOD"]
 
-    scope = OpenTracing.global_tracer.start_active_span(method, :tags => {
+    tags = {
       :component => "rack",
       :"span.kind" => "server",
       :"http.method" => method,
       :"http.url" => env["REQUEST_URI"]
-    })
+    }
 
+    scope = OpenTracing.global_tracer.start_active_span(method, :tags => tags)
     span = scope.span
     env["rack.span"] = span
 
@@ -36,4 +39,6 @@ class Tracing::Rack
   ensure
     scope.close
   end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
 end

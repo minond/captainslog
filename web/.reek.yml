@@ -12,6 +12,7 @@ detectors:
     exclude:
       - ExternalService#self.client # has the variable name 'e', ok since it's in a rescue block
       - Job#safe_run # has the variable name 'e', ok since it's in a rescue block
+      - Tracing::Rack#call # has the variable name 'e', ok since it's in a rescue block
   DuplicateMethodCall:
     enabled: false
   FeatureEnvy:
@@ -21,6 +22,7 @@ detectors:
   TooManyStatements:
     exclude:
       - ExternalService#self.client
+      - Tracing::Rack#call
   TooManyMethods:
     exclude:
       - Book

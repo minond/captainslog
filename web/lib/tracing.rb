@@ -1,4 +1,6 @@
 module Tracing
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
   def self.build_tracer
     service_name = ARGV.first == "jobs:work" ? "worker" : "web"
     Jaeger::Client.build(
@@ -20,4 +22,6 @@ module Tracing
       )
     )
   end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
 end
