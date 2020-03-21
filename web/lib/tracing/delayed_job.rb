@@ -36,7 +36,7 @@ class Tracing::DelayedJob < Delayed::Plugin
   # @param [Delayed::Backend::ActiveRecord::Job] job
   # @return [String]
   def self.get_job_name(job)
-    YAML.safe_load(job.handler).job_data["job_class"]
+    YAML.safe_load(job.handler, [ActiveJob::QueueAdapters::DelayedJobAdapter::JobWrapper]).job_data["job_class"]
   rescue StandardError
     "UnknownJob"
   end
