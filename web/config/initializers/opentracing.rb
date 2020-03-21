@@ -10,3 +10,4 @@ return if Rails.env.test?
 OpenTracing.global_tracer = Tracing.build_tracer
 
 Tracing::ActiveRecord.instrument!
+Delayed::Worker.plugins << Tracing::DelayedJob
