@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/minond/captainslog/internal"
 	"github.com/minond/captainslog/querier/repository"
 	"github.com/minond/captainslog/querier/sqlparse"
 	"github.com/minond/captainslog/querier/sqlrewrite"
@@ -49,7 +50,15 @@ type QueryResponse struct {
 	Results [][]interface{} `json:"results"`
 }
 
-func (s *Service) Handle(ctx context.Context, req *QueryRequest) (*QueryResponse, error) {
+func (s *Service) Handle(ctx context.Context, req *internal.Request) (interface{}, error) {
+	queryRequest := &QueryRequest{}
+	if err := req.Unmarshal(queryRequest); err != nil {
+		return nil, err
+	}
+	return s.Query(ctx, queryRequest)
+}
+
+func (s *Service) Query(ctx context.Context, req *QueryRequest) (*QueryResponse, error) {
 	if err := validateServiceRequest(req); err != nil {
 		return nil, err
 	}

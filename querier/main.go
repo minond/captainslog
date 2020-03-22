@@ -3,8 +3,9 @@ package main
 import (
 	"database/sql"
 	"flag"
-	"log"
+	"os"
 
+	"github.com/minond/captainslog/internal"
 	"github.com/minond/captainslog/querier/repl"
 	"github.com/minond/captainslog/querier/repository"
 
@@ -26,15 +27,15 @@ func main() {
 }
 
 func runServer() {
-	server, err := NewServerFromEnv()
+	db, err := sql.Open("postgres", os.Getenv("QUERIER_DB_CONN"))
 	if err != nil {
 		panic(err)
 	}
 
-	log.Printf("listening on %s", server.Addr())
-	go server.Start()
-	server.ListenForShutdown()
-	log.Print("server shutdown is complete")
+	repo := repository.New(db)
+	service := NewService(repo)
+	server := internal.NewServer(os.Getenv("QUERIER_HTTP_LISTEN"), service)
+	server.Run()
 }
 
 func runRepl() {
