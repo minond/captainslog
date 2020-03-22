@@ -8,7 +8,9 @@ class Tracing::DelayedJob < Delayed::Plugin
     end
 
     lifecycle.around(:perform) do |_worker, job, &block|
-      OpenTracing.start_active_span("Perform #{get_job_name(job)}", :tags => generate_perform_tags(job), :child_of => extract(job)) do
+      parent = extract(job)
+      references = [OpenTracing::Reference.follows_from(parent)] if parent
+      OpenTracing.start_active_span("Perform #{get_job_name(job)}", :tags => generate_perform_tags(job), :references => references) do
         block.call(job)
       end
     end
