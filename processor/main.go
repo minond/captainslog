@@ -8,6 +8,8 @@ import (
 )
 
 func main() {
+	internal.InitGlobalTracer("processor")
+
 	db, err := sql.Open("postgres", os.Getenv("PROCESSOR_DB_CONN"))
 	if err != nil {
 		panic(err)
