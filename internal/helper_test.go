@@ -42,11 +42,7 @@ func makeRequest(t *testing.T, rawBody string, handler ServiceHandler) *httptest
 	}
 
 	rr := httptest.NewRecorder()
-	server, err := NewServer(ServiceWrapper{handler})
-	if err != nil {
-		t.Fatalf("unexpected error from NewServer: %v", err)
-	}
-
+	server := NewServer("", ServiceWrapper{handler})
 	server.ServeHTTP(rr, req)
 
 	return rr

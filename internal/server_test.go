@@ -28,7 +28,7 @@ func TestServer_Error_GoodJSON(t *testing.T) {
 }
 
 func TestServer_AddGetterSetter(t *testing.T) {
-	server, _ := NewServer(nil)
+	server := NewServer("", nil)
 	server.SetAddr("xs")
 	assertEqual(t, "xs", server.Addr())
 }

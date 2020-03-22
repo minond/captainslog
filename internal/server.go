@@ -47,11 +47,12 @@ type Server struct {
 	httpListener *http.Server
 }
 
-func NewServer(service Service) (*Server, error) {
+func NewServer(listen string, service Service) *Server {
 	s := &Server{}
 	s.service = service
 	s.httpListener = &http.Server{Handler: s}
-	return s, nil
+	s.SetAddr(listen)
+	return s
 }
 
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -93,6 +94,13 @@ func (s *Server) ListenForShutdown() {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 	_ = s.httpListener.Shutdown(ctx)
+}
+
+func (s *Server) Run() {
+	log.Printf("listening on %s", s.Addr())
+	go s.Start()
+	s.ListenForShutdown()
+	log.Print("server shutdown is complete")
 }
 
 func readRequest(w http.ResponseWriter, r *http.Request) (*Request, error) {
