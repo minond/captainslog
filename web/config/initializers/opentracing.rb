@@ -9,5 +9,5 @@ return if Rails.env.test?
 
 OpenTracing.global_tracer = Tracing.build_tracer
 
-Tracing::ActiveRecord.instrument!
+Tracing::ActiveRecord.instrument! unless ARGV.first == "jobs:work"
 Delayed::Worker.plugins << Tracing::DelayedJob
