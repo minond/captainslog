@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	"errors"
+
+	"github.com/minond/captainslog/internal"
 )
 
 var (
@@ -35,7 +37,15 @@ type ProcessingResponse struct {
 	Data map[string]interface{} `json:"data,omitempty"`
 }
 
-func (s *Service) Handle(ctx context.Context, req *ProcessingRequest) (*ProcessingResponse, error) {
+func (s *Service) Handle(ctx context.Context, req *internal.Request) (interface{}, error) {
+	processingRequest := &ProcessingRequest{}
+	if err := req.Unmarshal(processingRequest); err != nil {
+		return nil, err
+	}
+	return s.Process(ctx, processingRequest)
+}
+
+func (s *Service) Process(ctx context.Context, req *ProcessingRequest) (*ProcessingResponse, error) {
 	if err := validateServiceRequest(req); err != nil {
 		return nil, err
 	}

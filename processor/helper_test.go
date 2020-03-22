@@ -10,6 +10,7 @@ import (
 	"testing"
 
 	"github.com/DATA-DOG/go-txdb"
+	"github.com/minond/captainslog/internal"
 
 	"github.com/DATA-DOG/go-sqlmock"
 )
@@ -49,7 +50,7 @@ func makeRequest(t *testing.T, rawBody string, repo Repository) *httptest.Respon
 
 	rr := httptest.NewRecorder()
 	service := NewService(repo, NewProcessor())
-	server, err := NewServer(service)
+	server := internal.NewServer("", service)
 	if err != nil {
 		t.Fatalf("unexpected error from NewServer: %v", err)
 	}

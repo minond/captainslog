@@ -1,15 +1,19 @@
 package main
 
-import "log"
+import (
+	"database/sql"
+	"os"
+
+	"github.com/minond/captainslog/internal"
+)
 
 func main() {
-	server, err := NewServerFromEnv()
+	db, err := sql.Open("postgres", os.Getenv("PROCESSOR_DB_CONN"))
 	if err != nil {
 		panic(err)
 	}
 
-	log.Printf("listening on %s", server.Addr())
-	go server.Start()
-	server.ListenForShutdown()
-	log.Print("server shutdown is complete")
+	service := NewService(NewRepository(db), NewProcessor())
+	server := internal.NewServer(os.Getenv("PROCESSOR_HTTP_LISTEN"), service)
+	server.Run()
 }
