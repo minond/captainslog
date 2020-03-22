@@ -23,6 +23,7 @@ detectors:
     exclude:
       - ExternalService#self.client
       - Tracing::Rack#call
+      - Job#run
   TooManyMethods:
     exclude:
       - Book

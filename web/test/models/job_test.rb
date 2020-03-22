@@ -79,7 +79,7 @@ class JobTest < ActiveSupport::TestCase
   test "errors are printed to the logs after the job has ran" do
     job = Job.schedule!(user, :test_error, TestArgs.new)
     job.run!
-    assert_equal job.logs, "error: Err1 error1\nerror: Err2 error2\n"
+    assert_equal job.logs, "error: err1: error1\nerror: err2: error2\n"
   end
 
   test "exception is pronted to th elogs after the job has ran" do

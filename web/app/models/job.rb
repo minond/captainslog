@@ -62,15 +62,24 @@ class Job < ApplicationRecord
 private
 
   def run
-    running!
+    OpenTracing.start_active_span("Job.setup") do
+      running!
+    end
 
-    cmd, err = safe_run
+    cmd, err = OpenTracing.start_active_span("Job.run") do
+      safe_run
+    end
+
+    OpenTracing.start_active_span("Job.teardown") do
+      capture_results(cmd, err)
+    end
+  end
+
+  # @param [SimpleCommand, nil] cmd
+  # @param [Error, nil] err
+  def capture_results(cmd, err)
     capture_errors(cmd, err)
-
-    update(:status => run_status(cmd, err),
-           :logs => log.string)
-
-    @log = nil
+    update(:status => run_status(cmd, err), :logs => log.string)
   end
 
   def schedule_run
@@ -104,14 +113,46 @@ private
 
   # @param [SimpleCommand, nil] cmd
   # @param [Error, nil] err
-  def capture_errors(cmd, err)
-    unless err.nil?
-      log.puts "error: #{err.class}"
-      log.puts "message: #{err.message}"
-    end
+  # @return [Boolean]
+  def errors?(cmd, err)
+    return true if err.present?
+    return true unless cmd&.errors&.full_messages&.empty?
 
-    cmd&.errors&.full_messages&.each do |msg|
-      log.puts "error: #{msg}"
+    false
+  end
+
+  # @param [SimpleCommand, nil] cmd
+  # @param [Error, nil] err
+  def capture_errors(cmd, err)
+    span = ::OpenTracing.active_span
+    span&.set_tag("error", true) if errors?(cmd, err)
+
+    log_command_errors(cmd, span)
+    log_command_exception(err, span)
+  end
+
+  # @param [SimpleCommand, nil] cmd
+  # @param [OpenTracing::Span, nil] span
+  def log_command_errors(cmd, span)
+    return if cmd.nil?
+    return if cmd.errors.empty?
+
+    cmd.errors.each do |key, msg|
+      span&.log_kv(key => msg)
+      log.puts "error: #{key}: #{msg}"
     end
+  end
+
+  # @param [Error, nil] err
+  # @param [OpenTracing::Span, nil] span
+  def log_command_exception(err, span)
+    return if err.nil?
+
+    log.puts "error: #{err.class}"
+    log.puts "message: #{err.message}"
+    span&.log_kv(:"error.kind" => err.class.to_s,
+                 :"error.object" => err,
+                 :message => err.message,
+                 :stack => err.backtrace.join("\n"))
   end
 end
