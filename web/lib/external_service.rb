@@ -37,7 +37,9 @@ module ExternalService
         OpenTracing.start_active_span("ExternalService.#{label}") do |scope|
           scope.span.set_tag("peer.address", uri)
           scope.span.set_tag("span.kind", "client")
-          response_class.new(poster.post(uri, req.to_json))
+          headers = {}
+          OpenTracing.inject(scope.span.context, OpenTracing::FORMAT_TEXT_MAP, headers)
+          response_class.new(poster.post(uri, req.to_json, headers))
         rescue StandardError => e
           scope.span.set_tag("error", true)
           scope.span.log_kv(:"error.kind" => e.class,
