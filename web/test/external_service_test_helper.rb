@@ -17,7 +17,7 @@ module ExternalServiceTestHelper
     # @param [URI] uri
     # @param [String] body
     # @return [HTTPResponse]
-    def post(uri, body, headers = {})
+    def post(uri, body, _headers = {})
       @calls << { :uri => uri, :body => body }
       raise err if err
 
