@@ -10,6 +10,8 @@ import (
 	"os"
 	"os/signal"
 	"time"
+
+	opentracing "github.com/opentracing/opentracing-go"
 )
 
 type Response struct {
@@ -58,12 +60,18 @@ func NewServer(listen string, service Service) *Server {
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	log.Println("handling request")
 
+	span := opentracing.GlobalTracer().StartSpan("Server.ServeHTTP",
+		opentracing.ChildOf(extractSpanContextFromRequest(r)),
+		opentracing.Tag{Key: "span.kind", Value: "server"})
+	defer span.Finish()
+
 	req, err := readRequest(w, r)
 	if err != nil {
 		return
 	}
 
-	res, err := s.service.Handle(context.Background(), req)
+	ctx := opentracing.ContextWithSpan(context.Background(), span)
+	res, err := s.service.Handle(ctx, req)
 	if err != nil {
 		respond(w, http.StatusBadRequest, errResponse(err.Error()))
 		return
