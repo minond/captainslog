@@ -6,5 +6,5 @@ require (
 	github.com/DATA-DOG/go-sqlmock v1.4.0
 	github.com/DATA-DOG/go-txdb v0.1.3
 	github.com/lib/pq v1.3.0
-	github.com/minond/captainslog/internal v0.0.0-20200325050342-ad1c92c1886b
+	github.com/minond/captainslog/internal v0.0.0-20200325052757-59d2092b04a5
 )

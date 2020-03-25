@@ -22,8 +22,8 @@ github.com/mattn/go-isatty v0.0.8 h1:HLtExJ+uU2HOZ+wI0Tt5DtUDrx8yhUqDcp7fYERX4CE
 github.com/mattn/go-isatty v0.0.8/go.mod h1:Iq45c/XA43vh69/j3iqttzPXn0bhXyGjM0Hdxcsrc5s=
 github.com/mattn/go-runewidth v0.0.7 h1:Ei8KR0497xHyKJPAv59M1dkC+rOZCMBJ+t3fZ+twI54=
 github.com/mattn/go-runewidth v0.0.7/go.mod h1:H031xJmbD/WCDINGzjvQ9THkh0rPKHF+m2gUSrubnMI=
-github.com/minond/captainslog/internal v0.0.0-20200325050342-ad1c92c1886b h1:JKLK5jcqkv9UzNLIamx90mwUwquzLa9i2uZ43W91dXs=
-github.com/minond/captainslog/internal v0.0.0-20200325050342-ad1c92c1886b/go.mod h1:9ungS2IrzqiKW/GEO4Wm7s5z0tz08IC9jaIePSzMOV0=
+github.com/minond/captainslog/internal v0.0.0-20200325052757-59d2092b04a5 h1:LF0dfoJd+PUPVWVzFy3dS8u9TXUNPU+LFVypKsX5p5s=
+github.com/minond/captainslog/internal v0.0.0-20200325052757-59d2092b04a5/go.mod h1:9ungS2IrzqiKW/GEO4Wm7s5z0tz08IC9jaIePSzMOV0=
 github.com/olekukonko/tablewriter v0.0.4 h1:vHD/YYe1Wolo78koG299f7V/VAS08c6IpCLn+Ejf/w8=
 github.com/olekukonko/tablewriter v0.0.4/go.mod h1:zq6QwlOf5SlnkVbMSr5EoBv3636FWnp+qbPhuoO21uA=
 github.com/opentracing/opentracing-go v1.1.0 h1:pWlfV3Bxv7k65HYwkikxat0+s3pV4bsqf19k25Ur8rU=
