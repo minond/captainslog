@@ -9,6 +9,6 @@ require (
 	github.com/k0kubun/pp v3.0.1+incompatible
 	github.com/lib/pq v1.0.0
 	github.com/mattn/go-colorable v0.1.4 // indirect
-	github.com/minond/captainslog/internal v0.0.0-20200322053750-3c42dd3acba9
+	github.com/minond/captainslog/internal v0.0.0-20200325050342-ad1c92c1886b
 	github.com/olekukonko/tablewriter v0.0.4
 )
