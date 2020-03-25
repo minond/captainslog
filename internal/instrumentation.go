@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"log"
 	"net/http"
 
 	opentracing "github.com/opentracing/opentracing-go"
@@ -8,7 +9,11 @@ import (
 )
 
 func InitGlobalTracer(appName string) {
-	config, _ := jaegerConfig.FromEnv()
+	config, err := jaegerConfig.FromEnv()
+	if err != nil {
+		log.Printf("jaeger setup error: %v", err)
+		return
+	}
 	config.InitGlobalTracer(appName)
 }
 
