@@ -1,8 +1,10 @@
 package internal
 
 import (
+	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	opentracing "github.com/opentracing/opentracing-go"
 	jaegerConfig "github.com/uber/jaeger-client-go/config"
@@ -14,6 +16,13 @@ func InitGlobalTracer(appName string) {
 		log.Printf("jaeger setup error: %v", err)
 		return
 	}
+
+	host := os.Getenv("JAEGER_HOST")
+	port := os.Getenv("JAEGER_PORT")
+	if host != "" && port != "" {
+		config.Reporter.LocalAgentHostPort = fmt.Sprintf("%s:%d", host, port)
+	}
+
 	config.InitGlobalTracer(appName)
 }
 
