@@ -40,6 +40,8 @@ where the external services live:
     FITBIT_CLIENT_ID
     FITBIT_CLIENT_SECRET
     FITBIT_REDIRECT_URL   # example http://localhost:3000/oauth/fitbit
+    JAEGER_HOST           # example localhost
+    JAEGER_PORT           # example 6831
     PROCESSOR_ADDRESS     # example http://host.docker.internal:8081
     QUERIER_ADDRESS       # example http://host.docker.internal:8082
 
