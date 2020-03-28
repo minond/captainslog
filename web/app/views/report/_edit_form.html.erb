@@ -1,5 +1,6 @@
 <%= form_for(report, :url => report.id.present? ? report_path(report) : report_index_path) do |f| %>
   <%= render "form/field", :f => f, :field => :label %>
+  <%= render "form/timestamps", :f => f %>
 
   <% if report.persisted? %>
     <hr />
@@ -17,16 +18,6 @@
     <div class="field btns">
       <%= link_to t(:add_new_report_output), new_report_report_output_path(report.id), :class => "btn" %>
     </div>
-
-    <hr />
-
-    <%= render "form/field", :f => f, :field => :created_at do %>
-      <%= f.text_field :created_at, :readonly => true %>
-    <% end %>
-
-    <%= render "form/field", :f => f, :field => :updated_at do %>
-      <%= f.text_field :updated_at, :readonly => true %>
-    <% end %>
   <% end %>
 
   <%= render "form/actions", :f => f, :back_url => user_path %>

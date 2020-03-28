@@ -10,5 +10,6 @@
     <%= select(:user, :homepage, user.homepage_options, :object => user) %>
   <% end %>
 
+  <%= render "form/timestamps", :f => f %>
   <%= render "form/actions", :f => f, :back_url => user_path %>
 <% end %>

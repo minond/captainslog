@@ -2,16 +2,6 @@
   <%= render "form/field", :f => f, :field => :label %>
   <%= render "form/field", :f => f, :field => :match %>
   <%= render "form/field", :f => f, :field => :type %>
-
-  <% if extractor.persisted? %>
-    <%= render "form/field", :f => f, :field => :created_at do %>
-      <%= f.text_field :created_at, :readonly => true %>
-    <% end %>
-
-    <%= render "form/field", :f => f, :field => :updated_at do %>
-      <%= f.text_field :updated_at, :readonly => true %>
-    <% end %>
-  <% end %>
-
+  <%= render "form/timestamps", :f => f %>
   <%= render "form/actions", :f => f, :back_url => edit_book_path(extractor.book.slug) %>
 <% end %>
