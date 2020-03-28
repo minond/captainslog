@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	extractorColumns = []string{"label", "match", "type"}
+	extractorColumns = []string{"label", "match", "data_type"}
 
 	firstExtractor = Extractor{
 		Label:    "a",
