@@ -1,4 +1,4 @@
-class UsersController < ApplicationController
+class UsersController < UserSessionController
   # === URL
   #   GET /user
   #

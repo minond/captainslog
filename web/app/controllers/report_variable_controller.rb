@@ -1,4 +1,4 @@
-class ReportVariableController < ApplicationController
+class ReportVariableController < UserSessionController
   # === URL
   #   GET /report/:report_id/report_variable/new
   #

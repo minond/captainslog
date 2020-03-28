@@ -1,6 +1,4 @@
-class EntryController < ApplicationController
-  around_action :user_timezone
-
+class EntryController < UserSessionController
   # === URL
   #   POST /book/:slug/entry
   #

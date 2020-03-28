@@ -1,4 +1,4 @@
-class ReportController < ApplicationController
+class ReportController < UserSessionController
   # === URL
   #   GET /report/new
   #

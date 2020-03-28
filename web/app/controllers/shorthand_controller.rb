@@ -1,4 +1,4 @@
-class ShorthandController < ApplicationController
+class ShorthandController < UserSessionController
   # === URL
   #   GET /book/:slug/shorthand/new
   #

@@ -1,4 +1,4 @@
-class JobController < ApplicationController
+class JobController < UserSessionController
   # === URL
   #   GET /job/:id
   #

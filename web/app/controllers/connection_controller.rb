@@ -1,4 +1,4 @@
-class ConnectionController < ApplicationController
+class ConnectionController < UserSessionController
   CONNECTIONS = [
     {
       :logo => "fitbit-logo.png",

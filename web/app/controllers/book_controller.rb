@@ -1,6 +1,4 @@
-class BookController < ApplicationController
-  around_action :user_timezone
-
+class BookController < UserSessionController
   # === URL
   #   GET /book/new
   #

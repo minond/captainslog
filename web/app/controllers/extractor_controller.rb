@@ -1,4 +1,4 @@
-class ExtractorController < ApplicationController
+class ExtractorController < UserSessionController
   # === URL
   #   GET /book/:slug/extractor/new
   #
