@@ -4,6 +4,6 @@
     user
     label { "testing" }
     match { "/*/" }
-    type { 0 }
+    data_type { :string }
   end
 end

@@ -15,6 +15,6 @@ private
                   :user => user,
                   :label => "a",
                   :match => "/b/",
-                  :type => 1)
+                  :data_type => :number)
   end
 end

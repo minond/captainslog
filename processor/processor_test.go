@@ -52,11 +52,11 @@ func TestExtract_WorkoutsSample(t *testing.T) {
 	}
 
 	extractors := []Extractor{
-		{Label: "exercise", Match: `^(.+),`, Type: StringData},
-		{Label: "sets", Match: `,\s{0,}(\d+)\s{0,}x`, Type: NumberData},
-		{Label: "reps", Match: `x\s{0,}(\d+)\s{0,}@`, Type: NumberData},
-		{Label: "weight", Match: `@\s{0,}(\d+)$`, Type: NumberData},
-		{Label: "time", Match: `(\d+\s{0,}(sec|seconds|min|minutes|hour|hours))`, Type: StringData},
+		{Label: "exercise", Match: `^(.+),`, DataType: StringData},
+		{Label: "sets", Match: `,\s{0,}(\d+)\s{0,}x`, DataType: NumberData},
+		{Label: "reps", Match: `x\s{0,}(\d+)\s{0,}@`, DataType: NumberData},
+		{Label: "weight", Match: `@\s{0,}(\d+)$`, DataType: NumberData},
+		{Label: "time", Match: `(\d+\s{0,}(sec|seconds|min|minutes|hour|hours))`, DataType: StringData},
 	}
 
 	runExtractTests("TestExtract_WorkoutsSample", t, tests, extractors)
@@ -122,10 +122,10 @@ func TestProcess(t *testing.T) {
 	}
 
 	extractors := []Extractor{
-		{Label: "exercise", Match: `^(.+),`, Type: StringData},
-		{Label: "sets", Match: `,\s{0,}(\d+)\s{0,}x`, Type: NumberData},
-		{Label: "reps", Match: `x\s{0,}(\d+)\s{0,}@`, Type: NumberData},
-		{Label: "weight", Match: `@\s{0,}(\d+)$`, Type: NumberData},
+		{Label: "exercise", Match: `^(.+),`, DataType: StringData},
+		{Label: "sets", Match: `,\s{0,}(\d+)\s{0,}x`, DataType: NumberData},
+		{Label: "reps", Match: `x\s{0,}(\d+)\s{0,}@`, DataType: NumberData},
+		{Label: "weight", Match: `@\s{0,}(\d+)$`, DataType: NumberData},
 	}
 
 	p := processor{}

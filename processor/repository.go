@@ -25,7 +25,7 @@ func NewRepository(db *sql.DB) Repository {
 func (r *repository) FindExtractors(ctx context.Context, bookID int64) ([]Extractor, error) {
 	var extractors []Extractor
 
-	rows, err := r.db.QueryContext(ctx, "select label, match, type from extractors where book_id = $1", bookID)
+	rows, err := r.db.QueryContext(ctx, "select label, match, data_type from extractors where book_id = $1", bookID)
 	if err != nil {
 		return nil, err
 	}
@@ -34,16 +34,16 @@ func (r *repository) FindExtractors(ctx context.Context, bookID int64) ([]Extrac
 	for rows.Next() {
 		var label string
 		var match string
-		var typ DataType
+		var dataType DataType
 
-		if err := rows.Scan(&label, &match, &typ); err != nil {
+		if err := rows.Scan(&label, &match, &dataType); err != nil {
 			return nil, err
 		}
 
 		extractor := Extractor{
-			Label: label,
-			Match: match,
-			Type:  typ,
+			Label:    label,
+			Match:    match,
+			DataType: dataType,
 		}
 
 		extractors = append(extractors, extractor)

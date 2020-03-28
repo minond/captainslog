@@ -19,7 +19,7 @@ class ExtractorController < UserSessionController
   #   [String] slug - the slug for the book the extractor belongs to
   #   [String] extractor[label] - the extractor label
   #   [String] extractor[match] - the extractor match
-  #   [Integer] extractor[type] - the extractor type
+  #   [Integer] extractor[data_type] - the extractor data type
   #
   # === Sample request
   #   /book/workouts/extractor
@@ -53,7 +53,7 @@ class ExtractorController < UserSessionController
   #   [Integer] id - the id for the extractor to update
   #   [String] extractor[label] - the extractor label
   #   [String] extractor[match] - the extractor match
-  #   [Integer] extractor[type] - the extractor type
+  #   [Integer] extractor[data_type] - the extractor data type
   #
   # === Sample request
   #   /book/workouts/extractor/1?label=mylabel
@@ -113,7 +113,7 @@ private
   # @return [ActionController::Parameters]
   def permitted_extractor_params
     params.require(:extractor)
-          .permit(:label, :match, :type)
+          .permit(:label, :match, :data_type)
   end
 
   # @param [Extractor] extractor

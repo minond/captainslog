@@ -12,27 +12,27 @@ var (
 	extractorColumns = []string{"label", "match", "type"}
 
 	firstExtractor = Extractor{
-		Label: "a",
-		Match: "/a/",
-		Type:  1,
+		Label:    "a",
+		Match:    "/a/",
+		DataType: NumberData,
 	}
 
 	firstExtractorRow = []driver.Value{
 		firstExtractor.Label,
 		firstExtractor.Match,
-		firstExtractor.Type,
+		firstExtractor.DataType,
 	}
 
 	secondExtractor = Extractor{
-		Label: "b",
-		Match: "/b/",
-		Type:  2,
+		Label:    "b",
+		Match:    "/b/",
+		DataType: BooleanData,
 	}
 
 	secondExtractorRow = []driver.Value{
 		secondExtractor.Label,
 		secondExtractor.Match,
-		secondExtractor.Type,
+		secondExtractor.DataType,
 	}
 )
 

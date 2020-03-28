@@ -10,9 +10,9 @@ const (
 )
 
 type Extractor struct {
-	Label string
-	Match string
-	Type  DataType
+	Label    string
+	Match    string
+	DataType DataType
 }
 
 type Shorthand struct {

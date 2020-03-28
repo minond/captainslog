@@ -2,8 +2,8 @@
   <%= render "form/field", :f => f, :field => :label %>
   <%= render "form/field", :f => f, :field => :match %>
 
-  <%= render "form/field", :f => f, :field => :type do %>
-    <%= select(:extractor, :type, {
+  <%= render "form/field", :f => f, :field => :data_type do %>
+    <%= select(:extractor, :data_type, {
       t(:data_type_string) => :string,
       t(:data_type_number) => :number,
       t(:data_type_boolean) => :boolean,

@@ -43,7 +43,7 @@ func (processor) Extract(text string, extractors []Extractor) (map[string]interf
 
 		matches := reg.FindStringSubmatch(text)
 		if len(matches) > 1 {
-			switch extractor.Type {
+			switch extractor.DataType {
 			case BooleanData:
 				data[extractor.Label] = true
 

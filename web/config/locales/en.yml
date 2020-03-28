@@ -76,7 +76,7 @@ en:
   edit_extractor: "Edit extractor"
   label: "Label"
   match: "Match"
-  type: "Type"
+  data_type: "Data type"
   data_type_string: "String"
   data_type_number: "Number"
   data_type_boolean: "Boolean"
