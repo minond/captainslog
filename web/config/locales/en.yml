@@ -77,6 +77,9 @@ en:
   label: "Label"
   match: "Match"
   type: "Type"
+  data_type_string: "String"
+  data_type_number: "Number"
+  data_type_boolean: "Boolean"
 
   edit_user: "Edit user"
 

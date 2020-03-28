@@ -12,5 +12,7 @@ class Extractor < ApplicationRecord
   validates :label, :match, :book, :user, :type, :presence => true
   validate :book_is_owned_by_user
 
+  enum :type => %i[string number boolean]
+
   default_scope { order(:label => :asc) }
 end

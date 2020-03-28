@@ -1,7 +1,15 @@
 <%= form_for(extractor, :url => extractor.id.present? ? book_extractor_path(extractor.book.slug, extractor) : book_extractor_index_path(extractor.book.slug)) do |f| %>
   <%= render "form/field", :f => f, :field => :label %>
   <%= render "form/field", :f => f, :field => :match %>
-  <%= render "form/field", :f => f, :field => :type %>
+
+  <%= render "form/field", :f => f, :field => :type do %>
+    <%= select(:extractor, :type, {
+      t(:data_type_string) => :string,
+      t(:data_type_number) => :number,
+      t(:data_type_boolean) => :boolean,
+    }, :object => extractor) %>
+  <% end %>
+
   <%= render "form/timestamps", :f => f %>
   <%= render "form/actions", :f => f, :back_url => edit_book_path(extractor.book.slug) %>
 <% end %>
