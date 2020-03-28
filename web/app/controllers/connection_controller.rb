@@ -111,7 +111,7 @@ class ConnectionController < UserSessionController
   #   Redirect to job
   #
   def schedule_data_pull
-    job = current_connection.schedule_data_pull_standard
+    job = current_connection.schedule_data_pull_manual
     flash.notice = t(:scheduled_data_pull)
     redirect_to job
   end

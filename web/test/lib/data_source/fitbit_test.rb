@@ -1,6 +1,5 @@
 require "test_helper"
 
-# rubocop:disable Metrics/ClassLength
 class DataSourceFibitTest < ActiveSupport::TestCase
   test "data source" do
     assert_equal :fitbit, DataSource::Fitbit.data_source
@@ -180,4 +179,3 @@ private
     FakeFitbitAPIClient.new(**results)
   end
 end
-# rubocop:enable Metrics/ClassLength

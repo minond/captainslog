@@ -41,5 +41,4 @@ Layout/LineLength:
   Enabled: false
 
 Metrics/ClassLength:
-  Exclude:
-    - test/models/book_test.rb
+  Enabled: false

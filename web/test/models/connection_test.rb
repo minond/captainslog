@@ -27,11 +27,17 @@ class ConnectionTest < ActiveSupport::TestCase
     assert_equal "connection_data_pull_standard", Job.last.kind
   end
 
-  test "schedule_data_pull_standard return previous job when scheduled within 15 min" do
+  test "schedule_data_pull_manual" do
+    assert_not Job.first
+    connection.schedule_data_pull_manual
+    assert_equal "connection_data_pull_manual", Job.last.kind
+  end
+
+  test "schedule_data_pull_manual return previous job when scheduled within 15 min" do
     conn = connection
     conn.save!
     original_job = conn.schedule_data_pull_standard
-    same_job = conn.schedule_data_pull_standard
+    same_job = conn.schedule_data_pull_manual
     assert_equal original_job.id, same_job.id
   end
 

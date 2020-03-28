@@ -5,8 +5,17 @@ class Job < ApplicationRecord
 
   validates :args, :status, :kind, :user, :presence => true
 
-  MAIN_KINDS = %i[connection_data_pull_standard connection_data_pull_backfill].freeze
-  TEST_KINDS = %i[test_log test_error test_exception].freeze
+  MAIN_KINDS = %i[
+    connection_data_pull_standard
+    connection_data_pull_backfill
+    connection_data_pull_manual
+  ].freeze
+
+  TEST_KINDS = %i[
+    test_log
+    test_error
+    test_exception
+  ].freeze
 
   enum :kind => Rails.env.test? ? MAIN_KINDS + TEST_KINDS : MAIN_KINDS
   enum :status => %i[initiated running errored done]
@@ -19,6 +28,10 @@ class Job < ApplicationRecord
 
   register :connection_data_pull_standard,
            Job::ConnectionDataPullStandardArgs,
+           Job::ConnectionDataPullRunner
+
+  register :connection_data_pull_manual,
+           Job::ConnectionDataPullManualArgs,
            Job::ConnectionDataPullRunner
 
   default_scope { order(:created_at => :desc) }

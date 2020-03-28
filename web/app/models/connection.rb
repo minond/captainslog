@@ -48,10 +48,16 @@ class Connection < ApplicationRecord
 
   # @return [Job]
   def schedule_data_pull_standard
-    return last_update_job if scheduled_data_pull_within(15.minutes)
-
     schedule_data_pull(:connection_data_pull_standard,
                        Job::ConnectionDataPullStandardArgs.new(:connection_id => id))
+  end
+
+  # @return [Job]
+  def schedule_data_pull_manual
+    return last_update_job if scheduled_data_pull_within(15.minutes)
+
+    schedule_data_pull(:connection_data_pull_manual,
+                       Job::ConnectionDataPullManualArgs.new(:connection_id => id))
   end
 
 private
