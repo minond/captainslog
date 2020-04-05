@@ -14,6 +14,7 @@ gem "jaeger-client"                           # OpenTracing Tracer implementatio
 gem "jbuilder", "~> 2.7"                      # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem "jquery-rails"                            # A gem to automate using jQuery with Rails
 gem "jwt"                                     # JSON Web Token encoder/decoder
+gem "lastfm"                                  # A Ruby interface for Last.fm Web Services
 gem "opentracing"                             # OpenTracing API for Ruby
 gem "pg", ">= 0.18", "< 2.0"                  # Use postgresql as the database for Active Record
 gem "puma", "~> 4.1"                          # Use Puma as the app server
