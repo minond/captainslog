@@ -1,5 +1,8 @@
 class Job::ConnectionDataPullRunner < Job::Runner
   prepend SimpleCommand
+  extend Instrumented
+
+  traced :call, :create_or_update_entries
 
   def call
     print_job_information
