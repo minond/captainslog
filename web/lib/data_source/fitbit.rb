@@ -4,8 +4,6 @@ class DataSource::Fitbit < DataSource::OauthClient
   traced :data_pull, :heart_rate_time_series, :steps_time_series,
          :weight_time_series
 
-  frequency! :daily
-
   DATA_PULL_BACKFILL_PERIOD_START = 2.years
   DATA_PULL_BACKFILL_PERIOD_END = 1.day
   DATA_PULL_STANDARD_PERIOD_START = 2.days
