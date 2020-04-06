@@ -2,12 +2,12 @@ class Job::ConnectionDataPullRunner < Job::Runner
   prepend SimpleCommand
   extend Instrumented
 
-  traced :call, :create_or_update_entries
+  traced :call, :create_or_update_entries, :update_connection_credentials
 
   def call
     print_job_information
     create_or_update_entries
-    update_connection_credentials
+    update_connection_credentials if oauth_client?
     log.puts "done"
   end
 
@@ -65,5 +65,10 @@ private
   # @return [Connection]
   def connection
     @connection ||= Connection.find(args.connection_id)
+  end
+
+  # @return [Boolean]
+  def oauth_client?
+    connection.client.is_a? DataSource::OauthClient
   end
 end
