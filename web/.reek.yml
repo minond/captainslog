@@ -22,8 +22,8 @@ detectors:
       - Instrumented#traced
       - Job#run
       - Tracing::Rack#call
-      - DataSource::Lastfm#take_while_with_index
-      - DataSource::Lastfm#map_over_date_range
+      - Iter#take_while_with_index
+      - Iter#map_over_date_range
   TooManyMethods:
     exclude:
       - Book
