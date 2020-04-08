@@ -6,7 +6,7 @@
       </td>
       <% if entry.user_data? %>
         <td class="entry-item-data">
-          <%= render "entry/datum", :entry => entry %>
+          <%= render "entry/datum", :datum => entry.user_data %>
         </td>
       <% end %>
     </tr>

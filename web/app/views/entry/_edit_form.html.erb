@@ -2,7 +2,7 @@
   <%= render "entry/input", :config => { :text => entry.text, :name => "original_text", :rows => 5 } %>
 
   <%= render "form/field", :f => f, :field => :processed_data do %>
-    <%= render "entry/datum", :entry => entry %>
+    <%= render "entry/datum", :datum => entry.data %>
   <% end %>
 
   <%= render "form/field", :f => f, :field => :processed_text do %>
