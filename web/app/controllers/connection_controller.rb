@@ -201,7 +201,7 @@ private
   # @param [Integer] connection_id
   # @param [String] code
   # @return [UpdateConnection]
-  def call_update_connection(connection_id, code)
+  def update_connection_auth(connection_id, code)
     connection = current_user.connections.find(connection_id)
     UpdateConnectionAuth.call(current_user, connection, code)
   end
@@ -209,7 +209,7 @@ private
   # @param [Symbol] data_source
   # @param [String] code
   # @return [SetupConnection]
-  def call_setup_connection(data_source, code)
+  def setup_connection_auth(data_source, code)
     SetupConnectionAuth.call(current_user, data_source, code)
   end
 
