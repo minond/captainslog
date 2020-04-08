@@ -1,10 +1,17 @@
 class ConnectionController < UserSessionController
-  CONNECTIONS = [
+  # @param [Symbol] name
+  # @return [Hash]
+  def self.build_connection_item(name, logo_extension: "png")
     {
-      :logo => "fitbit-logo.png",
-      :redirect => Rails.application.routes.url_helpers.fitbit_connection_index_path,
-      :description => I18n.t(:fitbit_connection_description),
-    },
+      :logo => "#{name}-logo.#{logo_extension}",
+      :redirect => Rails.application.routes.url_helpers.send(:"#{name}_connection_index_path"),
+      :description => I18n.t(:"#{name}_connection_description"),
+    }
+  end
+
+  CONNECTIONS = [
+    build_connection_item(:fitbit),
+    build_connection_item(:lastfm, :logo_extension => "svg"),
   ].freeze
 
   # === URL
@@ -39,6 +46,35 @@ class ConnectionController < UserSessionController
   #
   def fitbit_oauth
     cmd = handle_oauth_connection(:fitbit)
+    if cmd.success?
+      redirect_to cmd.result
+    else
+      redirect_to "/user#error"
+    end
+  end
+
+  # === URL
+  #   GET /connection/lastfm
+  #
+  # === Sample request
+  #   /connection/lastfm
+  #
+  def lastfm
+    redirect_to_auth_url :lastfm
+  end
+
+  # === URL
+  #   GET /connection/callback/lastfm
+  #
+  # === Request fields
+  #   [String] token - auth code
+  #   [String] state - encoded state string. see `DataSource::Client.encode_state`
+  #
+  # === Sample request
+  #   /connection/callback/lastfm?code=3j4k3lj4k3l2j32#_=_
+  #
+  def lastfm_callback
+    cmd = handle_oauth_connection(:lastfm, token)
     if cmd.success?
       redirect_to cmd.result
     else
@@ -136,6 +172,7 @@ private
 
   param_reader :id
   param_reader :code
+  param_reader :token
   param_reader :state
 
   # @return [Connection]
@@ -150,27 +187,29 @@ private
   end
 
   # @param [Symbol] data_source
+  # @param [String] code_str, defaults to `#code`
   # @return [SetupOauthConnection, UpdateOauthConnection]
-  def handle_oauth_connection(data_source)
+  def handle_oauth_connection(data_source, code_str = code)
     connection_id, _rest = DataSource::Client.decode_state(state) if state
-
     if connection_id
-      update_oauth_connection(connection_id)
+      update_oauth_connection(connection_id, code_str)
     else
-      setup_oauth_connection(data_source)
+      setup_oauth_connection(data_source, code_str)
     end
   end
 
   # @param [Integer] connection_id
+  # @param [String] code
   # @return [UpdateOauthConnection]
-  def update_oauth_connection(connection_id)
+  def update_oauth_connection(connection_id, code)
     connection = current_user.connections.find(connection_id)
     UpdateOauthConnection.call(current_user, connection, code)
   end
 
   # @param [Symbol] data_source
+  # @param [String] code
   # @return [SetupOauthConnection]
-  def setup_oauth_connection(data_source)
+  def setup_oauth_connection(data_source, code)
     SetupOauthConnection.call(current_user, data_source, code)
   end
 

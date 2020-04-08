@@ -2,9 +2,7 @@
   <table>
     <tr>
       <td class="entry-item-text">
-        <span class="entry-text">
-          <%= link_to entry.text, book_entry_url(entry.book.slug, entry.id) %>
-        </span>
+        <span class="entry-text"><%= link_to entry.text.strip, book_entry_url(entry.book.slug, entry.id) %></span>
       </td>
       <% if entry.user_data? %>
         <td class="entry-item-data">

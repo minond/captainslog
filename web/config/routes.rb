@@ -33,9 +33,14 @@ Rails.application.routes.draw do
 
       collection do
         get :fitbit
+        get :lastfm
 
         namespace :oauth, :module => nil do
           get :fitbit, :action => :fitbit_oauth
+        end
+
+        namespace :callback, :module => nil do
+          get :lastfm, :action => :lastfm_callback
         end
       end
     end

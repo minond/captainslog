@@ -9,10 +9,7 @@ detectors:
   NilCheck:
     enabled: false
   UncommunicativeVariableName:
-    exclude:
-      - ExternalService#self.client # has the variable name 'e', ok since it's in a rescue block
-      - Job#safe_run # has the variable name 'e', ok since it's in a rescue block
-      - Tracing::Rack#call # has the variable name 'e', ok since it's in a rescue block
+    enabled: false
   DuplicateMethodCall:
     enabled: false
   FeatureEnvy:
