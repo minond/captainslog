@@ -1,4 +1,4 @@
-class SetupOauthConnection
+class SetupConnectionAuth
   prepend SimpleCommand
 
   # @param [User] user
@@ -24,7 +24,7 @@ private
 
   def validate
     errors.add :missing_user, "a user is required" unless user.present?
-    errors.add :missing_code, "an oath code is required" unless code.present?
+    errors.add :missing_code, "an authentication code is required" unless code.present?
   end
 
   # @return [Connection, nil]

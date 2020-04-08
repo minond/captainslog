@@ -19,13 +19,21 @@ detectors:
   TooManyStatements:
     exclude:
       - ExternalService#self.client
-      - Tracing::Rack#call
+      - Instrumented#traced
       - Job#run
+      - Tracing::Rack#call
+      - DataSource::Lastfm#take_while_with_index
+      - DataSource::Lastfm#map_over_date_range
   TooManyMethods:
     exclude:
       - Book
+      - ConnectionController
   DataClump:
     enabled: false
+  NestedIterators:
+    exclude:
+      - DataSource::Lastfm#load_songs
+      - Instrumented#traced
   LongParameterList:
     exclude:
       - DataSourceFibitTest#weight_result

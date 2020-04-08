@@ -45,7 +45,7 @@ class ConnectionController < UserSessionController
   #   /connection/oauth/fitbit?code=3j4k3lj4k3l2j32#_=_
   #
   def fitbit_oauth
-    cmd = handle_oauth_connection(:fitbit)
+    cmd = handle_connection(:fitbit)
     if cmd.success?
       redirect_to cmd.result
     else
@@ -74,7 +74,7 @@ class ConnectionController < UserSessionController
   #   /connection/callback/lastfm?code=3j4k3lj4k3l2j32#_=_
   #
   def lastfm_callback
-    cmd = handle_oauth_connection(:lastfm, token)
+    cmd = handle_connection(:lastfm, token)
     if cmd.success?
       redirect_to cmd.result
     else
@@ -188,29 +188,29 @@ private
 
   # @param [Symbol] data_source
   # @param [String] code_str, defaults to `#code`
-  # @return [SetupOauthConnection, UpdateOauthConnection]
-  def handle_oauth_connection(data_source, code_str = code)
+  # @return [SetupConnection, UpdateConnection]
+  def handle_connection(data_source, code_str = code)
     connection_id, _rest = DataSource::Client.decode_state(state) if state
     if connection_id
-      update_oauth_connection(connection_id, code_str)
+      update_connection_auth(connection_id, code_str)
     else
-      setup_oauth_connection(data_source, code_str)
+      setup_connection_auth(data_source, code_str)
     end
   end
 
   # @param [Integer] connection_id
   # @param [String] code
-  # @return [UpdateOauthConnection]
-  def update_oauth_connection(connection_id, code)
+  # @return [UpdateConnection]
+  def call_update_connection(connection_id, code)
     connection = current_user.connections.find(connection_id)
-    UpdateOauthConnection.call(current_user, connection, code)
+    UpdateConnectionAuth.call(current_user, connection, code)
   end
 
   # @param [Symbol] data_source
   # @param [String] code
-  # @return [SetupOauthConnection]
-  def setup_oauth_connection(data_source, code)
-    SetupOauthConnection.call(current_user, data_source, code)
+  # @return [SetupConnection]
+  def call_setup_connection(data_source, code)
+    SetupConnectionAuth.call(current_user, data_source, code)
   end
 
   # Update the connection and return true if there were not errors doing so.
