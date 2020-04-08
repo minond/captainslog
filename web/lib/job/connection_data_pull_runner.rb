@@ -1,6 +1,6 @@
 class Job::ConnectionDataPullRunner < Job::Runner
   prepend SimpleCommand
-  extend Instrumented
+  include Instrumented
 
   traced :call, :create_or_update_entries, :update_connection_credentials
 
