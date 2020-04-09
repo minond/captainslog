@@ -1,5 +1,8 @@
 class Job < ApplicationRecord
   extend Registration
+  include Instrumented
+
+  traced :run, :tick
 
   belongs_to :user
 
@@ -75,17 +78,23 @@ class Job < ApplicationRecord
 private
 
   def run
-    OpenTracing.start_active_span("Job.setup") do
-      running!
+    running!
+
+    span = OpenTracing.active_span
+
+    task_runner = Concurrent::Future.execute do
+      with_active_span(span) { runner.call(decoded_args, log) }
     end
 
-    cmd, err = OpenTracing.start_active_span("Job.run") do
-      safe_run
+    tick_runner = Concurrent::TimerTask.execute(:execution_interval => 1.second) do
+      with_active_span(span) { tick }
     end
 
-    OpenTracing.start_active_span("Job.teardown") do
-      capture_results(cmd, err)
-    end
+    value = task_runner.value
+    error = task_runner.reason
+    tick_runner.kill
+
+    capture_results(value, error)
   end
 
   # @param [SimpleCommand, nil] cmd
@@ -99,16 +108,13 @@ private
     RunJob.perform_later self
   end
 
-  # @return [Tuple<SimpleCommand, Error>]
-  def safe_run
-    [runner.call(decoded_args, log), nil]
-  rescue StandardError => e
-    [nil, e]
-  end
-
   # @return [StringIO]
   def log
     @log ||= StringIO.new
+  end
+
+  def tick
+    update(:logs => log.string)
   end
 
   # @return [Class, nil]
