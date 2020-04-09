@@ -80,21 +80,26 @@ private
   def run
     running!
 
-    span = OpenTracing.active_span
-
-    task_runner = Concurrent::Future.execute do
-      with_active_span(span) { runner.call(decoded_args, log) }
-    end
-
-    tick_runner = Concurrent::TimerTask.execute(:execution_interval => 1.second) do
-      with_active_span(span) { tick }
-    end
+    task_runner = new_task_runner
+    tick_runner = new_tick_runner
 
     value = task_runner.value
     error = task_runner.reason
     tick_runner.kill
 
     capture_results(value, error)
+  end
+
+  # @return [Concurrent::Future]
+  def new_task_runner
+    span = OpenTracing.active_span
+    Concurrent::Future.execute { with_active_span(span) { runner.call(decoded_args, log) } }
+  end
+
+  # @return [Concurrent::TimerTask]
+  def new_tick_runner
+    span = OpenTracing.active_span
+    Concurrent::TimerTask.execute(:execution_interval => 1.second) { with_active_span(span) { tick } }
   end
 
   # @param [SimpleCommand, nil] cmd
