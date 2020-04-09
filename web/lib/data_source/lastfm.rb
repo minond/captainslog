@@ -67,25 +67,34 @@ private
   def load_songs(start_date: Date.today, end_date: start_date, &block)
     map_over_date_range(start_date, end_date, 7.days) do |sub_start_date, sub_end_date|
       take_while_with_index do |i|
-        songs = client.user.get_recent_tracks(:user => user,
-                                              :from => sub_start_date.to_i,
-                                              :to => sub_end_date.to_i,
-                                              :limit => LIMIT,
-                                              :page => i + 1)
-
-        process_songs(songs, &block)
+        songs = client.user.get_recent_tracks(song_page_params(i + 1, sub_start_date, sub_end_date))
+        processed = process_songs(songs, &block)
+        processed.empty? || processed.size < LIMIT ? nil : true
       end
     end
+  end
+
+  # @param [Integer] page
+  # @param [Date] start_date
+  # @param [Date] end_date
+  # @return [Hash]
+  def song_page_params(page, start_date, end_date)
+    {
+      :user => user,
+      :from => start_date.to_i,
+      :to => end_date.to_i,
+      :limit => LIMIT,
+      :page => page
+    }
   end
 
   # @param [Array<Hash>, Hash] results
   # @return [Array<Song>]
   def process_songs(results)
-    results = Array.wrap(results)
-    results.flatten
-           .filter { |result| Song.valid?(result) }
-           .each { |result| yield Song.from_result(result) }
-    results.empty? || results.size < LIMIT ? nil : results
+    Array.wrap(results)
+         .flatten
+         .filter { |result| Song.valid?(result) }
+         .each { |result| yield Song.from_result(result) }
   end
 
   # @param [Hash] options
