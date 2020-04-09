@@ -13,9 +13,9 @@ module Instrumented
 
       method_names.each do |method_name|
         operation_name = "#{name}.#{method_name}"
-        proxy.define_method(method_name) do |*args|
+        proxy.define_method(method_name) do |*args, &block|
           OpenTracing.start_active_span(operation_name) do
-            super(*args)
+            super(*args, &block)
           end
         end
       end
