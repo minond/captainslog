@@ -43,9 +43,12 @@ private
 
   # @param [Date] start_date
   # @param [Date] end_date
+  # @yieldparam [ProtoEntry]
   # @return [Array<ProtoEntry>]
-  def data_pull(**args)
-    heart_rate_time_series(args) + steps_time_series(args) + weight_time_series(args)
+  def data_pull(**args, &block)
+    heart_rate_time_series(args, &block)
+    steps_time_series(args, &block)
+    weight_time_series(args, &block)
   end
 
   # @param [Date] start_date
@@ -54,7 +57,7 @@ private
   def heart_rate_time_series(start_date: Date.today, end_date: start_date)
     client.heart_rate_time_series(:start_date => start_date, :end_date => end_date)
           .filter { |result| HeartRate.valid?(result) }
-          .map { |result| HeartRate.from_result(result) }
+          .each { |result| yield HeartRate.from_result(result) }
   end
 
   # @param [Date] start_date
@@ -63,7 +66,7 @@ private
   def steps_time_series(start_date: Date.today, end_date: start_date)
     client.activity_time_series("tracker/steps", :start_date => start_date, :end_date => end_date)
           .filter { |result| Steps.valid?(result) }
-          .map { |result| Steps.from_result(result) }
+          .each { |result| yield Steps.from_result(result) }
   end
 
   # @param [Date] start_date
@@ -76,7 +79,7 @@ private
     end
 
     results.filter { |result| Weight.valid?(result) }
-           .map { |result| Weight.from_result(result) }
+           .each { |result| yield Weight.from_result(result) }
   end
 
   # @param [Hash] options

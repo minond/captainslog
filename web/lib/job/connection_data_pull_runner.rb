@@ -16,11 +16,10 @@ private
   def print_job_information
     log.puts "pulling data for connection id #{connection.id}"
     log.puts "adding entries to book id #{book.id}"
-    log.puts "creating #{proto_entries.size} new entries"
   end
 
   def create_or_update_entries
-    proto_entries.each do |proto_entry|
+    proto_entries do |proto_entry|
       log.write "handling entry with digest #{proto_entry.digest.strip} ... "
       create_entry(proto_entry)
     rescue ActiveRecord::RecordInvalid
@@ -47,13 +46,14 @@ private
     log.puts "updated"
   end
 
+  # @yieldparam [ProtoEntry]
   # @return [Array<ProtoEntry>]
-  def proto_entries
+  def proto_entries(&block)
     @proto_entries ||=
       if args.is_a?(Job::ConnectionDataPullBackfillArgs)
-        connection.client.data_pull_backfill
+        connection.client.data_pull_backfill(&block)
       else
-        connection.client.data_pull_standard
+        connection.client.data_pull_standard(&block)
       end
   end
 

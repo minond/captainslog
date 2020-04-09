@@ -46,16 +46,20 @@ class DataSource::Client
     raise NotImplementedError, "#credential_options is not implemented"
   end
 
+  # @yieldparam [ProtoEntry]
   # @return [Array<ProtoEntry>]
-  def data_pull_backfill
+  def data_pull_backfill(&block)
     data_pull(:start_date => self.class::DATA_PULL_BACKFILL_PERIOD_START.ago.to_date,
-              :end_date => self.class::DATA_PULL_BACKFILL_PERIOD_END.from_now.to_date)
+              :end_date => self.class::DATA_PULL_BACKFILL_PERIOD_END.from_now.to_date,
+              &block)
   end
 
+  # @yieldparam [ProtoEntry]
   # @return [Array<ProtoEntry>]
-  def data_pull_standard
+  def data_pull_standard(&block)
     data_pull(:start_date => self.class::DATA_PULL_STANDARD_PERIOD_START.ago.to_date,
-              :end_date => self.class::DATA_PULL_STANDARD_PERIOD_END.from_now.to_date)
+              :end_date => self.class::DATA_PULL_STANDARD_PERIOD_END.from_now.to_date,
+              &block)
   end
 
 private

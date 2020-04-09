@@ -6,6 +6,8 @@ class DataSource::Lastfm < DataSource::Client
   DATA_PULL_STANDARD_PERIOD_START = 2.days
   DATA_PULL_STANDARD_PERIOD_END = 1.day
 
+  LIMIT = 200
+
   # @param [Hash] options
   def initialize(options = {})
     client(options)
@@ -46,29 +48,34 @@ private
 
   # @param [Date] start_date
   # @param [Date] end_date
+  # @yieldparam [ProtoEntry]
   # @return [Array<ProtoEntry>]
-  def data_pull(**args)
-    song_series(args)
+  def data_pull(**args, &block)
+    song_series(args, &block)
   end
 
   # # @param [Date] start_date
   # # @param [Date] end_date
   # # @return [Array<HeartRate>]
-  def song_series(**args)
-    process_songs(load_songs(args))
+  def song_series(**args, &block)
+    load_songs(args, &block)
   end
 
   # # @param [Date] start_date
   # # @param [Date] end_date
   # # @return [Array<Hash>]
-  def load_songs(start_date: Date.today, end_date: start_date)
+  def load_songs(start_date: Date.today, end_date: start_date, &block)
     map_over_date_range(start_date, end_date, 7.days) do |sub_start_date, sub_end_date|
       take_while_with_index do |i|
-        client.user.get_recent_tracks(:user => user,
-                                      :from => sub_start_date.to_i,
-                                      :to => sub_end_date.to_i,
-                                      :limit => 200,
-                                      :page => i + 1)
+        songs = client.user.get_recent_tracks(:user => user,
+                                              :from => sub_start_date.to_i,
+                                              :to => sub_end_date.to_i,
+                                              :limit => LIMIT,
+                                              :page => i + 1)
+
+        songs = Array.wrap(songs)
+        process_songs(Array.wrap(songs), &block) if songs
+        songs.empty? || songs.size < LIMIT ? nil : songs
       end
     end
   end
@@ -78,7 +85,7 @@ private
   def process_songs(results)
     results.flatten
            .filter { |result| Song.valid?(result) }
-           .map { |result| Song.from_result(result) }
+           .each { |result| yield Song.from_result(result) }
   end
 
   # @param [Hash] options
