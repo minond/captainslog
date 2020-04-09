@@ -6,11 +6,11 @@ class DataSourceFibitTest < ActiveSupport::TestCase
   end
 
   test "standard data pull with no results" do
-    client.data_pull_standard
+    client.data_pull_standard {}
   end
 
   test "backfill data pull with no results" do
-    client.data_pull_backfill
+    client.data_pull_backfill {}
   end
 
   test "authentication url" do
@@ -47,14 +47,16 @@ class DataSourceFibitTest < ActiveSupport::TestCase
       heart_rate_result(4.days.ago, 82),
     ]
     results = { :heart_rate_results => heart_rate_results }
-    entries = client(:results => results).send(:data_pull)
+    entries = []
+    client(:results => results).send(:data_pull) { |x| entries << x }
     assert_equal 3, entries.size
   end
 
   test "ignore invalid heart rate results" do
     heart_rate_results = [{}, heart_rate_result(3.days.ago, 81), {}]
     results = { :heart_rate_results => heart_rate_results }
-    entries = client(:results => results).send(:data_pull)
+    entries = []
+    client(:results => results).send(:data_pull) { |x| entries << x }
     assert_equal 1, entries.size
   end
 
@@ -65,14 +67,16 @@ class DataSourceFibitTest < ActiveSupport::TestCase
       steps_result(4.days.ago, 1232),
     ]
     results = { :activity_results => activity_results }
-    entries = client(:results => results).send(:data_pull)
+    entries = []
+    client(:results => results).send(:data_pull) { |x| entries << x }
     assert_equal 3, entries.size
   end
 
   test "ignore invalid step results" do
     activity_results = [{}, steps_result(3.days.ago, 4321), {}]
     results = { :activity_results => activity_results }
-    entries = client(:results => results).send(:data_pull)
+    entries = []
+    client(:results => results).send(:data_pull) { |x| entries << x }
     assert_equal 1, entries.size
   end
 
@@ -83,14 +87,16 @@ class DataSourceFibitTest < ActiveSupport::TestCase
       weight_result(4.days.ago, 153),
     ]
     results = { :weight_results => weight_results }
-    entries = client(:results => results).send(:data_pull)
+    entries = []
+    client(:results => results).send(:data_pull) { |x| entries << x }
     assert_equal 3, entries.size
   end
 
   test "ignore invalid weight results" do
     weight_results = [{}, weight_result(3.days.ago, 152), {}]
     results = { :weight_results => weight_results }
-    entries = client(:results => results).send(:data_pull)
+    entries = []
+    client(:results => results).send(:data_pull) { |x| entries << x }
     assert_equal 1, entries.size
   end
 
@@ -105,7 +111,8 @@ class DataSourceFibitTest < ActiveSupport::TestCase
       :weight_results => weight_results,
     }
 
-    entries = client(:results => results).send(:data_pull)
+    entries = []
+    client(:results => results).send(:data_pull) { |x| entries << x }
     digests = entries.map(&:digest).uniq
     assert_equal 3, digests.size
   end
@@ -132,7 +139,8 @@ class DataSourceFibitTest < ActiveSupport::TestCase
       :weight_results => weight_results,
     }
 
-    entries = client(:results => results).send(:data_pull)
+    entries = []
+    client(:results => results).send(:data_pull) { |x| entries << x }
     digests = entries.map(&:digest).uniq
     assert_equal 6, entries.size
     assert_equal 3, digests.size
