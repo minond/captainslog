@@ -24,14 +24,9 @@ module Instrumented
     end
   end
 
-  # @param [OpenTracing::Span] span
-  def set_active_span(span)
-    OpenTracing.global_tracer.scope_manager.activate(span, :finish_on_close => false)
-  end
-
   # @param [OpenTracing::Span, nil] span
   def with_active_span(span)
-    set_active_span(span) if span
+    OpenTracing.global_tracer.scope_manager.activate(span, :finish_on_close => false) if span
     yield
   end
 end
