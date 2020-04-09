@@ -16,6 +16,18 @@
         <td><%= job.decoded_args.to_json %></td>
       </tr>
       <tr>
+        <td><%= t(:run_time) %></td>
+        <td><%= job.run_time_s %></td>
+      </tr>
+      <tr>
+        <td><%= t(:started_at) %></td>
+        <td><%= job.started_at %></td>
+      </tr>
+      <tr>
+        <td><%= t(:finished_at) %></td>
+        <td><%= job.finished_at %></td>
+      </tr>
+      <tr>
         <td><%= t(:created_at) %></td>
         <td><%= job.created_at %></td>
       </tr>

@@ -98,8 +98,8 @@ en:
 
   name: "Name"
   slug: "Slug"
-  created_at: "Created date"
-  updated_at: "Updated date"
+  created_at: "Created at"
+  updated_at: "Updated at"
   grouping: "Grouping"
   group_by_none: "None"
   group_by_day: "Day"
@@ -157,6 +157,9 @@ en:
   arguments: "Arguments"
   job_details: "Job details"
   logs: "Logs"
+  started_at: "Started at"
+  finished_at: "Finished at"
+  run_time: "Run time"
 
   schedule_data_pull: "Schedule data pull"
   scheduled_data_pull: "A data pull job has been successfully scheduled to run"

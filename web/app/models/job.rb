@@ -75,10 +75,25 @@ class Job < ApplicationRecord
     # rubocop:enable Security/MarshalLoad
   end
 
+  # @return [Float, nil]
+  def run_time
+    return nil if initiated? || started_at.nil?
+    return DateTime.current - started_at if running?
+
+    finished_at - started_at
+  end
+
+  # @return [String]
+  def run_time_s
+    return "--:--:--" if run_time.nil?
+
+    Time.at(run_time).utc.strftime("%H:%M:%S")
+  end
+
 private
 
   def run
-    running!
+    start
 
     task_runner = new_task_runner
     tick_runner = new_tick_runner
@@ -87,7 +102,7 @@ private
     error = task_runner.reason
     tick_runner.kill
 
-    capture_results(value, error)
+    finish(value, error)
   end
 
   # @return [Concurrent::Future]
@@ -102,11 +117,18 @@ private
     Concurrent::TimerTask.execute(:execution_interval => 1.second) { with_active_span(span) { tick } }
   end
 
+  def start
+    update(:status => :running,
+           :started_at => DateTime.current)
+  end
+
   # @param [SimpleCommand, nil] cmd
   # @param [Error, nil] err
-  def capture_results(cmd, err)
+  def finish(cmd, err)
     capture_errors(cmd, err)
-    update(:status => run_status(cmd, err), :logs => log.string)
+    update(:status => run_status(cmd, err),
+           :logs => log.string,
+           :finished_at => DateTime.current)
   end
 
   def schedule_run

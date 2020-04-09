@@ -29,6 +29,7 @@ detectors:
     exclude:
       - Book
       - ConnectionController
+      - Job
   DataClump:
     enabled: false
   NestedIterators:
