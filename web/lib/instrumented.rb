@@ -23,4 +23,9 @@ module Instrumented
       prepend proxy
     end
   end
+
+  # @param [OpenTracing::Span] span
+  def set_active_span(span)
+    OpenTracing.global_tracer.scope_manager.activate(span, :finish_on_close => false)
+  end
 end
