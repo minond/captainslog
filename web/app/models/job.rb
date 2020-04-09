@@ -78,7 +78,7 @@ class Job < ApplicationRecord
   # @return [Float, nil]
   def run_time
     return nil if initiated? || started_at.nil?
-    return DateTime.current - started_at if running?
+    return DateTime.current - started_at.to_i if running?
 
     finished_at - started_at
   end
