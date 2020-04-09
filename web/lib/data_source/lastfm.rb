@@ -73,19 +73,19 @@ private
                                               :limit => LIMIT,
                                               :page => i + 1)
 
-        songs = Array.wrap(songs)
-        process_songs(Array.wrap(songs), &block) if songs
-        songs.empty? || songs.size < LIMIT ? nil : songs
+        process_songs(songs, &block)
       end
     end
   end
 
-  # @param [Array<Hash>] results
+  # @param [Array<Hash>, Hash] results
   # @return [Array<Song>]
   def process_songs(results)
+    results = Array.wrap(results)
     results.flatten
            .filter { |result| Song.valid?(result) }
            .each { |result| yield Song.from_result(result) }
+    results.empty? || results.size < LIMIT ? nil : results
   end
 
   # @param [Hash] options
