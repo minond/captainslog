@@ -11,13 +11,3 @@ task :lint, [*Rake.application[:rubocop].arg_names] => %i[rubocop reek]
 namespace :lint do
   task :all => %i[rubocop sandi_meter rails_best_practices brakeman reek]
 end
-
-namespace :ts do
-  task :compile do
-    system("./node_modules/.bin/tsc && ./node_modules/.bin/browserify public/assets/report_builder.js > public/assets/report_builder.bundle.js")
-  end
-
-  task :lint do
-    system("./node_modules/.bin/tslint app/client/*.ts* app/client/**/*.ts*")
-  end
-end

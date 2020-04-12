@@ -30,6 +30,10 @@
     "react": "^16.8.4",
     "react-dom": "^16.8.4"
   },
+  "scripts": {
+    "build": "tsc && browserify public/assets/report_builder.js > public/assets/report_builder.bundle.js",
+    "lint": "tslint app/client/*.ts* app/client/**/*.ts*"
+  },
   "jest": {
     "setupFilesAfterEnv": [
       "./node_modules/jest-enzyme/lib/index.js"

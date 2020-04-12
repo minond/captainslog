@@ -52,7 +52,7 @@ where the external services live:
 === Container
 
     # build base image with rails application and all dependencies
-    docker build -t minond/captainslog-ruby -f Dockerfile .
+    docker build -t minond/captainslog-rails -f Dockerfile .
 
     # build and run server application
     docker build -t minond/captainslog-web -f Dockerfile.web .

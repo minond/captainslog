@@ -4,17 +4,16 @@ WORKDIR /usr/src/app
 
 ENV RAILS_ENV production
 
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends postgresql-client && \
-    rm -rf /var/lib/apt/lists/*
+RUN apt-get update \
+      && apt-get install -y --no-install-recommends postgresql-client nodejs npm \
+      && rm -rf /var/lib/apt/lists/* \
+      && gem install bundler --version 2.1.0 \
+      && mkdir -p log tmp public/assets
 
-COPY Gemfile* ./
+COPY package.json .
+COPY package-lock.json .
+RUN npm install
 
-RUN gem install bundler --version 2.1.0
+COPY Gemfile .
+COPY Gemfile.lock .
 RUN bundle install
-
-COPY . .
-
-RUN mkdir log
-RUN mkdir public/assets
-RUN mkdir tmp
