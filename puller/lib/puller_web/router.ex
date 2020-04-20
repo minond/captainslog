@@ -29,5 +29,6 @@ defmodule PullerWeb.Router do
     pipe_through [:browser, :authenticated]
 
     get "/", PageController, :index
+    resources "/sources", SourceController
   end
 end
