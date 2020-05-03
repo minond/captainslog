@@ -1,6 +1,6 @@
 class Job < ApplicationRecord
   extend Registration
-  include Instrumented
+  include OpenTracing::Instrumented
 
   traced :run, :tick
 
@@ -200,5 +200,11 @@ private
                  :"error.object" => err,
                  :message => err.message,
                  :stack => err.backtrace.join("\n"))
+  end
+
+  # @param [OpenTracing::Span, nil] span
+  def with_active_span(span)
+    OpenTracing.global_tracer.scope_manager.activate(span, :finish_on_close => false) if span
+    yield
   end
 end

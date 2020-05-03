@@ -1,6 +1,6 @@
 class DataSource::Fitbit < DataSource::OauthClient
   include Iter
-  include Instrumented
+  include OpenTracing::Instrumented
 
   traced :data_pull, :heart_rate_time_series, :steps_time_series,
          :weight_time_series

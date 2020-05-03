@@ -20,7 +20,6 @@ detectors:
     exclude:
       - DataSource::Lastfm#load_songs
       - ExternalService#self.client
-      - Instrumented::ClassMethods#traced
       - Iter#map_over_date_range
       - Iter#take_while_with_index
       - Job#run
@@ -35,7 +34,6 @@ detectors:
   NestedIterators:
     exclude:
       - DataSource::Lastfm#load_songs
-      - Instrumented::ClassMethods#traced
   LongParameterList:
     exclude:
       - DataSourceFibitTest#weight_result

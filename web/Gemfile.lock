@@ -164,6 +164,8 @@ GEM
       multi_xml (~> 0.5)
       rack (>= 1.2, < 3)
     opentracing (0.5.0)
+    opentracing-instrumented (0.1.0)
+      opentracing
     orm_adapter (0.5.0)
     parallel (1.19.1)
     parser (2.7.1.0)
@@ -316,6 +318,7 @@ DEPENDENCIES
   lastfm
   listen (>= 3.0.5, < 3.2)
   opentracing
+  opentracing-instrumented
   pg (>= 0.18, < 2.0)
   puma (~> 4.1)
   rabl
@@ -336,4 +339,4 @@ DEPENDENCIES
   yard
 
 BUNDLED WITH
-   2.1.0
+   2.1.4
