@@ -1,0 +1,45 @@
+# PostgreSQL. Versions 9.3 and up are supported.
+#
+# Install the pg driver:
+#   gem install pg
+# On macOS with Homebrew:
+#   gem install pg -- --with-pg-config=/usr/local/bin/pg_config
+# On macOS with MacPorts:
+#   gem install pg -- --with-pg-config=/opt/local/lib/postgresql84/bin/pg_config
+# On Windows:
+#   gem install pg
+#       Choose the win32 build.
+#       Install PostgreSQL and put its /bin directory on your path.
+#
+# ## pool
+#
+# For details on connection pooling, see Rails configuration guide
+# https://guides.rubyonrails.org/configuring.html#database-pooling
+#
+# ## min_messages
+#
+# Minimum log levels, in increasing order: debug5, debug4, debug3, debug2,
+# debug1, log, notice, warning, error, fatal, and panic Defaults to warning.
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+dev: &dev
+  host: <%= ENV.fetch("DATABASE_HOST") { "localhost" } %>
+  port: <%= ENV.fetch("DATABASE_PORT") { 5432 } %>
+  username: <%= ENV["DATABASE_USERNAME"] %>
+
+development:
+  <<: *default
+  <<: *dev
+  database: captainslog_puller_development
+
+test:
+  <<: *default
+  <<: *dev
+  database: captainslog_puller_test
+
+production:
+  <<: *default
+  url: <%= ENV["DATABASE_URL"] %>

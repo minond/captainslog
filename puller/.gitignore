@@ -1,0 +1,14 @@
+!/log/.keep
+!/tmp/.keep
+/.bundle
+/.byebug_history
+/.env
+/.yardoc
+/config/master.key
+/coverage/
+/doc
+/log/*
+/node_modules/
+/public/assets/
+/sandi_meter/
+/tmp/*
