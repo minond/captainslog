@@ -19,6 +19,7 @@ gem "pg", ">= 0.18", "< 2.0"                  # Use postgresql as the database f
 gem "puma", "~> 4.1"                          # Use Puma as the app server
 gem "rails", "~> 6.0.1"                       # Bundle edge Rails instead: gem "rails", github: "rails/rails"
 gem "simple_command"                          # A simple, standardized way to build and use Service Objects (aka Commands) in Ruby
+gem "tachyons-rails"                          # Tachyons for your Rails project
 gem "turbolinks", "~> 5"                      # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem "tzinfo-data", :platforms => %i[mingw mswin x64_mingw jruby] # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 

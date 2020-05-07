@@ -1,0 +1,34 @@
+<main class="pt5 pb4 ph1 black-80 mw7 center">
+  <%= image_tag "captainslog_logo.png", :class => "w5" %>
+
+  <div class="bb mt2 mb4 b--black-10"></div>
+
+  <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+    <fieldset class="ba b--transparent ph0 mh0">
+      <legend class="f4 fw6 ph0 mh0"><%= t(:sign_in) %></legend>
+
+      <%= render "form/field", :f => f, :field => :email do %>
+        <%= f.email_field :email, autofocus: true, :autocomplete => "email", :class => "input-reset ba b--black-20 pa2 mb2 db w-100", :placeholder => t(:email) %>
+      <% end %>
+
+      <%= render "form/field", :f => f, :field => :password do %>
+        <%= f.password_field :password, :autocomplete => "password", :class => "input-reset ba b--black-20 pa2 mb2 db w-100", :placeholder => t(:password) %>
+      <% end %>
+
+      <%# <% if devise_mapping.rememberable? %>
+      <%#   <label class="pa0 ma0 lh-copy f6 pointer">
+      <%#     <%= f.check_box :remember_me %>
+      <%#     <%= f.label :remember_me %>
+      <%#   </label>
+      <%# <% end %>
+    </fieldset>
+
+    <div class="mt3 actions">
+      <%= f.submit t(:log_in) %>
+    </div>
+  <% end %>
+
+  <div class="lh-copy mt3">
+    <%= render "devise/shared/links" %>
+  </div>
+</main>
