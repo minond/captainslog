@@ -1,0 +1,17 @@
+<%= form_with(:model => connection, :local => true) do |form| %>
+  <div class="cf mb4" style="max-width: 820px">
+    <% [:fitbit, :lastfm].each do |source| %>
+      <label class="pointer fl w-100 w-50-l pa2 border-box">
+        <input class="source-radio dn" type="radio" name="connection[source]" value="<%= source %>" />
+        <div class="source-box pa4 ba b--black-10 tc">
+          <%= image_tag "#{source}-logo", :class => "h3 mb3" %>
+          <div><%= I18n.t(:"#{source}_connection_description") %></div>
+        </div>
+      </label>
+    <% end %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit t(:create_connection) %>
+  </div>
+<% end %>

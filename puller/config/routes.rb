@@ -16,6 +16,6 @@ Rails.application.routes.draw do
   end
 
   authenticated :user do
-    resources :connections
+    resources :connections, :only => [:new, :create, :destroy]
   end
 end

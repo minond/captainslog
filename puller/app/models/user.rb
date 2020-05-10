@@ -3,6 +3,8 @@ class User < ApplicationRecord
   # :recoverable, :rememberable
   devise :database_authenticatable, :registerable
 
+  has_many :connections
+
   validates :email, :presence => true, :uniqueness => true
 
   after_initialize :constructor
