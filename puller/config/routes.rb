@@ -16,5 +16,6 @@ Rails.application.routes.draw do
   end
 
   authenticated :user do
+    resources :connections
   end
 end

@@ -7,10 +7,11 @@
           class="dib br-100 pa1 ba b--black-10 h2 w2" alt="avatar" />
       </a>
       <div class="flex-grow flex items-center">
+        <%= link_to t(:create_connection), new_connection_path,
+          :class => "link f6 mh3" %>
         <%= link_to t(:sign_out), destroy_user_session_path,
           :method => :delete,
-          :class => "link f6 dib bg-animate hover-bg-black-10 pv2 ph3 br-pill"
-        %>
+          :class => "link f6 bg-animate hover-bg-black-10 pv2 ph3 br-pill" %>
       </div>
     </nav>
   <% end %>

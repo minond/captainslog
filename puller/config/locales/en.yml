@@ -13,3 +13,9 @@ en:
   email: "Email"
   password: "Password"
   password_confirmation: "Password confirmation"
+
+  create_connection: "Create connection"
+  new_connection: "New connection"
+  create_connection: "Create connection"
+  fitbit_connection_description: "Pull in your weight, resting heart rates, and daily steps, from Fitbit."
+  lastfm_connection_description: "Pull in every song you listen to, including song, album, and artist information."
