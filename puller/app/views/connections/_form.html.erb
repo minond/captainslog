@@ -4,8 +4,8 @@
       <label class="pointer fl w-100 w-50-l pa2 border-box">
         <input class="source-radio dn" type="radio" name="connection[source]" value="<%= source %>" />
         <div class="source-box pa4 ba b--black-10 tc">
-          <%= image_tag "#{source}-logo", :class => "h3 mb3" %>
-          <div><%= I18n.t(:"#{source}_connection_description") %></div>
+          <%= image_tag "#{source}-logo", :class => "h3" %>
+          <p class="lh-copy"><%= I18n.t(:"#{source}_connection_description") %></p>
         </div>
       </label>
     <% end %>

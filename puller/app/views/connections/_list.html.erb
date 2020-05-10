@@ -1,0 +1,22 @@
+<div class="overflow-auto">
+  <table class="f6 w-100" style="max-width: 820px">
+  <thead>
+    <tr>
+      <th class="fw6 bb b--black-10 tl pb3 pr3"></th>
+      <th class="fw6 bb b--black-10 tl pb3 pr3"><%= t(:created_at) %></th>
+      <th class="fw6 bb b--black-10 tl pb3 pr3"><%= t(:updated_at) %></th>
+      <th class="fw6 bb b--black-10 tl pb3 pr3"></th>
+    </tr>
+  </thead>
+  <tbody class="lh-copy">
+    <% connections.each do |connection| %>
+      <tr>
+        <td class="pv3 pr3 bb b--black-10"><%= image_tag "#{connection.source}-logo", :class => "mw4" %></td>
+        <td class="pv3 pr3 bb b--black-10"><%= connection.created_at %></td>
+        <td class="pv3 pr3 bb b--black-10"><%= connection.updated_at %></td>
+        <td class="pv3 pr3 bb b--black-10"><%= render "form/delete", :resource => connection %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+</div>
