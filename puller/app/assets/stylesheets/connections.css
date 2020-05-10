@@ -1,0 +1,19 @@
+/*
+  Place all the styles related to the matching controller here.
+  They will automatically be included in application.css.
+*/
+
+.source-box {
+  opacity: .6;
+  transition: .1s border-color, .1s opacity;
+}
+
+.source-box:hover {
+  opacity: .8;
+  border: 1px solid #c5c5c5;
+}
+
+.source-radio:checked ~ .source-box {
+  opacity: 1;
+  border: 1px solid #909090;
+}
