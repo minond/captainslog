@@ -1,17 +1,15 @@
 <header>
   <% if current_user %>
-    <nav class="dt w-100 border-box pa2 ph2 ph5-l bb b--black-10">
-      <a class="dtc v-mid mid-gray link dim w-25 tl mb2" href="/" title="Home">
+    <nav class="flex justify-between pa2 ph2 ph5-l bb b--black-10">
+      <a class="flex items-center" href="/" title="Home">
         <img
           src="<%= current_user.icon_url %>"
           class="dib br-100 pa1 ba b--black-10 h2 w2" alt="avatar" />
       </a>
-      <div class="dtc v-mid w-75 tr">
-        <!-- <a class="link dim dark&#45;gray f6 f5&#45;l dib mr3 mr4&#45;l" href="#" title="Home">Home</a> -->
-
+      <div class="flex-grow flex items-center">
         <%= link_to t(:sign_out), destroy_user_session_path,
           :method => :delete,
-          :class => "btn destructive"
+          :class => "link f6 dib bg-animate hover-bg-black-10 pv2 ph3 br-pill"
         %>
       </div>
     </nav>
