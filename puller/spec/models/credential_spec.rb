@@ -4,12 +4,12 @@ describe Credential do
   let(:user) { create(:user) }
   let(:connection) { create(:connection, :user => user) }
 
-  let(:options) {
+  let(:options) do
     {
       :name => "Marcos",
       :key => "hihihihi"
     }
-  }
+  end
 
   describe ".create_with_options" do
     let(:original_values) { options.values }
