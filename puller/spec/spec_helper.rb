@@ -26,6 +26,11 @@ require "rspec/expectations"
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
+  # ... what it really means in Rails is "run every test method within a
+  # transaction." In the context of rspec-rails, it means "run every example
+  # within a transaction."
+  config.use_transactional_fixtures = true
+
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.
@@ -108,4 +113,8 @@ RSpec.configure do |config|
   # test failures related to randomization by passing the same `--seed` value
   # as the one that triggered the failure.
   # Kernel.srand config.seed
+
+  # Use FactoryBot methods in specs without having to fully quality the
+  # FactoryBot module.
+  config.include FactoryBot::Syntax::Methods
 end
