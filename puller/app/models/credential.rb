@@ -1,8 +1,7 @@
 class Credential < ApplicationRecord
   belongs_to :user
   belongs_to :connection
-
-  has_many :credential_options
+  has_many :credential_options, :dependent => :destroy
 
   validates :user, :connection, :presence => true
 

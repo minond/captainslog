@@ -3,7 +3,7 @@ class User < ApplicationRecord
   # :recoverable, :rememberable
   devise :database_authenticatable, :registerable
 
-  has_many :connections
+  has_many :connections, :dependent => :destroy
 
   validates :email, :presence => true, :uniqueness => true
 
