@@ -94,22 +94,24 @@ private
 
   # @param [Symbol] source
   # @param [String] service_auth_payload
-  # @return [SetupConnection, UpdateConnection]
+  # @return [Array<SetupConnection, UpdateConnection, Boolean>]
   def command_for_connection_auth(source, service_auth_payload)
     connection_id, _rest = Source::Client.decode_state(state) if state
     if connection_id
-      update_connection_auth(connection_id, service_auth_payload)
+      [update_connection_auth(connection_id, service_auth_payload), false]
     else
-      setup_connection_auth(source, service_auth_payload)
+      [setup_connection_auth(source, service_auth_payload), true]
     end
   end
 
   # @param [Symbol] source
   # @param [String] service_auth_payload
   def handle_connection_auth(source, service_auth_payload)
-    cmd = command_for_connection_auth(source, service_auth_payload)
-    if cmd.success?
+    cmd, is_new = command_for_connection_auth(source, service_auth_payload)
+    if cmd.success? && is_new
       redirect_to :root, :notice => t(:connection_successfully_created)
+    elsif cmd.success?
+      redirect_to :root, :notice => t(:connection_successfully_authenticated)
     else
       redirect_to :new, :notice => "bad"
     end
