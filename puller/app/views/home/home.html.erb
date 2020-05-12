@@ -1,4 +1,8 @@
 <%= render "layouts/content-view" do %>
-  <%= render "form/header", :key => :connections %>
-  <%= render "connection/list", :connections => current_user.connections %>
+  <% if current_user.connections.present? %>
+    <%= render "form/header", :key => :connections %>
+    <%= render "connection/list", :connections => current_user.connections %>
+  <% else %>
+    <p class="lh-copy"><%= t(:no_connections_create_one, :href => new_connection_path).html_safe %></p>
+  <% end %>
 <% end %>

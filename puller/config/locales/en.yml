@@ -20,6 +20,7 @@ en:
   create_connection: "Create connection"
   fitbit_connection_description: "Pull in your weight, resting heart rates, and daily steps, from Fitbit."
   lastfm_connection_description: "Pull in every song you listen to, including song, album, and artist information."
+  no_connections_create_one: "Looks like you don't have any connections yet, <a href='%{href}'>click here</a> to create one."
 
   created_at: "Created at"
   updated_at: "Updated at"
