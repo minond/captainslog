@@ -26,6 +26,7 @@ en:
   view_details: "View details"
   are_you_sure: "Are you sure?"
   delete: "Delete"
+  authenticate: "Authenticate"
 
   connection_successfully_created: "Connection was successfully created."
   connection_successfully_deleted: "Connection was successfully deleted."
