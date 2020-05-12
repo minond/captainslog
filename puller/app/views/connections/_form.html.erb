@@ -1,6 +1,6 @@
 <%= form_with(:model => connection, :local => true) do |form| %>
   <div class="cf mb4" style="max-width: 820px">
-    <% [:fitbit, :lastfm].each do |source| %>
+    <% connection_options.each do |source| %>
       <label class="pointer fl w-100 w-50-l pa2 border-box">
         <input class="source-radio dn" type="radio" name="connection[source]" value="<%= source %>" />
         <div class="source-box pa4 ba b--black-10 tc">

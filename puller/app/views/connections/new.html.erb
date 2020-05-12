@@ -1,4 +1,5 @@
 <%= render "layouts/content-view" do %>
   <%= render "form/header", :key => :new_connection %>
-  <%= render "form", :connection => connection %>
+  <%= render "form", :connection => connection,
+                     :connection_options => connection_options %>
 <% end %>

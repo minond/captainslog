@@ -1,7 +1,10 @@
 class ConnectionsController < ApplicationController
+  KNOWN_CONNECTIONS = [:fitbit, :lastfm]
+
   # GET /connections/new
   def new
-    locals :connection => Connection.new
+    locals :connection => Connection.new,
+           :connection_options => KNOWN_CONNECTIONS
   end
 
   # POST /connections
@@ -11,7 +14,8 @@ class ConnectionsController < ApplicationController
     if connection.save
       redirect_to :root, :notice => t(:connection_successfully_created)
     else
-      locals :new, :connection => connection
+      locals :new, :connection => connection,
+                   :connection_options => KNOWN_CONNECTIONS
     end
   end
 
