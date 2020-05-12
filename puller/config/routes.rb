@@ -16,6 +16,25 @@ Rails.application.routes.draw do
   end
 
   authenticated :user do
-    resources :connections, :only => %i[new create destroy]
+    resources :connection, :only => %i[new create destroy] do
+      member do
+        get :authenticate
+      end
+
+      collection do
+        namespace :initiate, :module => nil do
+          get :fitbit, :action => :fitbit_initiate
+          get :lastfm, :action => :lastfm_initiate
+        end
+
+        namespace :oauth, :module => nil do
+          get :fitbit, :action => :fitbit_oauth
+        end
+
+        namespace :callback, :module => nil do
+          get :lastfm, :action => :lastfm_callback
+        end
+      end
+    end
   end
 end

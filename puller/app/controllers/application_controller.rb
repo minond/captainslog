@@ -1,4 +1,25 @@
 class ApplicationController < ActionController::Base
+  # Generates a getter method for a request parameter
+  #
+  # @example call
+  #
+  #   param_reader :code
+  #
+  #
+  # @example result
+  #
+  #   def code
+  #     params[:code]
+  #   end
+  #
+  #
+  # @param [Symbol] param
+  def self.param_reader(param)
+    define_method(param) do
+      params[param]
+    end
+  end
+
 private
 
   # Helper method for rendering a view with local variables.
