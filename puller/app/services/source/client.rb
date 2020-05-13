@@ -1,8 +1,17 @@
 class Source::Client
   # @param [Symbol] source
   # @return [Class]
-  def self.for_source(source)
+  def self.class_for_source(source)
     "Source::#{source.to_s.camelcase}".safe_constantize
+  end
+
+  # @param [Symbol] source
+  # @param [String] code
+  # @return [Hash]
+  def self.credentials_for_source(source, code)
+    client = class_for_source(source).new
+    client.code = code
+    client.credential_options
   end
 
   # @return [Symbol]
