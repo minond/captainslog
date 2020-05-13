@@ -14,6 +14,14 @@ class Source::Client
     client.credential_options
   end
 
+  # @param [Symbol] source
+  # @param [Connection] connection, optional
+  # @return [String]
+  def self.auth_url_for_source(source, connection = nil)
+    client = Source::Client.class_for_source(source).new
+    client.auth_url(connection)
+  end
+
   # @return [Symbol]
   def self.source
     name.demodulize.underscore.to_sym

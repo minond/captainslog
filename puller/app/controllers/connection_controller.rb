@@ -77,7 +77,7 @@ private
   # @param [Symbol] source
   # @param [Connection, nil] connection
   def redirect_to_auth_url(source, connection = nil)
-    redirect_to Source::Client.for_source(source).new.auth_url(connection)
+    redirect_to Source::Client.auth_url_for_source(source, connection)
   end
 
   # @param [Symbol] source
