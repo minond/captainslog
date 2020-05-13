@@ -9,15 +9,14 @@ class Credential < ApplicationRecord
   # Each credential option is encrypted using the user that is associated with
   # the credential.
   #
-  # @param [User] user
   # @param [Connection] connection
-  # @param [Hash] options
+  # @param [Hash] credentials_hash
   # @return [Credential]
-  def self.create_with_options(user, connection, options)
-    credential = create(:user => user,
+  def self.create_with_options(connection, credentials_hash)
+    credential = create(:user => connection.user,
                         :connection => connection)
 
-    options.each do |label, value|
+    credentials_hash.each do |label, value|
       CredentialOption.create(:credential => credential,
                               :label => label,
                               :value => value)
