@@ -1,8 +1,10 @@
 class ConnectionController < ApplicationController
+  KNOWN_SOURCES = %i[fitbit lastfm].freeze
+
   # GET /connection/new
   def new
     locals :connection => Connection.new,
-           :known_sources => known_sources
+           :known_sources => KNOWN_SOURCES
   end
 
   # POST /connection
@@ -13,7 +15,7 @@ class ConnectionController < ApplicationController
       redirect_to :root, :notice => t(:connection_successfully_created)
     else
       locals :new, :connection => connection,
-                   :known_sources => known_sources
+                   :known_sources => KNOWN_SOURCES
     end
   end
 
@@ -128,10 +130,5 @@ private
   # @return [SetupConnection]
   def setup_connection_auth(source, code)
     SetupConnectionAuth.call(current_user, source, code)
-  end
-
-  # @return [Array<Symbol>]
-  def known_sources
-    Source::Client.descendants.map(&:source)
   end
 end
