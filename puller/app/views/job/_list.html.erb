@@ -1,0 +1,28 @@
+<div class="overflow-auto">
+  <table class="f6 w-100" style="max-width: 820px">
+    <thead>
+      <tr>
+        <th class="fw6 bb b--black-10 tl pb3 pr3"><%= t(:status) %></th>
+        <th class="fw6 bb b--black-10 tl pb3 pr3"><%= t(:kind) %></th>
+        <th class="fw6 bb b--black-10 tl pb3 pr3"><%= t(:created_at) %></th>
+        <th class="fw6 bb b--black-10 tl pb3 pr3"><%= t(:started_at) %></th>
+        <th class="fw6 bb b--black-10 tl pb3 pr3"><%= t(:stopped_at) %></th>
+        <th class="fw6 bb b--black-10 tl pb3 pr3"><%= t(:run_time) %></th>
+        <th class="fw6 bb b--black-10 tl pb3 pr3" colwidth="1"></th>
+      </tr>
+    </thead>
+    <tbody class="lh-copy">
+      <% jobs.each do |job| %>
+        <tr>
+          <td class="pv3 pr3 bb b--black-10"><%= job.status.humanize %></td>
+          <td class="pv3 pr3 bb b--black-10"><%= job.kind.humanize %></td>
+          <td class="pv3 pr3 bb b--black-10"><%= job.created_at %></td>
+          <td class="pv3 pr3 bb b--black-10"><%= job.started_at %></td>
+          <td class="pv3 pr3 bb b--black-10"><%= job.stopped_at %></td>
+          <td class="pv3 pr3 bb b--black-10"><%= job.run_time_s %></td>
+          <td class="pv3 pr3 bb b--black-10"><%= link_to t(:view_details), job %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

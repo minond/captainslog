@@ -24,10 +24,16 @@ en:
   connection_successfully_authenticated: "Connection was successfully authenticated."
   connection_successfully_created: "Connection was successfully created."
   connection_successfully_deleted: "Connection was successfully deleted."
+  error_creating_connection: "There was an error creating the connection."
+  pull_successfully_scheduled: "Pull was successfully scheduled."
+  error_scheduling_pull: "There was an error scheduling the pull."
+  authenticate: "Authenticate"
+  schedule_pull: "Schedule pull"
 
   created_at: "Created at"
   updated_at: "Updated at"
   view_details: "View details"
   are_you_sure: "Are you sure?"
   delete: "Delete"
-  authenticate: "Authenticate"
+
+  recent_jobs: "Recent jobs"

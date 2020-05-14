@@ -27,7 +27,7 @@ private
 
   def teardown
     job.update!(:status => result.success? ? :done : :errored,
-                :finished_at => Time.now,
+                :stopped_at => Time.now,
                 :logs => logs.string)
   end
 

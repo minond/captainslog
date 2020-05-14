@@ -5,7 +5,7 @@
         <th class="fw6 bb b--black-10 tl pb3 pr3"></th>
         <th class="fw6 bb b--black-10 tl pb3 pr3"><%= t(:created_at) %></th>
         <th class="fw6 bb b--black-10 tl pb3 pr3"><%= t(:updated_at) %></th>
-        <th class="fw6 bb b--black-10 tl pb3 pr3"></th>
+        <th class="fw6 bb b--black-10 tl pb3 pr3" colwidth="3"></th>
       </tr>
     </thead>
     <tbody class="lh-copy">
@@ -14,6 +14,7 @@
           <td class="pv3 pr3 bb b--black-10"><%= image_tag "#{connection.source}-logo", :class => "mw4" %></td>
           <td class="pv3 pr3 bb b--black-10"><%= connection.created_at %></td>
           <td class="pv3 pr3 bb b--black-10"><%= connection.updated_at %></td>
+          <td class="pv3 pr3 bb b--black-10"><%= link_to t(:schedule_pull), schedule_pull_connection_path(connection) %></td>
           <td class="pv3 pr3 bb b--black-10"><%= link_to t(:authenticate), authenticate_connection_path(connection) %></td>
           <td class="pv3 pr3 bb b--black-10"><%= render "form/delete", :resource => connection %></td>
         </tr>

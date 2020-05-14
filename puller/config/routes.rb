@@ -19,6 +19,7 @@ Rails.application.routes.draw do
     resources :connection, :only => %i[new create destroy] do
       member do
         get :authenticate
+        get :schedule_pull
       end
 
       collection do

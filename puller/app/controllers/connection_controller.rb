@@ -30,6 +30,14 @@ class ConnectionController < ApplicationController
     redirect_to_auth_url(current_connection.source, current_connection)
   end
 
+  # GET /connection/:id/schedule_pull
+  def schedule_pull
+    current_connection.schedule_pull_job!
+    redirect_to :root, :notice => t(:pull_successfully_scheduled)
+  rescue
+    redirect_to :root, :alert => t(:error_scheduling_pull)
+  end
+
   # GET /connection/initiate/fitbit
   def fitbit_initiate
     redirect_to_auth_url :fitbit
@@ -113,7 +121,7 @@ private
     elsif cmd.success?
       redirect_to :root, :notice => t(:connection_successfully_authenticated)
     else
-      redirect_to :new, :notice => "bad"
+      redirect_to :root, :alert => t(:error_creating_connection)
     end
   end
 

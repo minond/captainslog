@@ -14,4 +14,10 @@ class Connection < ApplicationRecord
       connection
     end
   end
+
+  # @return [Job]
+  def schedule_pull_job!
+    args = ExecutePullJob::Arguments.new(:connection_id => id)
+    Job.schedule!(user, :pull, args)
+  end
 end
