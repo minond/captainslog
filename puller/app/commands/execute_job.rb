@@ -22,7 +22,7 @@ private
   end
 
   def execute
-    @result = job.command.call(job.args, logs)
+    # @result = job.command.call(job.args, logs)
   end
 
   def teardown
