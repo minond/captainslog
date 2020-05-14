@@ -37,3 +37,8 @@ en:
   delete: "Delete"
 
   recent_jobs: "Recent jobs"
+  status: "Status"
+  kind: "Kind"
+  started_at: "Started at"
+  stopped_at: "Stopped at"
+  run_time: "Run time"

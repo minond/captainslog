@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   end
 
   authenticated :user do
+    resources :job, :only => %i[show]
     resources :connection, :only => %i[new create destroy] do
       member do
         get :authenticate

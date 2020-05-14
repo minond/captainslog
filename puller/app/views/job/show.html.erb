@@ -1,0 +1,41 @@
+<%= render "layouts/content-view" do %>
+  <table class="w-100">
+    <tbody class="lh-copy">
+      <tr>
+        <td class="v-top pr4 mw2">
+          <table class="w-100 f6">
+            <tbody class="lh-copy">
+              <tr>
+                <td class="pv2 pr3 bb b--black-10"><%= t(:status) %></td>
+                <td class="pv2 pr3 bb b--black-10"><%= job.status.humanize %></td>
+              </tr>
+              <tr>
+                <td class="pv2 pr3 bb b--black-10"><%= t(:kind) %></td>
+                <td class="pv2 pr3 bb b--black-10"><%= job.kind.humanize %></td>
+              </tr>
+              <tr>
+                <td class="pv2 pr3 bb b--black-10"><%= t(:created_at) %></td>
+                <td class="pv2 pr3 bb b--black-10"><%= job.created_at %></td>
+              </tr>
+              <tr>
+                <td class="pv2 pr3 bb b--black-10"><%= t(:started_at) %></td>
+                <td class="pv2 pr3 bb b--black-10"><%= job.started_at %></td>
+              </tr>
+              <tr>
+                <td class="pv2 pr3 bb b--black-10"><%= t(:stopped_at) %></td>
+                <td class="pv2 pr3 bb b--black-10"><%= job.stopped_at %></td>
+              </tr>
+              <tr>
+                <td class="pv2 pr3 bb b--black-10"><%= t(:run_time) %></td>
+                <td class="pv2 pr3 bb b--black-10"><%= job.run_time_s %></td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+        <td class="v-top pl4">
+          <pre class="bg-near-white pa3"><%= job.logs %></pre>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+<% end %>
