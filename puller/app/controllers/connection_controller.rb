@@ -81,26 +81,26 @@ private
   end
 
   # @param [Symbol] source
-  # @return [SetupConnection, UpdateConnection]
+  # @return [CreateConnection, UpdateConnection]
   def handle_connection_auth_with_code(source)
     handle_connection_auth(source, code)
   end
 
   # @param [Symbol] source
-  # @return [SetupConnection, UpdateConnection]
+  # @return [CreateConnection, UpdateConnection]
   def handle_connection_auth_with_token(source)
     handle_connection_auth(source, token)
   end
 
   # @param [Symbol] source
   # @param [String] service_auth_payload
-  # @return [Array<SetupConnection, UpdateConnection, Boolean>]
+  # @return [Array<CreateConnection, UpdateConnection, Boolean>]
   def command_for_connection_auth(source, service_auth_payload)
     connection_id, _rest = Source::Client.decode_state(state) if state
     if connection_id
       [update_connection_auth(connection_id, service_auth_payload), false]
     else
-      [setup_connection_auth(source, service_auth_payload), true]
+      [create_connection_auth(source, service_auth_payload), true]
     end
   end
 
@@ -127,8 +127,8 @@ private
 
   # @param [Symbol] source
   # @param [String] code
-  # @return [SetupConnection]
-  def setup_connection_auth(source, code)
-    SetupConnectionAuth.call(current_user, source, code)
+  # @return [CreateConnection]
+  def create_connection_auth(source, code)
+    CreateConnectionAuth.call(current_user, source, code)
   end
 end
