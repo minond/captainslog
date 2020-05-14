@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_14_010702) do
+ActiveRecord::Schema.define(version: 2020_05_14_234743) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -45,12 +45,13 @@ ActiveRecord::Schema.define(version: 2020_05_14_010702) do
     t.bigint "user_id", null: false
     t.integer "status"
     t.string "kind"
-    t.text "args"
     t.text "logs"
     t.datetime "started_at"
     t.datetime "stopped_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "connection_id", null: false
+    t.index ["connection_id"], name: "index_jobs_on_connection_id"
     t.index ["user_id"], name: "index_jobs_on_user_id"
   end
 
@@ -68,5 +69,6 @@ ActiveRecord::Schema.define(version: 2020_05_14_010702) do
   add_foreign_key "credential_options", "credentials"
   add_foreign_key "credentials", "connections"
   add_foreign_key "credentials", "users"
+  add_foreign_key "jobs", "connections"
   add_foreign_key "jobs", "users"
 end
