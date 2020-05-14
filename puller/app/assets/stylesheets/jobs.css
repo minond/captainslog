@@ -2,3 +2,19 @@
   Place all the styles related to the matching controller here.
   They will automatically be included in application.css.
 */
+
+.job-status-initiated {
+  background: #f0f0f066; /* light gray */
+}
+
+.job-status-running {
+  background: #fbff8d45; /* light yellow */
+}
+
+.job-status-done {
+  background: #30f26721; /* light green */
+}
+
+.job-status-errored {
+  background: #ffeaead1; /* light red */
+}
