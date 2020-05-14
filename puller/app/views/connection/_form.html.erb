@@ -1,6 +1,6 @@
-<div class="cf mb4" style="max-width: 820px">
+<div class="cf mb4">
   <% known_sources.each do |source| %>
-    <a class="link black pointer fl w-100 w-50-l pa2 border-box" href="/connection/initiate/<%= source %>">
+    <a class="link black pointer fl mw6 pa2 border-box" href="/connection/initiate/<%= source %>">
       <input class="source-radio dn" type="radio" name="connection[source]" value="<%= source %>" />
       <div class="source-box pa4 ba b--black-10 tc">
         <%= image_tag "#{source}-logo", :class => "h3" %>
