@@ -1,9 +1,8 @@
 <%= render "layouts/content-view" do %>
   <% if current_user.connections.present? %>
-    <%= render "form/header", :key => :recent_jobs %>
-    <%= render "job/list", :jobs => current_user.jobs.order("created_at desc").first(10) %>
-    <%= render "form/header", :key => :connections %>
     <%= render "connection/list", :connections => current_user.connections %>
+    <div class="pt5"></div>
+    <%= render "job/list", :jobs => current_user.jobs.order("created_at desc").first(10) %>
   <% else %>
     <p class="lh-copy"><%= t(:no_connections_create_one, :href => new_connection_path).html_safe %></p>
   <% end %>

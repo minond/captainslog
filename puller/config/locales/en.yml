@@ -14,6 +14,7 @@ en:
   password: "Password"
   password_confirmation: "Password confirmation"
 
+  source: "Source"
   create_connection: "Create connection"
   connections: "Connections"
   new_connection: "New connection"
@@ -36,7 +37,7 @@ en:
   are_you_sure: "Are you sure?"
   delete: "Delete"
 
-  recent_jobs: "Recent jobs"
+  jobs: "Jobs"
   status: "Status"
   kind: "Kind"
   started_at: "Started at"

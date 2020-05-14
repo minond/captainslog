@@ -20,7 +20,7 @@
           <td class="pv3 pr3 bb b--black-10"><%= job.started_at %></td>
           <td class="pv3 pr3 bb b--black-10"><%= job.stopped_at %></td>
           <td class="pv3 pr3 bb b--black-10"><%= job.run_time_s %></td>
-          <td class="pv3 pr3 bb b--black-10"><%= link_to t(:view_details), job %></td>
+          <td class="pv3 pr3 bb b--black-10"><%= link_to t(:view_details), job, :class => "blue" %></td>
         </tr>
       <% end %>
     </tbody>
