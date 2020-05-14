@@ -1,5 +1,5 @@
 describe Credential do
-  subject { Credential.create_with_options(user, connection, options) }
+  subject { Credential.create_with_options(connection, options) }
 
   let(:user) { create(:user) }
   let(:connection) { create(:connection, :user => user) }
