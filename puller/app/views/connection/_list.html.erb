@@ -1,22 +1,22 @@
 <div class="overflow-auto">
-  <table class="f6 w-100" style="max-width: 820px">
+  <table class="f6 w-100">
     <thead>
       <tr>
-        <th class="fw6 bb b--black-10 tl pb3 pr3"><%= t(:source) %></th>
-        <th class="fw6 bb b--black-10 tl pb3 pr3"><%= t(:created_at) %></th>
-        <th class="fw6 bb b--black-10 tl pb3 pr3"><%= t(:updated_at) %></th>
-        <th class="fw6 bb b--black-10 tl pb3 pr3" colwidth="3"></th>
+        <th class="nowrap fw6 bb b--black-10 tl pb3 ph3"><%= t(:source) %></th>
+        <th class="nowrap fw6 bb b--black-10 tl pb3 pr3"><%= t(:created_at) %></th>
+        <th class="nowrap fw6 bb b--black-10 tl pb3 pr3"><%= t(:updated_at) %></th>
+        <th class="nowrap fw6 bb b--black-10 tl pb3 pr3" colwidth="3"></th>
       </tr>
     </thead>
     <tbody class="lh-copy">
       <% connections.each do |connection| %>
         <tr>
-          <td class="pv3 pr3 bb b--black-10"><%= image_tag "#{connection.source}-logo", :class => "mw4" %></td>
-          <td class="pv3 pr3 bb b--black-10"><%= connection.created_at %></td>
-          <td class="pv3 pr3 bb b--black-10"><%= connection.updated_at %></td>
-          <td class="pv3 pr3 bb b--black-10"><%= link_to t(:schedule_pull), schedule_pull_connection_path(connection), :class => "blue" %></td>
-          <td class="pv3 pr3 bb b--black-10"><%= link_to t(:authenticate), authenticate_connection_path(connection), :class => "blue" %></td>
-          <td class="pv3 pr3 bb b--black-10"><%= render "form/delete", :resource => connection %></td>
+          <td class="nowrap pv3 ph3 bb b--black-10"><%= image_tag "#{connection.source}-logo", :class => "mw4" %></td>
+          <td class="nowrap pv3 pr3 bb b--black-10"><%= connection.created_at %></td>
+          <td class="nowrap pv3 pr3 bb b--black-10"><%= connection.updated_at %></td>
+          <td class="nowrap pv3 pr3 bb b--black-10"><%= link_to t(:schedule_pull), schedule_pull_connection_path(connection), :class => "blue" %></td>
+          <td class="nowrap pv3 pr3 bb b--black-10"><%= link_to t(:authenticate), authenticate_connection_path(connection), :class => "blue" %></td>
+          <td class="nowrap pv3 pr3 bb b--black-10"><%= render "form/delete", :resource => connection %></td>
         </tr>
       <% end %>
     </tbody>
