@@ -1,36 +1,33 @@
 class Job < ApplicationRecord
   belongs_to :user
+  belongs_to :connection
 
-  validates :args, :status, :kind, :user, :presence => true
+  validates :connection, :status, :kind, :user, :presence => true
 
   enum :status => %i[initiated running errored done]
 
   after_initialize :constructor
 
-  # @return [Class]
-  def self.arg_class_for_kind(kind)
-    "Execute#{kind.to_s.camelcase}Job::Arguments".safe_constantize
+  # @return [String]
+  def humanized_run_time
+    return "--:--:--" if run_time.nil?
+
+    Time.at(run_time).utc.strftime("%H:%M:%S")
   end
 
-  # @return [Class]
-  def self.command_class_for_kind(kind)
-    "Execute#{kind.to_s.camelcase}Job".safe_constantize
+  # @return [String]
+  def humanized_kind
+    if kind.to_sym == :pull
+      "Pull for #{connection.source.humanize}"
+    else
+      kind.humanize
+    end
   end
 
-  # @return [Object]
-  def args
-    arg_class = self.class.arg_class_for_kind(kind)
-    YAML.safe_load(super, [arg_class])
-  end
+private
 
-  # @param [Object]
-  def args=(args_obj)
-    super(Base64.encode64(YAML.dump(args_obj)))
-  end
-
-  # @return [Class]
-  def command
-    self.class.command_class_for_kind(kind)
+  def constructor
+    self.status ||= :initiated
   end
 
   # @return [Float, nil]
@@ -39,12 +36,5 @@ class Job < ApplicationRecord
     return DateTime.current - started_at.to_i if running?
 
     stopped_at - started_at
-  end
-
-  # @return [String]
-  def run_time_s
-    return "--:--:--" if run_time.nil?
-
-    Time.at(run_time).utc.strftime("%H:%M:%S")
   end
 end

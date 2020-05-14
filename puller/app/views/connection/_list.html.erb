@@ -3,6 +3,7 @@
     <thead>
       <tr>
         <th class="nowrap fw6 bb b--black-10 tl pb3 ph3"><%= t(:source) %></th>
+        <th class="nowrap fw6 bb b--black-10 tl pb3 pr3"><%= t(:pull_count) %></th>
         <th class="nowrap fw6 bb b--black-10 tl pb3 pr3"><%= t(:created_at) %></th>
         <th class="nowrap fw6 bb b--black-10 tl pb3 pr3"><%= t(:updated_at) %></th>
         <th class="nowrap fw6 bb b--black-10 tl pb3 pr3" colwidth="3"></th>
@@ -12,6 +13,7 @@
       <% connections.each do |connection| %>
         <tr>
           <td class="nowrap pv3 ph3 bb b--black-10"><%= image_tag "#{connection.source}-logo", :class => "mw4" %></td>
+          <td class="nowrap pv3 pr3 bb b--black-10"><%= connection.jobs.count %></td>
           <td class="nowrap pv3 pr3 bb b--black-10"><%= connection.created_at %></td>
           <td class="nowrap pv3 pr3 bb b--black-10"><%= connection.updated_at %></td>
           <td class="nowrap pv3 pr3 bb b--black-10"><%= link_to t(:schedule_pull), schedule_pull_connection_path(connection), :class => "blue" %></td>

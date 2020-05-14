@@ -11,7 +11,7 @@
               </tr>
               <tr>
                 <td class="pv2 pr3 bb b--black-10"><%= t(:kind) %></td>
-                <td class="pv2 pr3 bb b--black-10"><%= job.kind.humanize %></td>
+                <td class="pv2 pr3 bb b--black-10"><%= job.humanized_kind %></td>
               </tr>
               <tr>
                 <td class="pv2 pr3 bb b--black-10"><%= t(:created_at) %></td>
@@ -27,7 +27,7 @@
               </tr>
               <tr>
                 <td class="pv2 pr3 bb b--black-10"><%= t(:run_time) %></td>
-                <td class="pv2 pr3 bb b--black-10"><%= job.run_time_s %></td>
+                <td class="pv2 pr3 bb b--black-10"><%= job.humanized_run_time %></td>
               </tr>
             </tbody>
           </table>

@@ -15,6 +15,7 @@ en:
   password_confirmation: "Password confirmation"
 
   source: "Source"
+  pull_count: "Pull count"
   create_connection: "Create connection"
   connections: "Connections"
   new_connection: "New connection"
