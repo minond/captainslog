@@ -32,11 +32,13 @@ class ConnectionController < ApplicationController
 
   # GET /connection/:id/schedule_pull
   def schedule_pull
-    current_connection.schedule_pull_job!
-    redirect_to :root, :notice => t(:pull_successfully_scheduled)
-  rescue => err
-    logger.error err
-    redirect_to :root, :alert => t(:error_scheduling_pull)
+    cmd = SchedulePullJob.call(current_connection)
+    if cmd.success?
+      redirect_to :root, :notice => t(:pull_successfully_scheduled)
+    else
+      logger.error cmd.errors
+      redirect_to :root, :alert => t(:error_scheduling_pull)
+    end
   end
 
   # GET /connection/initiate/fitbit
