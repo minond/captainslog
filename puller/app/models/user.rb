@@ -4,6 +4,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable
 
   has_many :connections, :dependent => :destroy
+  has_many :jobs, :dependent => :destroy
 
   validates :email, :presence => true, :uniqueness => true
 
