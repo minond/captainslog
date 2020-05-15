@@ -15,6 +15,7 @@ en:
   password_confirmation: "Password confirmation"
 
   source: "Source"
+  history: "History"
   pull_count: "Pull count"
   create_connection: "Create connection"
   connections: "Connections"
@@ -40,6 +41,7 @@ en:
 
   jobs: "Jobs"
   status: "Status"
+  message: "Message"
   kind: "Kind"
   started_at: "Started at"
   stopped_at: "Stopped at"

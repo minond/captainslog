@@ -2,21 +2,21 @@
   <table class="f6 w-100 collapse">
     <thead>
       <tr>
-        <th class="nowrap fw6 bb b--black-10 tl pb3 ph3"></th>
-        <th class="nowrap fw6 bb b--black-10 tl pb3 pr3"><%= t(:status) %></th>
-        <th class="nowrap fw6 bb b--black-10 tl pb3 pr3"><%= t(:kind) %></th>
-        <th class="nowrap fw6 bb b--black-10 tl pb3 pr3"><%= t(:created_at) %></th>
-        <th class="nowrap fw6 bb b--black-10 tl pb3 pr3"><%= t(:started_at) %></th>
-        <th class="nowrap fw6 bb b--black-10 tl pb3 pr3"><%= t(:stopped_at) %></th>
-        <th class="nowrap fw6 bb b--black-10 tl pb3 pr3"><%= t(:run_time) %></th>
-        <th class="nowrap fw6 bb b--black-10 tl pb3 pr3"></th>
+        <th class="nowrap fw6 bb b--black-10 tl pb3 ph3 w4"></th>
+        <th class="nowrap fw6 bb b--black-10 tl pb3 pr3"><%= t(:message) %></th>
+        <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w4"><%= t(:kind) %></th>
+        <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w5"><%= t(:created_at) %></th>
+        <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w5"><%= t(:started_at) %></th>
+        <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w5"><%= t(:stopped_at) %></th>
+        <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w4"><%= t(:run_time) %></th>
+        <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w1"></th>
       </tr>
     </thead>
     <tbody class="lh-copy">
       <% jobs.each do |job| %>
         <tr>
-          <td class="nowrap pv3 ph3 bb b--black-10 w4 job-status-<%= job.status %>"></td>
-          <td class="nowrap pv3 pr3 bb b--black-10"><%= job.status.humanize %></td>
+          <td class="nowrap pv3 ph3 bb b--black-10 job-status-<%= job.status %>"></td>
+          <td class="nowrap pv3 pr3 bb b--black-10"></td>
           <td class="nowrap pv3 pr3 bb b--black-10"><%= job.humanized_kind %></td>
           <td class="nowrap pv3 pr3 bb b--black-10"><%= job.created_at %></td>
           <td class="nowrap pv3 pr3 bb b--black-10"><%= job.started_at %></td>
