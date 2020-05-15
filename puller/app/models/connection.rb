@@ -5,6 +5,8 @@ class Connection < ApplicationRecord
 
   validates :source, :user, :presence => true
 
+  class MissingCredentialsError < StandardError; end
+
   # @param [Hash] connection_attrs
   # @param [Hash] credentials_hash
   # @return [Connection]
@@ -14,5 +16,23 @@ class Connection < ApplicationRecord
       Credential.create_with_options(connection, credentials_hash)
       connection
     end
+  end
+
+  # @return [Source::Client]
+  def client
+    @client ||=
+      begin
+        raise MissingCredentialsError if newest_credentials.nil?
+
+        klass = Source::Client.class_for_source(source)
+        klass.new(newest_credentials.options)
+      end
+  end
+
+private
+
+  # @return [Credential, nil]
+  def newest_credentials
+    credentials.order("created_at desc").first
   end
 end

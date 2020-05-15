@@ -41,10 +41,6 @@ class Source::Lastfm < Source::Client
     }
   end
 
-private
-
-  attr_accessor :user
-
   # @param [Date] start_date
   # @param [Date] end_date
   # @yieldparam [ProtoEntry]
@@ -52,6 +48,10 @@ private
   def data_pull(**args, &block)
     song_series(args, &block)
   end
+
+private
+
+  attr_accessor :user
 
   # # @param [Date] start_date
   # # @param [Date] end_date
