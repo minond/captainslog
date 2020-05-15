@@ -3,6 +3,11 @@
   They will automatically be included in application.css.
 */
 
+.job-logs {
+  min-height: 20vh;
+  max-height: calc(100vh - 8rem);
+}
+
 .job-status-initiated,
 .job-status-running,
 .job-status-done,
