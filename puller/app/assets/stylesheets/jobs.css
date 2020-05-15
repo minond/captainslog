@@ -36,3 +36,32 @@
   from { -webkit-transform: rotate(360deg); }
   to { -webkit-transform: rotate(0deg); }
 }
+
+.job-status-ball-initiated,
+.job-status-ball-running,
+.job-status-ball-done,
+.job-status-ball-errored {
+  border-radius: 1000px;
+  border: 1px solid #d1d1d1;
+  display: inline-block;
+  height: 14px;
+  margin-right: 14px;
+  margin-top: 6px;
+  width: 14px;
+}
+
+.job-status-ball-initiated {
+  background: #c1c1c1; /* gray */
+}
+
+.job-status-ball-running {
+  background: #5e8dd3; /* blue */
+}
+
+.job-status-ball-done {
+  background: #63ff8f; /* green */
+}
+
+.job-status-ball-errored {
+  background: #ff3f3f; /* red */
+}
