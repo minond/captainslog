@@ -31,6 +31,16 @@ class Connection < ApplicationRecord
       end
   end
 
+  # @return [Job]
+  def schedule_pull
+    schedule_job(:pull)
+  end
+
+  # @return [Job]
+  def schedule_backfill
+    schedule_job(:backfill)
+  end
+
 private
 
   # @return [Credential, nil]
@@ -38,7 +48,10 @@ private
     credentials.order("created_at desc").first
   end
 
-  def schedule_backfill
-    ScheduleBackfillJob.call(self)
+  # @return [Job]
+  def schedule_job(kind)
+    Job.create(:user => user,
+               :connection => self,
+               :kind => kind)
   end
 end
