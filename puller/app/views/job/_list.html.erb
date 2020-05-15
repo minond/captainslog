@@ -2,25 +2,27 @@
   <table class="f6 w-100 collapse">
     <thead>
       <tr>
-        <th class="nowrap fw6 bb b--black-10 tl pb3 ph3"><%= t(:status) %></th>
+        <th class="nowrap fw6 bb b--black-10 tl pb3 ph3"></th>
+        <th class="nowrap fw6 bb b--black-10 tl pb3 pr3"><%= t(:status) %></th>
         <th class="nowrap fw6 bb b--black-10 tl pb3 pr3"><%= t(:kind) %></th>
         <th class="nowrap fw6 bb b--black-10 tl pb3 pr3"><%= t(:created_at) %></th>
         <th class="nowrap fw6 bb b--black-10 tl pb3 pr3"><%= t(:started_at) %></th>
         <th class="nowrap fw6 bb b--black-10 tl pb3 pr3"><%= t(:stopped_at) %></th>
         <th class="nowrap fw6 bb b--black-10 tl pb3 pr3"><%= t(:run_time) %></th>
-        <th class="nowrap fw6 bb b--black-10 tl pb3 pr3" colwidth="1"></th>
+        <th class="nowrap fw6 bb b--black-10 tl pb3 pr3"></th>
       </tr>
     </thead>
     <tbody class="lh-copy">
       <% jobs.each do |job| %>
-        <tr class="job-status-<%= job.status %>">
-          <td class="nowrap pv3 ph3 bb b--black-10"><%= job.status.humanize %></td>
+        <tr>
+          <td class="nowrap pv3 ph3 bb b--black-10 w4 job-status-<%= job.status %>"></td>
+          <td class="nowrap pv3 pr3 bb b--black-10"><%= job.status.humanize %></td>
           <td class="nowrap pv3 pr3 bb b--black-10"><%= job.humanized_kind %></td>
           <td class="nowrap pv3 pr3 bb b--black-10"><%= job.created_at %></td>
           <td class="nowrap pv3 pr3 bb b--black-10"><%= job.started_at %></td>
           <td class="nowrap pv3 pr3 bb b--black-10"><%= job.stopped_at %></td>
           <td class="nowrap pv3 pr3 bb b--black-10"><%= job.humanized_run_time %></td>
-          <td class="nowrap pv3 pr3 bb b--black-10"><%= link_to t(:view_details), job, :class => "blue" %></td>
+          <td class="nowrap pv3 pr3 bb b--black-10"><%= link_to t(:view_details), job, :class => "link blue" %></td>
         </tr>
       <% end %>
     </tbody>
