@@ -18,8 +18,11 @@ class Job < ApplicationRecord
 
   # @return [String]
   def humanized_kind
-    if kind.to_sym == :pull
+    case kind.to_sym
+    when :pull
       "Pull for #{connection.source.humanize}"
+    when :backfill
+      "Backfill for #{connection.source.humanize}"
     else
       kind.humanize
     end
