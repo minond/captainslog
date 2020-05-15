@@ -81,6 +81,11 @@ class Source::Client
               &block)
   end
 
+  # @return [Boolean]
+  def oauth?
+    self.class.singleton_class < Source::OauthClient
+  end
+
 private
 
   # @param [Date] start_date

@@ -1,45 +1,36 @@
 <%= render "layouts/content-view" do %>
-  <table class="w-100">
+  <table class="f6 w-50-l">
     <tbody class="lh-copy">
       <tr>
-        <td class="v-top pr4 mw2">
-          <table class="w-100 f6">
-            <tbody class="lh-copy">
-              <tr>
-                <td class="pv2 pr3 bb b--black-10"><%= t(:status) %></td>
-                <td class="pv2 pr3 bb b--black-10"><%= job.status.humanize %></td>
-              </tr>
-              <tr>
-                <td class="pv2 pr3 bb b--black-10"><%= t(:kind) %></td>
-                <td class="pv2 pr3 bb b--black-10"><%= job.humanized_kind %></td>
-              </tr>
-              <tr>
-                <td class="pv2 pr3 bb b--black-10"><%= t(:message) %></td>
-                <td class="pv2 pr3 bb b--black-10"><%= job.message %></td>
-              </tr>
-              <tr>
-                <td class="pv2 pr3 bb b--black-10"><%= t(:run_time) %></td>
-                <td class="pv2 pr3 bb b--black-10"><%= job.humanized_run_time %></td>
-              </tr>
-              <tr>
-                <td class="pv2 pr3 bb b--black-10"><%= t(:created_at) %></td>
-                <td class="pv2 pr3 bb b--black-10"><%= job.created_at %></td>
-              </tr>
-              <tr>
-                <td class="pv2 pr3 bb b--black-10"><%= t(:started_at) %></td>
-                <td class="pv2 pr3 bb b--black-10"><%= job.started_at %></td>
-              </tr>
-              <tr>
-                <td class="pv2 pr3 bb b--black-10"><%= t(:stopped_at) %></td>
-                <td class="pv2 pr3 bb b--black-10"><%= job.stopped_at %></td>
-              </tr>
-            </tbody>
-          </table>
-        </td>
-        <td class="v-top pl4">
-          <pre class="bg-near-white pa3"><%= job.logs %></pre>
-        </td>
+        <td class="pv2 ph3 bb b--black-10 nowrap w2 br b tr"><%= t(:status) %></td>
+        <td class="pv2 ph3 bb b--black-10 nowrap"><%= job.status.humanize %></td>
+      </tr>
+      <tr>
+        <td class="pv2 ph3 bb b--black-10 nowrap w2 br b tr"><%= t(:kind) %></td>
+        <td class="pv2 ph3 bb b--black-10 nowrap"><%= job.humanized_kind %></td>
+      </tr>
+      <tr>
+        <td class="pv2 ph3 bb b--black-10 nowrap w2 br b tr"><%= t(:message) %></td>
+        <td class="pv2 ph3 bb b--black-10 mw7"><%= job.message %></td>
+      </tr>
+      <tr>
+        <td class="pv2 ph3 bb b--black-10 nowrap w2 br b tr"><%= t(:run_time) %></td>
+        <td class="pv2 ph3 bb b--black-10 nowrap"><%= job.humanized_run_time %></td>
+      </tr>
+      <tr>
+        <td class="pv2 ph3 bb b--black-10 nowrap w2 br b tr"><%= t(:created_at) %></td>
+        <td class="pv2 ph3 bb b--black-10 nowrap"><%= job.created_at %></td>
+      </tr>
+      <tr>
+        <td class="pv2 ph3 bb b--black-10 nowrap w2 br b tr"><%= t(:started_at) %></td>
+        <td class="pv2 ph3 bb b--black-10 nowrap"><%= job.started_at %></td>
+      </tr>
+      <tr>
+        <td class="pv2 ph3 bb b--black-10 nowrap w2 br b tr"><%= t(:stopped_at) %></td>
+        <td class="pv2 ph3 bb b--black-10 nowrap"><%= job.stopped_at %></td>
       </tr>
     </tbody>
   </table>
+
+  <pre class="bg-near-white pa3 mt4"><%= job.logs %></pre>
 <% end %>
