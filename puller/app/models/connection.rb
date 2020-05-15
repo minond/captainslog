@@ -5,6 +5,8 @@ class Connection < ApplicationRecord
 
   validates :source, :user, :presence => true
 
+  after_create :schedule_backfill
+
   class MissingCredentialsError < StandardError; end
 
   # @param [Hash] connection_attrs
@@ -34,5 +36,9 @@ private
   # @return [Credential, nil]
   def newest_credentials
     credentials.order("created_at desc").first
+  end
+
+  def schedule_backfill
+    ScheduleBackfillJob.call(self)
   end
 end
