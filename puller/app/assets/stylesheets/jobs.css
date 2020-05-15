@@ -3,18 +3,36 @@
   They will automatically be included in application.css.
 */
 
-.job-status-initiated {
-  background: #f0f0f066; /* light gray */
+.job-status-initiated,
+.job-status-running,
+.job-status-done,
+.job-status-errored {
+  background-position: 50% 50%;
+  background-size: 24px;
+  background-repeat: no-repeat;
 }
 
-.job-status-running {
-  background: #fbff8d45; /* light yellow */
+.job-status-initiated {
+  background-image: url(checklist.png);
 }
 
 .job-status-done {
-  background: #30f26721; /* light green */
+  background-image: url(checkmark.png);
 }
 
 .job-status-errored {
-  background: #ffeaead1; /* light red */
+  background-image: url(warning.png);
+}
+
+.job-status-running {
+  background-image: url(rotate.png);
+  animation-name: backwards-rotate;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+@keyframes backwards-rotate {
+  from { -webkit-transform: rotate(360deg); }
+  to { -webkit-transform: rotate(0deg); }
 }
