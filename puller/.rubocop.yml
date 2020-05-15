@@ -52,6 +52,10 @@ Layout/AccessModifierIndentation:
 Layout/LineLength:
   Enabled: false
 
+Metrics/MethodLength:
+  Exclude:
+    - db/migrate/*
+
 Metrics/ClassLength:
   Enabled: false
 

@@ -1,6 +1,6 @@
 class CreateDelayedJobs < ActiveRecord::Migration[6.0]
-  def self.up
-    create_table :delayed_jobs, force: true do |t|
+  def up
+    create_table :delayed_jobs, :force => true do |t|
       t.integer :priority, :default => 0, :null => false # Allows some jobs to jump to the front of the queue
       t.integer :attempts, :default => 0, :null => false # Provides for retries, but still fail eventually.
       t.text :handler,                    :null => false # YAML-encoded string of the object that will do work
@@ -14,10 +14,10 @@ class CreateDelayedJobs < ActiveRecord::Migration[6.0]
       t.timestamps :null => true
     end
 
-    add_index :delayed_jobs, [:priority, :run_at], :name => "delayed_jobs_priority"
+    add_index :delayed_jobs, %i[priority run_at], :name => "delayed_jobs_priority"
   end
 
-  def self.down
+  def down
     drop_table :delayed_jobs
   end
 end
