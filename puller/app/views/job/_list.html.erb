@@ -16,7 +16,7 @@
       <% jobs.each do |job| %>
         <tr>
           <td class="nowrap pv3 ph3 bb b--black-10 job-status-<%= job.status %>"></td>
-          <td class="nowrap pv3 pr3 bb b--black-10"></td>
+          <td class="nowrap pv3 pr3 bb b--black-10"><%= job.message %></td>
           <td class="nowrap pv3 pr3 bb b--black-10"><%= job.humanized_kind %></td>
           <td class="nowrap pv3 pr3 bb b--black-10"><%= job.created_at %></td>
           <td class="nowrap pv3 pr3 bb b--black-10"><%= job.started_at %></td>
