@@ -3,12 +3,12 @@
     <thead>
       <tr>
         <th class="nowrap fw6 bb b--black-10 tl pb3 ph3 w4"></th>
-        <th class="nowrap fw6 bb b--black-10 tl pb3 pr3"><%= t(:message) %></th>
         <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w4"><%= t(:kind) %></th>
+        <th class="nowrap fw6 bb b--black-10 tl pb3 pr3"><%= t(:message) %></th>
+        <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w4"><%= t(:run_time) %></th>
         <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w5"><%= t(:created_at) %></th>
         <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w5"><%= t(:started_at) %></th>
         <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w5"><%= t(:stopped_at) %></th>
-        <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w4"><%= t(:run_time) %></th>
         <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w1"></th>
       </tr>
     </thead>
@@ -16,12 +16,12 @@
       <% jobs.each do |job| %>
         <tr>
           <td class="nowrap pv3 ph3 bb b--black-10 job-status-<%= job.status %>"></td>
-          <td class="nowrap pv3 pr3 bb b--black-10"><%= job.message %></td>
           <td class="nowrap pv3 pr3 bb b--black-10"><%= job.humanized_kind %></td>
+          <td class="nowrap pv3 pr3 bb b--black-10"><%= job.message %></td>
+          <td class="nowrap pv3 pr3 bb b--black-10"><%= job.humanized_run_time %></td>
           <td class="nowrap pv3 pr3 bb b--black-10"><%= job.created_at %></td>
           <td class="nowrap pv3 pr3 bb b--black-10"><%= job.started_at %></td>
           <td class="nowrap pv3 pr3 bb b--black-10"><%= job.stopped_at %></td>
-          <td class="nowrap pv3 pr3 bb b--black-10"><%= job.humanized_run_time %></td>
           <td class="nowrap pv3 pr3 bb b--black-10"><%= link_to t(:view_details), job, :class => "link blue" %></td>
         </tr>
       <% end %>

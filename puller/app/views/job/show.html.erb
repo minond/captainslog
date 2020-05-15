@@ -18,6 +18,10 @@
                 <td class="pv2 pr3 bb b--black-10"><%= job.message %></td>
               </tr>
               <tr>
+                <td class="pv2 pr3 bb b--black-10"><%= t(:run_time) %></td>
+                <td class="pv2 pr3 bb b--black-10"><%= job.humanized_run_time %></td>
+              </tr>
+              <tr>
                 <td class="pv2 pr3 bb b--black-10"><%= t(:created_at) %></td>
                 <td class="pv2 pr3 bb b--black-10"><%= job.created_at %></td>
               </tr>
@@ -28,10 +32,6 @@
               <tr>
                 <td class="pv2 pr3 bb b--black-10"><%= t(:stopped_at) %></td>
                 <td class="pv2 pr3 bb b--black-10"><%= job.stopped_at %></td>
-              </tr>
-              <tr>
-                <td class="pv2 pr3 bb b--black-10"><%= t(:run_time) %></td>
-                <td class="pv2 pr3 bb b--black-10"><%= job.humanized_run_time %></td>
               </tr>
             </tbody>
           </table>
