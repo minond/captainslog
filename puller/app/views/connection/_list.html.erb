@@ -12,7 +12,7 @@
     <tbody class="lh-copy">
       <% connections.each do |connection| %>
         <tr>
-          <td class="nowrap pv0 pl0 bb b--black-10 w4 tc"><%= image_tag "#{connection.source}-logo", :class => "w3" %></td>
+          <td class="nowrap pv0 pl0 bb b--black-10 w4 source <%= "source-#{connection.source}" %>"></td>
           <td class="nowrap pv3 pr3 bb b--black-10"><%= connection.jobs.count %></td>
           <td class="nowrap pv3 pr3 bb b--black-10"><%= connection.created_at %></td>
           <td class="nowrap pv3 pr3 bb b--black-10"><%= connection.updated_at %></td>

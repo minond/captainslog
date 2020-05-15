@@ -17,3 +17,17 @@
   opacity: 1;
   border: 1px solid #909090;
 }
+
+.source {
+  background-position: 50%;
+  background-size: 60px;
+  background-repeat: no-repeat;
+}
+
+.source-fitbit {
+  background-image: url(fitbit-logo.png);
+}
+
+.source-lastfm {
+  background-image: url(lastfm-logo.svg);
+}
