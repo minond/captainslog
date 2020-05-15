@@ -13,8 +13,8 @@ class ExecuteJob
     setup
     create_or_update_records
     update_connection_credentials
-  rescue => err
-    @errors << err
+  rescue StandardError => e
+    @errors << e
   ensure
     log_metrics
     teardown
