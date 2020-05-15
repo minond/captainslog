@@ -2,7 +2,7 @@
   <% if current_user.connections.present? %>
     <%= render "connection/list", :connections => current_user.connections %>
     <div class="pt5"></div>
-    <%= render "job/list", :jobs => current_user.jobs.order("created_at desc").first(10) %>
+    <%= render "job/list", :jobs => current_user.jobs.order("created_at desc").first(500) %>
   <% else %>
     <p class="lh-copy"><%= t(:no_connections_create_one, :href => new_connection_path).html_safe %></p>
   <% end %>
