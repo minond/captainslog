@@ -7,6 +7,7 @@ class Job < ApplicationRecord
   enum :status => %i[initiated running errored done]
 
   after_initialize :constructor
+  after_create :schedule_processing
 
   # @return [String]
   def humanized_run_time
@@ -28,6 +29,10 @@ private
 
   def constructor
     self.status ||= :initiated
+  end
+
+  def schedule_processing
+    ProcessJobJob.perform_later(id)
   end
 
   # @return [Float, nil]
