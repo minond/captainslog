@@ -23,6 +23,7 @@ en:
   source: "Source"
   history: "History"
   pull_count: "Pull count"
+  last_updated_at: "Last updated at"
   create_connection: "Create connection"
   connections: "Connections"
   new_connection: "New connection"

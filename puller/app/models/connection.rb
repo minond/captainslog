@@ -31,7 +31,7 @@ class Connection < ApplicationRecord
       end
   end
 
-  def recent_stats(last_n_jobs = 15)
+  def recent_stats(last_n_jobs = 10)
     jobs.select(:id, :status, "extract(epoch from stopped_at - started_at) as run_time")
         .order("created_at desc")
         .first(last_n_jobs)

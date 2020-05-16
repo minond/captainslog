@@ -5,6 +5,7 @@
         <th class="nowrap fw6 bb b--black-10 tl pb3 ph3 w100px"></th>
         <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 dn dtc-ns"><%= t(:history) %></th>
         <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w4"><%= t(:pull_count) %></th>
+        <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w5"><%= t(:last_updated_at) %></th>
         <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w5"><%= t(:created_at) %></th>
         <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w5"><%= t(:updated_at) %></th>
         <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w1"></th>
@@ -22,6 +23,7 @@
             <% end %>
           </td>
           <td class="nowrap pv3 pr3 bb b--black-10"><%= connection.jobs.count %></td>
+          <td class="nowrap pv3 pr3 bb b--black-10"><%= connection.last_updated_at %></td>
           <td class="nowrap pv3 pr3 bb b--black-10"><%= connection.created_at %></td>
           <td class="nowrap pv3 pr3 bb b--black-10"><%= connection.updated_at %></td>
           <td class="nowrap pv3 pr3 bb b--black-10"><%= link_to t(:schedule_pull), schedule_pull_connection_path(connection), :class => "link blue" %></td>

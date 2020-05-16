@@ -44,11 +44,14 @@ private
   end
 
   def teardown
-    logs.puts "job teardown"
     job.update!(:status => status,
                 :stopped_at => Time.now,
                 :message => message,
                 :logs => logs.string)
+
+    connection.update!(:last_updated_at => Time.now)
+
+    logs.puts "job teardown complete"
   end
 
   def status
