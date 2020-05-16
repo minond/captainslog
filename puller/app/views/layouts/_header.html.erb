@@ -1,11 +1,14 @@
 <header>
   <% if current_user %>
     <nav class="flex justify-between pa2 ph2 ph5-l bb b--black-10">
-      <a class="flex items-center" href="/" title="Home">
-        <img
-          src="<%= current_user.icon_url %>"
-          class="dib br-100 pa1 ba b--black-10 h2 w2" alt="avatar" />
-      </a>
+      <div class="flex items-center">
+        <a href="/" title="Home">
+          <img
+            src="<%= current_user.icon_url %>"
+            class="dib br-100 pa1 ba b--black-10 h2 w2" alt="avatar" />
+        </a>
+        <div class="dn db-ns lh-copy f6 ml3"><%= notice %></div>
+      </div>
       <div class="flex-grow flex items-center">
         <%= link_to t(:create_connection), new_connection_path,
           :class => "blue link f6 mh3" %>
@@ -16,3 +19,7 @@
     </nav>
   <% end %>
 </header>
+
+<% if alert %>
+  <div class="f6 absolute db w-100 ph5-l ph3 pv2 bb b--black-10 bg-washed-red navy"><%= alert %></div>
+<% end %>
