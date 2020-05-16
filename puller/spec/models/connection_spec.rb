@@ -55,4 +55,20 @@ describe Connection do
       expect { subject.schedule_pull }.to change { Job.count }.by 1
     end
   end
+
+  describe "#recent_stats" do
+    before do
+      create(:job, :done, :connection => subject)
+      create(:job, :done, :connection => subject)
+      create(:job, :errored, :connection => subject)
+      create(:job, :running, :connection => subject)
+    end
+
+    let(:recent_stats) { subject.recent_stats }
+    let(:recent_stats_statuses) { recent_stats.map(&:second) }
+
+    it "returns recent job information" do
+      expect(recent_stats_statuses).to match_array %w[done done errored running initiated]
+    end
+  end
 end

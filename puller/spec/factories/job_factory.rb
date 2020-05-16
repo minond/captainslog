@@ -5,6 +5,10 @@ FactoryBot.define do
 
     kind { :test }
 
+    trait :initiated do
+      status { :initiated }
+    end
+
     trait :running do
       status { :running }
     end
