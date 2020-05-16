@@ -1,0 +1,9 @@
+<div class="mt3">
+  <% content = yield %>
+  <% if content.present? %>
+    <%= content %>
+  <% else %>
+    <%= f.text_field field, autofocus: true, :class => "input-reset ba b--black-20 pa2 mb2 db w-100", :placeholder => t(field) %>
+  <% end %>
+  <%= render "form/field_error", :resource => f.object, :field => field %>
+</div>

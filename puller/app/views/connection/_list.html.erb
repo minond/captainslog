@@ -1,0 +1,34 @@
+<div class="overflow-auto">
+  <table class="f6 w-100 collapse rows-hoverable">
+    <thead>
+      <tr>
+        <th class="nowrap fw6 bb b--black-10 tl pb3 ph3 w100px"></th>
+        <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 dn dtc-ns"><%= t(:history) %></th>
+        <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w4"><%= t(:pull_count) %></th>
+        <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w5"><%= t(:created_at) %></th>
+        <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w5"><%= t(:updated_at) %></th>
+        <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w1"></th>
+        <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w1"></th>
+        <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w1"></th>
+      </tr>
+    </thead>
+    <tbody class="lh-copy">
+      <% connections.each do |connection| %>
+        <tr>
+          <td class="nowrap pv0 pl0 bb b--black-10 source <%= "source-#{connection.source}" %>"></td>
+          <td class="nowrap pv0 pl0 bb b--black-10 dn dtc-ns">
+            <% connection.recent_stats.each do |(id, status, _run_time)| %>
+              <%= link_to "", job_path(id), :class => "link job-status-ball-#{status}" %>
+            <% end %>
+          </td>
+          <td class="nowrap pv3 pr3 bb b--black-10"><%= connection.jobs.count %></td>
+          <td class="nowrap pv3 pr3 bb b--black-10"><%= connection.created_at %></td>
+          <td class="nowrap pv3 pr3 bb b--black-10"><%= connection.updated_at %></td>
+          <td class="nowrap pv3 pr3 bb b--black-10"><%= link_to t(:schedule_pull), schedule_pull_connection_path(connection), :class => "link blue" %></td>
+          <td class="nowrap pv3 pr3 bb b--black-10"><%= link_to t(:authenticate), authenticate_connection_path(connection), :class => "link blue" %></td>
+          <td class="nowrap pv3 pr3 bb b--black-10"><%= render "form/delete", :resource => connection %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

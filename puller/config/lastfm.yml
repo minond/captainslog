@@ -1,0 +1,3 @@
+api_key: <%= ENV.fetch("LASTFM_API_KEY", "") %>
+api_secret: <%= ENV.fetch("LASTFM_API_SECRET", "") %>
+redirect_uri: <%= ENV.fetch("LASTFM_REDIRECT_URL", "") %>

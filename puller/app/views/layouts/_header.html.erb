@@ -1,0 +1,25 @@
+<header>
+  <% if current_user %>
+    <nav class="flex justify-between pa2 ph2 ph5-l bb b--black-10">
+      <div class="flex items-center">
+        <a href="/" class="link black i baskerville f3 nowrap">
+          Captain&rsquo;s Log: Puller
+        </a>
+        <div class="dn db-l lh-copy f6 ml3"><%= notice %></div>
+      </div>
+      <div class="flex-grow flex items-center">
+        <%= link_to t(:create_connection), new_connection_path,
+          :class => "blue link f6 mh3" %>
+        <%= link_to t(:settings), me_path,
+          :class => "blue link f6 mh3" %>
+        <%= link_to t(:sign_out), destroy_user_session_path,
+          :method => :delete,
+          :class => "blue link f6 bg-animate hover-bg-black-10 pv2 ph3 br-pill" %>
+      </div>
+    </nav>
+  <% end %>
+</header>
+
+<% if alert %>
+  <div class="f6 absolute db w-100 ph5-l ph3 pv2 bb b--black-10 bg-washed-red navy"><%= alert %></div>
+<% end %>

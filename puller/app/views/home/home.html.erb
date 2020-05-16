@@ -1,0 +1,10 @@
+<%= render "layouts/content-view" do %>
+  <% if current_user.connections.present? %>
+    <%= render "connection/list", :connections => current_user.connections %>
+    <div class="pt5"></div>
+    <%= render "job/list", :jobs => current_user.jobs.order("created_at desc").first(500) %>
+  <% else %>
+    <p class="pl2 lh-copy"><%= t(:no_connections_create_one) %></p>
+    <%= render "connection/form" %>
+  <% end %>
+<% end %>

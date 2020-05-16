@@ -1,0 +1,74 @@
+/*
+  Place all the styles related to the matching controller here.
+  They will automatically be included in application.css.
+*/
+
+.job-logs {
+  min-height: 20vh;
+  max-height: calc(100vh - 8rem);
+}
+
+.job-status-ball-initiated,
+.job-status-ball-running,
+.job-status-ball-done,
+.job-status-ball-errored {
+  border-radius: 1000px;
+  border: 1px solid #d1d1d1;
+  display: inline-block;
+  height: 14px;
+  margin-right: 14px;
+  margin-top: 6px;
+  width: 14px;
+}
+
+.job-status-ball-running::before,
+.job-status-ball-initiated::before {
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  animation-name: orbit;
+  animation-timing-function: linear;
+  background: black;
+  border-radius: 100px;
+  content: " ";
+  display: block;
+  height: 4px;
+  left: 4px;
+  position: relative;
+  top: 4px;
+  width: 4px;
+}
+
+.job-status-ball-initiated,
+.job-status-ball-running {
+  animation-name: fade-in-and-out;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+.job-status-ball-initiated {
+  background: #eee; /* gray */
+}
+
+.job-status-ball-running {
+  background: #96ccff; /* blue */
+}
+
+.job-status-ball-done {
+  background: #9eebcf; /* green */
+}
+
+.job-status-ball-errored {
+  background: #ff4136; /* red */
+}
+
+@keyframes orbit {
+  from { transform: rotate(0deg) translate(-6px) rotate(0deg); }
+  to { transform: rotate(360deg) translate(-6px) rotate(-360deg); }
+}
+
+@keyframes fade-in-and-out {
+  0% { opacity: 1; }
+  50% { opacity: .5; }
+  100% { opacity: 1; }
+}

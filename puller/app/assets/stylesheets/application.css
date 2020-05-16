@@ -1,0 +1,46 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, or any plugin's
+ * vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any other CSS/SCSS
+ * files in this directory. Styles in this file should be added after the last require_* statement.
+ * It is generally better to create a new file per style scope.
+ *
+ *= require_tree .
+ *= require_self
+ *= require tachyons.min
+ */
+
+body {
+  cursor: default;
+  font-family: -apple-system, BlinkMacSystemFont,
+    'avenir next', avenir,
+    'helvetica neue', helvetica,
+    ubuntu,
+    roboto, noto,
+    'segoe ui', arial,
+    sans-serif;
+}
+
+html, body, textarea, input {
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.w100px {
+  max-width: 100px;
+  min-width: 100px;
+  width: 100px;
+}
+
+.rows-hoverable tbody td {
+  transition: background-color .1s;
+}
+
+.rows-hoverable tbody tr:hover td {
+  background-color: #f8f8f88c;
+}
