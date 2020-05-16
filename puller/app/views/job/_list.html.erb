@@ -14,18 +14,7 @@
     </thead>
     <tbody class="lh-copy">
       <% jobs.each do |job| %>
-        <tr>
-          <td class="nowrap pv3 ph3 bb b--black-10 tc">
-            <div class="job-status-ball-<%= job.status %>"></div>
-          </td>
-          <td class="nowrap pv3 pr3 bb b--black-10"><%= job.presenter.kind %></td>
-          <td class="nowrap pv3 pr3 bb b--black-10"><%= job.message %></td>
-          <td class="nowrap pv3 pr3 bb b--black-10"><%= job.presenter.run_time %></td>
-          <td class="nowrap pv3 pr3 bb b--black-10"><%= job.created_at %></td>
-          <td class="nowrap pv3 pr3 bb b--black-10"><%= job.started_at %></td>
-          <td class="nowrap pv3 pr3 bb b--black-10"><%= job.stopped_at %></td>
-          <td class="nowrap pv3 pr3 bb b--black-10"><%= link_to t(:view_details), job, :class => "link blue" %></td>
-        </tr>
+        <%= render "job/row", :job => job %>
       <% end %>
     </tbody>
   </table>
