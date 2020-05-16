@@ -3,7 +3,7 @@
     <thead>
       <tr>
         <th class="nowrap fw6 bb b--black-10 tl pb3 ph3 w100px"></th>
-        <th class="nowrap fw6 bb b--black-10 tl pb3 pr3"><%= t(:history) %></th>
+        <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 dn dtc-ns"><%= t(:history) %></th>
         <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w4"><%= t(:pull_count) %></th>
         <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w5"><%= t(:created_at) %></th>
         <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w5"><%= t(:updated_at) %></th>
@@ -16,7 +16,7 @@
       <% connections.each do |connection| %>
         <tr>
           <td class="nowrap pv0 pl0 bb b--black-10 source <%= "source-#{connection.source}" %>"></td>
-          <td class="nowrap pv0 pl0 bb b--black-10">
+          <td class="nowrap pv0 pl0 bb b--black-10 dn dtc-ns">
             <% connection.recent_stats.each do |(id, status, _run_time)| %>
               <%= link_to "", job_path(id), :class => "link job-status-ball-#{status}" %>
             <% end %>
