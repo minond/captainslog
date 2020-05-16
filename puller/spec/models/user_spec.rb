@@ -8,10 +8,6 @@ describe User do
     it { expect(User.new).not_to be_nil }
   end
 
-  describe "#icon_url" do
-    it { expect(subject.icon_url).to include email_hash }
-  end
-
   describe "#encrypt_value" do
     it "is able to encrypt a value" do
       expect(subject.encrypt_value("123")).not_to be_nil

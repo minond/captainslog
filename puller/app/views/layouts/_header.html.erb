@@ -2,12 +2,10 @@
   <% if current_user %>
     <nav class="flex justify-between pa2 ph2 ph5-l bb b--black-10">
       <div class="flex items-center">
-        <a href="/" title="Home">
-          <img
-            src="<%= current_user.icon_url %>"
-            class="dib br-100 pa1 ba b--black-10 h2 w2" alt="avatar" />
+        <a href="/" class="link black i baskerville f3 nowrap">
+          Captain's Log: Puller
         </a>
-        <div class="dn db-ns lh-copy f6 ml3"><%= notice %></div>
+        <div class="dn db-l lh-copy f6 ml3"><%= notice %></div>
       </div>
       <div class="flex-grow flex items-center">
         <%= link_to t(:create_connection), new_connection_path,

@@ -10,11 +10,6 @@ class User < ApplicationRecord
 
   after_initialize :constructor
 
-  # @return [String]
-  def icon_url
-    "https://www.gravatar.com/avatar/#{email_hash}?d=blank"
-  end
-
   # @param [String] value
   # @return [String]
   def encrypt_value(value)
@@ -31,11 +26,6 @@ private
 
   def constructor
     self.salt ||= SecureRandom.hex(ActiveSupport::MessageEncryptor.key_len)
-  end
-
-  # @return [String]
-  def email_hash
-    Digest::MD5.hexdigest(email.downcase)
   end
 
   # @return [String]
