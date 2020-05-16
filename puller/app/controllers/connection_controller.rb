@@ -4,17 +4,6 @@ class ConnectionController < ApplicationController
     render
   end
 
-  # POST /connection
-  def create
-    connection = create_connection
-
-    if connection.save
-      redirect_to :root, :notice => t(:connection_successfully_created)
-    else
-      locals :new, :connection => connection
-    end
-  end
-
   # DELETE /connection/1
   def destroy
     current_connection.destroy

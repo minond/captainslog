@@ -20,7 +20,7 @@ Rails.application.routes.draw do
     patch :me, :controller => :user, :action => :update
 
     resources :job, :only => %i[show]
-    resources :connection, :only => %i[new create destroy] do
+    resources :connection, :only => %i[new destroy] do
       member do
         get :authenticate
         get :schedule_pull
