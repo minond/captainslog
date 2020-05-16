@@ -18,9 +18,9 @@
           <td class="nowrap pv3 ph3 bb b--black-10 tc">
             <div class="job-status-ball-<%= job.status %>"></div>
           </td>
-          <td class="nowrap pv3 pr3 bb b--black-10"><%= job.humanized_kind %></td>
+          <td class="nowrap pv3 pr3 bb b--black-10"><%= job.presenter.kind %></td>
           <td class="nowrap pv3 pr3 bb b--black-10"><%= job.message %></td>
-          <td class="nowrap pv3 pr3 bb b--black-10"><%= job.humanized_run_time %></td>
+          <td class="nowrap pv3 pr3 bb b--black-10"><%= job.presenter.run_time %></td>
           <td class="nowrap pv3 pr3 bb b--black-10"><%= job.created_at %></td>
           <td class="nowrap pv3 pr3 bb b--black-10"><%= job.started_at %></td>
           <td class="nowrap pv3 pr3 bb b--black-10"><%= job.stopped_at %></td>

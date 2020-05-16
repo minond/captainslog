@@ -7,7 +7,7 @@
       </tr>
       <tr>
         <td class="pv2 ph3 bb b--black-10 nowrap w2 br b tr"><%= t(:kind) %></td>
-        <td class="pv2 ph3 bb b--black-10 nowrap"><%= job.humanized_kind %></td>
+        <td class="pv2 ph3 bb b--black-10 nowrap"><%= job.presenter.kind %></td>
       </tr>
       <tr>
         <td class="pv2 ph3 bb b--black-10 nowrap w2 br b tr"><%= t(:message) %></td>
@@ -15,7 +15,7 @@
       </tr>
       <tr>
         <td class="pv2 ph3 bb b--black-10 nowrap w2 br b tr"><%= t(:run_time) %></td>
-        <td class="pv2 ph3 bb b--black-10 nowrap"><%= job.humanized_run_time %></td>
+        <td class="pv2 ph3 bb b--black-10 nowrap"><%= job.presenter.run_time %></td>
       </tr>
       <tr>
         <td class="pv2 ph3 bb b--black-10 nowrap w2 br b tr"><%= t(:created_at) %></td>

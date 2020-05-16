@@ -1,4 +1,6 @@
 class Job < ApplicationRecord
+  include Presenter
+
   belongs_to :user
   belongs_to :connection
 
@@ -9,23 +11,12 @@ class Job < ApplicationRecord
   after_initialize :constructor
   after_create :schedule_processing
 
-  # @return [String]
-  def humanized_run_time
-    return "--:--:--" if run_time.nil?
+  # @return [Float, nil]
+  def run_time
+    return nil if initiated? || started_at.nil?
+    return DateTime.current.utc - started_at.to_i if running?
 
-    Time.at(run_time).utc.strftime("%H:%M:%S")
-  end
-
-  # @return [String]
-  def humanized_kind
-    case kind.to_sym
-    when :pull
-      "Pull for #{connection.source.humanize}"
-    when :backfill
-      "Backfill for #{connection.source.humanize}"
-    else
-      kind.humanize
-    end
+    stopped_at - started_at
   end
 
 private
@@ -36,13 +27,5 @@ private
 
   def schedule_processing
     ProcessJobJob.perform_later(id)
-  end
-
-  # @return [Float, nil]
-  def run_time
-    return nil if initiated? || started_at.nil?
-    return DateTime.current.utc - started_at.to_i if running?
-
-    stopped_at - started_at
   end
 end
