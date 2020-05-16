@@ -14,6 +14,14 @@ describe Connection do
     }
   end
 
+  describe "callbacks" do
+    describe "after_create" do
+      it "creates a job" do
+        expect { subject }.to change { Job.count }.by 1
+      end
+    end
+  end
+
   describe ".create_with_credentials" do
     it "creates the credentials" do
       expect { subject }.to change { Connection.count }.by 1
@@ -31,6 +39,20 @@ describe Connection do
 
     it "authenticates the client with the latests credentials" do
       expect(subject.client.credential_options).to include credentials_hash
+    end
+  end
+
+  describe "#schedule_backfill" do
+    it "creates a job" do
+      subject
+      expect { subject.schedule_backfill }.to change { Job.count }.by 1
+    end
+  end
+
+  describe "#schedule_pull" do
+    it "creates a job" do
+      subject
+      expect { subject.schedule_pull }.to change { Job.count }.by 1
     end
   end
 end
