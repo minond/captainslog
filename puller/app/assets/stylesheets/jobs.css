@@ -56,17 +56,17 @@
 }
 
 .job-status-ball-initiated {
-  background: #c1c1c1; /* gray */
+  background: #eee; /* gray */
 }
 
 .job-status-ball-running {
-  background: #5e8dd3; /* blue */
+  background: #96ccff; /* blue */
 }
 
 .job-status-ball-done {
-  background: #63ff8f; /* green */
+  background: #9eebcf; /* green */
 }
 
 .job-status-ball-errored {
-  background: #ff3f3f; /* red */
+  background: #ff4136; /* red */
 }
