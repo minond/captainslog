@@ -4,6 +4,7 @@
     <div class="pt5"></div>
     <%= render "job/list", :jobs => current_user.jobs.order("created_at desc").first(500) %>
   <% else %>
-    <p class="lh-copy"><%= t(:no_connections_create_one, :href => new_connection_path).html_safe %></p>
+    <p class="pl2 lh-copy"><%= t(:no_connections_create_one) %></p>
+    <%= render "connection/form", :connection => Connection.new %>
   <% end %>
 <% end %>

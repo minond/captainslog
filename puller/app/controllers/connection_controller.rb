@@ -1,10 +1,7 @@
 class ConnectionController < ApplicationController
-  KNOWN_SOURCES = %i[fitbit lastfm].freeze
-
   # GET /connection/new
   def new
-    locals :connection => Connection.new,
-           :known_sources => KNOWN_SOURCES
+    locals :connection => Connection.new
   end
 
   # POST /connection
@@ -14,8 +11,7 @@ class ConnectionController < ApplicationController
     if connection.save
       redirect_to :root, :notice => t(:connection_successfully_created)
     else
-      locals :new, :connection => connection,
-                   :known_sources => KNOWN_SOURCES
+      locals :new, :connection => connection
     end
   end
 

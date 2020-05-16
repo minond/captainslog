@@ -23,7 +23,7 @@ en:
   create_connection: "Create connection"
   fitbit_connection_description: "Pull in your weight, resting heart rates, and daily steps, from Fitbit."
   lastfm_connection_description: "Pull in every song you listen to, including song, album, and artist information."
-  no_connections_create_one: "Looks like you don't have any connections yet, <a href='%{href}'>click here</a> to create one."
+  no_connections_create_one: "Looks like you don't have any connections yet, get started by selecting a source from the options below."
   connection_successfully_authenticated: "Connection was successfully authenticated."
   connection_successfully_created: "Connection was successfully created."
   connection_successfully_deleted: "Connection was successfully deleted."
