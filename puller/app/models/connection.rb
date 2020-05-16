@@ -7,7 +7,18 @@ class Connection < ApplicationRecord
 
   after_create :schedule_backfill
 
+  scope :last_update_attempted_over, ->(datetime) { where("last_updated_at < ?", datetime) }
+
   class MissingCredentialsError < StandardError; end
+
+  # @param [Integer] limit, number of connections to retrieve
+  # @param [ActiveSupport::TimeWithZone] last_update_attempted_over_datetime
+  # @return [Array<Connection>]
+  def self.in_need_of_data_pull(limit = 10, last_update_attempted_over_datetime = 6.hours.ago)
+    last_update_attempted_over(last_update_attempted_over_datetime)
+      .order("random()")
+      .limit(limit)
+  end
 
   # @param [Hash] connection_attrs
   # @param [Hash] credentials_hash
