@@ -22,6 +22,27 @@ describe Connection do
     end
   end
 
+  describe ".in_need_of_data_pull" do
+    context "when there are no connections that need to be updated" do
+      before { create_list(:connection, 3, :last_updated_at => 5.minutes.ago) }
+
+      it "returns nothing" do
+        expect(described_class.in_need_of_data_pull).to be_empty
+      end
+    end
+
+    context "when there are connections that need to be updated" do
+      before do
+        create_list(:connection, 3, :last_updated_at => 5.minutes.ago)
+        create_list(:connection, 2, :last_updated_at => 7.hours.ago)
+      end
+
+      it "returns nothing" do
+        expect(described_class.in_need_of_data_pull.count).to eq 2
+      end
+    end
+  end
+
   describe ".create_with_credentials" do
     it "creates the credentials" do
       expect { subject }.to change { Connection.count }.by 1
