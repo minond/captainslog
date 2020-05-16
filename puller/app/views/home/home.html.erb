@@ -5,6 +5,6 @@
     <%= render "job/list", :jobs => current_user.jobs.order("created_at desc").first(500) %>
   <% else %>
     <p class="pl2 lh-copy"><%= t(:no_connections_create_one) %></p>
-    <%= render "connection/form", :connection => Connection.new %>
+    <%= render "connection/form" %>
   <% end %>
 <% end %>

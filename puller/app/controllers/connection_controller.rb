@@ -1,7 +1,7 @@
 class ConnectionController < ApplicationController
   # GET /connection/new
   def new
-    locals :connection => Connection.new
+    render
   end
 
   # POST /connection
