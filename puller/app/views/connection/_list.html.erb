@@ -17,8 +17,8 @@
         <tr>
           <td class="nowrap pv0 pl0 bb b--black-10 source <%= "source-#{connection.source}" %>"></td>
           <td class="nowrap pv0 pl0 bb b--black-10">
-            <% connection.recent_stats.each do |(status, _run_time)| %>
-              <div class="job-status-ball-<%= status %>"></div>
+            <% connection.recent_stats.each do |(id, status, _run_time)| %>
+              <%= link_to "", job_path(id), :class => "link job-status-ball-#{status}" %>
             <% end %>
           </td>
           <td class="nowrap pv3 pr3 bb b--black-10"><%= connection.jobs.count %></td>
