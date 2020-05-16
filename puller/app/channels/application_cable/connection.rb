@@ -9,7 +9,7 @@ module ApplicationCable
   private
 
     def load_user
-      env['warden'].user || reject_unauthorized_connection
+      env["warden"].user || reject_unauthorized_connection
     end
   end
 end
