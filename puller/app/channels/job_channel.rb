@@ -6,6 +6,7 @@ class JobChannel < ApplicationCable::Channel
 
 
       transmit :job => payload["job"],
+               :connection => payload["connection"],
                :job_row_html => render("job/row", :job => job),
                :connection_row_html => render("connection/row", :connection => connection)
     end

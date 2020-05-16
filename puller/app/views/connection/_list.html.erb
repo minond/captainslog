@@ -13,7 +13,7 @@
         <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w1"></th>
       </tr>
     </thead>
-    <tbody class="lh-copy">
+    <tbody class="lh-copy" data-connections>
       <% connections.each do |connection| %>
         <%= render "connection/row", :connection => connection %>
       <% end %>
