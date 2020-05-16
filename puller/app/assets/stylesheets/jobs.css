@@ -8,40 +8,6 @@
   max-height: calc(100vh - 8rem);
 }
 
-.job-status-initiated,
-.job-status-running,
-.job-status-done,
-.job-status-errored {
-  background-position: 50% 50%;
-  background-size: 24px;
-  background-repeat: no-repeat;
-}
-
-.job-status-initiated {
-  background-image: url(checklist.png);
-}
-
-.job-status-done {
-  background-image: url(checkmark.png);
-}
-
-.job-status-errored {
-  background-image: url(warning.png);
-}
-
-.job-status-running {
-  background-image: url(rotate.png);
-  animation-name: backwards-rotate;
-  animation-duration: 2s;
-  animation-iteration-count: infinite;
-  animation-timing-function: linear;
-}
-
-@keyframes backwards-rotate {
-  from { -webkit-transform: rotate(360deg); }
-  to { -webkit-transform: rotate(0deg); }
-}
-
 .job-status-ball-initiated,
 .job-status-ball-running,
 .job-status-ball-done,
