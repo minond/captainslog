@@ -41,7 +41,7 @@ private
   # @return [Float, nil]
   def run_time
     return nil if initiated? || started_at.nil?
-    return DateTime.current - started_at.to_i if running?
+    return DateTime.current.utc - started_at.to_i if running?
 
     stopped_at - started_at
   end
