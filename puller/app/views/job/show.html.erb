@@ -32,5 +32,9 @@
     </tbody>
   </table>
 
-  <pre class="bg-near-white pa3 mt4 pre job-logs"><%= job.logs %></pre>
+  <% if job.logs&.present? %>
+    <pre class="bg-near-white pa3 mt4 pre job-logs"><%= job.logs %></pre>
+  <% else %>
+    <p class="lh-copy i f6 mt4"><%= t(:no_logs) %></p>
+  <% end %>
 <% end %>
