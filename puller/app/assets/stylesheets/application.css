@@ -36,11 +36,3 @@ html, body, textarea, input {
   min-width: 100px;
   width: 100px;
 }
-
-.rows-hoverable tbody td {
-  transition: background-color .1s;
-}
-
-.rows-hoverable tbody tr:hover td {
-  background-color: #f8f8f88c;
-}

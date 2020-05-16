@@ -21,23 +21,6 @@
   width: 14px;
 }
 
-.job-status-ball-running::before,
-.job-status-ball-initiated::before {
-  animation-duration: 2s;
-  animation-iteration-count: infinite;
-  animation-name: orbit;
-  animation-timing-function: linear;
-  background: black;
-  border-radius: 100px;
-  content: " ";
-  display: block;
-  height: 4px;
-  left: 4px;
-  position: relative;
-  top: 4px;
-  width: 4px;
-}
-
 .job-status-ball-initiated,
 .job-status-ball-running {
   animation-name: fade-in-and-out;
