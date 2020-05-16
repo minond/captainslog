@@ -117,7 +117,6 @@ RSpec.configure do |config|
   # as the one that triggered the failure.
   # Kernel.srand config.seed
 
-  # Use FactoryBot methods in specs without having to fully quality the
-  # FactoryBot module.
   config.include FactoryBot::Syntax::Methods
+  config.include ActiveSupport::Testing::TimeHelpers
 end
