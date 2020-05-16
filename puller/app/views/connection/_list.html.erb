@@ -26,7 +26,7 @@
           <td class="nowrap pv3 pr3 bb b--black-10"><%= connection.last_updated_at %></td>
           <td class="nowrap pv3 pr3 bb b--black-10"><%= connection.created_at %></td>
           <td class="nowrap pv3 pr3 bb b--black-10"><%= connection.updated_at %></td>
-          <td class="nowrap pv3 pr3 bb b--black-10"><%= link_to t(:schedule_pull), schedule_pull_connection_path(connection), :class => "link blue" %></td>
+          <td class="nowrap pv3 pr3 bb b--black-10"><%= link_to t(:schedule_pull), schedule_pull_connection_path(connection), :class => "link blue", :remote => true %></td>
           <td class="nowrap pv3 pr3 bb b--black-10"><%= link_to t(:authenticate), authenticate_connection_path(connection), :class => "link blue" %></td>
           <td class="nowrap pv3 pr3 bb b--black-10"><%= render "form/delete", :resource => connection %></td>
         </tr>

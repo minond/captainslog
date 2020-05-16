@@ -10,6 +10,7 @@ class Job < ApplicationRecord
 
   after_initialize :constructor
   after_create :schedule_processing
+  after_save :broadcast_record
 
   # @return [Float, nil]
   def run_time
@@ -27,5 +28,9 @@ private
 
   def schedule_processing
     ProcessJobJob.perform_later(id)
+  end
+
+  def broadcast_record
+    ActionCable.server.broadcast("jobs_for_user_#{user.id}", :job => self)
   end
 end

@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   root "home#home"
 
+  mount ActionCable.server => "/ws"
+
   devise_for :user, :only => [:sessions]
 
   # cancel_user_registration GET    /user/cancel(.:format)   devise/registrations#cancel
