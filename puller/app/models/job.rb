@@ -31,7 +31,7 @@ private
   end
 
   def broadcast_record
-    ActionCable.server.broadcast("jobs_for_user_#{user.id}", :job => self,
-                                                             :connection => connection)
+    ActionCable.server.broadcast("jobs_for_user_#{user.id}", :job_id => id,
+                                                             :connection_id => connection.id)
   end
 end
