@@ -86,8 +86,7 @@ private
 
   def pull_records
     each_record do |record|
-      logs.write "processing entry #{record.digest.strip} ... "
-      logs.puts "created"
+      logs.puts "processing entry #{record.digest.strip}"
       @create_count += 1
     end
   end
