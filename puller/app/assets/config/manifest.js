@@ -2,3 +2,4 @@
 //= link_directory ../stylesheets .css
 //= link application.js
 //= link home.js
+//= link job.js

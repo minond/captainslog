@@ -1,9 +1,8 @@
 //= require action_cable
 
 $(function () {
-  const cable = ActionCable.createConsumer("/ws")
-
-  cable.subscriptions.create("JobChannel", { received: handleJobChannelMessage })
+  ActionCable.createConsumer("/ws").subscriptions
+    .create("JobChannel", { received: handleJobChannelMessage })
 })
 
 /**
