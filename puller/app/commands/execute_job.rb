@@ -1,6 +1,8 @@
 class ExecuteJob
   prepend SimpleCommand
 
+  TICK_INTERVAL = 1.second
+
   # @param [Job] job
   def initialize(job)
     @job = job
@@ -11,12 +13,14 @@ class ExecuteJob
 
   def call
     setup
-    create_or_update_records
+    start_ticker
+    pull_records
     update_connection_credentials
   rescue StandardError => e
     @errors << e
   ensure
-    log_metrics
+    log_errors
+    stop_ticker
     teardown
   end
 
@@ -30,29 +34,37 @@ private
   delegate :oauth?, :to => :client, :private => true
 
   def setup
-    logs.puts "job setup"
+    logs.puts "starting job, updating every #{TICK_INTERVAL}s"
     job.update!(:status => :running,
                 :started_at => Time.now)
   end
 
-  def log_metrics
-    logs.puts "job completed"
-    logs.puts "created: #{@create_count}"
-    logs.puts "updated: #{@update_count}"
-    logs.puts "errors: #{@errors.count}"
+  def start_ticker
+    @ticker = Concurrent::TimerTask.execute(:execution_interval => TICK_INTERVAL) do
+      job.update(:logs => logs.string)
+    end
+  end
+
+  def stop_ticker
+    @ticker.kill
+  end
+
+  def log_errors
+    logs.puts "errors:" unless @errors.empty?
     @errors.each { |err| logs.puts "    - #{err.message}" }
   end
 
+  # rubocop:disable Metrics/AbcSize
   def teardown
-    job.update!(:status => status,
-                :stopped_at => Time.now,
-                :message => message,
-                :logs => logs.string)
+    job.assign_attributes(:status => status,
+                          :message => message,
+                          :stopped_at => Time.now)
 
-    connection.update!(:last_updated_at => Time.now)
-
-    logs.puts "job teardown complete"
+    logs.puts "job completed in #{job.run_time}ms"
+    job.update(:logs => logs.string)
+    connection.update(:last_updated_at => Time.now)
   end
+  # rubocop:enable Metrics/AbcSize
 
   def status
     @errors.empty? ? :done : :errored
@@ -72,15 +84,15 @@ private
     @logs ||= StringIO.new
   end
 
-  def create_or_update_records
-    pull_records do |record|
+  def pull_records
+    each_record do |record|
       logs.write "processing entry #{record.digest.strip} ... "
       logs.puts "created"
       @create_count += 1
     end
   end
 
-  def pull_records(&block)
+  def each_record(&block)
     case job.kind.to_sym
     when :backfill
       client.data_pull_backfill(&block)
