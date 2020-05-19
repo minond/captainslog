@@ -1,18 +1,16 @@
 <main class="pt5 pb4 ph1 black-80 mw7 center">
-  <%= image_tag "captainslog_logo.png", :class => "w5" %>
+  <span class="link black i baskerville f3 nowrap">Captain&rsquo;s Log: Puller</span>
 
-  <div class="bb mt2 mb4 b--black-10"></div>
+  <div class="bb mt2 mb2 b--black-10"></div>
 
   <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
     <fieldset class="ba b--transparent ph0 mh0">
-      <legend class="f4 fw6 ph0 mh0"><%= t(:sign_in) %></legend>
-
       <%= render "form/field", :f => f, :field => :email do %>
-        <%= f.email_field :email, autofocus: true, :autocomplete => "email", :class => "input-reset ba b--black-20 pa2 mb2 db w-100", :placeholder => t(:email) %>
+        <%= f.email_field :email, autofocus: true, :autocomplete => "email", :class => "input-reset ba b--black-100 pa2 mb2 db w-100", :placeholder => t(:email) %>
       <% end %>
 
       <%= render "form/field", :f => f, :field => :password do %>
-        <%= f.password_field :password, :autocomplete => "password", :class => "input-reset ba b--black-20 pa2 mb2 db w-100", :placeholder => t(:password) %>
+        <%= f.password_field :password, :autocomplete => "password", :class => "input-reset ba b--black-100 pa2 mb2 db w-100", :placeholder => t(:password) %>
       <% end %>
 
       <%# <% if devise_mapping.rememberable? %>
