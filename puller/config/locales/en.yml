@@ -30,6 +30,7 @@ en:
   create_connection: "Create connection"
   fitbit_connection_description: "Pull in your weight, resting heart rates, and daily steps, from Fitbit."
   lastfm_connection_description: "Pull in every song you listen to, including song, album, and artist information."
+  captainslog_connection_description: "Push all of your logs to Captain’s Log, the best personal logging application around."
   no_connections_create_one: "Looks like you don't have any connections yet, get started by selecting a source from the options below."
   connection_successfully_authenticated: "Connection was successfully authenticated."
   connection_successfully_created: "Connection was successfully created."

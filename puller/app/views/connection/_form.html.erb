@@ -1,5 +1,5 @@
 <div class="cf mb4">
-  <% [[:fitbit, :png], [:lastfm, :svg]].each do |(source, ext)| %>
+  <% [[:captainslog, :png], [:fitbit, :png], [:lastfm, :svg]].each do |(source, ext)| %>
     <a class="link black pointer fl mw6 pa2 border-box" href="/connection/initiate/<%= source %>">
       <input class="source-radio dn" type="radio" name="connection[source]" value="<%= source %>" />
       <div class="source-box pa4 ba b--black-10 tc">
