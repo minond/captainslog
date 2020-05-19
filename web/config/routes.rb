@@ -2,10 +2,13 @@
 Rails.application.routes.draw do
   root :to => "homepage#home"
 
-  devise_for :users, :skip => %i[registrations sessions]
+  devise_for :users,
+             :skip => %i[registrations sessions],
+             :controllers => { :sessions => "users/session" }
+
   as :user do
-    post "/users/sign_in" => "devise/sessions#create", :as => :user_session
-    delete "/users/sign_out" => "devise/sessions#destroy", :as => :destroy_user_session
+    post "/users/sign_in" => "users/sessions#create", :as => :user_session
+    delete "/users/sign_out" => "users/sessions#destroy", :as => :destroy_user_session
   end
 
   authenticate :user do

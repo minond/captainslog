@@ -36,6 +36,11 @@ class User < ApplicationRecord
     homepage_report_options + homepage_book_options
   end
 
+  # @return [String]
+  def jwt
+    JWT.encode_application_token(:user_id => id)
+  end
+
 private
 
   def constructor

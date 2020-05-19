@@ -10,7 +10,7 @@ class AuthenticateUser
 
   # @return [String, Nil]
   def call
-    JWT.encode_application_token(:user_id => user.id) if user
+    user&.jwt
   end
 
 private
