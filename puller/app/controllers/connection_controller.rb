@@ -26,6 +26,16 @@ class ConnectionController < ApplicationController
     end
   end
 
+  # GET /connection/initiate/captainslog
+  def captainslog_initiate
+    redirect_to_auth_url :captainslog
+  end
+
+  # GET /connection/callback/captainslog?token=...&state=...
+  def captainslog_callback
+    handle_connection_auth_with_token :captainslog
+  end
+
   # GET /connection/initiate/fitbit
   def fitbit_initiate
     redirect_to_auth_url :fitbit
