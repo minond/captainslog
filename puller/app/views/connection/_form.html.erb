@@ -1,9 +1,9 @@
 <div class="cf mb4">
-  <% [[:captainslog, :png], [:fitbit, :png], [:lastfm, :svg]].each do |(source, ext)| %>
+  <% [:captainslog, :fitbit, [:lastfm, :svg]].each do |(source, ext)| %>
     <a class="link black pointer fl mw6 pa2 border-box" href="/connection/initiate/<%= source %>">
       <input class="source-radio dn" type="radio" name="connection[source]" value="<%= source %>" />
       <div class="source-box pa4 ba b--black-10 tc">
-        <%= image_tag "#{source}-logo.#{ext}", :class => "h3" %>
+        <%= image_tag "#{source}-logo.#{ext || :png}", :class => "h3" %>
         <p class="lh-copy"><%= I18n.t(:"#{source}_connection_description") %></p>
       </div>
     </a>
