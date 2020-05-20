@@ -1,7 +1,8 @@
 <ul>
   <% collections.each do |collection| %>
     <li>
-      <%= link_to collection.datetime.to_date, book_at_path(collection.book.slug, collection.datetime.to_i), :class => "link" %>
+      <%= link_to collection.datetime.to_date, book_at_path(collection.book.slug, collection.datetime.to_i),
+        :class => "link blue" %>
     </li>
   <% end %>
 </ul>

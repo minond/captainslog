@@ -4,15 +4,11 @@
 
   <%= render "form/subtitle", :key => :extractors %>
   <%= render "extractor/list", :extractors => book.extractors %>
-  <div class="field btns">
-    <%= link_to t(:add_new_extractor), new_book_extractor_path(book.slug), :class => "btn" %>
-  </div>
+  <%= link_to t(:add_new_extractor), new_book_extractor_path(book.slug), :class => "link blue" %>
 
   <%= render "form/subtitle", :key => :shorthands %>
   <%= render "shorthand/list", :shorthands => book.shorthands %>
-  <div class="field btns">
-    <%= link_to t(:add_new_shorthand), new_book_shorthand_path(book.slug), :class => "btn" %>
-  </div>
+  <%= link_to t(:add_new_shorthand), new_book_shorthand_path(book.slug), :class => "link blue" %>
 
   <% unless book.collections.empty? %>
     <%= render "form/subtitle", :key => :collections %>

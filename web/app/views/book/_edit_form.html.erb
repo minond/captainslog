@@ -16,7 +16,7 @@
   <%= render "form/actions", :f => f,
     :paths => {
       :back => user_path,
-      :delete => book_path(book.slug)
+      :delete => book.persisted? && book_path(book.slug)
     }
   %>
 <% end %>
