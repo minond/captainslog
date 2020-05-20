@@ -1,24 +1,20 @@
-<main class="pt5 pb4 ph1 black-80 mw7 center">
-  <span class="link black i baskerville f3 nowrap">Captain&rsquo;s Log: Puller</span>
-
-  <div class="bb mt2 mb2 b--black-10"></div>
+<div class="center mw7 mt5">
+  <span class="black i baskerville f2 nowrap">Captain&rsquo;s Log: Puller</span>
 
   <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-    <fieldset class="ba b--transparent ph0 mh0">
-      <%= render "form/field", :f => f, :field => :email do %>
-        <%= f.email_field :email, autofocus: true, :autocomplete => "email", :class => "input-reset ba b--black-100 pa2 mb2 db w-100", :placeholder => t(:email) %>
-      <% end %>
+    <%= render "form/field", :f => f, :field => :email do %>
+      <%= f.email_field :email, autofocus: true, :autocomplete => "email", :class => "input-reset ba b--black-20 pa2 mb2 db w-100" %>
+    <% end %>
 
-      <%= render "form/field", :f => f, :field => :password do %>
-        <%= f.password_field :password, :autocomplete => "password", :class => "input-reset ba b--black-100 pa2 mb2 db w-100", :placeholder => t(:password) %>
-      <% end %>
+    <%= render "form/field", :f => f, :field => :password do %>
+      <%= f.password_field :password, :autocomplete => "password", :class => "input-reset ba b--black-20 pa2 mb2 db w-100" %>
+    <% end %>
 
-      <%= render "form/field", :f => f, :field => :password_confirmation do %>
-        <%= f.password_field :password_confirmation, :autocomplete => "password", :class => "input-reset ba b--black-100 pa2 mb2 db w-100", :placeholder => t(:password_confirmation) %>
-      <% end %>
-    </fieldset>
+    <%= render "form/field", :f => f, :field => :password_confirmation do %>
+      <%= f.password_field :password_confirmation, :autocomplete => "password", :class => "input-reset ba b--black-20 pa2 mb2 db w-100" %>
+    <% end %>
 
-    <div class="mt3 actions">
+    <div class="mt4">
       <%= f.submit t(:sign_up) %>
     </div>
   <% end %>
@@ -26,4 +22,4 @@
   <div class="lh-copy mt3">
     <%= render "devise/shared/links" %>
   </div>
-</main>
+</div>

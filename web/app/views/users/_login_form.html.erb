@@ -7,13 +7,15 @@
     <%= f.password_field :password, :autocomplete => "current-password", :class => "w-100" %>
   <% end %>
 
-  <div class="mt2 mb4">
+  <div class="mt2">
     <label class="f6 lh-copy">
       <%= f.check_box :remember_me %>
       <%= t(:remember_me) %>
     </label>
   </div>
 
-  <%= f.hidden_field :callback, :name => :callback, :value => params[:callback] %>
-  <%= f.submit t(:sign_in), :class => "" %>
+  <div class="mt4">
+    <%= f.hidden_field :callback, :name => :callback, :value => params[:callback] %>
+    <%= f.submit t(:sign_in), :class => "" %>
+  </div>
 <% end %>

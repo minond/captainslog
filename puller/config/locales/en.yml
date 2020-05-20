@@ -1,11 +1,14 @@
 en:
   captains_log_puller: "Captain's Log: Puller"
 
+  intro_message: "Captain‘s Log is an application for logging anything you want. The intent is to have an application that someone can use to log anything in relatively free form, but while still being able to extract (or inject) important information from each log entry and, more importantly, from aggregated logs."
+
   settings: "Settings"
   log_in: "Log in"
   sign_up: "Sign up"
   sign_in: "Sign in"
   sign_out: "Sign out"
+  remember_me: "Remember me"
   forgot_your_password: "Forgot your password?"
   didnt_receive_confirmation: "Didn't receive confirmation instructions?"
   didnt_receive_unlock: "Didn't receive unlock instructions?"
