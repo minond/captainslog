@@ -1,0 +1,30 @@
+.search {
+  position: relative;
+  margin-right: .5rem;
+}
+
+.search input {
+  border: none;
+  width: 0;
+  height: 20px;
+  padding: 0;
+  border-bottom: 1px solid rgba(0, 0, 0, .2);
+  outline: none;
+  opacity: 0;
+  transition: width .5s, opacity .2s;
+}
+
+.search:focus input,
+.search:active input,
+.search input:focus,
+.search input:active {
+  width: 300px;
+  opacity: 1;
+}
+
+.search img {
+  height: 20px;
+  cursor: pointer;
+  top: 3px;
+  position: relative;
+}

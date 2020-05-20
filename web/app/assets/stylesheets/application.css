@@ -53,15 +53,11 @@ html, body {
   margin-top: 1rem;
 }
 
-input[readonly] {
+.field input[readonly] {
   cursor: not-allowed;
 }
 
 /* HELPERS ****************************************************************/
-
-.text-right {
-  text-align: right;
-}
 
 .field-error-message {
   font-size: .8rem;
@@ -83,50 +79,16 @@ input[readonly] {
   white-space: pre;
 }
 
-/* BUTTON *****************************************************************/
-
-.btn.destructive {
-  background: #ffeaea;
-  border-color: #ff3e3e;
-}
-
-.btn.destructive:hover {
-  background: #ff3e3e78;
-}
-
-.circular {
-  background-color: #f0ffffb3;
-  border-radius: 50px;
-  border: 2px solid #d0d0d0;
-  display: inline-block;
-  padding: 4px 10px;
-  text-align: center;
-  vertical-align: middle;
-}
-
-.circular.with-background-image {
-  background-position: 50%;
-  background-size: contain;
-}
-
 /* RAILS FLASH ************************************************************/
-
-#notice, #alert {
-  border-bottom-style: solid;
-  border-bottom-width: 1px;
-  margin: 0;
-  padding: 10px;
-  text-align: center;
-}
-
-#notice {
-  background: #e7ffe7;
-  border-color: #54f054;
-}
 
 #alert {
   background: #ffeaea;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
   border-color: #ff3e3e;
+  margin: 0;
+  padding: 10px;
+  text-align: center;
 }
 
 /* RAILS ERRORS ***********************************************************/
@@ -135,41 +97,6 @@ input[readonly] {
   color: red;
   font-weight: bold;
 }
-
-
-/* HEADER *****************************************************************/
-
-.search {
-  position: relative;
-  margin-right: .5rem;
-}
-
-.search input {
-  border: none;
-  width: 0;
-  height: 20px;
-  padding: 0;
-  border-bottom: 1px solid rgba(0, 0, 0, .2);
-  outline: none;
-  opacity: 0;
-  transition: width .5s, opacity .2s;
-}
-
-.search:focus input,
-.search:active input,
-.search input:focus,
-.search input:active {
-  width: 300px;
-  opacity: 1;
-}
-
-.search img {
-  height: 20px;
-  cursor: pointer;
-  top: 3px;
-  position: relative;
-}
-
 
 /* LOGIN ******************************************************************/
 
