@@ -46,14 +46,14 @@ input[readonly] {
 input[type=text],
 input[type=password],
 input[type=email] {
-  border-style: solid;
-  border-width: 1px;
-  box-sizing: border-box;
-  font-size: 100%;
-  line-height: 1.15;
-  margin: 0;
-  padding: .5rem;
-  width: 100%;
+  /* border-style: solid; */
+  /* border-width: 1px; */
+  /* box-sizing: border-box; */
+  /* font-size: 100%; */
+  /* line-height: 1.15; */
+  /* margin: 0; */
+  /* padding: .5rem; */
+  /* width: 100%; */
 }
 
 .field select {
@@ -205,12 +205,6 @@ table, tr, td {
   position: relative;
 }
 
-
-/* SEARCH VIEW ************************************************************/
-
-.no-search-results {
-  margin-top: 4rem;
-}
 
 /* LOGIN ******************************************************************/
 

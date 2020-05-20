@@ -1,18 +1,21 @@
 <%= render "layouts/content-view" do %>
   <% if results.empty? %>
-    <div class="no-search-results">
-      <h2><%= t(:no_search_results_for, :query => query) %></h2>
-      <form action="<%= search_path %>">
-        <input
-          autofocus="true"
-          type="text"
-          name="query"
-          placeholder="<%= t(:search_again_q) %>"
-        />
-      </form>
-    <div>
+    <div class="f3 baskerville mb4">
+      <%= t(:no_search_results_for, :query => query) %>
+    </div>
+    <form action="<%= search_path %>">
+      <input
+        autofocus="true"
+        type="text"
+        name="query"
+        class="code w-100 f6 pa2"
+        placeholder="<%= t(:search_again_q) %>" />
+    </form>
   <% else %>
-    <h2><%= t(:search_results_for, :query => query) %></h2>
+    <div class="f3 baskerville mb4">
+      <%= t(:search_results_for, :query => query) %>
+    </div>
+
     <%= render "entry/list", :entries => results %>
     <%= render "entry/fin" %>
   <% end %>
