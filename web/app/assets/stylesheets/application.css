@@ -59,10 +59,6 @@ html, body {
 
 /* HELPERS ****************************************************************/
 
-.field-error-message {
-  font-size: .8rem;
-}
-
 .codesnippet {
   margin: 0;
   font-size: 1rem;
@@ -77,13 +73,6 @@ html, body {
   padding: 1rem;
   overflow: scroll;
   white-space: pre;
-}
-
-/* RAILS ERRORS ***********************************************************/
-
-.field_with_errors label {
-  color: red;
-  font-weight: bold;
 }
 
 /* LOGIN ******************************************************************/
