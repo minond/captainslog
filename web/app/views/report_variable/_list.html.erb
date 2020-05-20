@@ -1,19 +1,15 @@
-<div class="table">
-  <table class="table">
+<div class="overflow-auto">
+  <table class="f6 w-100 collapse">
     <tr>
-      <th><%= t(:id) %></td>
-      <th><%= t(:label) %></td>
-      <th><%= t(:default_value) %></td>
-      <th><%= t(:query) %></td>
+      <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w4"><%= t(:label) %></td>
+      <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w4"><%= t(:default_value) %></td>
+      <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w4"><%= t(:query) %></td>
     </tr>
     <% variables.each do |variable| %>
       <tr>
-        <td>
-          <%= link_to variable.id, edit_report_report_variable_path(report, variable), :class => "link" %>
-        </td>
-        <td class="nowrap"><%= variable.label %></td>
-        <td><%= variable.default_value %></td>
-        <td class="codesnippet"><%= variable.query %></td>
+        <td class="nowrap pv3 pr3 bb b--black-10"><%= link_to variable.label, edit_report_report_variable_path(report, variable), :class => "link" %></td>
+        <td class="nowrap pv3 pr3 bb b--black-10"><%= variable.default_value %></td>
+        <td class="nowrap pv3 pr3 bb b--black-10 code"><%= variable.query.truncate(80) %></td>
       </tr>
     <% end %>
   </table>

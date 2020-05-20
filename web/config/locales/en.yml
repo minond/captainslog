@@ -94,7 +94,6 @@ en:
   edit_book: "Edit book"
   new_book: "New book"
   books: "Books"
-  add_new_book: "Add new book"
 
   name: "Name"
   slug: "Slug"
@@ -134,8 +133,8 @@ en:
   edit_report: "Edit report"
   new_report_variable: "Add new variable"
   new_report_output: "Add new output"
-  add_new_report_variable: "Add new variable"
-  add_new_report_output: "Add new output"
+  create_report_variable: "Create variable"
+  create_report_output: "Create output"
   add_report_variable: "Add variable"
   add_report_output: "Add output"
   edit_report_variable: "Edit variable"

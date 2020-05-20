@@ -2,23 +2,8 @@
   <%= render "form/field", :f => f, :field => :label %>
   <%= render "form/timestamps", :f => f %>
 
-  <% if report.persisted? %>
-    <hr />
-
-    <%= render "form/subtitle", :key => :variables %>
-    <%= render "report_variable/list", :report => report, :variables => report.variables %>
-    <div class="field btns">
-      <%= link_to t(:add_new_report_variable), new_report_report_variable_path(report.id), :class => "btn" %>
-    </div>
-
-    <hr />
-
-    <%= render "form/subtitle", :key => :outputs %>
-    <%= render "report_output/list", :report => report, :outputs => report.outputs %>
-    <div class="field btns">
-      <%= link_to t(:add_new_report_output), new_report_report_output_path(report.id), :class => "btn" %>
-    </div>
+  <%= render "form/actions", :f => f,
+    :paths => { :back => user_path, :delete => report } do %>
+    <%= block_given? && yield %>
   <% end %>
-
-  <%= render "form/actions", :f => f, :back_url => user_path %>
 <% end %>

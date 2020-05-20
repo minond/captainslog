@@ -1,25 +1,21 @@
-<div class="table">
-  <table class="table">
+<div class="overflow-auto">
+  <table class="f6 w-100 collapse">
     <tr>
-      <th><%= t(:id) %></td>
-      <th><%= t(:order) %></td>
-      <th><%= t(:label) %></td>
-      <th><%= t(:kind) %></td>
-      <th><%= t(:height) %></td>
-      <th><%= t(:width) %></td>
-      <th><%= t(:query) %></td>
+      <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w4"><%= t(:label) %></td>
+      <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w4"><%= t(:order) %></td>
+      <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w4"><%= t(:kind) %></td>
+      <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w4"><%= t(:height) %></td>
+      <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w4"><%= t(:width) %></td>
+      <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w4"><%= t(:query) %></td>
     </tr>
     <% outputs.each do |output| %>
       <tr>
-        <td>
-          <%= link_to output.id, edit_report_report_output_path(report, output), :class => "link" %>
-        </td>
-        <td><%= output.order %></td>
-        <td class="nowrap"><%= output.label %></td>
-        <td><%= output.kind %></td>
-        <td><%= output.height %></td>
-        <td><%= output.width %></td>
-        <td class="codesnippet"><%= output.query %></td>
+        <td class="nowrap pv3 pr3 bb b--black-10"><%= link_to output.label, edit_report_report_output_path(report, output), :class => "link" %></td>
+        <td class="nowrap pv3 pr3 bb b--black-10"><%= output.order %></td>
+        <td class="nowrap pv3 pr3 bb b--black-10"><%= output.kind %></td>
+        <td class="nowrap pv3 pr3 bb b--black-10"><%= output.height %></td>
+        <td class="nowrap pv3 pr3 bb b--black-10"><%= output.width %></td>
+        <td class="nowrap pv3 pr3 bb b--black-10 code"><%= output.query.truncate(60) %></td>
       </tr>
     <% end %>
   </table>
