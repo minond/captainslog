@@ -1,8 +1,10 @@
-<div class="navigation">
+<div class="pa2 ph2 ph5-l bb b--black-10">
   <% reports.each do |report| %>
-    <%= link_to report.label, report_path(report) %>
+    <%= link_to report.label, report_path(report),
+      :class => "link black f6 mr3" %>
   <% end %>
   <% books.each do |book| %>
-    <%= link_to book.name, book_path(book.slug) %>
+    <%= link_to book.name, book_path(book.slug),
+      :class => "link black f6 mr3" %>
   <% end %>
 </div>

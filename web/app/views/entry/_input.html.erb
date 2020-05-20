@@ -2,7 +2,7 @@
   name="<%= config[:name] || 'text' %>"
   rows="<%= config[:rows] || '1' %>"
   placeholder="<%= config[:requested_time] ? t(:enter_new_log, :datetime => config[:requested_time].to_date) : '' %>"
-  class="entry-input"
+  class="code ba b--black-10 pa2 w-100 mb2"
   autofocus="true"
   data-enter-to-submit="true"
 ><%= config[:text] || "" %></textarea>

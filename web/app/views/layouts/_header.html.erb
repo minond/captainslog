@@ -1,25 +1,31 @@
+<% if alert %>
+  <p id="alert"><%= alert %></p>
+<% end %>
 <header>
-  <table>
-    <tr>
-      <td class="header-logo">
-        <%= link_to image_tag("logo.png"), root_path, :class => "logo" %>
-      </td>
-      <td class="header-actions">
-        <% if current_user %>
-          <form action="<%= search_path %>" class="search">
-            <label>
-              <input type="text" name="query" />
-              <%= image_tag("search.svg") %>
-            </label>
-          </form>
-          <%= link_to "&nbsp;".html_safe, user_path,
-            :class => "circular with-background-image",
-            :style => "background-image: url(#{current_user.icon_url})",
-            :data => { :testing => :userpage } %>
-        <% end %>
-      </td>
-    </tr>
-  </table>
+  <nav class="flex justify-between pa2 ph2 ph5-l bb b--black-10">
+    <div class="flex items-center">
+      <a href="/" class="link black i baskerville f3 nowrap">
+        Captain&rsquo;s Log
+      </a>
+      <div class="dn db-l lh-copy f6 ml3"><%= notice %></div>
+    </div>
+    <div class="flex-grow flex items-center">
+      <span class="search dn-ns">
+        <%= link_to image_tag("search.svg"), :search %>
+      </span>
+      <form action="<%= search_path %>" class="search nowrap dn dib-ns">
+        <label>
+          <input type="text" name="query" />
+          <%= image_tag("search.svg") %>
+        </label>
+      </form>
+      <%= link_to t(:settings), user_path,
+        :class => "blue link f6 mh3 dn dib-l" %>
+      <%= link_to t(:sign_out), destroy_user_session_path,
+        :method => :delete,
+        :class => "blue link f6 bg-animate hover-bg-black-10 pv2 ph3 br-pill" %>
+    </div>
+  </nav>
 </header>
 
 <%= render "layouts/navigation", :books => current_user.books, :reports => current_user.reports %>

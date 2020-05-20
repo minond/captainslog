@@ -1,8 +1,9 @@
-<div class="entry-item" data-entry-item="<%= entry.id %>">
+<div class="entry-item overflow-scroll" data-entry-item="<%= entry.id %>">
   <table>
     <tr>
       <td class="entry-item-text">
-        <span class="entry-text"><%= link_to entry.text.strip, book_entry_url(entry.book.slug, entry.id) %></span>
+        <%= link_to entry.text.strip, book_entry_url(entry.book.slug, entry.id),
+          :class => "code f6 break-word pre black-90 no-underline" %>
       </td>
       <% if entry.user_data? %>
         <td class="entry-item-data">
