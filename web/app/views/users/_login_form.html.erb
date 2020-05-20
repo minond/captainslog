@@ -1,23 +1,19 @@
 <%= form_for(User.new, :url => user_session_path) do |f| %>
-  <div class="field">
-    <%= f.label :email, t(:email) %>
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
-  </div>
+  <%= render "form/field", :f => f, :field => :email do %>
+    <%= f.email_field :email, :autofocus => true, :autocomplete => "email", :class => "w-100" %>
+  <% end %>
 
-  <div class="field">
-    <%= f.label :password, t(:password) %>
-    <%= f.password_field :password, autocomplete: "current-password" %>
-  </div>
+  <%= render "form/field", :f => f, :field => :password do %>
+    <%= f.password_field :password, :autocomplete => "current-password", :class => "w-100" %>
+  <% end %>
 
-  <div class="field smaller">
-    <label>
+  <div class="mt2 mb4">
+    <label class="f6 lh-copy">
       <%= f.check_box :remember_me %>
       <%= t(:remember_me) %>
     </label>
   </div>
 
-  <div class="field">
-    <%= f.hidden_field :callback, :name => :callback, :value => params[:callback] %>
-    <%= f.submit t(:sign_in), :class => "w1 btn" %>
-  </div>
+  <%= f.hidden_field :callback, :name => :callback, :value => params[:callback] %>
+  <%= f.submit t(:sign_in), :class => "" %>
 <% end %>
