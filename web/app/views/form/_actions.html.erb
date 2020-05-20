@@ -1,4 +1,15 @@
-<div class="field btns">
-  <%= f.submit t(:save), :class => "w1 btn" %>
-  <%= link_to t(:cancel), back_url %>
+<div class="mt4">
+  <%= f.submit t(:save), :class => "f6 link bn pa0 input-reset pointer blue" %>
+
+  <% if paths[:back] %>
+    <%= link_to t(:cancel), paths[:back], :class => "f6 link blue ml2" %>
+  <% end %>
+
+  <% if f.object.persisted? && paths[:delete] %>
+    <%= link_to t(:delete), paths[:delete],
+      :method => :delete,
+      :class => "f6 link blue ml2",
+      :data => { :confirm => t(:are_you_sure_q) }
+    %>
+  <% end %>
 </div>

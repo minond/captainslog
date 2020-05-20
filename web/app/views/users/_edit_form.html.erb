@@ -11,5 +11,5 @@
   <% end %>
 
   <%= render "form/timestamps", :f => f %>
-  <%= render "form/actions", :f => f, :back_url => user_path %>
+  <%= render "form/actions", :f => f, :paths => { :back => user_path } %>
 <% end %>

@@ -2,39 +2,18 @@
   <%= render "form/title", :key => :edit_user %>
   <%= render "users/edit_form", :user => user %>
 
-  <hr />
-
   <%= render "form/subtitle", :key => :books %>
   <%= render "book/list", :books => user.books %>
-  <div class="field btns">
-    <%= link_to t(:add_new_book), new_book_path, :class => "btn" %>
-  </div>
-
-  <hr />
-
-  <%= render "form/subtitle", :key => :connections %>
-  <%= render "connection/list", :connections => user.connections %>
-  <div class="field btns">
-    <%= link_to t(:add_new_connection), new_connection_path, :class => "btn" %>
-  </div>
-
-  <hr />
 
   <%= render "form/subtitle", :key => :reports %>
   <%= render "report/list", :reports => user.reports %>
-  <div class="field btns">
-    <%= link_to t(:add_new_report), new_report_path, :class => "btn" %>
-  </div>
 
-  <hr />
+  <%# <%= render "form/subtitle", :key => :connections %>
+  <%# <%= render "connection/list", :connections => user.connections %>
+  <%# <div class="field btns">
+  <%#   <%= link_to t(:add_new_connection), new_connection_path, :class => "btn" %>
+  <%# </div>
 
-  <%= render "form/subtitle", :key => :jobs %>
-  <%= render "job/list", :jobs => user.jobs %>
-
-  <hr />
-
-  <%= link_to t(:sign_out), destroy_user_session_path,
-    :method => :delete,
-    :class => "btn destructive"
-  %>
+  <%# <%= render "form/subtitle", :key => :jobs %>
+  <%# <%= render "job/list", :jobs => user.jobs %>
 <% end %>

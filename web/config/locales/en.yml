@@ -165,3 +165,6 @@ en:
   scheduled_data_pull: "A data pull job has been successfully scheduled to run"
   authenticate: "Authenticate"
   order: "Order"
+
+  create_book: "Create book"
+  create_report: "Create report"

@@ -38,8 +38,22 @@ html, body {
   word-break: break-word;
 }
 
+.field input[type=text],
+.field input[type=password],
+.field input[type=email] {
+  -webkit-appearance: none;
+  border-color: rgba(0,0,0,.2);
+  border-style: solid;
+  border-width: 1px;
+  min-width: 24rem;
+  padding: .5rem;
+}
+
+.field + .field {
+  margin-top: 1rem;
+}
+
 input[readonly] {
-  background: rgba(0, 0, 0, .1);
   cursor: not-allowed;
 }
 
@@ -56,9 +70,9 @@ input[type=email] {
   /* width: 100%; */
 }
 
-.field select {
-  display: block;
-}
+/* .field select { */
+/*   display: block; */
+/* } */
 
 table, tr, td {
   padding: 0;
@@ -76,13 +90,9 @@ table, tr, td {
   white-space: nowrap;
 }
 
-.field + .field {
-  margin-top: 1rem;
-}
-
-.field.smaller label {
-  font-size: .875rem;
-}
+/* .field.smaller label { */
+/*   font-size: .875rem; */
+/* } */
 
 .field-error-message {
   font-size: .8rem;

@@ -19,8 +19,9 @@
           <%= image_tag("search.svg") %>
         </label>
       </form>
-      <%= link_to t(:settings), user_path,
-        :class => "blue link f6 mh3 dn dib-l" %>
+      <%= link_to t(:create_book), new_book_path, :class => "blue link f6 mh3 dn dib-l" %>
+      <%= link_to t(:create_report), new_report_path, :class => "blue link f6 mh3 dn dib-l" %>
+      <%= link_to t(:settings), user_path, :class => "blue link f6 mh3 dn dib-l" %>
       <%= link_to t(:sign_out), destroy_user_session_path,
         :method => :delete,
         :class => "blue link f6 bg-animate hover-bg-black-10 pv2 ph3 br-pill" %>
