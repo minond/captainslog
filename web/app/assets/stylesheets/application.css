@@ -79,18 +79,6 @@ html, body {
   white-space: pre;
 }
 
-/* RAILS FLASH ************************************************************/
-
-#alert {
-  background: #ffeaea;
-  border-bottom-style: solid;
-  border-bottom-width: 1px;
-  border-color: #ff3e3e;
-  margin: 0;
-  padding: 10px;
-  text-align: center;
-}
-
 /* RAILS ERRORS ***********************************************************/
 
 .field_with_errors label {
