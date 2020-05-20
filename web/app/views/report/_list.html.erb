@@ -1,19 +1,15 @@
-<div class="table">
-  <table class="table">
+<div class="overflow-auto">
+  <table class="f6 w-100 collapse">
     <tr>
-      <th><%= t(:id) %></td>
-      <th><%= t(:label) %></td>
-      <th><%= t(:variables) %></td>
-      <th><%= t(:outputs) %></td>
+      <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w4"><%= t(:name) %></td>
+      <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w4"><%= t(:variables) %></td>
+      <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w4"><%= t(:outputs) %></td>
     </tr>
     <% reports.each do |report| %>
       <tr>
-        <td>
-          <%= link_to report.id, edit_report_path(report), :class => "link" %>
-        </td>
-        <td class="nowrap"><%= report.label %></td>
-        <td><%= report.variables.count %></td>
-        <td><%= report.outputs.count %></td>
+        <td class="nowrap pv3 pr3 bb b--black-10"><%= link_to report.label, edit_report_path(report), :class => "link blue" %></td>
+        <td class="nowrap pv3 pr3 bb b--black-10"><%= report.variables.count %></td>
+        <td class="nowrap pv3 pr3 bb b--black-10"><%= report.outputs.count %></td>
       </tr>
     <% end %>
   </table>
