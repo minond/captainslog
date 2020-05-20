@@ -30,9 +30,8 @@ Rails.application.routes.draw do
 
       collection do
         namespace :initiate, :module => nil do
-          get :captainslog, :action => :captainslog_initiate
-          get :fitbit,      :action => :fitbit_initiate
-          get :lastfm,      :action => :lastfm_initiate
+          get :fitbit, :action => :fitbit_initiate
+          get :lastfm, :action => :lastfm_initiate
         end
 
         namespace :oauth, :module => nil do
@@ -40,8 +39,7 @@ Rails.application.routes.draw do
         end
 
         namespace :callback, :module => nil do
-          get :captainslog, :action => :captainslog_callback
-          get :lastfm,      :action => :lastfm_callback
+          get :lastfm, :action => :lastfm_callback
         end
       end
     end

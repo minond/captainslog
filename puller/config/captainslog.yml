@@ -1,2 +1,0 @@
-application_uri: <%= ENV.fetch("CAPTAINSLOG_APPLICATION_URL", "") %>
-redirect_uri: <%= ENV.fetch("CAPTAINSLOG_REDIRECT_URL", "") %>
