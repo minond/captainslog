@@ -57,60 +57,15 @@ input[readonly] {
   cursor: not-allowed;
 }
 
-input[type=text],
-input[type=password],
-input[type=email] {
-  /* border-style: solid; */
-  /* border-width: 1px; */
-  /* box-sizing: border-box; */
-  /* font-size: 100%; */
-  /* line-height: 1.15; */
-  /* margin: 0; */
-  /* padding: .5rem; */
-  /* width: 100%; */
-}
-
-/* .field select { */
-/*   display: block; */
-/* } */
-
-table, tr, td {
-  /* padding: 0; */
-  /* margin: 0; */
-  /* border-collapse: collapse; */
-}
-
 /* HELPERS ****************************************************************/
 
 .text-right {
   text-align: right;
 }
 
-.nowrap {
-  white-space: nowrap;
-}
-
-/* .field.smaller label { */
-/*   font-size: .875rem; */
-/* } */
-
 .field-error-message {
   font-size: .8rem;
 }
-
-/* .table { */
-/*   overflow: scroll; */
-/* } */
-/*  */
-/* .table table { */
-/*   width: 100%; */
-/* } */
-/*  */
-/* .table th, */
-/* .table td { */
-/*   padding: .4rem; */
-/*   border: 1px solid gray; */
-/* } */
 
 .codesnippet {
   margin: 0;
