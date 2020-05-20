@@ -92,7 +92,6 @@ en:
 
   book: "Book"
   edit_book: "Edit book"
-  new_book: "New book"
   books: "Books"
 
   name: "Name"
@@ -129,10 +128,7 @@ en:
 
   are_you_sure_q: "Are you sure?"
 
-  new_report: "New report"
   edit_report: "Edit report"
-  new_report_variable: "Add new variable"
-  new_report_output: "Add new output"
   create_report_variable: "Create variable"
   create_report_output: "Create output"
   add_report_variable: "Add variable"
