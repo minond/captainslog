@@ -11,5 +11,10 @@
   <% end %>
 
   <%= render "form/timestamps", :f => f %>
-  <%= render "form/actions", :f => f, :back_url => edit_book_path(extractor.book.slug) %>
+  <%= render "form/actions", :f => f,
+    :paths => {
+      :back_url => edit_book_path(extractor.book.slug),
+      :delete => extractor.persisted? && book_extractor_path(extractor.book.slug, extractor.id),
+    }
+  %>
 <% end %>
