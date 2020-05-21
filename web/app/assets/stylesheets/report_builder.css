@@ -1,3 +1,15 @@
+.report-variable-field,
+.output-label {
+  font-family: baskerville,serif;
+}
+
+.report-variable-field select,
+.table-output-table,
+.value-output-value,
+.output-no-data {
+  font-family: monospace;
+}
+
 .report-variable-fields {
   margin-bottom: 30px;
 }

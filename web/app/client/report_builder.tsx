@@ -867,7 +867,6 @@ namespace Reports {
     loadReportData(inputs, outputs, dispatchInput, dispatchOutput)
 
     return <>
-      <h1>{report ? report.label : " "}</h1>
       {editForm}
       <Variables.Form variables={variables} inputs={inputs} onSelect={setInput} />
       <Outputs.View outputs={outputs} onEdit={(output) => setEditing(output)} />
