@@ -14,9 +14,7 @@
 
   <%= render "form/timestamps", :f => f %>
   <%= render "form/actions", :f => f,
-    :paths => {
-      :back => user_path,
-      :delete => book.persisted? && book_path(book.slug)
-    }
-  %>
+    :paths => { :back => user_path, :delete => book.persisted? && book_path(book.slug) } do %>
+    <%= block_given? && yield %>
+  <% end %>
 <% end %>
