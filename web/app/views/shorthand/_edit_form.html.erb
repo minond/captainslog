@@ -4,5 +4,8 @@
   <%= render "form/field", :f => f, :field => :match %>
   <%= render "form/field", :f => f, :field => :text %>
   <%= render "form/timestamps", :f => f %>
-  <%= render "form/actions", :f => f, :back_url => edit_book_path(shorthand.book.slug) %>
+  <%= render "form/actions", :f => f, :paths => {
+    :back => edit_book_path(shorthand.book.slug),
+    :delete => shorthand.persisted? && book_shorthand_path(shorthand.book.slug, shorthand.id),
+  } %>
 <% end %>
