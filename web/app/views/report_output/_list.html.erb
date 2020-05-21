@@ -10,7 +10,7 @@
     </tr>
     <% outputs.each do |output| %>
       <tr>
-        <td class="nowrap pv3 pr3 bb b--black-10"><%= link_to output.label, edit_report_report_output_path(report, output), :class => "link" %></td>
+        <td class="nowrap pv3 pr3 bb b--black-10"><%= link_to output.label, edit_report_report_output_path(report, output), :class => "link blue" %></td>
         <td class="nowrap pv3 pr3 bb b--black-10"><%= output.order %></td>
         <td class="nowrap pv3 pr3 bb b--black-10"><%= output.kind %></td>
         <td class="nowrap pv3 pr3 bb b--black-10"><%= output.height %></td>

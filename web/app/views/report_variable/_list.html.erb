@@ -7,7 +7,7 @@
     </tr>
     <% variables.each do |variable| %>
       <tr>
-        <td class="nowrap pv3 pr3 bb b--black-10"><%= link_to variable.label, edit_report_report_variable_path(report, variable), :class => "link" %></td>
+        <td class="nowrap pv3 pr3 bb b--black-10"><%= link_to variable.label, edit_report_report_variable_path(report, variable), :class => "link blue" %></td>
         <td class="nowrap pv3 pr3 bb b--black-10"><%= variable.default_value %></td>
         <td class="nowrap pv3 pr3 bb b--black-10 code"><%= variable.query.truncate(80) %></td>
       </tr>
