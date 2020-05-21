@@ -13,9 +13,16 @@
   <% end %>
 
   <%= render "form/field", :f => f, :field => :query do %>
-    <textarea name="report_output[query]" rows="5"><%= report_output.query %></textarea>
+    <textarea
+      name="report_output[query]"
+      rows="10"
+      class="code ba b--black-10 pa2 w-100 mb2"
+    ><%= report_output.query %></textarea>
   <% end %>
 
   <%= render "form/timestamps", :f => f %>
-  <%= render "form/actions", :f => f, :back_url => user_path %>
+  <%= render "form/actions", :f => f, :paths => {
+    :back => user_path,
+    :delete => report_output.persisted? && report_report_output_path(report_output.report, report_output),
+  } %>
 <% end %>

@@ -1,11 +1,4 @@
 <%= render "layouts/content-view" do %>
   <%= render "form/title", :key => :edit_report_output %>
   <%= render "report_output/edit_form", :report_output => report_output %>
-
-  <hr />
-  <%= link_to t(:delete), report_report_output_path(report_output.report, report_output),
-    :method => :delete,
-    :class => "btn destructive",
-    :data => { :confirm => t(:are_you_sure_q) }
-  %>
 <% end %>
