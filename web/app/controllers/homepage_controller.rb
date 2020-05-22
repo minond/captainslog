@@ -1,6 +1,14 @@
 class HomepageController < ApplicationController
+  include CallbackRedirect
+
   def home
-    current_user ? authenticated_landing_page : public_landing_page
+    if current_user && callback.present?
+      callback_redirect
+    elsif current_user
+      authenticated_landing_page
+    else
+      public_landing_page
+    end
   end
 
 private

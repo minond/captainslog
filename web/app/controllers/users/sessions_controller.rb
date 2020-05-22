@@ -1,27 +1,13 @@
 class Users::SessionsController < Devise::SessionsController
+  include CallbackRedirect
+
   # POST /users/sign_in
   def create
     super do |user|
-      if callback?
-        respond_with user, :location => callback_url(user)
+      if callback.present?
+        callback_redirect(:user => user)
         return
       end
     end
-  end
-
-private
-
-  # @return [Boolean]
-  def callback?
-    params[:callback].present?
-  end
-
-  # @param [User]
-  # @return [String]
-  def callback_url(user)
-    url = URI.parse(params[:callback])
-    url.query ||= ""
-    url.query << "&token=#{user.jwt}"
-    url.to_s
   end
 end
