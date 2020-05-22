@@ -1,0 +1,53 @@
+Web interface for Captain's Log Puller application. This is a Rails app with
+application workers for pulling in data and pushing it to the main CL app.
+
+
+=== Requirements
+
+- Ruby 2.6.1
+- PostgreSQL 10.3
+
+
+=== Development
+
+    bundle                        # install dependencies
+    bundle exec rake db:setup     # setup database
+    bundle exec spec              # run tests
+    bundle exec lint              # run linters
+
+    bundle exec rails s           # start the web server process
+    bundle exec rake jobs:work    # start the worker process
+
+
+=== Configuration
+
+The application needs to know what database it should read and write from and
+where the external services live:
+
+    DATABASE_URL          # example postgres://postgres@host.docker.internal:5432/captainslog
+    FITBIT_CLIENT_ID
+    FITBIT_CLIENT_SECRET
+    FITBIT_REDIRECT_URL   # example http://localhost:3000/connection/oauth/fitbit
+    JAEGER_HOST           # example localhost
+    JAEGER_PORT           # example 6831
+    SPOTIFY_CLIENT_ID
+    SPOTIFY_CLIENT_SECRET
+    SPOTIFY_REDIRECT_URL  # example http://localhost:3000/connection/oauth/spotify
+
+
+=== Container (TODO)
+
+    # build base image with rails application and all dependencies
+    docker build -t minond/captainslog-puller-base -f Dockerfile .
+
+    # build and run server application
+    docker build -t minond/captainslog-puller-web -f Dockerfile.web .
+    docker run -d --env-file .env --name cl-web -p 8080:3000 minond/captainslog-puller-web
+
+    # build and run worker application
+    docker build -t minond/captainslog-puller-worker -f Dockerfile.worker .
+    docker run -d --env-file .env --name cl-worker minond/captainslog-puller-worker
+
+    # push to container repo
+    docker push minond/captainslog-puller-web:latest
+    docker push minond/captainslog-puller-worker:latest
