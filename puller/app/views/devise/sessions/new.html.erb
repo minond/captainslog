@@ -20,12 +20,10 @@
       <% end %>
     </div>
 
-    <div class="mt4">
-      <%= f.submit t(:sign_in) %>
+    <div class="lh-copy mt4">
+      <%= f.submit t(:sign_in), :class => "f6 link bn pa0 input-reset pointer blue" %>
+      <span class="f6"><%= t(:or) %></span>
+      <%= link_to t(:sign_up).downcase, new_registration_path(resource_name), :class => "link blue f6 link" %>
     </div>
   <% end %>
-
-  <div class="lh-copy mt3">
-    <%= render "devise/shared/links" %>
-  </div>
 </div>
