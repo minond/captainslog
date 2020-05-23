@@ -69,17 +69,17 @@ class Source::Client
 
   # @return [Boolean]
   def oauth?
-    self.class < Source::Oauth
+    self.class < Oauth
   end
 
   # @return [Boolean]
   def input?
-    self.class < Source::Input
+    self.class < Input
   end
 
   # @return [Boolean]
   def output?
-    self.class < Source::Output
+    self.class < Output
   end
 
 private
