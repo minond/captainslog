@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/minond/ruby-opentracing-tracers
-  revision: 8913b7d2f50091207455d4e314a7632985b45945
+  revision: 1e67a76e90ca25afe7c67c87a9958cb1f8db9f5b
   specs:
     opentracing-tracers (0.1.0)
 
