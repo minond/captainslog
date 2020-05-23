@@ -6,10 +6,10 @@ module CallbackRedirect
   end
 
   def callback_redirect_url(user: current_user, url: callback)
-    url = URI.parse(callback)
-    url.query ||= ""
-    url.query << "&token=#{user.jwt}"
-    url.to_s
+    uri = URI.parse(url)
+    uri.query ||= ""
+    uri.query << "&token=#{user.jwt}"
+    uri.to_s
   end
 
   def callback
