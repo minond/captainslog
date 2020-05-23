@@ -82,7 +82,7 @@ en:
   data_type_number: "Number"
   data_type_boolean: "Boolean"
 
-  edit_user: "Edit user"
+  settings: "Settings"
 
   connections: "Connections"
   add_new_connection: "Add new connection"

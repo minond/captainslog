@@ -1,9 +1,11 @@
-<%= render "layouts/content-view" do %>
-  <%= render "form/title", :key => :edit_book %>
-  <%= render "book/edit_form", :book => book do %>
-    <%= link_to t(:add_new_extractor), new_book_extractor_path(book.slug), :class => "f6 link ml4 blue" %>
-    <%= link_to t(:add_new_shorthand), new_book_shorthand_path(book.slug), :class => "f6 link ml2 blue" %>
-  <% end %>
+<%= render "layouts/full-content-view" do %>
+  <div class="measure-wide">
+    <%= render "form/title", :key => :edit_book %>
+    <%= render "book/edit_form", :book => book do %>
+      <%= link_to t(:add_new_extractor), new_book_extractor_path(book.slug), :class => "f6 link ml4 blue" %>
+      <%= link_to t(:add_new_shorthand), new_book_shorthand_path(book.slug), :class => "f6 link ml2 blue" %>
+    <% end %>
+  </div>
 
   <%= render "form/subtitle", :key => :extractors %>
   <%= render "extractor/list", :extractors => book.extractors %>

@@ -1,9 +1,11 @@
-<%= render "layouts/content-view" do %>
-  <%= render "form/title", :key => :edit_report %>
-  <%= render "report/edit_form", :report => report do %>
-    <%= link_to t(:create_report_variable), new_report_report_variable_path(report.id), :class => "f6 link ml4 blue" %>
-    <%= link_to t(:create_report_output), new_report_report_output_path(report.id), :class => "f6 link ml2 blue" %>
-  <% end %>
+<%= render "layouts/full-content-view" do %>
+  <div class="measure-wide">
+    <%= render "form/title", :key => :edit_report %>
+    <%= render "report/edit_form", :report => report do %>
+      <%= link_to t(:create_report_variable), new_report_report_variable_path(report.id), :class => "f6 link ml4 blue" %>
+      <%= link_to t(:create_report_output), new_report_report_output_path(report.id), :class => "f6 link ml2 blue" %>
+    <% end %>
+  </div>
 
   <%= render "form/subtitle", :key => :variables %>
   <%= render "report_variable/list", :report => report, :variables => report.variables %>

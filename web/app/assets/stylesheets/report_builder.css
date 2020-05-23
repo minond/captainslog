@@ -140,6 +140,10 @@
   font-size: 2rem;
 }
 
+.table-output {
+  display: inline-block;
+}
+
 .table-output .output-label {
   border-left: 1px solid #f2f2f2e6;
   border-right: 1px solid #f2f2f2e6;
@@ -181,6 +185,7 @@
 }
 
 .chart-output {
+  display: inline-block;
   border: 1px solid #f2f2f2e6;
 }
 

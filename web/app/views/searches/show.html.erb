@@ -1,22 +1,24 @@
-<%= render "layouts/content-view" do %>
-  <% if results.empty? %>
-    <div class="f3 baskerville mb4">
-      <%= t(:no_search_results_for, :query => query) %>
-    </div>
-    <form action="<%= search_path %>">
-      <input
-        autofocus="true"
-        type="text"
-        name="query"
-        class="code w-100 f6 pa2"
-        placeholder="<%= t(:search_again_q) %>" />
-    </form>
-  <% else %>
-    <div class="f3 baskerville mb4">
-      <%= t(:search_results_for, :query => query) %>
-    </div>
+<%= render "layouts/full-content-view" do %>
+  <div class="mw8 mt3 center">
+    <% if results.empty? %>
+      <div class="f3 baskerville mb4">
+        <%= t(:no_search_results_for, :query => query) %>
+      </div>
+      <form action="<%= search_path %>">
+        <input
+          autofocus="true"
+          type="text"
+          name="query"
+          class="code w-100 f6 pa2"
+          placeholder="<%= t(:search_again_q) %>" />
+      </form>
+    <% else %>
+      <div class="f3 baskerville mb4">
+        <%= t(:search_results_for, :query => query) %>
+      </div>
 
-    <%= render "entry/list", :entries => results %>
-    <%= render "entry/fin" %>
-  <% end %>
+      <%= render "entry/list", :entries => results %>
+      <%= render "entry/fin" %>
+    <% end %>
+  </div>
 <% end %>

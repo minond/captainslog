@@ -1,6 +1,8 @@
-<%= render "layouts/content-view" do %>
-  <%= render "form/title", :key => :edit_user %>
-  <%= render "users/edit_form", :user => user %>
+<%= render "layouts/full-content-view" do %>
+  <div class="measure-wide">
+    <%= render "form/title", :key => :settings %>
+    <%= render "users/edit_form", :user => user %>
+  </div>
 
   <%= render "form/subtitle", :key => :books %>
   <%= render "book/list", :books => user.books %>
