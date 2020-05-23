@@ -18,10 +18,10 @@ class ConnectionController < ApplicationController
   # GET /connection/:id/schedule_pull
   def schedule_pull
     job = current_connection.schedule_pull
-    if job.errors.empty?
+    if job&.errors&.empty?
       redirect_to :root, :notice => t(:pull_successfully_scheduled)
     else
-      logger.error job.errors
+      logger.error job&.errors
       redirect_to :root, :alert => t(:error_scheduling_pull)
     end
   end

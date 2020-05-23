@@ -7,6 +7,8 @@ class Connection < ApplicationRecord
 
   scope :last_update_attempted_over, ->(datetime) { where("last_updated_at < ?", datetime) }
 
+  delegate :input?, :output?, :to => :client
+
   class MissingCredentialsError < StandardError; end
 
   # @param [Integer] limit, number of connections to retrieve
@@ -49,12 +51,12 @@ class Connection < ApplicationRecord
 
   # @return [Job]
   def schedule_pull
-    schedule_job(:pull)
+    schedule_job(:pull) if input?
   end
 
   # @return [Job]
   def schedule_backfill_pull
-    schedule_job(:backfill)
+    schedule_job(:backfill) if input?
   end
 
 private
