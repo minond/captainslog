@@ -85,7 +85,7 @@ class Source::Client
 
   # @return [Boolean]
   def oauth?
-    self.class < Source::OauthClient
+    self.class < Source::Oauth
   end
 
 private
