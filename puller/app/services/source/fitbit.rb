@@ -10,8 +10,7 @@ class Source::Fitbit < Source::Client
   backfill_range 2.years..1.day
   standard_range 2.days..1.day
 
-  traced :pull, :heart_rate_time_series, :steps_time_series,
-         :weight_time_series
+  traced :pull, :pull_heart_rate, :pull_steps, :pull_weight
 
   # @return [String]
   def base_auth_url
@@ -44,15 +43,15 @@ private
   # @yieldparam [ProtoEntry]
   # @return [Array<ProtoEntry>]
   def pull(**args, &block)
-    heart_rate_time_series(args, &block)
-    steps_time_series(args, &block)
-    weight_time_series(args, &block)
+    pull_heart_rate(args, &block)
+    pull_steps(args, &block)
+    pull_weight(args, &block)
   end
 
   # @param [Date] start_date
   # @param [Date] end_date
   # @return [Array<HeartRate>]
-  def heart_rate_time_series(start_date: Date.today, end_date: start_date)
+  def pull_heart_rate(start_date: Date.today, end_date: start_date)
     client.heart_rate_time_series(:start_date => start_date, :end_date => end_date)
           .filter { |result| HeartRate.valid?(result) }
           .each { |result| yield HeartRate.from_result(result) }
@@ -61,7 +60,7 @@ private
   # @param [Date] start_date
   # @param [Date] end_date
   # @return [Array<Steps>]
-  def steps_time_series(start_date: Date.today, end_date: start_date)
+  def pull_steps(start_date: Date.today, end_date: start_date)
     client.activity_time_series("tracker/steps", :start_date => start_date, :end_date => end_date)
           .filter { |result| Steps.valid?(result) }
           .each { |result| yield Steps.from_result(result) }
@@ -70,7 +69,7 @@ private
   # @param [Date] start_date
   # @param [Date] end_date
   # @return [Array<Weight>]
-  def weight_time_series(start_date: Date.today, end_date: start_date)
+  def pull_weight(start_date: Date.today, end_date: start_date)
     # The weight API can only retrieve a maximum of 31 days at a time.
     results = map_over_date_range(start_date, end_date, 30.days) do |sub_start_date, sub_end_date|
       client.weight_log_period(sub_start_date, sub_end_date)
