@@ -7,7 +7,7 @@ class Connection < ApplicationRecord
 
   scope :last_update_attempted_over, ->(datetime) { where("last_updated_at < ?", datetime) }
 
-  delegate :input?, :output?, :to => :client
+  delegate :input?, :output?, :to => :new_unauthenticated_client
 
   class MissingCredentialsError < StandardError; end
 
@@ -37,8 +37,7 @@ class Connection < ApplicationRecord
       begin
         raise MissingCredentialsError if newest_credentials.nil?
 
-        klass = Source.class_for_source(source)
-        klass.new(newest_credentials.options)
+        new_authenticated_client
       end
   end
 
@@ -71,5 +70,20 @@ private
     Job.create(:user => user,
                :connection => self,
                :kind => kind)
+  end
+
+  # @return [Class]
+  def client_class
+    Source.class_for_source(source)
+  end
+
+  # @return [Source::Client]
+  def new_unauthenticated_client
+    client_class.new
+  end
+
+  # @return [Source::Client]
+  def new_authenticated_client
+    client_class.new(newest_credentials.options)
   end
 end
