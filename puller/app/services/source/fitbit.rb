@@ -38,16 +38,6 @@ private
 
   # @param [Date] start_date
   # @param [Date] end_date
-  # @yieldparam [ProtoEntry]
-  # @return [Array<ProtoEntry>]
-  def pull(**args, &block)
-    pull_heart_rate(args, &block)
-    pull_steps(args, &block)
-    pull_weight(args, &block)
-  end
-
-  # @param [Date] start_date
-  # @param [Date] end_date
   # @return [Array<HeartRate>]
   def pull_heart_rate(start_date: Date.today, end_date: start_date)
     client.heart_rate_time_series(:start_date => start_date, :end_date => end_date)

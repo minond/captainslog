@@ -39,14 +39,6 @@ private
 
   attr_accessor :user
 
-  # @param [Date] start_date
-  # @param [Date] end_date
-  # @yieldparam [ProtoEntry]
-  # @return [Array<ProtoEntry>]
-  def pull(**args, &block)
-    pull_songs(args, &block)
-  end
-
   # # @param [Date] start_date
   # # @param [Date] end_date
   # # @return [Array<Hash>]

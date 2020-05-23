@@ -14,6 +14,11 @@ module Source::Client::Input
       end
     end
 
+    # @return [Array<Symbol>]
+    def input_record_types
+      @input_record_types
+    end
+
     # @param [Range<ActiveSupport::Duration>] range
     def backfill_range(range)
       @backfill_range = range
@@ -48,8 +53,10 @@ module Source::Client::Input
   # @param [Date] start_date
   # @param [Date] end_date
   # @return [Array<ProtoEntry>]
-  def pull(_args)
-    raise NotImplementedError, "#pull is not implemented"
+  def pull(**args, &block)
+    self.class.input_record_types.each do |ty|
+      send("pull_#{ty}", args, &block)
+    end
   end
 
   # @yieldparam [ProtoEntry]
