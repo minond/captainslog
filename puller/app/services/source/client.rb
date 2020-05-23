@@ -8,11 +8,11 @@ class Source::Client
   end
 
   # @param [Symbol] source
-  # @param [String] code
+  # @param [String] auth_code
   # @return [Hash]
-  def self.credentials_for_source(source, code)
+  def self.credentials_for_source(source, auth_code)
     client = class_for_source(source).new
-    client.code = code
+    client.code = auth_code
     client.credential_options
   end
 

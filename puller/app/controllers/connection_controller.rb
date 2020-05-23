@@ -99,21 +99,21 @@ private
   end
 
   # @param [Symbol] source
-  # @param [String] service_auth_payload
+  # @param [String] auth_code
   # @return [Array<CreateConnection, UpdateConnection, Boolean>]
-  def command_for_connection_auth(source, service_auth_payload)
+  def command_for_connection_auth(source, auth_code)
     connection_id, _rest = Source::Client.decode_state(state) if state
     if connection_id
-      [update_connection_auth(connection_id, service_auth_payload), false]
+      [update_connection_auth(connection_id, auth_code), false]
     else
-      [create_connection_auth(source, service_auth_payload), true]
+      [create_connection_auth(source, auth_code), true]
     end
   end
 
   # @param [Symbol] source
-  # @param [String] service_auth_payload
-  def handle_connection_auth(source, service_auth_payload)
-    cmd, is_new = command_for_connection_auth(source, service_auth_payload)
+  # @param [String] auth_code
+  def handle_connection_auth(source, auth_code)
+    cmd, is_new = command_for_connection_auth(source, auth_code)
     if cmd.success? && is_new
       redirect_to :root, :notice => t(:connection_successfully_created)
     elsif cmd.success?
@@ -124,17 +124,17 @@ private
   end
 
   # @param [Integer] connection_id
-  # @param [String] code
+  # @param [String] auth_code
   # @return [UpdateConnection]
-  def update_connection_auth(connection_id, code)
+  def update_connection_auth(connection_id, auth_code)
     connection = current_user.connections.find(connection_id)
-    UpdateConnectionAuth.call(current_user, connection, code)
+    UpdateConnectionAuth.call(current_user, connection, auth_code)
   end
 
   # @param [Symbol] source
-  # @param [String] code
+  # @param [String] auth_code
   # @return [CreateConnection]
-  def create_connection_auth(source, code)
-    CreateConnectionAuth.call(current_user, source, code)
+  def create_connection_auth(source, auth_code)
+    CreateConnectionAuth.call(current_user, source, auth_code)
   end
 end

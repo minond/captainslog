@@ -3,11 +3,11 @@ class UpdateConnectionAuth
 
   # @param [User] user
   # @param [Connection] connection
-  # @param [String] code
-  def initialize(user, connection, code)
+  # @param [String] auth_code
+  def initialize(user, connection, auth_code)
     @user = user
     @connection = connection
-    @code = code
+    @auth_code = auth_code
   end
 
   # @return [Connection]
@@ -21,11 +21,11 @@ class UpdateConnectionAuth
 
 private
 
-  attr_reader :user, :connection, :code
+  attr_reader :user, :connection, :auth_code
 
   def validate
     errors.add :missing_user, "a user is required" unless user.present?
-    errors.add :missing_code, "an authentication code is required" unless code.present?
+    errors.add :missing_code, "an authentication code is required" unless auth_code.present?
     errors.add :missing_connection, "a connection is required" unless connection.present?
   end
 
@@ -36,6 +36,6 @@ private
 
   # @return [Hash]
   def credentials_hash
-    Source::Client.credentials_for_source(connection.source, code)
+    Source::Client.credentials_for_source(connection.source, auth_code)
   end
 end

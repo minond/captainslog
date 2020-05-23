@@ -3,11 +3,11 @@ class CreateConnectionAuth
 
   # @param [User] user
   # @param [Symbol] source
-  # @param [String] code
-  def initialize(user, source, code)
+  # @param [String] auth_code
+  def initialize(user, source, auth_code)
     @user = user
     @source = source
-    @code = code
+    @auth_code = auth_code
   end
 
   # @return [Connection, nil]
@@ -20,11 +20,11 @@ class CreateConnectionAuth
 
 private
 
-  attr_reader :user, :source, :code
+  attr_reader :user, :source, :auth_code
 
   def validate
     errors.add :missing_user, "a user is required" unless user.present?
-    errors.add :missing_code, "an authentication code is required" unless code.present?
+    errors.add :missing_code, "an authentication code is required" unless auth_code.present?
   end
 
   # @return [Connection, nil]
@@ -39,6 +39,6 @@ private
 
   # @return [Hash]
   def credentials_hash
-    Source::Client.credentials_for_source(source, code)
+    Source::Client.credentials_for_source(source, auth_code)
   end
 end
