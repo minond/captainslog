@@ -12,6 +12,8 @@ module Source::Client::Configurable
     end
   end
 
+private
+
   # @return [Hash]
   def config(options = {})
     options.merge(::Rails.application.config.send(self.class.config_name)).with_indifferent_access

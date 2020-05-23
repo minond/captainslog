@@ -1,5 +1,6 @@
 class Source::Lastfm < Source::Client
   include Input
+  include Iterators
   include TokenAuthenticated
 
   callback_param :cb
