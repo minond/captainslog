@@ -1,3 +1,3 @@
-module Source::Output
+module Source::Client::Output
   extend extend ActiveSupport::Concern
 end

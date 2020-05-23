@@ -1,4 +1,4 @@
-module Source::Input
+module Source::Client::Input
   extend extend ActiveSupport::Concern
 
   class_methods do

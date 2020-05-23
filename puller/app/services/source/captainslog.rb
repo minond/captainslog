@@ -1,6 +1,6 @@
 class Source::Captainslog < Source::Client
-  include Source::Config
-  include Source::Output
+  include Config
+  include Output
 
   config_from :captainslog
 

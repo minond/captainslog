@@ -1,6 +1,6 @@
 class Source::Lastfm < Source::Client
-  include Source::Config
-  include Source::Input
+  include Config
+  include Input
 
   config_from :lastfm
 

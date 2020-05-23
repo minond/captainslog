@@ -1,4 +1,4 @@
-module Source::Oauth
+module Source::Client::Oauth
   extend extend ActiveSupport::Concern
 
   # Oauth code setter. Setting the code will trigger the Fitbit API client to
