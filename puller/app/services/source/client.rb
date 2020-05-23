@@ -67,22 +67,6 @@ class Source::Client
     raise NotImplementedError, "#credential_options is not implemented"
   end
 
-  # @yieldparam [ProtoEntry]
-  # @return [Array<ProtoEntry>]
-  def data_pull_backfill(&block)
-    data_pull(:start_date => self.class::DATA_PULL_BACKFILL_PERIOD_START.ago.to_date,
-              :end_date => self.class::DATA_PULL_BACKFILL_PERIOD_END.from_now.to_date,
-              &block)
-  end
-
-  # @yieldparam [ProtoEntry]
-  # @return [Array<ProtoEntry>]
-  def data_pull_standard(&block)
-    data_pull(:start_date => self.class::DATA_PULL_STANDARD_PERIOD_START.ago.to_date,
-              :end_date => self.class::DATA_PULL_STANDARD_PERIOD_END.from_now.to_date,
-              &block)
-  end
-
   # @return [Boolean]
   def oauth?
     self.class < Source::Oauth
@@ -99,13 +83,6 @@ class Source::Client
   end
 
 private
-
-  # @param [Date] start_date
-  # @param [Date] end_date
-  # @return [Array<ProtoEntry>]
-  def data_pull(_args)
-    raise NotImplementedError, "#data_pull is not implemented"
-  end
 
   # Takes while results of yielding are not nil. Passing a counter each time
   # the block is executed. Returns array containing every result of yielding,
