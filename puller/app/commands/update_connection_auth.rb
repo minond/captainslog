@@ -36,6 +36,6 @@ private
 
   # @return [Hash]
   def credentials_hash
-    Source::Client.credentials_for_source(connection.source, auth_code)
+    Source.credentials_for_source(connection.source, auth_code)
   end
 end

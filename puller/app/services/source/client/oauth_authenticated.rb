@@ -14,6 +14,6 @@ module Source::Client::OauthAuthenticated
   # @param [Connection, nil] connection
   # @return [String]
   def auth_url(connection = nil)
-    base_auth_url + "&state=#{self.class.encode_state(connection)}"
+    base_auth_url + "&state=#{Source.encode_state(connection)}"
   end
 end

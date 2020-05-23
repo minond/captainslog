@@ -35,7 +35,7 @@ class Connection < ApplicationRecord
       begin
         raise MissingCredentialsError if newest_credentials.nil?
 
-        klass = Source::Client.class_for_source(source)
+        klass = Source.class_for_source(source)
         klass.new(newest_credentials.options)
       end
   end
