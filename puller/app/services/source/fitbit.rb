@@ -10,7 +10,7 @@ class Source::Fitbit < Source::Client
   backfill_range 2.years..1.day
   standard_range 2.days..1.day
 
-  traced :data_pull, :heart_rate_time_series, :steps_time_series,
+  traced :pull, :heart_rate_time_series, :steps_time_series,
          :weight_time_series
 
   # @param [Hash] options
@@ -48,7 +48,7 @@ private
   # @param [Date] end_date
   # @yieldparam [ProtoEntry]
   # @return [Array<ProtoEntry>]
-  def data_pull(**args, &block)
+  def pull(**args, &block)
     heart_rate_time_series(args, &block)
     steps_time_series(args, &block)
     weight_time_series(args, &block)

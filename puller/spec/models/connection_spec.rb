@@ -22,12 +22,12 @@ describe Connection do
     end
   end
 
-  describe ".in_need_of_data_pull" do
+  describe ".in_need_of_pull" do
     context "when there are no connections that need to be updated" do
       before { create_list(:connection, 3, :last_updated_at => 5.minutes.ago) }
 
       it "returns nothing" do
-        expect(described_class.in_need_of_data_pull).to be_empty
+        expect(described_class.in_need_of_pull).to be_empty
       end
     end
 
@@ -38,7 +38,7 @@ describe Connection do
       end
 
       it "returns nothing" do
-        expect(described_class.in_need_of_data_pull.count).to eq 2
+        expect(described_class.in_need_of_pull.count).to eq 2
       end
     end
   end

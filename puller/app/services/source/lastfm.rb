@@ -52,7 +52,7 @@ private
   # @param [Date] end_date
   # @yieldparam [ProtoEntry]
   # @return [Array<ProtoEntry>]
-  def data_pull(**args, &block)
+  def pull(**args, &block)
     song_series(args, &block)
   end
 

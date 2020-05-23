@@ -41,23 +41,23 @@ module Source::Client::Input
   # @param [Date] start_date
   # @param [Date] end_date
   # @return [Array<ProtoEntry>]
-  def data_pull(_args)
-    raise NotImplementedError, "#data_pull is not implemented"
+  def pull(_args)
+    raise NotImplementedError, "#pull is not implemented"
   end
 
   # @yieldparam [ProtoEntry]
   # @return [Array<ProtoEntry>]
-  def data_pull_backfill(&block)
-    data_pull(:start_date => self.class.backfill_range_start_date,
-              :end_date => self.class.backfill_range_end_date,
-              &block)
+  def pull_backfill(&block)
+    pull(:start_date => self.class.backfill_range_start_date,
+         :end_date => self.class.backfill_range_end_date,
+         &block)
   end
 
   # @yieldparam [ProtoEntry]
   # @return [Array<ProtoEntry>]
-  def data_pull_standard(&block)
-    data_pull(:start_date => self.class.standard_range_start_date,
-              :end_date => self.class.standard_range_end_date,
-              &block)
+  def pull_standard(&block)
+    pull(:start_date => self.class.standard_range_start_date,
+         :end_date => self.class.standard_range_end_date,
+         &block)
   end
 end

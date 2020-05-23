@@ -94,9 +94,9 @@ private
   def each_record(&block)
     case job.kind.to_sym
     when :backfill
-      client.data_pull_backfill(&block)
+      client.pull_backfill(&block)
     when :pull
-      client.data_pull_standard(&block)
+      client.pull_standard(&block)
     end
   end
 

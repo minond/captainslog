@@ -12,7 +12,7 @@ class Connection < ApplicationRecord
   # @param [Integer] limit, number of connections to retrieve
   # @param [ActiveSupport::TimeWithZone] last_update_attempted_over_datetime
   # @return [Array<Connection>]
-  def self.in_need_of_data_pull(limit = 10, last_update_attempted_over_datetime = 6.hours.ago)
+  def self.in_need_of_pull(limit = 10, last_update_attempted_over_datetime = 6.hours.ago)
     last_update_attempted_over(last_update_attempted_over_datetime)
       .order("random()")
       .limit(limit)
