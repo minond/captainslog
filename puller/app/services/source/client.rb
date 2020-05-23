@@ -88,6 +88,16 @@ class Source::Client
     self.class < Source::Oauth
   end
 
+  # @return [Boolean]
+  def input?
+    self.class < Source::Input
+  end
+
+  # @return [Boolean]
+  def output?
+    self.class < Source::Output
+  end
+
 private
 
   # @param [Date] start_date

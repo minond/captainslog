@@ -1,4 +1,5 @@
 class Source::Fitbit < Source::Client
+  include Source::Input
   include Source::Oauth
 
   traced :data_pull, :heart_rate_time_series, :steps_time_series,

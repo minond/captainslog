@@ -1,4 +1,6 @@
 class Source::Captainslog < Source::Client
+  include Source::Output
+
   # @param [Hash] options
   def initialize(options = {})
     @token = options.with_indifferent_access[:token]

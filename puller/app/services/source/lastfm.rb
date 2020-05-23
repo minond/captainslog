@@ -1,4 +1,6 @@
 class Source::Lastfm < Source::Client
+  include Source::Input
+
   DATA_PULL_BACKFILL_PERIOD_START = 2.years
   DATA_PULL_BACKFILL_PERIOD_END = 1.day
   DATA_PULL_STANDARD_PERIOD_START = 2.days
