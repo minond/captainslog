@@ -83,7 +83,7 @@ class Source::Client
 
   # @return [Boolean]
   def oauth?
-    self.class.singleton_class < Source::OauthClient
+    self.class < Source::OauthClient
   end
 
 private

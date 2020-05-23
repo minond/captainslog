@@ -1,5 +1,5 @@
 class Source::Fitbit < Source::Client
-  extend Source::OauthClient
+  include Source::Oauth
   include OpenTracing::Instrumented
 
   traced :data_pull, :heart_rate_time_series, :steps_time_series,
