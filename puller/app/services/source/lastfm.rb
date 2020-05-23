@@ -1,6 +1,8 @@
 class Source::Lastfm < Source::Client
   include Source::Input
 
+  pulls_in :songs
+
   backfill_range 2.years..1.day
   standard_range 2.days..1.day
 

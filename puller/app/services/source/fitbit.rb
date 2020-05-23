@@ -2,6 +2,8 @@ class Source::Fitbit < Source::Client
   include Source::Input
   include Source::Oauth
 
+  pulls_in :heart_rate, :steps, :weight
+
   backfill_range 2.years..1.day
   standard_range 2.days..1.day
 
