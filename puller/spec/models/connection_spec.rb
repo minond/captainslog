@@ -14,14 +14,6 @@ describe Connection do
     }
   end
 
-  describe "callbacks" do
-    describe "after_create" do
-      it "creates a job" do
-        expect { subject }.to change { Job.count }.by 1
-      end
-    end
-  end
-
   describe ".in_need_of_pull" do
     context "when there are no connections that need to be updated" do
       before { create_list(:connection, 3, :last_updated_at => 5.minutes.ago) }
@@ -79,6 +71,7 @@ describe Connection do
 
   describe "#recent_stats" do
     before do
+      create(:job, :initiated, :connection => subject)
       create(:job, :done, :connection => subject)
       create(:job, :done, :connection => subject)
       create(:job, :errored, :connection => subject)
