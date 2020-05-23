@@ -12,11 +12,6 @@ class Source::Fitbit < Source::Client
   traced :pull, :heart_rate_time_series, :steps_time_series,
          :weight_time_series
 
-  # @param [Hash] options
-  def initialize(options = {})
-    client(options)
-  end
-
   # @return [String]
   def base_auth_url
     client.auth_url
@@ -41,7 +36,7 @@ class Source::Fitbit < Source::Client
 
 private
 
-  attr_accessor :user_id
+  attr_reader :user_id
 
   # @param [Date] start_date
   # @param [Date] end_date

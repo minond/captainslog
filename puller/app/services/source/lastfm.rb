@@ -2,6 +2,7 @@ class Source::Lastfm < Source::Client
   include Input
   include TokenAuthenticated
 
+  callback_param :cb
   config_from :lastfm
 
   pulls_in :songs
@@ -13,19 +14,8 @@ class Source::Lastfm < Source::Client
 
   # @param [Hash] options
   def initialize(options = {})
-    client(options)
+    super
     @user = options.with_indifferent_access[:user]
-  end
-
-  # Path to page where user can start the authentication process for this
-  # source.
-  #
-  # @param [Connection, nil] connection
-  # @return [String]
-  def auth_url(connection = nil)
-    state = "?state=#{self.class.encode_state(connection)}"
-    callback = URI.encode_www_form_component(config[:redirect_uri] + state)
-    "#{base_auth_url}&cb=#{callback}"
   end
 
   # @return [String]
