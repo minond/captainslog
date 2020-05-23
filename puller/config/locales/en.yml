@@ -21,7 +21,6 @@ en:
   password_confirmation: "Password confirmation"
   current_password: "Current password"
 
-  update_user: "Update user"
   update_password: "Update password"
 
   source: "Source"
