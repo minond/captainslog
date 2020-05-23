@@ -1,7 +1,6 @@
 class Source::Lastfm < Source::Client
-  include Config
   include Input
-  include Token
+  include TokenAuthenticated
 
   config_from :lastfm
 

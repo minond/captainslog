@@ -1,7 +1,6 @@
 class Source::Captainslog < Source::Client
-  include Config
   include Output
-  include Token
+  include TokenAuthenticated
 
   config_from :captainslog
 

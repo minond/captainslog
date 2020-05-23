@@ -1,4 +1,4 @@
-module Source::Client::Oauth
+module Source::Client::OauthAuthenticated
   extend extend ActiveSupport::Concern
 
   # Oauth code setter. Each client may handle this as needed.

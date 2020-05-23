@@ -1,5 +1,6 @@
 class Source::Client
   include OpenTracing::Instrumented
+  include Source::Client::Configurable
 
   # @param [Symbol] source
   # @return [Class]
@@ -12,8 +13,8 @@ class Source::Client
   # @return [Hash]
   def self.credentials_for_source(source, auth_code)
     client = class_for_source(source).new
-    client.code = auth_code if client.oauth?
-    client.token = auth_code if client.token?
+    client.code = auth_code if client.oauth_authenticated?
+    client.token = auth_code if client.token_authenticated?
     client.credential_options
   end
 
@@ -69,13 +70,13 @@ class Source::Client
   end
 
   # @return [Boolean]
-  def oauth?
-    self.class < Oauth
+  def oauth_authenticated?
+    self.class < OauthAuthenticated
   end
 
   # @return [Boolean]
-  def token?
-    self.class < Token
+  def token_authenticated?
+    self.class < TokenAuthenticated
   end
 
   # @return [Boolean]

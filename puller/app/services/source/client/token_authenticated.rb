@@ -1,4 +1,4 @@
-module Source::Client::Token
+module Source::Client::TokenAuthenticated
   extend extend ActiveSupport::Concern
 
   # Auth token setter. Each client may handle this as needed.

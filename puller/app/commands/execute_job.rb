@@ -31,7 +31,7 @@ private
   delegate :connection, :to => :job, :private => true
   delegate :client, :to => :connection, :private => true
   delegate :credential_options, :to => :client, :private => true
-  delegate :oauth?, :to => :client, :private => true
+  delegate :oauth_authenticated?, :to => :client, :private => true
 
   def setup
     logs.puts "starting job, updating every #{TICK_INTERVAL}s"
@@ -101,6 +101,6 @@ private
   end
 
   def update_connection_credentials
-    Credential.create_with_options(connection, credential_options) if oauth?
+    Credential.create_with_options(connection, credential_options) if oauth_authenticated?
   end
 end
