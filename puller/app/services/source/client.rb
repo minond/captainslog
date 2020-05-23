@@ -12,7 +12,8 @@ class Source::Client
   # @return [Hash]
   def self.credentials_for_source(source, auth_code)
     client = class_for_source(source).new
-    client.code = auth_code
+    client.code = auth_code if client.oauth?
+    client.token = auth_code if client.token?
     client.credential_options
   end
 
@@ -70,6 +71,11 @@ class Source::Client
   # @return [Boolean]
   def oauth?
     self.class < Oauth
+  end
+
+  # @return [Boolean]
+  def token?
+    self.class < Token
   end
 
   # @return [Boolean]

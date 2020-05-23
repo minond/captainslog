@@ -1,6 +1,7 @@
 class Source::Lastfm < Source::Client
   include Config
   include Input
+  include Token
 
   config_from :lastfm
 
@@ -33,9 +34,9 @@ class Source::Lastfm < Source::Client
     "http://www.last.fm/api/auth/?api_key=#{config[:api_key]}"
   end
 
-  # @param [String] code
-  def code=(code)
-    session = client.auth.get_session(:token => code).with_indifferent_access
+  # @param [String] token
+  def token=(token)
+    session = client.auth.get_session(:token => token).with_indifferent_access
     self.user = session[:name]
   end
 

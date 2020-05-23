@@ -1,6 +1,7 @@
 class Source::Captainslog < Source::Client
   include Config
   include Output
+  include Token
 
   config_from :captainslog
 
@@ -25,9 +26,9 @@ class Source::Captainslog < Source::Client
     config[:application_uri]
   end
 
-  # @param [String] code
-  def code=(code)
-    @token = code
+  # @param [String] token
+  def token=(token)
+    @token = token
   end
 
   # @return [Hash]
