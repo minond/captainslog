@@ -16,6 +16,7 @@ gem "jquery-rails"                            # A gem to automate using jQuery w
 gem "lastfm"                                  # A Ruby interface for Last.fm Web Services
 gem "opentracing"                             # OpenTracing API for Ruby
 gem "opentracing-instrumented"                # OpenTracing instrumentation helpers
+gem "opentracing-tracers", :git => "https://github.com/minond/ruby-opentracing-tracers" # OpenTracing tracers
 gem "pg", ">= 0.18", "< 2.0"                  # Use postgresql as the database for Active Record
 gem "puma", "~> 4.1"                          # Use Puma as the app server
 gem "rails", "~> 6.0.1"                       # Bundle edge Rails instead: gem "rails", github: "rails/rails"

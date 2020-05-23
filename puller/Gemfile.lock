@@ -1,3 +1,9 @@
+GIT
+  remote: https://github.com/minond/ruby-opentracing-tracers
+  revision: 8913b7d2f50091207455d4e314a7632985b45945
+  specs:
+    opentracing-tracers (0.1.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -322,6 +328,7 @@ DEPENDENCIES
   listen (>= 3.0.5, < 3.2)
   opentracing
   opentracing-instrumented
+  opentracing-tracers!
   pg (>= 0.18, < 2.0)
   puma (~> 4.1)
   rails (~> 6.0.1)

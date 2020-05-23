@@ -1,0 +1,4 @@
+host: <%= ENV.fetch("JAEGER_HOST", "localhost") %>
+port: <%= ENV.fetch("JAEGER_PORT", 6831) %>
+flush_interval: <%= ENV.fetch("JAEGER_REPORTER_FLUSH_INTERVAL", 10) %>
+max_packet_size: <%= ENV.fetch("JAEGER_REPORTER_MAX_QUEUE_SIZE", 8000) %>
