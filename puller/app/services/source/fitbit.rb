@@ -10,8 +10,6 @@ class Source::Fitbit < Source::Client
   backfill_range 2.years..1.day
   standard_range 2.days..1.day
 
-  traced :pull, :pull_heart_rate, :pull_steps, :pull_weight
-
   # @return [String]
   def base_auth_url
     client.auth_url

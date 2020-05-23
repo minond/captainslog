@@ -1,10 +1,17 @@
 module Source::Client::Input
   extend extend ActiveSupport::Concern
 
+  included do
+    traced :pull
+  end
+
   class_methods do
     # @param [Array<Symbol>] types
     def pulls_in(*types)
       @input_record_types = types
+      types.each do |ty|
+        traced "pull_#{ty}"
+      end
     end
 
     # @param [Range<ActiveSupport::Duration>] range

@@ -11,8 +11,6 @@ class Source::Lastfm < Source::Client
   backfill_range 2.years..1.day
   standard_range 2.days..1.day
 
-  traced :pull, :pull_songs
-
   LIMIT = 200
 
   # @param [Hash] options
