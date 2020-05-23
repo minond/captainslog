@@ -38,9 +38,7 @@ class Source::Lastfm < Source::Client
 
   # @return [Hash]
   def credential_options
-    {
-      :user => user
-    }
+    { :user => user }
   end
 
 private
