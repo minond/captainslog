@@ -15,8 +15,6 @@ require "action_view/railtie"
 require "sprockets/railtie"
 require "rails/test_unit/railtie"
 
-require "opentracing/tracers/rack"
-
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
@@ -34,9 +32,6 @@ module Web
     # -- all .rb files in that directory are automatically loaded after loading
     # the framework and any gems in your application.
     config.autoload_paths += %w[lib]
-
-    # OpenTracing instrumentation.
-    config.middleware.use ::OpenTracing::Tracers::Rack
 
     # https://guides.rubyonrails.org/active_job_basics.html
     # https://github.com/collectiveidea/delayed_job#active-job
