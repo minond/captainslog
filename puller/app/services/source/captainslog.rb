@@ -1,5 +1,8 @@
 class Source::Captainslog < Source::Client
+  include Source::Config
   include Source::Output
+
+  config_from :captainslog
 
   # @param [Hash] options
   def initialize(options = {})
@@ -35,9 +38,4 @@ class Source::Captainslog < Source::Client
 private
 
   attr_accessor :token
-
-  # @return [Hash]
-  def config
-    @config ||= ::Rails.application.config.captainslog.with_indifferent_access
-  end
 end

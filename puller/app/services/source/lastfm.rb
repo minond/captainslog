@@ -1,5 +1,8 @@
 class Source::Lastfm < Source::Client
+  include Source::Config
   include Source::Input
+
+  config_from :lastfm
 
   pulls_in :songs
 
@@ -100,10 +103,5 @@ private
   # @return [::Lastfm]
   def client(_options = {})
     @client ||= ::Lastfm.new(config[:api_key], config[:api_secret])
-  end
-
-  # @return [Hash]
-  def config
-    @config ||= ::Rails.application.config.lastfm.with_indifferent_access
   end
 end

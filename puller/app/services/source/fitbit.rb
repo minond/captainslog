@@ -1,6 +1,9 @@
 class Source::Fitbit < Source::Client
+  include Source::Config
   include Source::Input
   include Source::Oauth
+
+  config_from :fitbit
 
   pulls_in :heart_rate, :steps, :weight
 
@@ -90,17 +93,5 @@ private
                   @user_id = conf["user_id"]
                   ::FitbitAPI::Client.new(conf)
                 end
-  end
-
-  # @param [Hash] options
-  #
-  # @option [String] user_id
-  # @option [String] access_token
-  # @option [String] refresh_token
-  # @option [Integer] expires_at
-  #
-  # @return [Hash]
-  def config(options = {})
-    options.merge(::Rails.application.config.fitbit).with_indifferent_access
   end
 end
