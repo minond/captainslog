@@ -5,8 +5,6 @@ class Connection < ApplicationRecord
 
   validates :source, :user, :presence => true
 
-  after_create :schedule_backfill
-
   scope :last_update_attempted_over, ->(datetime) { where("last_updated_at < ?", datetime) }
 
   class MissingCredentialsError < StandardError; end
@@ -55,7 +53,7 @@ class Connection < ApplicationRecord
   end
 
   # @return [Job]
-  def schedule_backfill
+  def schedule_backfill_pull
     schedule_job(:backfill)
   end
 

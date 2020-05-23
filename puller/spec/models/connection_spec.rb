@@ -63,10 +63,10 @@ describe Connection do
     end
   end
 
-  describe "#schedule_backfill" do
+  describe "#schedule_backfill_pull" do
     it "creates a job" do
       subject
-      expect { subject.schedule_backfill }.to change { Job.count }.by 1
+      expect { subject.schedule_backfill_pull }.to change { Job.count }.by 1
     end
   end
 
