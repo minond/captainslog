@@ -4,37 +4,37 @@ module Source::Input
   class_methods do
     # @param [Array<Symbol>] types
     def pulls_in(*types)
-      @@input_record_types = types
+      @input_record_types = types
     end
 
     # @param [Range<ActiveSupport::Duration>] range
     def backfill_range(range)
-      @@backfill_range = range
+      @backfill_range = range
     end
 
     # @return [Date]
     def backfill_range_start_date
-      @@backfill_range.first.ago.to_date
+      @backfill_range.first.ago.to_date
     end
 
     # @return [Date]
     def backfill_range_end_date
-      @@backfill_range.last.from_now.to_date
+      @backfill_range.last.from_now.to_date
     end
 
     # @param [Range<ActiveSupport::Duration>] range
     def standard_range(range)
-      @@standard_range = range
+      @standard_range = range
     end
 
     # @return [Date]
     def standard_range_start_date
-      @@standard_range.first.ago.to_date
+      @standard_range.first.ago.to_date
     end
 
     # @return [Date]
     def standard_range_end_date
-      @@standard_range.last.from_now.to_date
+      @standard_range.last.from_now.to_date
     end
   end
 
