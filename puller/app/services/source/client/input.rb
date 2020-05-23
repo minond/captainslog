@@ -50,25 +50,21 @@ module Source::Client::Input
     end
   end
 
-  # @param [Date] start_date
-  # @param [Date] end_date
-  # @return [Array<ProtoEntry>]
+  # @yieldparam [Source::Record]
   def pull(**args, &block)
     self.class.input_record_types.each do |ty|
       send("pull_#{ty}", args, &block)
     end
   end
 
-  # @yieldparam [ProtoEntry]
-  # @return [Array<ProtoEntry>]
+  # @yieldparam [Source::Record]
   def pull_backfill(&block)
     pull(:start_date => self.class.backfill_range_start_date,
          :end_date => self.class.backfill_range_end_date,
          &block)
   end
 
-  # @yieldparam [ProtoEntry]
-  # @return [Array<ProtoEntry>]
+  # @yieldparam [Source::Record]
   def pull_standard(&block)
     pull(:start_date => self.class.standard_range_start_date,
          :end_date => self.class.standard_range_end_date,

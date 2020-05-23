@@ -39,7 +39,7 @@ private
   # @param [Date] start_date
   # @param [Date] end_date
   # @return [Array<HeartRate>]
-  def pull_heart_rate(start_date: Date.today, end_date: start_date)
+  def pull_heart_rate(start_date:, end_date:)
     client.heart_rate_time_series(:start_date => start_date, :end_date => end_date)
           .filter { |result| HeartRate.valid?(result) }
           .each { |result| yield HeartRate.from_result(result) }
@@ -48,7 +48,7 @@ private
   # @param [Date] start_date
   # @param [Date] end_date
   # @return [Array<Steps>]
-  def pull_steps(start_date: Date.today, end_date: start_date)
+  def pull_steps(start_date:, end_date:)
     client.activity_time_series("tracker/steps", :start_date => start_date, :end_date => end_date)
           .filter { |result| Steps.valid?(result) }
           .each { |result| yield Steps.from_result(result) }
@@ -57,7 +57,7 @@ private
   # @param [Date] start_date
   # @param [Date] end_date
   # @return [Array<Weight>]
-  def pull_weight(start_date: Date.today, end_date: start_date)
+  def pull_weight(start_date:, end_date:)
     # The weight API can only retrieve a maximum of 31 days at a time.
     results = map_over_date_range(start_date, end_date, 30.days) do |sub_start_date, sub_end_date|
       client.weight_log_period(sub_start_date, sub_end_date)

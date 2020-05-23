@@ -42,7 +42,7 @@ private
   # # @param [Date] start_date
   # # @param [Date] end_date
   # # @return [Array<Hash>]
-  def pull_songs(start_date: Date.today, end_date: start_date, &block)
+  def pull_songs(start_date:, end_date:, &block)
     map_over_date_range(start_date, end_date, 7.days) do |sub_start_date, sub_end_date|
       take_while_with_index do |i|
         songs = client.user.get_recent_tracks(song_page_params(i + 1, sub_start_date, sub_end_date))
