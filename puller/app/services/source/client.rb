@@ -1,4 +1,6 @@
 class Source::Client
+  include OpenTracing::Instrumented
+
   # @param [Symbol] source
   # @return [Class]
   def self.class_for_source(source)
