@@ -21,7 +21,7 @@ class Source::Captainslog < Source::Client
     { :token => token }
   end
 
-  # @return [Array<Source::Client::Output::Destination>]
+  # @return [Array<Output::Destination>]
   def available_output_destinations
     books.map do |book|
       Output::Destination.new(:id => book["id"], :label => book["name"])

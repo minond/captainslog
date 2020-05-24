@@ -3,7 +3,13 @@ module Source::Client::Output
 
   Destination = Struct.new(:id, :label, :keyword_init => true)
 
-  # @return [Array<Target>]
+  # @param [Array<Source::Record>] records
+  # @param [Destination] destination
+  def push(records, destination)
+    raise NotImplementedError, "#push is not implemented"
+  end
+
+  # @return [Array<Destination>]
   def available_output_destinations
     raise NotImplementedError, "#available_output_destinations is not implemented"
   end
