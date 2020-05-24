@@ -1,6 +1,7 @@
 class Source::Client
   include OpenTracing::Instrumented
   include Source::Client::Configurable
+  include Iterators
 
   # @return [Symbol]
   def self.source

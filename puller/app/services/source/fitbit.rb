@@ -1,7 +1,6 @@
 class Source::Fitbit < Source::Client
-  include Input
-  include Iterators
-  include OauthAuthenticated
+  include Source::Client::Input
+  include Source::Client::OauthAuthenticated
 
   config_from :fitbit
 

@@ -1,6 +1,6 @@
 class Source::Captainslog < Source::Client
-  include Output
-  include TokenAuthenticated
+  include Source::Client::Output
+  include Source::Client::TokenAuthenticated
 
   attr_accessor :token
 

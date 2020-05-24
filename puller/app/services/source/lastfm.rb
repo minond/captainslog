@@ -1,7 +1,6 @@
 class Source::Lastfm < Source::Client
-  include Input
-  include Iterators
-  include TokenAuthenticated
+  include Source::Client::Input
+  include Source::Client::TokenAuthenticated
 
   callback_param :cb
   config_from :lastfm
