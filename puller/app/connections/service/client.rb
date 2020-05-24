@@ -4,7 +4,7 @@ class Service::Client
   include Iterators
 
   # @return [Symbol]
-  def self.source
+  def self.service
     name.demodulize.underscore.to_sym
   end
 

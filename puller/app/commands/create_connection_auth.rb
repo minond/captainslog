@@ -2,11 +2,11 @@ class CreateConnectionAuth
   prepend SimpleCommand
 
   # @param [User] user
-  # @param [Symbol] source
+  # @param [Symbol] service
   # @param [String] auth_code
-  def initialize(user, source, auth_code)
+  def initialize(user, service, auth_code)
     @user = user
-    @source = source
+    @service = service
     @auth_code = auth_code
   end
 
@@ -20,7 +20,7 @@ class CreateConnectionAuth
 
 private
 
-  attr_reader :user, :source, :auth_code
+  attr_reader :user, :service, :auth_code
 
   def validate
     errors.add :missing_user, "a user is required" unless user.present?
@@ -34,11 +34,11 @@ private
 
   # @return [Hash]
   def connection_attrs
-    { :user => user, :source => source }
+    { :user => user, :service => service }
   end
 
   # @return [Hash]
   def credentials_hash
-    Service.credentials_for_source(source, auth_code)
+    Service.credentials_for_service(service, auth_code)
   end
 end

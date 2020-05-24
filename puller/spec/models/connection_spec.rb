@@ -3,7 +3,7 @@ describe Connection do
 
   let(:connection_attrs) do
     {
-      :source => :lastfm,
+      :service => :lastfm,
       :user => create(:user)
     }
   end

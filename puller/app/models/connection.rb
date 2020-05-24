@@ -3,7 +3,7 @@ class Connection < ApplicationRecord
   has_many :credentials, :dependent => :destroy
   has_many :jobs, :dependent => :destroy
 
-  validates :source, :user, :presence => true
+  validates :service, :user, :presence => true
 
   scope :last_update_attempted_over, ->(datetime) { where("last_updated_at < ?", datetime) }
 
@@ -77,7 +77,7 @@ private
 
   # @return [Class]
   def client_class
-    Service.class_for_source(source)
+    Service.class_for_service(service)
   end
 
   # @return [Service::Client]

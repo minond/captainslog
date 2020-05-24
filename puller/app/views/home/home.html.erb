@@ -1,6 +1,6 @@
 <%= render "layouts/content-view" do %>
   <% if current_user.connections.present? %>
-    <%= render "connection/list", :connections => current_user.connections.order("source") %>
+    <%= render "connection/list", :connections => current_user.connections.order("service") %>
     <div class="pt5"></div>
     <%= render "job/list", :jobs => current_user.jobs.order("created_at desc").first(500) %>
   <% else %>

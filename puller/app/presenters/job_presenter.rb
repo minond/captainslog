@@ -42,9 +42,9 @@ class JobPresenter
   def kind
     case job.kind.to_sym
     when :pull
-      "Pull for #{job.connection.source.humanize}"
+      "Pull for #{job.connection.service.humanize}"
     when :backfill
-      "Backfill for #{job.connection.source.humanize}"
+      "Backfill for #{job.connection.service.humanize}"
     else
       job.kind.humanize
     end

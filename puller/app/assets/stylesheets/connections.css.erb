@@ -3,36 +3,36 @@
   They will automatically be included in application.css.
 */
 
-.source-box {
+.service-box {
   opacity: .6;
   transition: .1s border-color, .1s opacity;
 }
 
-.source-box:hover {
+.service-box:hover {
   opacity: .8;
   border: 1px solid #c5c5c5;
 }
 
-.source-radio:checked ~ .source-box {
+.service-radio:checked ~ .service-box {
   opacity: 1;
   border: 1px solid #909090;
 }
 
-.source {
+.service {
   background-position: 50%;
   background-size: 60px;
   background-repeat: no-repeat;
 }
 
-.source-fitbit {
+.service-fitbit {
   background-image: url(<%= asset_path("fitbit-logo.png") %>);
 }
 
-.source-captainslog {
+.service-captainslog {
   background-image: url(<%= asset_path("captainslog-logo.png") %>);
   background-size: 80px;
 }
 
-.source-lastfm {
+.service-lastfm {
   background-image: url(<%= asset_path("lastfm-logo.svg") %>);
 }

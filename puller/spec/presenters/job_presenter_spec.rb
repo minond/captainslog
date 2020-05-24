@@ -9,7 +9,7 @@ describe JobPresenter do
                  :stopped_at => stopped_at)
   end
 
-  let(:connection) { create(:connection, :source => :fitbit) }
+  let(:connection) { create(:connection, :service => :fitbit) }
   let(:status) { :done }
   let(:kind) { :pull }
   let(:started_at) { 62.seconds.ago }

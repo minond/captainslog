@@ -1,25 +1,25 @@
 module Service
-  # @param [Symbol] source
+  # @param [Symbol] service
   # @return [Class]
-  def self.class_for_source(source)
-    "Service::#{source.to_s.camelcase}".safe_constantize
+  def self.class_for_service(service)
+    "Service::#{service.to_s.camelcase}".safe_constantize
   end
 
-  # @param [Symbol] source
+  # @param [Symbol] service
   # @param [String] auth_code
   # @return [Hash]
-  def self.credentials_for_source(source, auth_code)
-    client = class_for_source(source).new
+  def self.credentials_for_service(service, auth_code)
+    client = class_for_service(service).new
     client.code = auth_code if client.oauth_authenticated?
     client.token = auth_code if client.token_authenticated?
     client.credential_options
   end
 
-  # @param [Symbol] source
+  # @param [Symbol] service
   # @param [Connection] connection, optional
   # @return [String]
-  def self.auth_url_for_source(source, connection = nil)
-    client = class_for_source(source).new
+  def self.auth_url_for_service(service, connection = nil)
+    client = class_for_service(service).new
     client.auth_url(connection)
   end
 

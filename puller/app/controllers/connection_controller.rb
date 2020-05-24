@@ -12,7 +12,7 @@ class ConnectionController < ApplicationController
 
   # GET /connection/:id/authenticate
   def authenticate
-    redirect_to_auth_url(current_connection.source, current_connection)
+    redirect_to_auth_url(current_connection.service, current_connection)
   end
 
   # GET /connection/:id/schedule_pull
@@ -77,43 +77,43 @@ private
 
   # @return [ActionController::Parameters]
   def connection_params
-    params.require(:connection).permit(:source)
+    params.require(:connection).permit(:service)
   end
 
-  # @param [Symbol] source
+  # @param [Symbol] service
   # @param [Connection, nil] connection
-  def redirect_to_auth_url(source, connection = nil)
-    redirect_to Service.auth_url_for_source(source, connection)
+  def redirect_to_auth_url(service, connection = nil)
+    redirect_to Service.auth_url_for_service(service, connection)
   end
 
-  # @param [Symbol] source
+  # @param [Symbol] service
   # @return [CreateConnection, UpdateConnection]
-  def handle_connection_auth_with_code(source)
-    handle_connection_auth(source, code)
+  def handle_connection_auth_with_code(service)
+    handle_connection_auth(service, code)
   end
 
-  # @param [Symbol] source
+  # @param [Symbol] service
   # @return [CreateConnection, UpdateConnection]
-  def handle_connection_auth_with_token(source)
-    handle_connection_auth(source, token)
+  def handle_connection_auth_with_token(service)
+    handle_connection_auth(service, token)
   end
 
-  # @param [Symbol] source
+  # @param [Symbol] service
   # @param [String] auth_code
   # @return [Array<CreateConnection, UpdateConnection, Boolean>]
-  def command_for_connection_auth(source, auth_code)
+  def command_for_connection_auth(service, auth_code)
     connection_id, _rest = Service.decode_state(state) if state
     if connection_id
       [update_connection_auth(connection_id, auth_code), false]
     else
-      [create_connection_auth(source, auth_code), true]
+      [create_connection_auth(service, auth_code), true]
     end
   end
 
-  # @param [Symbol] source
+  # @param [Symbol] service
   # @param [String] auth_code
-  def handle_connection_auth(source, auth_code)
-    cmd, is_new = command_for_connection_auth(source, auth_code)
+  def handle_connection_auth(service, auth_code)
+    cmd, is_new = command_for_connection_auth(service, auth_code)
     if cmd.success? && is_new
       redirect_to :root, :notice => t(:connection_successfully_created)
     elsif cmd.success?
@@ -131,10 +131,10 @@ private
     UpdateConnectionAuth.call(current_user, connection, auth_code)
   end
 
-  # @param [Symbol] source
+  # @param [Symbol] service
   # @param [String] auth_code
   # @return [CreateConnection]
-  def create_connection_auth(source, auth_code)
-    CreateConnectionAuth.call(current_user, source, auth_code)
+  def create_connection_auth(service, auth_code)
+    CreateConnectionAuth.call(current_user, service, auth_code)
   end
 end
