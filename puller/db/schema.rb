@@ -58,6 +58,15 @@ ActiveRecord::Schema.define(version: 2020_05_24_190504) do
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
   end
 
+  create_table "edges", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "tail_id", null: false
+    t.bigint "head_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_edges_on_user_id"
+  end
+
   create_table "jobs", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.integer "status"
@@ -84,10 +93,23 @@ ActiveRecord::Schema.define(version: 2020_05_24_190504) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
+  create_table "vertices", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "connection_id", null: false
+    t.text "urn"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["connection_id"], name: "index_vertices_on_connection_id"
+    t.index ["user_id"], name: "index_vertices_on_user_id"
+  end
+
   add_foreign_key "connections", "users"
   add_foreign_key "credential_options", "credentials"
   add_foreign_key "credentials", "connections"
   add_foreign_key "credentials", "users"
+  add_foreign_key "edges", "users"
   add_foreign_key "jobs", "connections"
   add_foreign_key "jobs", "users"
+  add_foreign_key "vertices", "connections"
+  add_foreign_key "vertices", "users"
 end

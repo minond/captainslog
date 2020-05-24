@@ -2,6 +2,7 @@ class Connection < ApplicationRecord
   belongs_to :user
   has_many :credentials, :dependent => :destroy
   has_many :jobs, :dependent => :destroy
+  has_many :vertices, :dependent => :destroy
 
   validates :service, :user, :presence => true
 

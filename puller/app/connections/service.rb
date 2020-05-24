@@ -38,4 +38,10 @@ module Service
     state = JSON.parse(decoded_state).with_indifferent_access
     [state[:connection_id]]
   end
+
+  # @param [Symbol] direction
+  # @return [Class]
+  def self.resource_class_for_direction(direction)
+    "Service::Client::#{direction.to_s.camelcase}::Resource".safe_constantize
+  end
 end
