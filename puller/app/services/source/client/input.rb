@@ -1,6 +1,8 @@
 module Source::Client::Input
   extend extend ActiveSupport::Concern
 
+  Type = Struct.new(:id, :keyword_init => true)
+
   included do
     traced :pull
   end
@@ -8,13 +10,16 @@ module Source::Client::Input
   class_methods do
     # @param [Array<Symbol>] types
     def pulls_in(*types)
-      @available_input_types = types
+      @available_input_types = types.map do |typ|
+        Type.new(:id => typ)
+      end
+
       types.each do |ty|
         traced "pull_#{ty}"
       end
     end
 
-    # @return [Array<Symbol>]
+    # @return [Array<Source::Client::Input::Type>]
     def available_input_types
       @available_input_types
     end
@@ -53,7 +58,7 @@ module Source::Client::Input
   # @yieldparam [Source::Record]
   def pull(**args, &block)
     self.class.available_input_types.each do |ty|
-      send("pull_#{ty}", args, &block)
+      send("pull_#{ty.id}", args, &block)
     end
   end
 
