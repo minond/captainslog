@@ -1,4 +1,4 @@
-class Source::Captainslog < Source::Client
+class Service::Captainslog < Service::Client
   include Target
   include TokenAuthenticated
 

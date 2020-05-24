@@ -1,8 +1,8 @@
-module Source
+module Service
   # @param [Symbol] source
   # @return [Class]
   def self.class_for_source(source)
-    "Source::#{source.to_s.camelcase}".safe_constantize
+    "Service::#{source.to_s.camelcase}".safe_constantize
   end
 
   # @param [Symbol] source

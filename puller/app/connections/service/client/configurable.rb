@@ -1,4 +1,4 @@
-module Source::Client::Configurable
+module Service::Client::Configurable
   extend extend ActiveSupport::Concern
 
   class_methods do

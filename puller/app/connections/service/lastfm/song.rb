@@ -1,4 +1,4 @@
-class Source::Lastfm::Song < Source::Record
+class Service::Lastfm::Song < Service::Record
   # @param [Hash] result
   # @return [Song]
   def self.from_result(result)

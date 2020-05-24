@@ -1,4 +1,4 @@
-class Source::Fitbit < Source::Client
+class Service::Fitbit < Service::Client
   include Source
   include OauthAuthenticated
 

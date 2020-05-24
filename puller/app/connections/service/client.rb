@@ -1,4 +1,4 @@
-class Source::Client
+class Service::Client
   include OpenTracing::Instrumented
   include Configurable
   include Iterators
@@ -14,7 +14,7 @@ class Source::Client
   end
 
   # Path to page where user can start the authentication process for this
-  # source.
+  # service.
   #
   # @param [Connection, nil] connection
   # @return [String]
@@ -23,7 +23,7 @@ class Source::Client
   end
 
   # Path to page where user can start the authentication process for this
-  # source.
+  # service.
   #
   # @return [String]
   def base_auth_url

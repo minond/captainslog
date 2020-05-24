@@ -1,9 +1,9 @@
-module Source::Client::Target
+module Service::Client::Target
   extend extend ActiveSupport::Concern
 
   ID = Struct.new(:id, :label, :keyword_init => true)
 
-  # @param [Array<Source::Record>] records
+  # @param [Array<Service::Record>] records
   # @param [ID] id
   def push(_records, _id)
     raise NotImplementedError, "#push is not implemented"

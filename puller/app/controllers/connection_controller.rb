@@ -83,7 +83,7 @@ private
   # @param [Symbol] source
   # @param [Connection, nil] connection
   def redirect_to_auth_url(source, connection = nil)
-    redirect_to Source.auth_url_for_source(source, connection)
+    redirect_to Service.auth_url_for_source(source, connection)
   end
 
   # @param [Symbol] source
@@ -102,7 +102,7 @@ private
   # @param [String] auth_code
   # @return [Array<CreateConnection, UpdateConnection, Boolean>]
   def command_for_connection_auth(source, auth_code)
-    connection_id, _rest = Source.decode_state(state) if state
+    connection_id, _rest = Service.decode_state(state) if state
     if connection_id
       [update_connection_auth(connection_id, auth_code), false]
     else

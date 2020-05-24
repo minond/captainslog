@@ -1,4 +1,4 @@
-class Source::Lastfm < Source::Client
+class Service::Lastfm < Service::Client
   include Source
   include TokenAuthenticated
 

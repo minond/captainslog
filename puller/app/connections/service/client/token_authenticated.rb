@@ -1,4 +1,4 @@
-module Source::Client::TokenAuthenticated
+module Service::Client::TokenAuthenticated
   extend extend ActiveSupport::Concern
 
   class_methods do
@@ -21,12 +21,12 @@ module Source::Client::TokenAuthenticated
   end
 
   # Path to page where user can start the authentication process for this
-  # source.
+  # service.
   #
   # @param [Connection, nil] connection
   # @return [String]
   def auth_url(connection = nil)
-    state = "?state=#{Source.encode_state(connection)}"
+    state = "?state=#{Service.encode_state(connection)}"
     callback = URI.encode_www_form_component(config[:redirect_uri] + state)
 
     uri = URI.parse(base_auth_url)

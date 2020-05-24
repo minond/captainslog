@@ -1,4 +1,4 @@
-class Source::Fitbit::Steps < Source::Record
+class Service::Fitbit::Steps < Service::Record
   # @param [Hash] result
   # @return [Steps]
   def self.from_result(result)

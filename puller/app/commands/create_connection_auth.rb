@@ -39,6 +39,6 @@ private
 
   # @return [Hash]
   def credentials_hash
-    Source.credentials_for_source(source, auth_code)
+    Service.credentials_for_source(source, auth_code)
   end
 end

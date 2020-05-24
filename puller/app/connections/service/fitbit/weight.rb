@@ -1,4 +1,4 @@
-class Source::Fitbit::Weight < Source::Record
+class Service::Fitbit::Weight < Service::Record
   # @param [Hash] result
   # @return [Weight]
   def self.from_result(result)

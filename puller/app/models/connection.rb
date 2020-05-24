@@ -34,7 +34,7 @@ class Connection < ApplicationRecord
     end
   end
 
-  # @return [Source::Client]
+  # @return [Service::Client]
   def client
     @client ||=
       begin
@@ -77,15 +77,15 @@ private
 
   # @return [Class]
   def client_class
-    Source.class_for_source(source)
+    Service.class_for_source(source)
   end
 
-  # @return [Source::Client]
+  # @return [Service::Client]
   def new_unauthenticated_client
     client_class.new
   end
 
-  # @return [Source::Client]
+  # @return [Service::Client]
   def new_authenticated_client
     client_class.new(newest_credentials.options)
   end

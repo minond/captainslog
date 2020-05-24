@@ -1,4 +1,4 @@
-class Source::Record
+class Service::Record
   attr_reader :text, :date
 
   def initialize(text, date)

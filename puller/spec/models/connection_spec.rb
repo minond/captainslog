@@ -47,7 +47,7 @@ describe Connection do
 
   describe "#client" do
     it "returns the expected client class" do
-      expect(subject.client).to be_a Source::Lastfm
+      expect(subject.client).to be_a Service::Lastfm
     end
 
     it "authenticates the client with the latests credentials" do

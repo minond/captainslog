@@ -1,4 +1,4 @@
-class Source::Fitbit::HeartRate < Source::Record
+class Service::Fitbit::HeartRate < Service::Record
   # @param [Hash] result
   # @return [HeartRate]
   def self.from_result(result)

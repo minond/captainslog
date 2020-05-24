@@ -1,4 +1,4 @@
-module Source::Client::Source
+module Service::Client::Source
   extend extend ActiveSupport::Concern
 
   ID = Struct.new(:id, :keyword_init => true)
@@ -19,7 +19,7 @@ module Source::Client::Source
       end
     end
 
-    # @return [Array<Source::Client::Source::ID>]
+    # @return [Array<Service::Client::Source::ID>]
     def available_sources
       @available_sources
     end
@@ -55,21 +55,21 @@ module Source::Client::Source
     end
   end
 
-  # @yieldparam [Source::Record]
+  # @yieldparam [Service::Record]
   def pull(**args, &block)
     self.class.available_sources.each do |ty|
       send("pull_#{ty.id}", args, &block)
     end
   end
 
-  # @yieldparam [Source::Record]
+  # @yieldparam [Service::Record]
   def pull_backfill(&block)
     pull(:start_date => self.class.backfill_range_start_date,
          :end_date => self.class.backfill_range_end_date,
          &block)
   end
 
-  # @yieldparam [Source::Record]
+  # @yieldparam [Service::Record]
   def pull_standard(&block)
     pull(:start_date => self.class.standard_range_start_date,
          :end_date => self.class.standard_range_end_date,
