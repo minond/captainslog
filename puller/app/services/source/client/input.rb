@@ -8,15 +8,15 @@ module Source::Client::Input
   class_methods do
     # @param [Array<Symbol>] types
     def pulls_in(*types)
-      @input_record_types = types
+      @available_input_types = types
       types.each do |ty|
         traced "pull_#{ty}"
       end
     end
 
     # @return [Array<Symbol>]
-    def input_record_types
-      @input_record_types
+    def available_input_types
+      @available_input_types
     end
 
     # @param [Range<ActiveSupport::Duration>] range
@@ -52,7 +52,7 @@ module Source::Client::Input
 
   # @yieldparam [Source::Record]
   def pull(**args, &block)
-    self.class.input_record_types.each do |ty|
+    self.class.available_input_types.each do |ty|
       send("pull_#{ty}", args, &block)
     end
   end
