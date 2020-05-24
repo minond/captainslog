@@ -1,15 +1,15 @@
 module Service::Client::Target
   extend extend ActiveSupport::Concern
 
-  ID = Struct.new(:id, :label, :keyword_init => true)
+  Resource = Struct.new(:id, :label, :keyword_init => true)
 
   # @param [Array<Service::Record>] records
-  # @param [ID] id
-  def push(_records, _id)
+  # @param [Resource] resource
+  def push(_records, _resource)
     raise NotImplementedError, "#push is not implemented"
   end
 
-  # @return [Array<ID>]
+  # @return [Array<Resource>]
   def available_targets
     raise NotImplementedError, "#available_targets is not implemented"
   end

@@ -21,10 +21,10 @@ class Service::Captainslog < Service::Client
     { :token => token }
   end
 
-  # @return [Array<Target::ID>]
+  # @return [Array<Target::Resource>]
   def available_targets
     books.map do |book|
-      Target::ID.new(:id => book["id"], :label => book["name"])
+      Target::Resource.new(:id => book["id"], :label => book["name"])
     end
   end
 
