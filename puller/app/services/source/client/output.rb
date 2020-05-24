@@ -5,7 +5,7 @@ module Source::Client::Output
 
   # @param [Array<Source::Record>] records
   # @param [Destination] destination
-  def push(records, destination)
+  def push(_records, _destination)
     raise NotImplementedError, "#push is not implemented"
   end
 
