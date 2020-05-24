@@ -7,7 +7,10 @@ class Connection < ApplicationRecord
 
   scope :last_update_attempted_over, ->(datetime) { where("last_updated_at < ?", datetime) }
 
-  delegate :input?, :output?, :to => :new_unauthenticated_client
+  delegate :input?, :to => :new_unauthenticated_client
+  delegate :output?, :to => :new_unauthenticated_client
+  delegate :available_input_types, :to => :client_class
+  delegate :available_output_destinations, :to => :client
 
   class MissingCredentialsError < StandardError; end
 
