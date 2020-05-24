@@ -7,10 +7,10 @@ class Connection < ApplicationRecord
 
   scope :last_update_attempted_over, ->(datetime) { where("last_updated_at < ?", datetime) }
 
-  delegate :input?, :to => :new_unauthenticated_client
-  delegate :output?, :to => :new_unauthenticated_client
-  delegate :available_input_types, :to => :client_class
-  delegate :available_output_destinations, :to => :client
+  delegate :source?, :to => :new_unauthenticated_client
+  delegate :target?, :to => :new_unauthenticated_client
+  delegate :available_sources, :to => :client_class
+  delegate :available_targets, :to => :client
 
   class MissingCredentialsError < StandardError; end
 
@@ -53,12 +53,12 @@ class Connection < ApplicationRecord
 
   # @return [Job]
   def schedule_pull
-    schedule_job(:pull) if input?
+    schedule_job(:pull) if source?
   end
 
   # @return [Job]
   def schedule_backfill_pull
-    schedule_job(:backfill) if input?
+    schedule_job(:backfill) if source?
   end
 
 private

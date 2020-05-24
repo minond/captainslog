@@ -1,6 +1,6 @@
 class Source::Captainslog < Source::Client
-  include Source::Client::Output
-  include Source::Client::TokenAuthenticated
+  include Target
+  include TokenAuthenticated
 
   attr_accessor :token
 
@@ -21,10 +21,10 @@ class Source::Captainslog < Source::Client
     { :token => token }
   end
 
-  # @return [Array<Output::Destination>]
-  def available_output_destinations
+  # @return [Array<Target::ID>]
+  def available_targets
     books.map do |book|
-      Output::Destination.new(:id => book["id"], :label => book["name"])
+      Target::ID.new(:id => book["id"], :label => book["name"])
     end
   end
 

@@ -1,6 +1,6 @@
 class Source::Client
   include OpenTracing::Instrumented
-  include Source::Client::Configurable
+  include Configurable
   include Iterators
 
   # @return [Symbol]
@@ -46,12 +46,12 @@ class Source::Client
   end
 
   # @return [Boolean]
-  def input?
-    self.class < Input
+  def source?
+    self.class < Source
   end
 
   # @return [Boolean]
-  def output?
-    self.class < Output
+  def target?
+    self.class < Target
   end
 end

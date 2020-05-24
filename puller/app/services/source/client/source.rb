@@ -1,27 +1,27 @@
-module Source::Client::Input
+module Source::Client::Source
   extend extend ActiveSupport::Concern
 
-  Type = Struct.new(:id, :keyword_init => true)
+  ID = Struct.new(:id, :keyword_init => true)
 
   included do
     traced :pull
   end
 
   class_methods do
-    # @param [Array<Symbol>] types
-    def pulls_in(*types)
-      @available_input_types = types.map do |typ|
-        Type.new(:id => typ)
+    # @param [Array<Symbol>] sources
+    def pulls_in(*sources)
+      @available_sources = sources.map do |typ|
+        ID.new(:id => typ)
       end
 
-      types.each do |ty|
+      sources.each do |ty|
         traced "pull_#{ty}"
       end
     end
 
-    # @return [Array<Source::Client::Input::Type>]
-    def available_input_types
-      @available_input_types
+    # @return [Array<Source::Client::Source::ID>]
+    def available_sources
+      @available_sources
     end
 
     # @param [Range<ActiveSupport::Duration>] range
@@ -57,7 +57,7 @@ module Source::Client::Input
 
   # @yieldparam [Source::Record]
   def pull(**args, &block)
-    self.class.available_input_types.each do |ty|
+    self.class.available_sources.each do |ty|
       send("pull_#{ty.id}", args, &block)
     end
   end

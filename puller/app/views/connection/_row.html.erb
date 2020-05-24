@@ -10,7 +10,7 @@
   <td class="nowrap pv3 pr3 bb b--black-10"><%= connection.created_at %></td>
   <td class="nowrap pv3 pr3 bb b--black-10"><%= connection.updated_at %></td>
   <td class="nowrap pv3 pr3 bb b--black-10">
-    <% if connection.input? %>
+    <% if connection.source? %>
       <%= link_to t(:schedule_pull), schedule_pull_connection_path(connection), :class => "link blue", :remote => true %>
     <% end %>
   </td>
