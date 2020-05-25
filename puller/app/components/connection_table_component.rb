@@ -26,8 +26,8 @@ class ConnectionTableComponent < Component
   end
 
   def rows
-    connections.map do
-      |connection| ConnectionRowComponent.render(:connection => connection)
+    connections.map do |connection|
+      ConnectionRowComponent.render(:connection => connection)
     end
   end
 end
