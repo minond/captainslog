@@ -1,9 +1,9 @@
 <%= render "layouts/content-view" do %>
   <% if connections.empty? %>
     <p class="pl2 lh-copy"><%= t(:no_connections_create_one) %></p>
-    <%= render "connection/form" %>
+    <%= AvailableConnectionsComponent.render %>
   <% else %>
-    <%= render "connection/list", :connections => connections %>
+    <%= ConnectionTableComponent.render(:connections => connections) %>
     <div class="pt5"></div>
     <%= render "job/list", :jobs => jobs %>
   <% end %>

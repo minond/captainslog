@@ -13,6 +13,9 @@ Lint/RaiseException:
 Lint/StructNewOverride:
   Enabled: true
 
+Style/StringLiteralsInInterpolation:
+  Enabled: false
+
 Style/ExponentialNotation:
   Enabled: true
 

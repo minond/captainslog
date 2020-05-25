@@ -32,7 +32,7 @@ class JobChannel < ApplicationCable::Channel
       :job => { :id => job.id },
       :connection => { :id => connection.id },
       :job_row_html => render("job/row", :job => job),
-      :connection_row_html => render("connection/row", :connection => connection)
+      :connection_row_html => ConnectionRowComponent.render(:connection => connection)
     }
   end
 
