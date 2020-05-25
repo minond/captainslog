@@ -5,7 +5,7 @@
   <% else %>
     <%= ConnectionTableComponent.render(:connections => connections) %>
     <div class="pt5"></div>
-    <%= render "job/list", :jobs => jobs %>
+    <%= JobTableComponent.render(:jobs => jobs) %>
   <% end %>
 <% end %>
 
