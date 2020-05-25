@@ -1,5 +1,5 @@
 class Service::Resource
-  attr_reader :id, :service, :label
+  attr_reader :id, :service
 
   # @param [String] urn
   # @return [Resource]
