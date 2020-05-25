@@ -36,7 +36,7 @@ class Connection < ApplicationRecord
   end
 
   # @return [Array<Service::Resource>]
-  def resources
+  def available_resources
     source? ? available_source_resources : available_target_resources
   end
 

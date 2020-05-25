@@ -6,7 +6,7 @@
     <% end %>
   </td>
   <td class="nowrap pv3 pr3 bb b--black-10">
-    <% connection.resources.each do |resource| %>
+    <% connection.available_resources.each do |resource| %>
       <span
         class="f7 pv1 ph2 ba b--black-20 pointer"
         title="<%= resource.urn %>"><%= resource.label %></span>
