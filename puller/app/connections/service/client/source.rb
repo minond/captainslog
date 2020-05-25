@@ -1,8 +1,6 @@
 module Service::Client::Source
   extend extend ActiveSupport::Concern
 
-  Resource = Struct.new(:id, :keyword_init => true)
-
   included do
     traced :pull
   end
@@ -11,7 +9,7 @@ module Service::Client::Source
     # @param [Array<Symbol>] sources
     def pulls_in(*sources)
       @available_sources = sources.map do |typ|
-        Resource.new(:id => typ)
+        Service::Resource.new(typ, service)
       end
 
       sources.each do |ty|
@@ -19,7 +17,7 @@ module Service::Client::Source
       end
     end
 
-    # @return [Array<Service::Client::Source::Resource>]
+    # @return [Array<Service::Resource>]
     def available_sources
       @available_sources
     end

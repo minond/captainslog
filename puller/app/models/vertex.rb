@@ -6,17 +6,13 @@ class Vertex < ApplicationRecord
 
   validates :connection, :urn, :presence => true
 
-  # @return [Service::Client::Target::Resource, Service::Client::Source::Resource]
+  # @return [Service::Resource]
   def resource
-    _urn, direction, _service, id = urn.split(":")
-    Service.resource_class_for_direction(direction).new(:id => id)
+    Service::Resource.from_urn(urn)
   end
 
-  # @param [Service::Client::Target::Resource, Service::Client::Source::Resource] resource
+  # @param [Service::Resource] resource
   def resource=(resource)
-    id = resource.id
-    direction = connection.source? ? "source" : "target"
-    service = connection.service
-    self.urn = "urn:#{direction}:#{service}:#{id}"
+    self.urn = resource.urn
   end
 end
