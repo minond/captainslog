@@ -4,5 +4,10 @@ require "rspec/core/rake_task"
 
 Rails.application.load_tasks
 
+Rake::Task["spec"].clear if ::Rake::Task.task_defined?("spec")
+Rake::Task["default"].clear if ::Rake::Task.task_defined?("default")
+
 RuboCop::RakeTask.new(:lint)
 RSpec::Core::RakeTask.new(:spec)
+
+task :default => %i[lint spec]
