@@ -5,10 +5,15 @@
       <%= link_to "", job_path(id), :class => "link job-status-ball-#{status}" %>
     <% end %>
   </td>
+  <td class="nowrap pv3 pr3 bb b--black-10">
+    <% connection.resources.each do |resource| %>
+      <span
+        class="f7 pv1 ph2 ba b--black-20 pointer"
+        title="<%= resource.urn %>"><%= resource.label %></span>
+    <% end %>
+  </td>
   <td class="nowrap pv3 pr3 bb b--black-10"><%= connection.jobs.count %></td>
   <td class="nowrap pv3 pr3 bb b--black-10"><%= connection.last_updated_at %></td>
-  <td class="nowrap pv3 pr3 bb b--black-10"><%= connection.created_at %></td>
-  <td class="nowrap pv3 pr3 bb b--black-10"><%= connection.updated_at %></td>
   <td class="nowrap pv3 pr3 bb b--black-10">
     <% if connection.source? %>
       <%= link_to t(:schedule_pull), schedule_pull_connection_path(connection), :class => "link blue", :remote => true %>

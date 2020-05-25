@@ -10,8 +10,8 @@ class Connection < ApplicationRecord
 
   delegate :source?, :to => :new_unauthenticated_client
   delegate :target?, :to => :new_unauthenticated_client
-  delegate :available_sources, :to => :client_class
-  delegate :available_targets, :to => :client
+  delegate :available_source_resources, :to => :client_class
+  delegate :available_target_resources, :to => :client
 
   class MissingCredentialsError < StandardError; end
 
@@ -33,6 +33,11 @@ class Connection < ApplicationRecord
       Credential.create_with_options(connection, credentials_hash)
       connection
     end
+  end
+
+  # @return [Array<Service::Resource>]
+  def resources
+    source? ? available_source_resources : available_target_resources
   end
 
   # @return [Service::Client]

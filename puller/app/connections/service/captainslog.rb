@@ -22,7 +22,7 @@ class Service::Captainslog < Service::Client
   end
 
   # @return [Array<Service::Resource>]
-  def available_targets
+  def available_target_resources
     books.map do |book|
       Service::Resource.new(book["id"], self.class.service, book["name"])
     end

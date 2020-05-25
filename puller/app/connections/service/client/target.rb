@@ -8,7 +8,7 @@ module Service::Client::Target
   end
 
   # @return [Array<Service::Resource>]
-  def available_targets
-    raise NotImplementedError, "#available_targets is not implemented"
+  def available_target_resources
+    raise NotImplementedError, "#available_target_resources is not implemented"
   end
 end

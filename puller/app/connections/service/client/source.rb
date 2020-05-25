@@ -8,7 +8,7 @@ module Service::Client::Source
   class_methods do
     # @param [Array<Symbol>] sources
     def pulls_in(*sources)
-      @available_sources = sources.map do |typ|
+      @available_source_resources = sources.map do |typ|
         Service::Resource.new(typ, service)
       end
 
@@ -18,8 +18,8 @@ module Service::Client::Source
     end
 
     # @return [Array<Service::Resource>]
-    def available_sources
-      @available_sources
+    def available_source_resources
+      @available_source_resources
     end
 
     # @param [Range<ActiveSupport::Duration>] range
@@ -55,7 +55,7 @@ module Service::Client::Source
 
   # @yieldparam [Service::Record]
   def pull(**args, &block)
-    self.class.available_sources.each do |ty|
+    self.class.available_source_resources.each do |ty|
       send("pull_#{ty.id}", args, &block)
     end
   end

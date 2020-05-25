@@ -21,4 +21,8 @@ class Service::Resource
   def urn
     "urn:#{service}:#{id}"
   end
+
+  def label
+    @label.presence || id.to_s.humanize
+  end
 end
