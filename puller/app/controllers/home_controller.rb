@@ -1,10 +1,20 @@
 class HomeController < ApplicationController
   def home
     if current_user
-      locals :connections => current_user.connections.order("service"),
-             :jobs => current_user.jobs.order("created_at desc").first(100)
+      component HomeComponent, :connections => connections,
+                               :jobs => jobs
     else
       redirect_to :new_user_session
     end
+  end
+
+  # @return [Array<Connection>]
+  def connections
+    current_user.connections.order("service")
+  end
+
+  # @return [Array<Job>]
+  def jobs
+    current_user.jobs.order("created_at desc").first(100)
   end
 end
