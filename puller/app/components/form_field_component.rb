@@ -19,12 +19,19 @@ class FormFieldComponent < Component
   def field
     case type
     when :email
-      form.email_field name, :class => class_string
+      form.email_field name, attributes
     when :password
-      form.password_field name, :class => class_string
+      form.password_field name, attributes
     else
-      form.text_field name, :class => class_string
+      form.text_field name, attributes
     end
+  end
+
+  def attributes
+    {
+      :autofocus => autofocus,
+      :class => class_string,
+    }
   end
 
   def class_string
