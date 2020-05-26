@@ -20,6 +20,13 @@ class Component
     end
   end
 
+  module Rendering
+    def component(klass, **args)
+      render :html => klass.render(args),
+             :layout => "layouts/application"
+    end
+  end
+
   # @param [Array<String>, String] strs
   # @return [String]
   def self.html(strs)
