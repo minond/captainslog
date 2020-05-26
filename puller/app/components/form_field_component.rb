@@ -5,11 +5,7 @@ class FormFieldComponent < Component
         :autofocus => Object
 
   def render
-    <<-HTML
-      #{label}
-      #{field}
-      #{error}
-    HTML
+    [label, field, error]
   end
 
   def label

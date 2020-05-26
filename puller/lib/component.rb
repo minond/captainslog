@@ -34,10 +34,11 @@ class Component
     strs.html_safe
   end
 
-  # @param [Hash] args
+  # @param [Array<String>, String, Nil] children
+  # @param [Hash] props
   # @return [String]
-  def self.render(args = {}, &block)
-    html(new(args, &block).render)
+  def self.render(children = nil, **props, &block)
+    html(new(children, props, &block).render)
   end
 
   # @param [Array<Symbol>] props
@@ -84,10 +85,11 @@ class Component
     end
   end
 
+  # @param [Array<String>, String, Nil] children
   # @param [Hash] props
   # @raise [TypeError] if a property is passed in with an unexpected type.
-  def initialize(props)
-    @children = proc { |*args| yield(*args) if block_given? }
+  def initialize(children = nil, **props)
+    @children = proc { |*args| block_given? ? yield(*args) : children }
 
     self.class.zip(props).each do |(prop, type, val)|
       self.class.typecheck!(prop, type, val)

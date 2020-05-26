@@ -2,7 +2,7 @@ class JobShowComponent < Component
   props :job => Job
 
   def render
-    ContentComponent.render { content + javascript }
+    ContentComponent.render [content, javascript]
   end
 
   def content

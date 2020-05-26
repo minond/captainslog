@@ -2,13 +2,14 @@ class UserEditComponent < Component
   props :user => User
 
   def render
-    ContentComponent.render do
-      SectionComponent.render do
-        [
-          HeaderComponent.render(:key => :settings),
-          UserFormComponent.render(:user => user),
-        ]
-      end
-    end
+    ContentComponent.render SectionComponent.render([header, form])
+  end
+
+  def header
+    HeaderComponent.render(:key => :settings)
+  end
+
+  def form
+    UserFormComponent.render(:user => user)
   end
 end

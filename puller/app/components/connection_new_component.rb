@@ -1,7 +1,5 @@
 class ConnectionNewComponent < Component
   def render
-    ContentComponent.render do
-      AvailableConnectionsComponent.render
-    end
+    ContentComponent.render [AvailableConnectionsComponent.render]
   end
 end
