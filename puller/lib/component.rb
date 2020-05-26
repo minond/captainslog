@@ -3,6 +3,12 @@ class Component
   include ActionView::Helpers::AssetUrlHelper
   include ActionView::Helpers::UrlHelper
   include ActionView::Helpers::AssetTagHelper
+  include ActionView::Helpers::FormHelper
+  include ActionView::Context
+  include ActiveSupport::Configurable
+  include ActionController::RequestForgeryProtection
+
+  attr_accessor :output_buffer
 
   class TypeError < ArgumentError
     # @param [Class] component
@@ -14,12 +20,17 @@ class Component
     end
   end
 
+  # @param [Array<String>, String] strs
+  # @return [String]
+  def self.html(strs)
+    strs = strs.join if strs.is_a? Array
+    strs.html_safe
+  end
+
   # @param [Hash] args
   # @return [String]
   def self.render(args = {}, &block)
-    res = new(args).render(&block)
-    res = res.join if res.is_a? Array
-    res.html_safe
+    html(new(args, &block).render)
   end
 
   # @param [Array<Symbol>] props
@@ -66,10 +77,12 @@ class Component
     end
   end
 
-  # @param [Hash] args
+  # @param [Hash] props
   # @raise [TypeError] if a property is passed in with an unexpected type.
-  def initialize(args)
-    self.class.zip(args).each do |(prop, type, val)|
+  def initialize(props)
+    @children = proc { |*args| yield(*args) if block_given? }
+
+    self.class.zip(props).each do |(prop, type, val)|
       self.class.typecheck!(prop, type, val)
       send("#{prop}=", val)
     end
@@ -80,7 +93,24 @@ class Component
     raise NotImplementedError, "#render is not implemented"
   end
 
+  # @param [Array<Object>] args
+  # @return [String]
+  def children(*args)
+    self.class.html(@children.call(*args))
+  end
+
+  # @param [Symbol] key
+  # @param [Hash] args
+  # @return [String]
   def t(key, **args)
     I18n.t(key, args)
+  end
+
+  # Allows ActionController::RequestForgeryProtection and authenticity token
+  # generation to work.
+  #
+  # @return [Hash]
+  def session
+    {}
   end
 end
