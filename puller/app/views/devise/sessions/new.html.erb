@@ -3,13 +3,8 @@
   <p class="lh-copy mb4"><%= t(:intro_message) %></p>
 
   <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-    <%= render "form/field", :f => f, :field => :email do %>
-      <%= f.email_field :email, autofocus: true, :autocomplete => "email", :class => "input-reset ba b--black-20 pa2 mb2 db w-100" %>
-    <% end %>
-
-    <%= render "form/field", :f => f, :field => :password do %>
-      <%= f.password_field :password, :autocomplete => "password", :class => "input-reset ba b--black-20 pa2 mb2 db w-100" %>
-    <% end %>
+    <%= FormFieldComponent.render(:form => f, :name => :email, :type => :email, :autofocus => true) %>
+    <%= FormFieldComponent.render(:form => f, :name => :password, :type => :password) %>
 
     <div class="mt2">
       <% if devise_mapping.rememberable? %>

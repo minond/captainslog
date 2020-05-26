@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::Base
+  include Component::Rendering
+
   # Generates a getter method for a request parameter
   #
   # @example call

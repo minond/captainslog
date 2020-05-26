@@ -1,7 +1,7 @@
 class ConnectionController < ApplicationController
   # GET /connection/new
   def new
-    render
+    component ConnectionNewComponent
   end
 
   # DELETE /connection/1
