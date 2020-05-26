@@ -16,8 +16,8 @@ class Component
 
   # @param [Hash] args
   # @return [String]
-  def self.render(args = {})
-    res = new(args).render
+  def self.render(args = {}, &block)
+    res = new(args).render(&block)
     res = res.join if res.is_a? Array
     res.html_safe
   end

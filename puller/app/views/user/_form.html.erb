@@ -1,27 +1,10 @@
 <%= form_for(user, :url => me_path) do |f| %>
-  <%= render "form/field", :f => f, :field => :email do %>
-    <%= f.email_field :email,
-      :class => "input-reset ba b--black-20 pa2 mb2 db w-100" %>
-  <% end %>
+  <%= FormFieldComponent.render(:form => f, :type => :email, :name => :email) %>
 
-  <p class="lh-copy i f6 mt4"><%= t(:update_password) %></p>
+  <%= FormSectionLabelComponent.render(:key => :update_password) %>
+  <%= FormFieldComponent.render(:form => f, :type => :password, :name => :current_password) %>
+  <%= FormFieldComponent.render(:form => f, :type => :password, :name => :password) %>
+  <%= FormFieldComponent.render(:form => f, :type => :password, :name => :password_confirmation) %>
 
-  <%= render "form/field", :f => f, :field => :password do %>
-    <%= f.password_field :current_password,
-      :class => "input-reset ba b--black-20 pa2 mb2 db w-100" %>
-  <% end %>
-
-  <%= render "form/field", :f => f, :field => :password do %>
-    <%= f.password_field :password,
-      :class => "input-reset ba b--black-20 pa2 mb2 db w-100" %>
-  <% end %>
-
-  <%= render "form/field", :f => f, :field => :password_confirmation do %>
-    <%= f.password_field :password_confirmation,
-      :class => "input-reset ba b--black-20 pa2 mb2 db w-100" %>
-  <% end %>
-
-  <div class="mt4">
-    <input type="submit" value="<%= t(:submit) %>" class="f6 link bn pa0 input-reset pointer blue" />
-  </div>
+  <%= FormActionsComponent.render(:submit => true) %>
 <% end %>
