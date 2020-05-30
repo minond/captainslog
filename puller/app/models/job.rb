@@ -1,4 +1,5 @@
 class Job < ApplicationRecord
+  include Broadcaster
   include Presenter
 
   belongs_to :user
@@ -10,7 +11,8 @@ class Job < ApplicationRecord
 
   after_initialize :constructor
   after_create :schedule_processing
-  after_save :broadcast_record
+  after_save :broadcast_user_job
+  after_save :broadcast_user_connection
 
   # @return [Float, nil]
   def run_time
@@ -28,10 +30,5 @@ private
 
   def schedule_processing
     ProcessJobJob.perform_later(id)
-  end
-
-  def broadcast_record
-    ActionCable.server.broadcast("user/#{user.id}/connections", connection.id)
-    ActionCable.server.broadcast("user/#{user.id}/jobs", id)
   end
 end
