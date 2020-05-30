@@ -1,4 +1,6 @@
 class HomeController < ApplicationController
+  before_action :set_no_cache_headers
+
   def home
     if current_user
       component HomeComponent, :connections => connections,

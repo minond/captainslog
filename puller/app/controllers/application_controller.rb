@@ -37,4 +37,11 @@ private
   def locals(*view, **defs)
     render view.first, :locals => defs
   end
+
+  # Sets required headers to prevent response from being cached.
+  def set_no_cache_headers
+    response.headers["Cache-Control"] = "no-cache, no-store"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "Mon, 01 Jan 1990 00:00:00 GMT"
+  end
 end
