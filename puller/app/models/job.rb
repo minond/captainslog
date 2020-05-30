@@ -1,6 +1,9 @@
 class Job < ApplicationRecord
   include Broadcaster
+  include Performer
   include Presenter
+
+  performs ProcessJobJob
 
   belongs_to :user
   belongs_to :connection
@@ -10,7 +13,7 @@ class Job < ApplicationRecord
   enum :status => %i[initiated running errored done]
 
   after_initialize :constructor
-  after_create :schedule_processing
+  after_create :perform_process_job_later
   after_save :broadcast_user_job
   after_save :broadcast_user_connection
 
@@ -26,9 +29,5 @@ private
 
   def constructor
     self.status ||= :initiated
-  end
-
-  def schedule_processing
-    ProcessJobJob.perform_later(id)
   end
 end

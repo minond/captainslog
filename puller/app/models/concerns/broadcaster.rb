@@ -11,7 +11,7 @@ module Broadcaster
       super
     end
 
-    # Defines a broadcast_user_X method
+    # Defines a broadcast_user_X method.
     #
     # @example
     #
