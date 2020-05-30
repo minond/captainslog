@@ -50,6 +50,8 @@ class Connection < ApplicationRecord
       end
   end
 
+  # @param [Integer] last_n_jobs
+  # @return [Tuple<Integer, Symbol, :Integer>]
   def recent_stats(last_n_jobs = 10)
     jobs.select(:id, :status, "extract(epoch from stopped_at - started_at) as run_time")
         .order("created_at desc")
