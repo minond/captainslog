@@ -5,11 +5,11 @@ class CredentialOption < ApplicationRecord
 
   # @return [String]
   def decrypted_value
-    credential.user.decrypt_value(value) if value.present?
+    credential.user.decrypt(value) if value.present?
   end
 
   # @param [String] value
   def value=(value)
-    self[:value] = credential.user.encrypt_value(value)
+    self[:value] = credential.user.encrypt(value)
   end
 end

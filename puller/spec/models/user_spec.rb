@@ -8,16 +8,16 @@ describe User do
     it { expect(User.new).not_to be_nil }
   end
 
-  describe "#encrypt_value" do
+  describe "#encrypt" do
     it "is able to encrypt a value" do
-      expect(subject.encrypt_value("123")).not_to be_nil
+      expect(subject.encrypt("123")).not_to be_nil
     end
   end
 
-  describe "#decrypt_value" do
+  describe "#decrypt" do
     let(:original) { "123" }
-    let(:encrypted) { subject.encrypt_value(original) }
-    let(:decrypted) { subject.decrypt_value(encrypted) }
+    let(:encrypted) { subject.encrypt(original) }
+    let(:decrypted) { subject.decrypt(encrypted) }
 
     it "is able to decrypt and encrypted value" do
       expect(decrypted).to eq original
