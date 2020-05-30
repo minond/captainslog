@@ -4,7 +4,7 @@ class JobRowComponent < Component
   # rubocop:disable Metrics/AbcSize
   def render
     <<-HTML
-      <tr data-job-id="#{job.id}">
+      <tr data-model="job" data-component="row" data-id="#{job.id}">
         <td class="nowrap pv3 ph3 bb b--black-10 tc">#{job_status}</td>
         <td class="nowrap pv3 pr3 bb b--black-10">#{job.presenter.kind}</td>
         <td class="nowrap pv3 pr3 bb b--black-10">#{job.message}</td>

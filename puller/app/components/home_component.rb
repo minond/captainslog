@@ -39,7 +39,10 @@ class HomeComponent < Component
 
   def javascript
     <<-HTML
-      <script src="/assets/home.js"></script>
+      <script>
+        streamModelUpdates("JobChannel")
+        streamModelUpdates("ConnectionChannel")
+      </script>
     HTML
   end
 end

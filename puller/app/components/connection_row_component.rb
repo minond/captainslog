@@ -3,7 +3,7 @@ class ConnectionRowComponent < Component
 
   def render
     <<-HTML
-      <tr data-connection-id="#{connection.id}">
+      <tr data-model="connection" data-component="row" data-id="#{connection.id}">
         <td class="nowrap pv0 pl0 bb b--black-10 service service-#{connection.service}"></td>
         <td class="nowrap pv0 pl0 bb b--black-10 dn dtc-ns">#{history}</td>
         <td class="nowrap pv3 pr3 bb b--black-10">#{resources.join}</td>

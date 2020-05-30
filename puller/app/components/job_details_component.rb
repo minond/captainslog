@@ -1,8 +1,17 @@
 class JobDetailsComponent < Component
   props :job => Job
 
-  # rubocop:disable Metrics/AbcSize
   def render
+    <<-HTML
+      <div data-model="job" data-component="details" data-id="#{job.id}">
+        #{details}
+        #{logs}
+      </div>
+    HTML
+  end
+
+  # rubocop:disable Metrics/AbcSize
+  def details
     table [
       row(:status, job.presenter.status),
       row(:kind, job.presenter.kind),
@@ -32,5 +41,9 @@ class JobDetailsComponent < Component
         <td class="pv2 ph3 bb b--black-10 nowrap" data-job-details-#{field}>#{value}</td>
       </tr>
     HTML
+  end
+
+  def logs
+    JobLogsComponent.render(:job => job)
   end
 end

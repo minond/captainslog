@@ -17,7 +17,7 @@ class ConnectionTableComponent < Component
               <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w1"></th>
             </tr>
           </thead>
-          <tbody class="lh-copy" data-connections>
+          <tbody class="lh-copy" data-model="connection" data-component="rows">
             #{rows.join}
           </tbody>
         </table>
