@@ -28,8 +28,8 @@ class VertexEditComponent < Component
   end
 
   def form
-    url = connection_vertex_edges_path(:vertex_id => vertex.id,
-                                       :connection_id => vertex.connection.id)
+    url = connection_vertex_edges_path(:vertex_id => vertex,
+                                       :connection_id => connection)
 
     FormComponent.render(:resource => Edge.new, :url => url) do
       [
