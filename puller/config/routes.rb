@@ -28,7 +28,9 @@ Rails.application.routes.draw do
         get :schedule_pull
       end
 
-      resources :vertices, :only => %i[edit]
+      resources :vertices, :only => %i[edit] do
+        resources :edges, :only => %i[create destroy]
+      end
 
       collection do
         namespace :initiate, :module => nil do
