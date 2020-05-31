@@ -77,11 +77,47 @@ class Component
     end
   end
 
+  # @param [Symbol] tag
+  # @param [Hash] attrs
+  # @return [Class]
+  #
+  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/AbcSize
+  def self.new(tag, **attrs, &block)
+    return super unless self == Component
+
+    props = attrs.delete(:props) || {}
+
+    Class.new(Component) do
+      props props
+
+      define_method(:_tag) { tag }
+      define_method(:_attrs) { attrs }
+      define_method(:_block) { block }
+
+      def initialize(children = nil, **attr_overrides)
+        super(children, _attrs.merge(attr_overrides))
+      end
+
+      def render
+        content_tag(_tag, _attrs.merge(@attributes)) do
+          if _block.present?
+            Component.html(instance_eval(&_block))
+          else
+            ""
+          end
+        end
+      end
+    end
+  end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
+
   # @param [Array<String>, String] strs
   # @return [String]
   def self.html(strs)
     strs = strs.join if strs.is_a? Array
-    strs.html_safe
+    strs&.html_safe || ""
   end
 
   # @param [Array<String>, String, Nil] children
