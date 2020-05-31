@@ -85,10 +85,10 @@ class Component
   end
 
   # @param [Array<String>, String, Nil] children
-  # @param [Hash] props
+  # @param [Hash] attrs
   # @return [String]
-  def self.render(children = nil, **props, &block)
-    html(new(children, props, &block).render)
+  def self.render(children = nil, **attrs, &block)
+    html(new(children, attrs, &block).render)
   end
 
   # @param [Array<Symbol>] props
@@ -100,21 +100,22 @@ class Component
     @props = props
   end
 
-  # @param [Hash] args
+  # @param [Hash] attrs
   # @return [Array<Symbol, Class, Object>]
-  def self.zip(args)
+  def self.zip(attrs)
     props.each_with_object([]) do |(prop, type), acc|
-      acc << [prop, type, args[prop]]
+      acc << [prop, type, attrs[prop]]
     end
   end
 
   # @param [Array<String>, String, Nil] children
-  # @param [Hash] props
+  # @param [Hash] attrs
   # @raise [TypeError] if a property is passed in with an unexpected type.
-  def initialize(children = nil, **props)
+  def initialize(children = nil, **attrs)
     @children = proc { |*args| block_given? ? yield(*args) : children }
+    @attributes = attrs
 
-    self.class.zip(props).each do |(prop, type, val)|
+    self.class.zip(attrs).each do |(prop, type, val)|
       Typechecker.assert!(prop, type, val)
       send("#{prop}=", val)
     end
