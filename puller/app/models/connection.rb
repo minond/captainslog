@@ -1,10 +1,18 @@
 class Connection < ApplicationRecord
+  include Broadcaster
+  include Performer
+
+  performs CreateVerticesJob
+
   belongs_to :user
   has_many :credentials, :dependent => :destroy
   has_many :jobs, :dependent => :destroy
   has_many :vertices, :dependent => :destroy
 
   validates :service, :user, :presence => true
+
+  after_create :perform_create_vertices_later
+  after_touch :broadcast_user_connection
 
   scope :last_update_attempted_over, ->(datetime) { where("last_updated_at < ?", datetime) }
 
@@ -67,6 +75,20 @@ class Connection < ApplicationRecord
   # @return [Job]
   def schedule_backfill_pull
     schedule_job(:backfill) if source?
+  end
+
+  # Creates a Vertex for every available resource. Vertices are created for a
+  # services before they are used as a way to cache the available sources or
+  # targets. This is particularly helpful for target services, which require an
+  # external call in order to retrieve available resources.
+  #
+  # @return [Array<Vertex>]
+  def create_vertices!
+    available_resources.map do |resource|
+      Vertex.create(:user => user,
+                    :connection => self,
+                    :resource => resource)
+    end
   end
 
 private

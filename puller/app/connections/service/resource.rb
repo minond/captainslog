@@ -1,11 +1,11 @@
 class Service::Resource
   attr_reader :id, :service
 
-  # @param [String] urn
+  # @param [String] str
   # @return [Resource]
-  def self.from_urn(urn)
-    _urn, service, id = urn.split(":")
-    new(id, service)
+  def self.from_urn(str)
+    urn = URN.parse(str)
+    new(urn.nss, urn.nid, urn.q[:label])
   end
 
   # @param [String] id
@@ -17,9 +17,9 @@ class Service::Resource
     @label = label
   end
 
-  # @return [String]
+  # @return [URN]
   def urn
-    "urn:#{service}:#{id}"
+    URN.new(service, id, :q => { :label => @label })
   end
 
   def label

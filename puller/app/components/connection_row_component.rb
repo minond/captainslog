@@ -21,8 +21,8 @@ class ConnectionRowComponent < Component
   end
 
   def resources
-    connection.available_resources.map do |resource|
-      PillBoxComponent.render(:label => resource.label)
+    connection.vertices.map do |vertex|
+      PillBoxComponent.render(:label => vertex.resource.label)
     end
   end
 

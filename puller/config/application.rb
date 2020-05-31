@@ -22,6 +22,7 @@ Bundler.require(*Rails.groups)
 module Puller
   class Application < Rails::Application
     require_relative Rails.root.join("lib/ext/fitbit_api/client")
+    require_relative Rails.root.join("lib/urn")
 
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.0

@@ -13,6 +13,6 @@ class Vertex < ApplicationRecord
 
   # @param [Service::Resource] resource
   def resource=(resource)
-    self.urn = resource.urn
+    self.urn = resource.urn.to_s
   end
 end
