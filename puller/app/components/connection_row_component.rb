@@ -22,7 +22,9 @@ class ConnectionRowComponent < Component
 
   def resources
     connection.vertices.map do |vertex|
-      PillBoxComponent.render(:label => vertex.resource.label)
+      link_to PillBoxComponent.render(:label => vertex.resource.label),
+              edit_connection_vertex_path(connection, vertex),
+              :class => "link"
     end
   end
 

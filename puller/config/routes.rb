@@ -28,6 +28,8 @@ Rails.application.routes.draw do
         get :schedule_pull
       end
 
+      resources :vertices, :only => %i[edit]
+
       collection do
         namespace :initiate, :module => nil do
           get :captainslog, :action => :captainslog_initiate
