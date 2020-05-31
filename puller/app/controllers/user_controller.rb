@@ -8,7 +8,7 @@ class UserController < ApplicationController
       bypass_sign_in(current_user)
       redirect_to :me
     else
-      locals :edit, :user => current_user
+      component UserEditComponent, :user => current_user
     end
   end
 
