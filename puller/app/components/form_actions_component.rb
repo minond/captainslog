@@ -1,5 +1,5 @@
 class FormActionsComponent < Component
-  props :submit => Object
+  props :submit => [NilClass, TrueClass, FalseClass]
 
   def render
     <<-HTML

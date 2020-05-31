@@ -59,7 +59,7 @@ class Component
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/PerceivedComplexity
   def self.typecheck!(prop, type, val)
-    ok = if type.is_a? Array
+    ok = if type.is_a?(Array) && type.size == 1
            if val.is_a? ActiveRecord::AssociationRelation
              val.name == type.first.name
            elsif val.is_a? Array
@@ -67,6 +67,8 @@ class Component
            else
              false
            end
+         elsif type.is_a? Array
+           type.any? { |t| val.is_a? t }
          else
            val.is_a? type
          end

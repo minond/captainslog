@@ -1,5 +1,5 @@
 class FormComponent < Component
-  props :resource => Object,
+  props :resource => ApplicationRecord,
         :url => String
 
   def render

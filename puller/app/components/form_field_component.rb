@@ -2,7 +2,7 @@ class FormFieldComponent < Component
   props :form => ActionView::Helpers::FormBuilder,
         :name => Symbol,
         :type => Symbol,
-        :autofocus => Object
+        :autofocus => [NilClass, TrueClass, FalseClass]
 
   def render
     [label, field, error]

@@ -1,6 +1,6 @@
 class HeaderComponent < Component
-  props :key => Symbol
-        :args => Object
+  props :key => Symbol,
+        :args => [NilClass, Hash]
 
   def render
     <<-HTML
