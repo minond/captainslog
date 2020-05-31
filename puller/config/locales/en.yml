@@ -15,6 +15,7 @@ en:
   didnt_receive_unlock: "Didn't receive unlock instructions?"
   sign_in_with: "Sing in with %{provider}"
   submit: "Submit"
+  select_option: "Select an option"
 
   email: "Email"
   password: "Password"
