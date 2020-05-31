@@ -3,6 +3,8 @@ en:
 
   intro_message: "Captain‘s Log is an application for logging anything you want. The intent is to have an application that someone can use to log anything in relatively free form, but while still being able to extract (or inject) important information from each log entry and, more importantly, from aggregated logs."
 
+  ok: "Success!"
+  not_ok: "An error has occured, please try again."
   settings: "Settings"
   or: "or"
   log_in: "Log in"
