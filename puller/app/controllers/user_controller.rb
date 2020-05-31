@@ -1,8 +1,10 @@
 class UserController < ApplicationController
+  # GET /me
   def edit
     component UserEditComponent, :user => current_user
   end
 
+  # PATCH /me
   def update
     if current_user.update(user_params)
       bypass_sign_in(current_user)

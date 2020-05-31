@@ -1,4 +1,5 @@
 class VerticesController < ApplicationController
+  # GET /connection/:connection_id/vertices/:id/edit
   def edit
     component VertexEditComponent, :vertex => current_vertex
   end

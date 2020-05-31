@@ -1,6 +1,7 @@
 class HomeController < ApplicationController
   before_action :set_no_cache_headers
 
+  # GET /
   def home
     if current_user
       component HomeComponent, :connections => connections,
@@ -9,6 +10,8 @@ class HomeController < ApplicationController
       redirect_to :new_user_session
     end
   end
+
+private
 
   # @return [Array<Connection>]
   def connections
