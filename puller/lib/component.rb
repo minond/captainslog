@@ -8,7 +8,12 @@ class Component
   include ActiveSupport::Configurable
   include ActionController::RequestForgeryProtection
 
-  attr_accessor :output_buffer
+  # rubocop:disable Naming/ConstantName
+  Boolean = [FalseClass, TrueClass].freeze
+  MaybeBoolean = [NilClass, FalseClass, TrueClass].freeze
+  MaybeHash = [NilClass, Hash].freeze
+  MaybeString = [NilClass, String].freeze
+  # rubocop:enable Naming/ConstantName
 
   class TypeError < ArgumentError
     # @param [Class] component

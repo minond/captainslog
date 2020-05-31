@@ -1,5 +1,5 @@
 class FormActionsComponent < Component
-  props :submit => [NilClass, TrueClass, FalseClass]
+  props :submit => MaybeBoolean
 
   def render
     <<-HTML
