@@ -100,13 +100,19 @@ class Component
       end
 
       def render
-        content_tag(_tag, _attrs.merge(@attributes)) do
-          if _block.present?
+        content_tag(_tag, _attrs.merge(@attributes.slice(*_attrs.keys))) do
+          if children_overrides.present?
+            children_overrides
+          elsif _block.present?
             Component.html(instance_eval(&_block))
           else
             ""
           end
         end
+      end
+
+      def children_overrides
+        @children_overrides ||= children
       end
     end
   end
