@@ -3,7 +3,7 @@ class PillBoxComponent < Component
 
   def render
     <<-HTML
-      <span class="f7 pv1 ph2 ba b--black-20 pointer">#{label}</span>
+      <span class="f7 pv1 ph2 ba b--black-20 black">#{label}</span>
     HTML
   end
 end
