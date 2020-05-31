@@ -21,9 +21,54 @@ class Component
   end
 
   module Rendering
+    # @param [Class] klass
+    # @param [Hash] args
     def component(klass, **args)
       render :html => klass.render(args),
              :layout => "layouts/application"
+    end
+  end
+
+  module Typechecker
+    # @param [Symbol] val
+    # @param [Class] type
+    # @param [Object] val
+    # @return [Boolean]
+    def self.assert!(prop, type, val)
+      raise TypeError.new(name, prop, type, val) unless of_type?(type, val)
+    end
+
+    # @param [Class] type
+    # @param [Object] val
+    # @return [Boolean]
+    def self.of_type?(type, val)
+      if type.is_a?(Array) && type.size == 1
+        of_list_type?(type, val)
+      elsif type.is_a? Array
+        of_union_type?(type, val)
+      else
+        val.is_a? type
+      end
+    end
+
+    # @param [Class] type
+    # @param [Object] val
+    # @return [Boolean]
+    def self.of_list_type?(type, val)
+      if val.is_a? ActiveRecord::AssociationRelation
+        val.name == type.first.name
+      elsif val.is_a? Array
+        val.first.nil? || val.first.is_a?(type.first)
+      else
+        false
+      end
+    end
+
+    # @param [Class] type
+    # @param [Object] val
+    # @return [Boolean]
+    def self.of_union_type?(type, val)
+      type.any? { |t| val.is_a? t }
     end
   end
 
@@ -50,35 +95,6 @@ class Component
     @props = props
   end
 
-  # @param [Symbol] val
-  # @param [Class] type
-  # @param [Object] val
-  # @return [Boolean]
-  #
-  # rubocop:disable Metrics/AbcSize
-  # rubocop:disable Metrics/MethodLength
-  # rubocop:disable Metrics/PerceivedComplexity
-  def self.typecheck!(prop, type, val)
-    ok = if type.is_a?(Array) && type.size == 1
-           if val.is_a? ActiveRecord::AssociationRelation
-             val.name == type.first.name
-           elsif val.is_a? Array
-             val.first.nil? || val.first.is_a?(type.first)
-           else
-             false
-           end
-         elsif type.is_a? Array
-           type.any? { |t| val.is_a? t }
-         else
-           val.is_a? type
-         end
-
-    raise TypeError.new(name, prop, type, val) unless ok
-  end
-  # rubocop:enable Metrics/AbcSize
-  # rubocop:enable Metrics/MethodLength
-  # rubocop:enable Metrics/PerceivedComplexity
-
   # @param [Hash] args
   # @return [Array<Symbol, Class, Object>]
   def self.zip(args)
@@ -94,7 +110,7 @@ class Component
     @children = proc { |*args| block_given? ? yield(*args) : children }
 
     self.class.zip(props).each do |(prop, type, val)|
-      self.class.typecheck!(prop, type, val)
+      Typechecker.assert!(prop, type, val)
       send("#{prop}=", val)
     end
   end
