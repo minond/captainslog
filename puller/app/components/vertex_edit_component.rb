@@ -11,7 +11,7 @@ class VertexEditComponent < Component
   delegate :target?, :to => :connection
 
   def render
-    ContentComponent.render [header, form]
+    ContentComponent.render [header, existing_edges, form]
   end
 
   def header
@@ -31,12 +31,8 @@ class VertexEditComponent < Component
     url = connection_vertex_edges_path(:vertex_id => vertex,
                                        :connection_id => connection)
 
-    FormComponent.render(:resource => Edge.new, :url => url) do
-      [
-        existing_edges,
-        blank_source_to_target_field,
-        FormActionsComponent.render(:submit => true),
-      ]
+    FormComponent.render(:resource => Edge.new, :url => url, :show_actions => true) do
+      blank_source_to_target_field
     end
   end
 

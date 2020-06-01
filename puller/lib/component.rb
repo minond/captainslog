@@ -104,7 +104,7 @@ class Component
           if children_overrides.present?
             children_overrides
           elsif _block.present?
-            Component.html(instance_eval(&_block))
+            html(instance_eval(&_block))
           else
             ""
           end
@@ -168,10 +168,16 @@ class Component
     raise NotImplementedError, "#render is not implemented"
   end
 
+  # @param [Array<String>, String] strs
+  # @return [String]
+  def html(strs)
+    self.class.html(strs)
+  end
+
   # @param [Array<Object>] args
   # @return [String]
   def children(*args)
-    self.class.html(@children.call(*args))
+    html(@children.call(*args))
   end
 
   # @param [Symbol] key
