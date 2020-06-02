@@ -44,6 +44,6 @@ class Job::Details < Component
   end
 
   def logs
-    JobLogs.render(:job => job)
+    Job::Logs.render(:job => job)
   end
 end
