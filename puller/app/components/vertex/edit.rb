@@ -16,7 +16,7 @@ class Vertex::Edit < Component
 
   def header
     Header.render(:key => header_key,
-                           :args => header_args)
+                  :args => header_args)
   end
 
   def header_key
