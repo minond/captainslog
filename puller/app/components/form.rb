@@ -1,4 +1,4 @@
-class FormComponent < Component
+class Form < Component
   props :resource => ApplicationRecord,
         :url => String,
         :show_actions => MaybeBoolean
@@ -10,6 +10,6 @@ class FormComponent < Component
   end
 
   def actions
-    show_actions ? FormActionsComponent.render(:submit => true) : ""
+    show_actions ? Form::Actions.render(:submit => true) : ""
   end
 end

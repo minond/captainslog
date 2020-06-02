@@ -4,7 +4,7 @@ class HomeController < ApplicationController
   # GET /
   def home
     if current_user
-      component HomeComponent, :connections => connections,
+      component Welcome::Home, :connections => connections,
                                :jobs => jobs
     else
       redirect_to :new_user_session

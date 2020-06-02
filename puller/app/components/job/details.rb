@@ -1,4 +1,4 @@
-class JobDetailsComponent < Component
+class Job::Details < Component
   props :job => Job
 
   def render
@@ -44,6 +44,6 @@ class JobDetailsComponent < Component
   end
 
   def logs
-    JobLogsComponent.render(:job => job)
+    JobLogs.render(:job => job)
   end
 end

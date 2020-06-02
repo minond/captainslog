@@ -1,4 +1,4 @@
-class HeaderComponent < Component
+class Header < Component
   props :key => Symbol,
         :args => MaybeHash
 

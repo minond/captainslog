@@ -1,4 +1,4 @@
-class PillBoxComponent < Component
+class PillBox < Component
   props :label => String
 
   def render

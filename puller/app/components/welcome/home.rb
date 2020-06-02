@@ -1,9 +1,9 @@
-class HomeComponent < Component
+class Welcome::Home < Component
   props :connections => [Connection],
         :jobs => [Job]
 
   def render
-    ContentComponent.render do
+    ViewContainer.render do
       if connections.empty?
         zero_state
       else
@@ -15,7 +15,7 @@ class HomeComponent < Component
   def zero_state
     <<-HTML
       <p class="pl2 lh-copy">#{t(:no_connections_create_one)}</p>
-      #{AvailableConnectionsComponent.render}
+      #{Connection::Options.render}
     HTML
   end
 
@@ -24,11 +24,11 @@ class HomeComponent < Component
   end
 
   def connections_table
-    ConnectionTableComponent.render(:connections => connections)
+    Connection::Table.render(:connections => connections)
   end
 
   def jobs_table
-    JobTableComponent.render(:jobs => jobs)
+    Job::Table.render(:jobs => jobs)
   end
 
   def separator

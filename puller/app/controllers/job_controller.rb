@@ -1,7 +1,7 @@
 class JobController < ApplicationController
   # GET /jobs/1
   def show
-    component JobShowComponent, :job => current_job
+    component Job::Show, :job => current_job
   end
 
 private

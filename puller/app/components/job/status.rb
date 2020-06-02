@@ -1,4 +1,4 @@
-class JobStatusComponent < Component
+class Job::Status < Component
   props :id => Integer,
         :status => String
 

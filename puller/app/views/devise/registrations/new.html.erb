@@ -3,9 +3,9 @@
   <p class="lh-copy mb4"><%= t(:intro_message) %></p>
 
   <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-    <%= FormFieldComponent.render(:form => f, :name => :email, :type => :email, :autofocus => true) %>
-    <%= FormFieldComponent.render(:form => f, :name => :password, :type => :password) %>
-    <%= FormFieldComponent.render(:form => f, :name => :password_confirmation, :type => :password) %>
+    <%= Form::Field.render(:form => f, :name => :email, :type => :email, :autofocus => true) %>
+    <%= Form::Field.render(:form => f, :name => :password, :type => :password) %>
+    <%= Form::Field.render(:form => f, :name => :password_confirmation, :type => :password) %>
 
     <div class="mt2">
       <% if devise_mapping.rememberable? %>

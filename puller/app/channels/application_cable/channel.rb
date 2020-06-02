@@ -65,15 +65,15 @@ module ApplicationCable
     end
 
     # param [Symbol] model
-    # @return [Class < Component]
+    # @return [Class]
     def row_class(model)
-      "#{model.to_s.classify}RowComponent".safe_constantize
+      "#{model.to_s.classify}::Row".safe_constantize
     end
 
     # param [Symbol] model
-    # @return [Class < Component]
+    # @return [Class]
     def details_class(model)
-      "#{model.to_s.classify}DetailsComponent".safe_constantize
+      "#{model.to_s.classify}::Details".safe_constantize
     end
   end
 end

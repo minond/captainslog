@@ -1,7 +1,7 @@
-class VertexEditComponent < Component
+class Vertex::Edit < Component
   props :vertex => Vertex
 
-  include SelectComponent::Helper
+  include Select::Helper
 
   RightArrow = Component.new(:span, :class => "f5 ph3") { "→" }
   Break = Component.new(:br)
@@ -11,11 +11,11 @@ class VertexEditComponent < Component
   delegate :target?, :to => :connection
 
   def render
-    ContentComponent.render [header, existing_edges, form]
+    ViewContainer.render [header, existing_edges, form]
   end
 
   def header
-    HeaderComponent.render(:key => header_key,
+    Header.render(:key => header_key,
                            :args => header_args)
   end
 
@@ -31,7 +31,7 @@ class VertexEditComponent < Component
     url = connection_vertex_edges_path(:vertex_id => vertex,
                                        :connection_id => connection)
 
-    FormComponent.render(:resource => Edge.new, :url => url, :show_actions => true) do
+    Form.render(:resource => Edge.new, :url => url, :show_actions => true) do
       blank_source_to_target_field
     end
   end

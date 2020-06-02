@@ -1,4 +1,4 @@
-class ConnectionRowComponent < Component
+class Connection::Row < Component
   props :connection => Connection
 
   def render
@@ -17,12 +17,12 @@ class ConnectionRowComponent < Component
   end
 
   def history
-    ConnectionJobHistoryComponent.render(:connection => connection)
+    Connection::QuickHistory.render(:connection => connection)
   end
 
   def resources
     connection.vertices.map do |vertex|
-      link_to PillBoxComponent.render(:label => vertex.resource.label),
+      link_to PillBox.render(:label => vertex.resource.label),
               edit_connection_vertex_path(connection, vertex),
               :class => "link"
     end

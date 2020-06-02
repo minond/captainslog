@@ -1,4 +1,4 @@
-class JobRowComponent < Component
+class Job::Row < Component
   props :job => Job
 
   # rubocop:disable Metrics/AbcSize
@@ -19,7 +19,7 @@ class JobRowComponent < Component
   # rubocop:enable Metrics/AbcSize
 
   def job_status
-    JobStatusComponent.render(:id => job.id, :status => job.status)
+    Job::Status.render(:id => job.id, :status => job.status)
   end
 
   def details_link

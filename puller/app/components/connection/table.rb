@@ -1,4 +1,4 @@
-class ConnectionTableComponent < Component
+class Connection::Table < Component
   props :connections => [Connection]
 
   def render
@@ -27,7 +27,7 @@ class ConnectionTableComponent < Component
 
   def rows
     connections.map do |connection|
-      ConnectionRowComponent.render(:connection => connection)
+      Connection::Row.render(:connection => connection)
     end
   end
 end

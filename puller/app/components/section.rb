@@ -1,4 +1,4 @@
-class SectionComponent < Component
+class Section < Component
   def render
     <<-HTML
       <div class="measure-wide">

@@ -1,12 +1,12 @@
-class JobShowComponent < Component
+class Job::Show < Component
   props :job => Job
 
   def render
-    ContentComponent.render [details, javascript]
+    ViewContainer.render [details, javascript]
   end
 
   def details
-    JobDetailsComponent.render(:job => job)
+    Job::Details.render(:job => job)
   end
 
   def javascript

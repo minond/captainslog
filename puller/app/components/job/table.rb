@@ -1,4 +1,4 @@
-class JobTableComponent < Component
+class Job::Table < Component
   props :jobs => [Job]
 
   def render
@@ -27,7 +27,7 @@ class JobTableComponent < Component
 
   def rows
     jobs.map do |job|
-      JobRowComponent.render(:job => job)
+      Job::Row.render(:job => job)
     end
   end
 end

@@ -1,4 +1,4 @@
-class SelectComponent < Component
+class Select < Component
   props :name => MaybeString,
         :placeholder => MaybeBoolean,
         :autofocus => MaybeBoolean,
@@ -7,7 +7,7 @@ class SelectComponent < Component
 
   module Helper
     def select(options, **attrs)
-      SelectComponent.render(attrs) do
+      Select.render(attrs) do
         options.map do |(value, text)|
           Option.render(:value => value.to_s,
                         :text => text)

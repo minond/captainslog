@@ -1,7 +1,7 @@
 class ConnectionController < ApplicationController
   # GET /connection/new
   def new
-    component ConnectionNewComponent
+    component Connection::New
   end
 
   # DELETE /connection/1

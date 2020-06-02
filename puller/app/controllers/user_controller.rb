@@ -1,7 +1,7 @@
 class UserController < ApplicationController
   # GET /me
   def edit
-    component UserEditComponent, :user => current_user
+    component User::Edit, :user => current_user
   end
 
   # PATCH /me
@@ -10,7 +10,7 @@ class UserController < ApplicationController
       bypass_sign_in(current_user)
       redirect_to :me
     else
-      component UserEditComponent, :user => current_user
+      component User::Edit, :user => current_user
     end
   end
 
