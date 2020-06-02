@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  root "home#home"
+  root "welcome#home"
 
   mount ActionCable.server => "/ws"
 

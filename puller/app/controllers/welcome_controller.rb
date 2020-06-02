@@ -1,4 +1,4 @@
-class HomeController < ApplicationController
+class WelcomeController < ApplicationController
   before_action :set_no_cache_headers
 
   # GET /
