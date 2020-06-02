@@ -1,7 +1,7 @@
 class UserController < ApplicationController
   # GET /me
   def edit
-    component User::Edit, :user => current_user
+    component :user => current_user
   end
 
   # PATCH /me

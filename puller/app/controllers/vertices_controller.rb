@@ -1,7 +1,7 @@
 class VerticesController < ApplicationController
   # GET /connection/:connection_id/vertices/:id/edit
   def edit
-    component Vertex::Edit, :vertex => current_vertex
+    component :vertex => current_vertex
   end
 
 private
