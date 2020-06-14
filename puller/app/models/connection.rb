@@ -91,6 +91,19 @@ class Connection < ApplicationRecord
     end
   end
 
+  def find_each_endpoint
+    direction = source? ? :outgoing : :incoming
+    vertices.find_each do |vertex|
+      vertex.send(direction).find_each do |edge|
+        if source?
+          yield vertex, edge.target
+        else
+          yield edge.source, vertex
+        end
+      end
+    end
+  end
+
 private
 
   # @return [Credential, nil]
