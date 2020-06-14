@@ -7,7 +7,6 @@ class Connection::Row < Component
         <td class="nowrap pv0 pl0 bb b--black-10 service service-#{connection.service}"></td>
         <td class="nowrap pv0 pl0 bb b--black-10 dn dtc-ns">#{history}</td>
         <td class="nowrap pv3 pr3 bb b--black-10">#{resources.join}</td>
-        <td class="nowrap pv3 pr3 bb b--black-10">#{connection.jobs.count}</td>
         <td class="nowrap pv3 pr3 bb b--black-10">#{connection.last_updated_at}</td>
         <td class="nowrap pv3 pr3 bb b--black-10">#{schedule_pull_link}</td>
         <td class="nowrap pv3 pr3 bb b--black-10">#{authenticate_link}</td>
