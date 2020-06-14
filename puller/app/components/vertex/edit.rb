@@ -92,9 +92,9 @@ class Vertex::Edit < Component
 
   def other_sources_or_targets
     if target?
-      vertex.outgoing.map(&:source)
+      vertex.incoming.map(&:source)
     else
-      vertex.incoming.map(&:target)
+      vertex.outgoing.map(&:target)
     end
   end
 end
