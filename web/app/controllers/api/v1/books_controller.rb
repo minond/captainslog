@@ -2,7 +2,7 @@ class Api::V1::BooksController < ApiController
   # === URL
   #   GET /api/v1/books
   #
-  # == Sample request
+  # === Sample request
   #   /api/v1/books
   #
   def index

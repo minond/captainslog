@@ -4,11 +4,11 @@ class Api::V1::TokenController < ApiController
   # === URL
   #   POST /api/v1/token
   #
-  # == Request fields
+  # === Request fields
   #   [String] email
   #   [String] password
   #
-  # == Sample request
+  # === Sample request
   #   /api/v1/token?email=...&password=...
   #
   def create
