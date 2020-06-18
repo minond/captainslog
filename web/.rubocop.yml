@@ -42,3 +42,8 @@ Layout/LineLength:
 
 Metrics/ClassLength:
   Enabled: false
+
+Metrics/BlockLength:
+  Exclude:
+    - spec/**/*
+    - config/*

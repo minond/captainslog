@@ -1,4 +1,3 @@
-# rubocop:disable Metrics/BlockLength
 Rails.application.routes.draw do
   root :to => "homepage#home"
 
@@ -55,9 +54,12 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :token, :only => %i[create]
       resources :books, :only => %i[index], :param => :slug do
-        resources :entries, :only => %i[create]
+        resources :entries, :only => %i[create] do
+          collection do
+            post :entries, :action => :bulk_create
+          end
+        end
       end
     end
   end
 end
-# rubocop:enable Metrics/BlockLength

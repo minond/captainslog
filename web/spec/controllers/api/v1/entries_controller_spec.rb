@@ -16,14 +16,52 @@ describe Api::V1::EntriesController, :type => :controller do
       expect(response).to have_http_status(:unauthorized)
     end
 
-    context "authenticated" do
+    context "when authenticated" do
       before do
         request.headers["Authorization"] = "Bearer #{user.jwt}"
       end
 
-      it "creates an entry" do
+      it "succeeds" do
         post :create, :params => entry_params
         expect(response).to have_http_status(:ok)
+      end
+
+      it "creates an entry" do
+        expect { post :create, :params => entry_params }
+          .to change { user.entries.count }.by 1
+      end
+    end
+  end
+
+  describe "POST /api/v1/books/:book_slug/entries" do
+    let(:entry_params) do
+      {
+        :book_slug => book.slug,
+        :time => Time.now.to_i,
+        :text => %i[one two three]
+      }
+    end
+
+    let(:expected_new_entry_count) { entry_params[:text].size }
+
+    it "requires authentication" do
+      post :bulk_create, :params => entry_params
+      expect(response).to have_http_status(:unauthorized)
+    end
+
+    context "when authenticated" do
+      before do
+        request.headers["Authorization"] = "Bearer #{user.jwt}"
+      end
+
+      it "succeeds" do
+        post :bulk_create, :params => entry_params
+        expect(response).to have_http_status(:no_content)
+      end
+
+      it "creates an entry for every text parameter" do
+        expect { post :bulk_create, :params => entry_params }
+          .to change { user.entries.count }.by expected_new_entry_count
       end
     end
   end

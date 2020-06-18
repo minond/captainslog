@@ -16,6 +16,21 @@ class Api::V1::EntriesController < ApiController
          :errors => entry.errors.full_messages
   end
 
+  # === URL
+  #   POST /api/v1/books/:book_slug/entries
+  #
+  # === Request fields
+  #   [String] book_slug - the book slug for the book the entry belongs to
+  #   [Array<String>] text - all entry texts
+  #   [Integer] time - entry timestamp
+  #
+  # === Sample request
+  #   /api/v1/books/workouts/entries?text[]=abc12&text[]=abc13
+  #
+  def bulk_create
+    text.map { |t| current_book.add_entry(t, time) }
+  end
+
 private
 
   param_reader :book_slug
