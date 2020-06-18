@@ -37,12 +37,12 @@ describe Api::V1::EntriesController, :type => :controller do
     let(:entry_params) do
       {
         :book_slug => book.slug,
-        :time => Time.now.to_i,
-        :text => %i[one two three]
+        :times => [Time.now.to_i] * 3,
+        :texts => %i[one two three]
       }
     end
 
-    let(:expected_new_entry_count) { entry_params[:text].size }
+    let(:expected_new_entry_count) { entry_params[:texts].size }
 
     it "requires authentication" do
       post :bulk_create, :params => entry_params
