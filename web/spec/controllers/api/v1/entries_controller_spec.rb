@@ -3,13 +3,13 @@ describe Api::V1::EntriesController, :type => :controller do
   let(:book) { create(:book, :user => user) }
 
   describe "POST /api/v1/books/:book_slug/entry" do
-    let(:entry_params) {
+    let(:entry_params) do
       {
         :book_slug => book.slug,
         :text => "Running, 45min",
         :time => Time.now.to_i
       }
-    }
+    end
 
     it "requires authentication" do
       post :create, :params => entry_params
