@@ -40,6 +40,9 @@ Layout/AccessModifierIndentation:
 Layout/LineLength:
   Enabled: false
 
+Naming/MethodParameterName:
+  Enabled: false
+
 Metrics/ClassLength:
   Enabled: false
 
