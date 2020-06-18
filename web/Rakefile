@@ -1,12 +1,16 @@
 require_relative "config/application"
-
 require "rubocop/rake_task"
+require "rspec/core/rake_task"
 
 Rails.application.load_tasks
 
-RuboCop::RakeTask.new
+Rake::Task["spec"].clear if ::Rake::Task.task_defined?("spec")
+Rake::Task["default"].clear if ::Rake::Task.task_defined?("default")
 
-task :lint, [*Rake.application[:rubocop].arg_names] => %i[rubocop reek]
+RuboCop::RakeTask.new(:lint)
+RSpec::Core::RakeTask.new(:spec)
+
+task :default => %i[lint spec]
 
 namespace :lint do
   task :all => %i[rubocop sandi_meter rails_best_practices brakeman reek]

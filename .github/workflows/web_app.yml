@@ -63,3 +63,7 @@ jobs:
     - name: Run tests
       working-directory: ./web
       run: bundle exec rake test
+
+    - name: Run tests
+      working-directory: ./web
+      run: bundle exec rake spec
