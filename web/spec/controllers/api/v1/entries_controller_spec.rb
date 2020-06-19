@@ -2,10 +2,10 @@ describe Api::V1::EntriesController, :type => :controller do
   let(:user) { create(:user) }
   let(:book) { create(:book, :user => user) }
 
-  describe "POST /api/v1/books/:book_slug/entries" do
+  describe "POST /api/v1/books/:book_id/entries" do
     let(:entry_params) do
       {
-        :book_slug => book.slug,
+        :book_id => book.id,
         :times => [Time.now.to_i] * 3,
         :texts => %i[one two three]
       }

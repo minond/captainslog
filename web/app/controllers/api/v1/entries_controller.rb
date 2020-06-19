@@ -1,9 +1,9 @@
 class Api::V1::EntriesController < ApiController
   # === URL
-  #   POST /api/v1/books/:book_slug/entries
+  #   POST /api/v1/books/:book_id/entries
   #
   # === Request fields
-  #   [String] book_slug - the book slug for the book the entry belongs to
+  #   [String] book_id - the book's id
   #   [Array<String>] texts - all entry texts
   #   [Array<Integer>] times - all entry timestamps
   #
@@ -18,12 +18,12 @@ class Api::V1::EntriesController < ApiController
 
 private
 
-  param_reader :book_slug
+  param_reader :book_id
   param_reader :texts
 
   # @return [Book]
   def current_book
-    current_user.books.by_slug(book_slug)
+    current_user.books.find(book_id)
   end
 
   # @param [Integer] i
