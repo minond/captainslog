@@ -6,15 +6,14 @@ class ExecuteJob
   # @param [Job] job
   def initialize(job)
     @job = job
-    @create_count = 0
-    @update_count = 0
+    @sync_count = 0
     @errors = []
   end
 
   def call
     setup
     start_ticker
-    pull_records
+    sync_records
     update_connection_credentials
   rescue StandardError => e
     @errors << e
@@ -71,23 +70,21 @@ private
   end
 
   def message
-    cc = @create_count
+    cc = @sync_count
     cr = "record".pluralize(cc)
-    uc = @update_count
-    ur = "record".pluralize(uc)
     ec = @errors.count
     er = "error".pluralize(ec)
-    "Created #{cc} #{cr}, updated #{uc} #{ur}, with #{ec} #{er}."
+    "Synched #{cc} #{cr} with #{ec} #{er}."
   end
 
   def logs
     @logs ||= StringIO.new
   end
 
-  def pull_records
+  def sync_records
     each_record do |record|
       logs.puts "processing entry #{record.digest.strip}"
-      @create_count += 1
+      @sync_count += 1
     end
   end
 
