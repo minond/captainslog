@@ -42,15 +42,15 @@ private
 
   # @return [Hash]
   def books
-    make(request(:get, "/api/v1/books"))
+    make_request(:get, "/api/v1/books")
   end
 
   # @param [Array<Text>] texts
   # @param [Array<Integer>] times
   # @param [Service::Resource] resource
   def bulk_create_entries(texts, times, resource)
-    payload = { :texts => texts, :times => times }
-    make(request(:post, "/api/v1/books/#{resource.id}/entries", payload))
+    make_request(:post, "/api/v1/books/#{resource.id}/entries", :texts => texts,
+                                                                :times => times)
   end
 
   # @param [Array<Service::Record>] records
@@ -64,6 +64,14 @@ private
 
       yield(texts, times)
     end
+  end
+
+  # @param [Symbol] method
+  # @param [String] path
+  # @param [Hash] payload
+  # @return [Hash]
+  def make_request(method, path, payload = nil)
+    make(request(method, path, payload))
   end
 
   # @param [Net::HTTPRequest] req
