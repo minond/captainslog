@@ -54,11 +54,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :token, :only => %i[create]
       resources :books, :only => %i[index], :param => :slug do
-        resources :entries, :only => %i[create] do
-          collection do
-            post :entries, :action => :bulk_create
-          end
-        end
+        resources :entries, :only => %i[create]
       end
     end
   end
