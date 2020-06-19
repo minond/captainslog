@@ -6,6 +6,8 @@ class Service::Captainslog < Service::Client
 
   config_from :captainslog
 
+  ENTRY_BULK_CREATE_RECORD_LIMIT = 100
+
   # @param [Hash] options
   def initialize(options = {})
     @token = options.with_indifferent_access[:token]
@@ -28,6 +30,14 @@ class Service::Captainslog < Service::Client
     end
   end
 
+  # @param [Array<Service::Record>] records
+  # @param [Service::Resource] resource
+  def push(records, resource)
+    each_entry_payload(records) do |texts, times|
+      bulk_create_entries(texts, times, resource)
+    end
+  end
+
 private
 
   # @return [Hash]
@@ -35,22 +45,48 @@ private
     make(request(:get, "/api/v1/books"))
   end
 
+  # @param [Array<Text>] texts
+  # @param [Array<Integer>] times
+  # @param [Service::Resource] resource
+  def bulk_create_entries(texts, times, resource)
+    payload = { :texts => texts, :times => times }
+    make(request(:post, "/api/v1/books/#{resource.id}/entries", payload))
+  end
+
+  # @param [Array<Service::Record>] records
+  # @yieldparam [Array<Service::Record>] records
+  def each_entry_payload(records)
+    records.each_slice(ENTRY_BULK_CREATE_RECORD_LIMIT) do |subrecords|
+      texts, times = subrecords.each_with_object([[], []]) do |record, acc|
+        acc.first << record.text
+        acc.second << record.date.to_i
+      end
+
+      yield(texts, times)
+    end
+  end
+
   # @param [Net::HTTPRequest] req
   # @return [Hash]
   def make(req)
     res = client.request(req)
-    JSON.parse(res.body)
+    JSON.parse(res.body || "{}")
   end
 
   # @param [Symbol] method
   # @param [String] path
+  # @param [Hash] payload
   # @return [Net::HTTPRequest]
-  def request(method, path)
+  def request(method, path, payload = nil)
     req = case method
           when :get
             Net::HTTP::Get.new(path)
+          when :post
+            Net::HTTP::Post.new(path)
           end
 
+    req.body = payload.to_json if payload.present?
+    req.set_content_type("application/json") if payload.is_a?(Hash)
     req["Authorization"] = token
     req
   end
