@@ -16,6 +16,6 @@ class Service::Fitbit::HeartRate < Service::Record
 
   # @return [String]
   def digest
-    Base64.encode64("fitbit-resting-heart-rate-#{date}")
+    Base64.encode64("fitbit-resting-heart-rate-#{datetime}")
   end
 end

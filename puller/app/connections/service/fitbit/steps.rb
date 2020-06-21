@@ -16,6 +16,6 @@ class Service::Fitbit::Steps < Service::Record
 
   # @return [String]
   def digest
-    Base64.encode64("fitbit-steps-#{date}")
+    Base64.encode64("fitbit-steps-#{datetime}")
   end
 end

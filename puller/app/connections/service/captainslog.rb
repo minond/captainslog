@@ -59,7 +59,7 @@ private
     records.each_slice(ENTRY_BULK_CREATE_RECORD_LIMIT) do |subrecords|
       texts, times = subrecords.each_with_object([[], []]) do |record, acc|
         acc.first << record.text
-        acc.second << record.date.to_i
+        acc.second << record.datetime.to_i
       end
 
       yield(texts, times)

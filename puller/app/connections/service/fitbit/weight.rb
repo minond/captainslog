@@ -3,10 +3,10 @@ class Service::Fitbit::Weight < Service::Record
   # @return [Weight]
   def self.from_result(result)
     text = text_from_result(result)
-    date = Date.parse("#{result['date']} #{result['time']}")
+    datetime = Date.parse("#{result['date']} #{result['time']}")
     log_id = result["logId"]
 
-    new(text, date, log_id)
+    new(text, datetime, log_id)
   end
 
   # @param [Hash] result
@@ -28,10 +28,10 @@ class Service::Fitbit::Weight < Service::Record
   end
 
   # @param [String] text
-  # @param [Date] date
+  # @param [DateTime] datetime
   # @param [String] log_id
-  def initialize(text, date, log_id)
-    super(text, date)
+  def initialize(text, datetime, log_id)
+    super(text, datetime)
     @log_id = log_id
   end
 

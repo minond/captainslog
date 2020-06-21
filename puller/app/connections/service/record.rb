@@ -1,9 +1,9 @@
 class Service::Record
-  attr_reader :text, :date
+  attr_reader :text, :datetime
 
-  def initialize(text, date)
+  def initialize(text, datetime)
     @text = text
-    @date = date
+    @datetime = datetime.to_datetime
   end
 
   # @return [String]
