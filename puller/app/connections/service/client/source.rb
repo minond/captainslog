@@ -83,7 +83,7 @@ module Service::Client::Source
   # @option [Array<Symbol>] resources
   # @yieldparam [Service::Record]
   def pull(**options, &block)
-    resources = options.delete(:resources) || {}
+    resources = options.delete(:resources)&.map(&:to_sym) || []
     self.class.selected_source_resources(resources).each do |ty|
       send("pull_#{ty.id}", options, &block)
     end
