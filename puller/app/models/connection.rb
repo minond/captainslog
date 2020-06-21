@@ -91,6 +91,8 @@ class Connection < ApplicationRecord
     end
   end
 
+  # @yieldparam [Vertex, Edge]
+  # @yieldparam [Edge, Vertex]
   def find_each_endpoint
     direction = source? ? :outgoing : :incoming
     vertices.find_each do |vertex|
