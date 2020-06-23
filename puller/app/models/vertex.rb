@@ -15,4 +15,9 @@ class Vertex < ApplicationRecord
   def resource=(resource)
     self.urn = resource.urn.to_s
   end
+
+  # @return [URN]
+  def to_urn
+    URN.parse(urn)
+  end
 end
