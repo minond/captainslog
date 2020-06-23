@@ -82,18 +82,32 @@ private
   end
 
   def sync_records
-    each_record do |record|
-      logs.puts "processing entry #{record.digest.strip}"
-      @sync_count += 1
+    connection.find_each_endpoint do |source, target|
+      push_resource = Service::Resource.from_urn(target.urn)
+      pull_resources = [URN.parse(source.urn).nss]
+      pull_args = { :resources => pull_resources }
+
+      push = proc do |records|
+        logs.puts "pushing #{source.to_urn} to #{target.to_urn}"
+        target.connection.client.push(records, push_resource)
+      end
+
+      Bag.with(500, push) do |bag|
+        source.connection.client.send(pull_method, pull_args) do |record|
+          logs.puts "pulling entry #{record.digest.strip}"
+          @sync_count += 1
+          bag << record
+        end
+      end
     end
   end
 
-  def each_record(&block)
+  def pull_method
     case job.kind.to_sym
     when :backfill
-      client.pull_backfill(&block)
+      :pull_backfill
     when :pull
-      client.pull_standard(&block)
+      :pull_standard
     end
   end
 
