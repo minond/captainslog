@@ -66,10 +66,12 @@ private
   end
   # rubocop:enable Metrics/AbcSize
 
+  # @return [Symbol]
   def status
     @errors.empty? ? :done : :errored
   end
 
+  # @return [String]
   def message
     cc = @sync_count
     cr = "record".pluralize(cc)
@@ -78,31 +80,47 @@ private
     "Synched #{cc} #{cr} with #{ec} #{er}."
   end
 
+  # @return [StringIO]
   def logs
     @logs ||= StringIO.new
   end
 
   def sync_records
     connection.find_each_endpoint do |source, target|
-      push_resource = Service::Resource.from_urn(target.urn)
-      pull_resources = [URN.parse(source.urn).nss]
-      pull_args = { :resources => pull_resources }
+      pull_and_push(source, target)
+    end
+  end
 
-      push = proc do |records|
-        logs.puts "pushing #{source.to_urn} to #{target.to_urn}"
-        target.connection.client.push(records, push_resource)
-      end
+  # @param [Vertex] source
+  # @param [Edge] target
+  def pull_and_push(source, target)
+    pull_args = pull_payload(source)
 
-      Bag.open(PULL_BATCH_SIZE, push) do |bag|
-        source.connection.client.send(pull_method, pull_args) do |record|
-          logs.puts "pulling entry #{record.digest.strip}"
-          @sync_count += 1
-          bag << record
-        end
+    Bag.open(PULL_BATCH_SIZE, push_proc(source, target)) do |bag|
+      source.connection.client.send(pull_method, pull_args) do |record|
+        logs.puts "pulling entry #{record.digest.strip}"
+        @sync_count += 1
+        bag << record
       end
     end
   end
 
+  # @param [Vertex] source
+  # @param [Edge] target
+  def push_proc(source, target)
+    resource = Service::Resource.from_urn(target.urn)
+    proc do |records|
+      logs.puts "pushing #{source.to_urn} to #{target.to_urn}"
+      target.connection.client.push(records, resource)
+    end
+  end
+
+  # @param [Vertex] source
+  def pull_payload(source)
+    { :resources => [URN.parse(source.urn).nss] }
+  end
+
+  # @return [Symbol]
   def pull_method
     case job.kind.to_sym
     when :backfill
