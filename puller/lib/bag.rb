@@ -1,5 +1,5 @@
 class Bag
-  def self.with(limit, on_flush)
+  def self.open(limit, on_flush)
     bag = new(limit, on_flush)
     yield bag
     bag.flush

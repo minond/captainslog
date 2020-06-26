@@ -2,6 +2,7 @@ class ExecuteJob
   prepend SimpleCommand
 
   TICK_INTERVAL = 1.second
+  PULL_BATCH_SIZE = 500
 
   # @param [Job] job
   def initialize(job)
@@ -92,7 +93,7 @@ private
         target.connection.client.push(records, push_resource)
       end
 
-      Bag.with(500, push) do |bag|
+      Bag.open(PULL_BATCH_SIZE, push) do |bag|
         source.connection.client.send(pull_method, pull_args) do |record|
           logs.puts "pulling entry #{record.digest.strip}"
           @sync_count += 1
