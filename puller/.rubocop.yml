@@ -1,8 +1,20 @@
+require:
+  - rubocop-performance
+
 AllCops:
   Exclude:
     - bin/*
     - db/schema.rb
     - vendor/bundle/**/*
+
+Layout/EmptyLinesAroundAttributeAccessor:
+  Enabled: false
+
+Lint/DeprecatedOpenSSLConstant:
+  Enabled: true
+
+Style/SlicingWithRange:
+  Enabled: true
 
 Layout/SpaceAroundMethodCallOperator:
   Enabled: true
