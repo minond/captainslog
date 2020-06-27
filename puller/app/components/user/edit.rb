@@ -1,4 +1,4 @@
-class User::Edit < Component
+class User::Edit < ViewComponent
   props :user => User
 
   def render

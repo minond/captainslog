@@ -1,4 +1,4 @@
-class Form::SectionLabel < Component
+class Form::SectionLabel < ViewComponent
   props :key => Symbol
 
   def render

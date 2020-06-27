@@ -1,4 +1,4 @@
-class Job::Details < Component
+class Job::Details < ViewComponent
   props :job => Job
 
   def render

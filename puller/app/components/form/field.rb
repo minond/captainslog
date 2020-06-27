@@ -1,4 +1,4 @@
-class Form::Field < Component
+class Form::Field < ViewComponent
   props :form => ActionView::Helpers::FormBuilder,
         :name => Symbol,
         :type => Symbol,

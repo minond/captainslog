@@ -1,4 +1,4 @@
-class Form::Actions < Component
+class Form::Actions < ViewComponent
   props :submit => MaybeBoolean
 
   def render

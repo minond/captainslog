@@ -1,4 +1,4 @@
-class User::Form < Component
+class User::Form < ViewComponent
   props :user => User
 
   def render

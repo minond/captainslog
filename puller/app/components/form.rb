@@ -1,4 +1,4 @@
-class Form < Component
+class Form < ViewComponent
   props :resource => ApplicationRecord,
         :url => String,
         :show_actions => MaybeBoolean

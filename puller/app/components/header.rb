@@ -1,4 +1,4 @@
-class Header < Component
+class Header < ViewComponent
   props :key => Symbol,
         :args => MaybeHash
 

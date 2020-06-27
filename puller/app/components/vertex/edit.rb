@@ -1,10 +1,10 @@
-class Vertex::Edit < Component
+class Vertex::Edit < ViewComponent
   props :vertex => Vertex
 
   include Select::Helper
 
-  RightArrow = Component.new(:span, :class => "f5 ph3") { "→" }
-  Break = Component.new(:br)
+  RightArrow = ViewComponent.new(:span, :class => "f5 ph3") { "→" }
+  Break = ViewComponent.new(:br)
 
   delegate :connection, :to => :vertex
   delegate :source?, :to => :connection

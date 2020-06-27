@@ -4,6 +4,12 @@ GIT
   specs:
     opentracing-tracers (0.1.0)
 
+GIT
+  remote: https://github.com/minond/ruby-view_component.git
+  revision: d53c646bcfabf483993fbf453bfc21ab445f94fc
+  specs:
+    view_component (0.1.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -350,6 +356,7 @@ DEPENDENCIES
   tachyons-rails
   turbolinks (~> 5)
   tzinfo-data (>= 1.2016.7)
+  view_component!
   web-console (>= 3.3.0)
   yard
 

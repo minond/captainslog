@@ -1,4 +1,4 @@
-class Job::Logs < Component
+class Job::Logs < ViewComponent
   props :job => Job
 
   def render

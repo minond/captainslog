@@ -1,4 +1,4 @@
-class Connection::Row < Component
+class Connection::Row < ViewComponent
   props :connection => Connection
 
   def render

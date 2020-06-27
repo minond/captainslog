@@ -1,4 +1,4 @@
-class Welcome::Home < Component
+class Welcome::Home < ViewComponent
   props :connections => [Connection],
         :jobs => [Job]
 

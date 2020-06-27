@@ -1,4 +1,4 @@
-class Select < Component
+class Select < ViewComponent
   props :name => MaybeString,
         :placeholder => MaybeBoolean,
         :autofocus => MaybeBoolean,
@@ -16,7 +16,7 @@ class Select < Component
     end
   end
 
-  class Option < Component
+  class Option < ViewComponent
     props :text => String,
           :value => MaybeString,
           :selected => MaybeBoolean,

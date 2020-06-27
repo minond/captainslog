@@ -1,4 +1,4 @@
-class Job::Table < Component
+class Job::Table < ViewComponent
   props :jobs => [Job]
 
   def render

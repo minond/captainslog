@@ -1,4 +1,4 @@
-class Job::Row < Component
+class Job::Row < ViewComponent
   props :job => Job
 
   # rubocop:disable Metrics/AbcSize

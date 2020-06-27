@@ -1,5 +1,5 @@
-class Connection::Options < Component
-  class Option < Component
+class Connection::Options < ViewComponent
+  class Option < ViewComponent
     props :service => Symbol,
           :ext => Symbol
 

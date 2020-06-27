@@ -1,4 +1,4 @@
-class Connection::QuickHistory < Component
+class Connection::QuickHistory < ViewComponent
   props :connection => Connection
 
   def render
