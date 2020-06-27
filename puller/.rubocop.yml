@@ -1,24 +1,11 @@
 require:
   - rubocop-performance
-  - rubocop-rails
 
 AllCops:
   Exclude:
     - bin/*
     - db/schema.rb
     - vendor/bundle/**/*
-
-Rails/Output:
-  Enabled: false
-
-Rails/Blank:
-  Enabled: false
-
-Rails/InverseOf:
-  Enabled: false
-
-Rails/RedundantForeignKey:
-  Enabled: false
 
 Layout/EmptyLinesAroundAttributeAccessor:
   Enabled: false
