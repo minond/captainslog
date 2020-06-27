@@ -23,7 +23,7 @@ gem "rails", "~> 6.0.1"                       # Bundle edge Rails instead: gem "
 gem "simple_command"                          # A simple, standardized way to build and use Service Objects (aka Commands) in Ruby
 gem "tachyons-rails"                          # Tachyons for your Rails project
 gem "turbolinks", "~> 5"                      # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
-gem "tzinfo-data", :platforms => %i[mingw mswin x64_mingw jruby] # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
+gem "tzinfo-data", ">= 1.2016.7"              # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 
 group :development, :test do
   gem "byebug", :platforms => %i[mri mingw x64_mingw] # Call "byebug" anywhere in the code to stop execution and get a debugger console
@@ -36,6 +36,7 @@ group :development do
   gem "reek"                                  # Code smell detector for Ruby
   gem "rubocop", :require => false            # Static code analyzer and code formatter
   gem "rubocop-performance", :require => false
+  # gem "rubocop-rails", :require => false
   gem "sandi_meter"                           # Static analysis tool for checking Ruby code for Sandi Metz' rules.
   gem "spring"                                # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem "spring-watcher-listen", "~> 2.0.0"
