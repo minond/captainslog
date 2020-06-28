@@ -49,7 +49,7 @@ jobs:
     - name: Install dependencies
       working-directory: ./puller
       run: |
-        gem install bundler --version 2.1.0
+        gem install bundler --version 2.1.4
         bundle config path vendor/bundle
         bundle install --jobs 4 --retry 3
 
