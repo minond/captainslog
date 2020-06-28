@@ -10,6 +10,8 @@ require File.expand_path("../config/environment", __dir__)
 require "rspec/rails"
 require "rspec/expectations"
 
+Rails.application.credentials.secret_key_base = "1" * 32
+
 # To fail the test command unless a minimum coverage is met:
 # SimpleCov.minimum_coverage 90
 
