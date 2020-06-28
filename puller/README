@@ -32,9 +32,9 @@ where the external services live:
     FITBIT_REDIRECT_URL         # example http://localhost:3000/connection/oauth/fitbit
     JAEGER_HOST                 # example localhost
     JAEGER_PORT                 # example 6831
-    SPOTIFY_CLIENT_ID
-    SPOTIFY_CLIENT_SECRET
-    SPOTIFY_REDIRECT_URL        # example http://localhost:3000/connection/oauth/spotify
+    LASTFM_API_KEY
+    LASTFM_API_SECRET
+    LASTFM_REDIRECT_URL
 
 
 === Container
