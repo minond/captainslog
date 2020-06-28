@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_28_212829) do
+ActiveRecord::Schema.define(version: 2020_06_28_213315) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -32,18 +32,6 @@ ActiveRecord::Schema.define(version: 2020_06_28_212829) do
     t.datetime "updated_at", precision: 6, null: false
     t.datetime "datetime", null: false
     t.index ["book_id"], name: "index_collections_on_book_id"
-  end
-
-  create_table "connections", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.bigint "book_id"
-    t.string "data_source"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.datetime "last_update_attempted_at"
-    t.bigint "last_update_job_id"
-    t.index ["book_id"], name: "index_connections_on_book_id"
-    t.index ["user_id"], name: "index_connections_on_user_id"
   end
 
   create_table "delayed_jobs", force: :cascade do |t|
@@ -75,10 +63,8 @@ ActiveRecord::Schema.define(version: 2020_06_28_212829) do
     t.datetime "processed_at"
     t.datetime "date"
     t.text "digest"
-    t.bigint "connection_id"
     t.index ["book_id"], name: "index_entries_on_book_id"
     t.index ["collection_id"], name: "index_entries_on_collection_id"
-    t.index ["connection_id"], name: "index_entries_on_connection_id"
     t.index ["user_id"], name: "index_entries_on_user_id"
   end
 
@@ -156,11 +142,8 @@ ActiveRecord::Schema.define(version: 2020_06_28_212829) do
 
   add_foreign_key "books", "users"
   add_foreign_key "collections", "books"
-  add_foreign_key "connections", "books"
-  add_foreign_key "connections", "users"
   add_foreign_key "entries", "books"
   add_foreign_key "entries", "collections"
-  add_foreign_key "entries", "connections"
   add_foreign_key "entries", "users"
   add_foreign_key "extractors", "books"
   add_foreign_key "extractors", "users"
