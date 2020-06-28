@@ -24,15 +24,17 @@ application workers for pulling in data and pushing it to the main CL app.
 The application needs to know what database it should read and write from and
 where the external services live:
 
-    DATABASE_URL          # example postgres://postgres@host.docker.internal:5432/captainslog
+    CAPTAINSLOG_APPLICATION_URL # example http://localhost:3001
+    CAPTAINSLOG_REDIRECT_URL    # example http://localhost:3000/connection/callback/captainslog
+    DATABASE_URL                # example postgres://postgres@host.docker.internal:5432/captainslog
     FITBIT_CLIENT_ID
     FITBIT_CLIENT_SECRET
-    FITBIT_REDIRECT_URL   # example http://localhost:3000/connection/oauth/fitbit
-    JAEGER_HOST           # example localhost
-    JAEGER_PORT           # example 6831
+    FITBIT_REDIRECT_URL         # example http://localhost:3000/connection/oauth/fitbit
+    JAEGER_HOST                 # example localhost
+    JAEGER_PORT                 # example 6831
     SPOTIFY_CLIENT_ID
     SPOTIFY_CLIENT_SECRET
-    SPOTIFY_REDIRECT_URL  # example http://localhost:3000/connection/oauth/spotify
+    SPOTIFY_REDIRECT_URL        # example http://localhost:3000/connection/oauth/spotify
 
 
 === Container
