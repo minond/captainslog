@@ -7,20 +7,20 @@ class ExecuteJob
   # @param [Job] job
   def initialize(job)
     @job = job
+    @metrics = {}
     @sync_count = 0
     @errors = []
   end
 
   def call
     setup
-    start_ticker
     sync_records
     update_connection_credentials
+    create_metrics
   rescue StandardError => e
     @errors << e
   ensure
     log_errors
-    stop_ticker
     teardown
   end
 
@@ -37,6 +37,7 @@ private
     logs.puts "starting job, updating every #{TICK_INTERVAL}s"
     job.update!(:status => :running,
                 :started_at => Time.now)
+    start_ticker
   end
 
   def start_ticker
@@ -54,17 +55,28 @@ private
     @errors.each { |err| logs.puts "    - #{err.message}" }
   end
 
-  # rubocop:disable Metrics/AbcSize
   def teardown
+    stop_ticker
     job.assign_attributes(:status => status,
                           :message => message,
                           :stopped_at => Time.now)
 
     logs.puts "job completed in #{job.run_time}ms"
     job.update(:logs => logs.string)
-    connection.update(:last_updated_at => Time.now)
   end
-  # rubocop:enable Metrics/AbcSize
+
+  def create_metrics
+    now = Time.now
+    @metrics.each do |connection, cumulative_run_time_s|
+      run_time = (cumulative_run_time_s * 1000).to_i
+      logs.puts "storing run time metrics for #{connection.service}, #{run_time}ms"
+      JobMetric.create(:job => job,
+                       :connection => connection,
+                       :job_status => status,
+                       :run_time => run_time)
+      connection.update(:last_updated_at => now)
+    end
+  end
 
   # @return [Symbol]
   def status
@@ -91,19 +103,23 @@ private
     end
   end
 
+  # rubocop:disable Metrics/AbcSize
   # @param [Vertex] source
   # @param [Edge] target
   def pull_and_push(source, target)
     pull_args = pull_payload(source)
 
     Bag.open(PULL_BATCH_SIZE, push_proc(source, target)) do |bag|
+      start_time = monotonic_now
       source.connection.client.send(pull_method, pull_args) do |record|
+        track_metric(source.connection, start_time, monotonic_now)
         logs.puts "pulling entry #{record.digest.strip}"
         @sync_count += 1
         bag << record
       end
     end
   end
+  # rubocop:enable Metrics/AbcSize
 
   # @param [Vertex] source
   # @param [Edge] target
@@ -111,7 +127,9 @@ private
     resource = Service::Resource.from_urn(target.urn)
     proc do |records|
       logs.puts "pushing #{source.to_urn} to #{target.to_urn}"
+      start_time = monotonic_now
       target.connection.client.push(records, resource)
+      track_metric(target.connection, start_time, monotonic_now)
     end
   end
 
@@ -128,6 +146,19 @@ private
     when :pull
       :pull_standard
     end
+  end
+
+  # @param [Connection] connection
+  # @param [Float] start_time
+  # @param [Float] end_time
+  def track_metric(connection, start_time, end_time)
+    @metrics[connection] ||= 0
+    @metrics[connection] += end_time - start_time
+  end
+
+  # @return [Float] end_time
+  def monotonic_now
+    Process.clock_gettime(Process::CLOCK_MONOTONIC)
   end
 
   def update_connection_credentials

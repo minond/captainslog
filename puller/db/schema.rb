@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_06_153022) do
+ActiveRecord::Schema.define(version: 2020_06_28_024942) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -67,6 +67,19 @@ ActiveRecord::Schema.define(version: 2020_06_06_153022) do
     t.index ["user_id"], name: "index_edges_on_user_id"
   end
 
+  create_table "job_metrics", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "job_id", null: false
+    t.bigint "connection_id", null: false
+    t.integer "job_status"
+    t.integer "run_time"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["connection_id"], name: "index_job_metrics_on_connection_id"
+    t.index ["job_id"], name: "index_job_metrics_on_job_id"
+    t.index ["user_id"], name: "index_job_metrics_on_user_id"
+  end
+
   create_table "jobs", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.integer "status"
@@ -108,6 +121,9 @@ ActiveRecord::Schema.define(version: 2020_06_06_153022) do
   add_foreign_key "credentials", "connections"
   add_foreign_key "credentials", "users"
   add_foreign_key "edges", "users"
+  add_foreign_key "job_metrics", "connections"
+  add_foreign_key "job_metrics", "jobs"
+  add_foreign_key "job_metrics", "users"
   add_foreign_key "jobs", "connections"
   add_foreign_key "jobs", "users"
   add_foreign_key "vertices", "connections"
