@@ -120,7 +120,7 @@ private
     # @param [String] part
     # @return [String, Nil]
     def self.string_from(str, part)
-      str[(str.index(part) + part.size)..] if str&.include?(part)
+      str[(str.index(part) + part.size)..-1] if str&.include?(part)
     end
 
     # @param [String] str

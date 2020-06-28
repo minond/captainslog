@@ -14,7 +14,7 @@ Lint/DeprecatedOpenSSLConstant:
   Enabled: true
 
 Style/SlicingWithRange:
-  Enabled: true
+  Enabled: false
 
 Layout/SpaceAroundMethodCallOperator:
   Enabled: true
