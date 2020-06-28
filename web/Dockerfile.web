@@ -1,4 +1,4 @@
-FROM minond/captainslog-rails
+FROM minond/captainslog-web-base
 
 ENV RAILS_SERVE_STATIC_FILES true
 ENV RAILS_LOG_TO_STDOUT true

@@ -1,4 +1,4 @@
-FROM minond/captainslog-rails
+FROM minond/captainslog-web-base
 
 CMD ["bundle", "exec", "rake", "jobs:work"]
 
