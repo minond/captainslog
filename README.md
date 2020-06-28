@@ -9,6 +9,9 @@ processing](processor), one for [entry querying](querier), and a [web
 application](web). Note that the web application is itself made up of a web
 server and a background worker.
 
+There's also a separate [data synchronization](puller) application that is able
+to aggregate data from various services and send them to Captain's Log.
+
 Code and documentation for each service can be found in the appropriate
 directory and in the `docs` directory.
 
@@ -17,3 +20,4 @@ directory and in the `docs` directory.
 [![Processor Service](https://github.com/minond/captainslog/workflows/Processor%20Service/badge.svg)](https://github.com/minond/captainslog/actions?query=workflow%3A%22Processor+Service%22)
 [![Querier Service](https://github.com/minond/captainslog/workflows/Querier%20Service/badge.svg)](https://github.com/minond/captainslog/actions?query=workflow%3A%22Querier+Service%22)
 [![Web App](https://github.com/minond/captainslog/workflows/Web%20App/badge.svg)](https://github.com/minond/captainslog/actions?query=workflow%3A%22Web+App%22)
+[![Puller App](https://github.com/minond/captainslog/workflows/Puller%20App/badge.svg)](https://github.com/minond/captainslog/actions?query=workflow%3A%22Puller+App%22)
