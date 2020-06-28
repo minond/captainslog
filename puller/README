@@ -35,18 +35,18 @@ where the external services live:
     SPOTIFY_REDIRECT_URL  # example http://localhost:3000/connection/oauth/spotify
 
 
-=== Container (TODO)
+=== Container
 
     # build base image with rails application and all dependencies
     docker build -t minond/captainslog-puller-base -f Dockerfile .
 
     # build and run server application
     docker build -t minond/captainslog-puller-web -f Dockerfile.web .
-    docker run -d --env-file .env --name cl-web -p 8080:3000 minond/captainslog-puller-web
+    docker run -d --env-file .env --name cl-puller-web -p 8080:3000 minond/captainslog-puller-web
 
     # build and run worker application
     docker build -t minond/captainslog-puller-worker -f Dockerfile.worker .
-    docker run -d --env-file .env --name cl-worker minond/captainslog-puller-worker
+    docker run -d --env-file .env --name cl-puller-worker minond/captainslog-puller-worker
 
     # push to container repo
     docker push minond/captainslog-puller-web:latest
