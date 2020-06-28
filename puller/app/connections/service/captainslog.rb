@@ -105,7 +105,9 @@ private
     @client ||= begin
                   conf = config(options)
                   uri = URI.parse(conf[:application_uri])
-                  Net::HTTP.new(uri.host, uri.port)
+                  client = Net::HTTP.new(uri.host, uri.port)
+                  client.use_ssl = true if uri.scheme == "https"
+                  client
                 end
   end
 end
