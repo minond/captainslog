@@ -1,2 +1,0 @@
-mmdc -i docs/entry_processing_flow.mmd -o docs/entry_processing_flow.svg
-mmdc -i docs/entry_querying_flow.mmd -o docs/entry_querying_flow.svg
