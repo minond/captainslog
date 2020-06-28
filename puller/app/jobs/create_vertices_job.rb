@@ -5,6 +5,5 @@ class CreateVerticesJob < ApplicationJob
   def perform(id)
     connection = Connection.find(id)
     connection.create_vertices!
-    connection.touch
   end
 end

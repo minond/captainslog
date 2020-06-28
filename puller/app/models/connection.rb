@@ -7,12 +7,13 @@ class Connection < ApplicationRecord
   belongs_to :user
   has_many :credentials, :dependent => :destroy
   has_many :jobs, :dependent => :destroy
+  has_many :job_metrics, :dependent => :destroy
   has_many :vertices, :dependent => :destroy
 
   validates :service, :user, :presence => true
 
   after_create :perform_create_vertices_later
-  after_touch :broadcast_user_connection
+  after_save :broadcast_user_connection
 
   scope :last_update_attempted_over, ->(datetime) { where("last_updated_at < ?", datetime) }
 
@@ -58,12 +59,19 @@ class Connection < ApplicationRecord
       end
   end
 
-  # @param [Integer] last_n_jobs
+  # @param [Integer] last_n
+  # @return [JobMetric]
+  def recent_metrics(last_n = 10)
+    job_metrics.order("created_at desc")
+               .first(last_n)
+  end
+
+  # @param [Integer] last_n
   # @return [Tuple<Integer, Symbol, :Integer>]
-  def recent_stats(last_n_jobs = 10)
+  def recent_stats(last_n = 10)
     jobs.select(:id, :status, "extract(epoch from stopped_at - started_at) as run_time")
         .order("created_at desc")
-        .first(last_n_jobs)
+        .first(last_n)
         .pluck(:id, :status, :run_time)
   end
 

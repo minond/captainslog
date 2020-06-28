@@ -112,11 +112,11 @@ private
     Bag.open(PULL_BATCH_SIZE, push_proc(source, target)) do |bag|
       start_time = monotonic_now
       source.connection.client.send(pull_method, pull_args) do |record|
-        track_metric(source.connection, start_time, monotonic_now)
         logs.puts "pulling entry #{record.digest.strip}"
         @sync_count += 1
         bag << record
       end
+      track_metric(source.connection, start_time, monotonic_now)
     end
   end
   # rubocop:enable Metrics/AbcSize

@@ -3,7 +3,7 @@ class JobMetric < ApplicationRecord
   belongs_to :connection
   belongs_to :job
 
-  enum :status => %i[initiated running errored done]
+  enum :job_status => %i[initiated running errored done]
 
   validates :connection, :job, :user, :job_status, :run_time, :presence => true
 
