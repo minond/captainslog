@@ -4,7 +4,6 @@
       <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w4"><%= t(:name) %></td>
       <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w4"><%= t(:slug) %></td>
       <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w4"><%= t(:grouping) %></td>
-      <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w4"><%= t(:connections) %></td>
       <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w4"><%= t(:collections) %></td>
       <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w4"><%= t(:entries) %></td>
       <th class="nowrap fw6 bb b--black-10 tl pb3 pr3 w4"><%= t(:dirty_entries) %></td>
@@ -14,7 +13,6 @@
         <td class="nowrap pv3 pr3 bb b--black-10"><%= link_to book.name, edit_book_path(book.slug), :class => "link blue" %></td>
         <td class="nowrap pv3 pr3 bb b--black-10"><%= book.slug %></td>
         <td class="nowrap pv3 pr3 bb b--black-10"><%= t("group_by_#{book.grouping}") %></td>
-        <td class="nowrap pv3 pr3 bb b--black-10"><%= book.connections.count %></td>
         <td class="nowrap pv3 pr3 bb b--black-10"><%= book.collections.count %></td>
         <td class="nowrap pv3 pr3 bb b--black-10"><%= book.entries.count %></td>
         <td class="nowrap pv3 pr3 bb b--black-10">

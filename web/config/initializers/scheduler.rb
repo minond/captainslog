@@ -2,4 +2,4 @@ return if defined?(Rails::Console) || Rails.env.test? || ARGV.first != "jobs:wor
 
 puts "Initializing schedule"
 
-ScheduleConnectionDataPullsJob.run_every 2.hours
+# ScheduleConnectionDataPullsJob.run_every 2.hours

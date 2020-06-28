@@ -18,22 +18,17 @@ detectors:
     enabled: false
   TooManyStatements:
     exclude:
-      - DataSource::Lastfm#load_songs
       - ExternalService#self.client
       - Iter#map_over_date_range
       - Iter#take_while_with_index
-      - Job#run
       - Tracing::Rack#call
   TooManyMethods:
     exclude:
       - Book
-      - ConnectionController
-      - Job
   DataClump:
     enabled: false
   NestedIterators:
-    exclude:
-      - DataSource::Lastfm#load_songs
+    enabled: true
   LongParameterList:
     exclude:
       - DataSourceFibitTest#weight_result

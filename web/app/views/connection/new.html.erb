@@ -1,8 +1,0 @@
-<%= render "layouts/content-view" do %>
-  <% connections.each do |connection| %>
-      <a href="<%= connection[:redirect] %>" class="connection">
-        <%= image_tag(connection[:logo], :class => "connection-logo") %>
-        <span><%= connection[:description] %></span>
-      </a>
-  <% end %>
-<% end %>

@@ -22,7 +22,6 @@ Bundler.require(*Rails.groups)
 module Web
   class Application < Rails::Application
     require_relative Rails.root.join("lib/ext/jwt")
-    require_relative Rails.root.join("lib/ext/fitbit_api/client")
 
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.0

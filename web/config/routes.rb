@@ -18,33 +18,12 @@ Rails.application.routes.draw do
       get "/at/:requested_time", :to => "book#show", :as => :at
     end
 
-    resources :job, :only => %i[show]
     resource :search, :only => %i[show]
     resource :user, :only => %i[show update]
 
     resources :report, :only => %i[new edit show update create destroy] do
       resources :report_variable, :only => %i[new edit update create destroy]
       resources :report_output, :only => %i[new edit update create destroy]
-    end
-
-    resources :connection, :only => %i[new show update destroy] do
-      member do
-        get :authenticate
-        get :schedule_data_pull
-      end
-
-      collection do
-        get :fitbit
-        get :lastfm
-
-        namespace :oauth, :module => nil do
-          get :fitbit, :action => :fitbit_oauth
-        end
-
-        namespace :callback, :module => nil do
-          get :lastfm, :action => :lastfm_callback
-        end
-      end
     end
 
     post "/query/execute", :to => "query#execute"

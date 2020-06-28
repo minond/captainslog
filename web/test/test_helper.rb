@@ -14,8 +14,6 @@ require "minitest/mock"
 require_relative "./external_service_test_helper"
 require_relative "./processor_test_helper"
 require_relative "./querier_test_helper"
-require_relative "./jobs_setup"
-require_relative "./fake_fitbit_api_client"
 require_relative "./fake_token"
 require_relative "./task_observer"
 

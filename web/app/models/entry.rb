@@ -2,7 +2,6 @@ class Entry < ApplicationRecord
   belongs_to :book
   belongs_to :collection
   belongs_to :user
-  belongs_to :connection, :optional => true
 
   alias_attribute :processed_data, :data
 

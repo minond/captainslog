@@ -6,7 +6,6 @@ class Book < ApplicationRecord
   has_many :entries, :dependent => :destroy
   has_many :shorthands, :dependent => :destroy
   has_many :extractors, :dependent => :destroy
-  has_many :connections, :dependent => :destroy
 
   after_initialize :constructor
 
