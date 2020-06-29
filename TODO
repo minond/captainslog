@@ -1,5 +1,6 @@
 # Puller
 
 - Fix ws connection in prod
+- Fix images in prod
 - Schedule backfill
 - Show metrics in connection row
