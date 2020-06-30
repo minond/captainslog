@@ -9,6 +9,7 @@ class Connection::Row < ViewComponent
         <td class="nowrap pv3 pr3 bb b--black-10">#{resources.join}</td>
         <td class="nowrap pv3 pr3 bb b--black-10">#{connection.last_updated_at}</td>
         <td class="nowrap pv3 pr3 bb b--black-10">#{schedule_pull_link}</td>
+        <td class="nowrap pv3 pr3 bb b--black-10">#{schedule_backfill_link}</td>
         <td class="nowrap pv3 pr3 bb b--black-10">#{authenticate_link}</td>
         <td class="nowrap pv3 pr3 bb b--black-10">#{delete_link}</td>
       </tr>
@@ -44,6 +45,14 @@ class Connection::Row < ViewComponent
   def schedule_pull_link
     if connection.source?
       link_to t(:schedule_pull), schedule_pull_connection_path(connection), :class => "link blue", :remote => true
+    else
+      ""
+    end
+  end
+
+  def schedule_backfill_link
+    if connection.source?
+      link_to t(:schedule_backfill), schedule_backfill_connection_path(connection), :class => "link blue", :remote => true
     else
       ""
     end

@@ -26,6 +26,7 @@ Rails.application.routes.draw do
       member do
         get :authenticate
         get :schedule_pull
+        get :schedule_backfill
       end
 
       resources :vertices, :only => %i[edit] do

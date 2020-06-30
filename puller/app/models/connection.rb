@@ -81,7 +81,7 @@ class Connection < ApplicationRecord
   end
 
   # @return [Job]
-  def schedule_backfill_pull
+  def schedule_backfill
     schedule_job(:backfill) if source?
   end
 

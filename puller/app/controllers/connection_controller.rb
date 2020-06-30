@@ -15,6 +15,17 @@ class ConnectionController < ApplicationController
     redirect_to_auth_url(current_connection.service, current_connection)
   end
 
+  # GET /connection/:id/schedule_backfill
+  def schedule_backfill
+    job = current_connection.schedule_backfill
+    if job&.errors&.empty?
+      redirect_to :root, :notice => t(:pull_successfully_scheduled)
+    else
+      logger.error job&.errors
+      redirect_to :root, :alert => t(:error_scheduling_pull)
+    end
+  end
+
   # GET /connection/:id/schedule_pull
   def schedule_pull
     job = current_connection.schedule_pull

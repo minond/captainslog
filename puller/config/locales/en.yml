@@ -46,6 +46,7 @@ en:
   error_scheduling_pull: "There was an error scheduling the pull."
   authenticate: "Authenticate"
   schedule_pull: "Schedule pull"
+  schedule_backfill: "Schedule backfill"
 
   created_at: "Created at"
   updated_at: "Updated at"
