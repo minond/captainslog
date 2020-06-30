@@ -37,6 +37,6 @@ class Service::Fitbit::Weight < Service::Record
 
   # @return [String]
   def digest
-    Base64.encode64("fitbit-weight-#{@log_id}")
+    Base64.urlsafe_encode64("fitbit-weight-#{@log_id}")
   end
 end

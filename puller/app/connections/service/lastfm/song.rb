@@ -20,6 +20,6 @@ class Service::Lastfm::Song < Service::Record
 
   # @return [String]
   def digest
-    Base64.encode64("lastfm-song-#{datetime}")
+    Base64.urlsafe_encode64("lastfm-song-#{datetime}")
   end
 end
