@@ -1,5 +1,4 @@
 # Puller
 
-- Fix ws connection in prod
 - Fix images in prod
 - Show metrics in connection row
