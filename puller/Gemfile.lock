@@ -6,7 +6,7 @@ GIT
 
 GIT
   remote: https://github.com/minond/ruby-view_component.git
-  revision: d53c646bcfabf483993fbf453bfc21ab445f94fc
+  revision: 022413cc9af248f88ce4529820871f1467887103
   specs:
     view_component (0.1.0)
 
