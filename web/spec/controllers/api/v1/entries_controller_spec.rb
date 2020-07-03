@@ -7,7 +7,8 @@ describe Api::V1::EntriesController, :type => :controller do
       {
         :book_id => book.id,
         :times => [Time.now.to_i] * 3,
-        :texts => %i[one two three]
+        :texts => %i[one two three],
+        :digests => [SecureRandom.uuid, SecureRandom.uuid, SecureRandom.uuid],
       }
     end
 
