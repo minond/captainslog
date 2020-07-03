@@ -33,8 +33,8 @@ class Service::Captainslog < Service::Client
   # @param [Array<Service::Record>] records
   # @param [Service::Resource] resource
   def push(records, resource)
-    each_entry_payload(records) do |texts, times|
-      bulk_create_entries(texts, times, resource)
+    each_entry_payload(records) do |texts, digests, times|
+      bulk_create_entries(texts, digests, times, resource)
     end
   end
 
@@ -45,11 +45,13 @@ private
     make_request(:get, "/api/v1/books")
   end
 
-  # @param [Array<Text>] texts
+  # @param [Array<String>] texts
+  # @param [Array<String>] digests
   # @param [Array<Integer>] times
   # @param [Service::Resource] resource
-  def bulk_create_entries(texts, times, resource)
+  def bulk_create_entries(texts, digests, times, resource)
     make_request(:post, "/api/v1/books/#{resource.id}/entries", :texts => texts,
+                                                                :digests => digests,
                                                                 :times => times)
   end
 
@@ -57,12 +59,13 @@ private
   # @yieldparam [Array<Service::Record>] records
   def each_entry_payload(records)
     records.each_slice(ENTRY_BULK_CREATE_RECORD_LIMIT) do |subrecords|
-      texts, times = subrecords.each_with_object([[], []]) do |record, acc|
+      texts, digests, times = subrecords.each_with_object([[], [], []]) do |record, acc|
         acc.first << record.text
-        acc.second << record.datetime.to_i
+        acc.second << record.digest
+        acc.third << record.datetime.to_i
       end
 
-      yield(texts, times)
+      yield(texts, digests, times)
     end
   end
 
