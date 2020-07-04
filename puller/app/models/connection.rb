@@ -66,15 +66,6 @@ class Connection < ApplicationRecord
                .first(last_n)
   end
 
-  # @param [Integer] last_n
-  # @return [Tuple<Integer, Symbol, :Integer>]
-  def recent_stats(last_n = 10)
-    jobs.select(:id, :status, "extract(epoch from stopped_at - started_at) as run_time")
-        .order("created_at desc")
-        .first(last_n)
-        .pluck(:id, :status, :run_time)
-  end
-
   # @return [Job]
   def schedule_pull
     schedule_job(:pull) if source?
