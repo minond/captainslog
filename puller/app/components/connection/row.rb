@@ -5,7 +5,7 @@ class Connection::Row < ViewComponent
     <<-HTML
       <tr data-model="connection" data-component="row" data-id="#{connection.id}">
         <td class="nowrap pv0 pl0 bb b--black-10 service service-#{connection.service}"></td>
-        <td class="nowrap pv0 pl0 bb b--black-10 dn dtc-ns">#{history}</td>
+        <td class="nowrap pv0 pl0 bb b--black-10 dn dtc-ns" id="#{id}">#{draw_metrics_graph_code}</td>
         <td class="nowrap pv3 pr3 bb b--black-10">#{resources.join}</td>
         <td class="nowrap pv3 pr3 bb b--black-10">#{connection.last_updated_at}</td>
         <td class="nowrap pv3 pr3 bb b--black-10">#{schedule_pull_link}</td>
@@ -16,8 +16,18 @@ class Connection::Row < ViewComponent
     HTML
   end
 
-  def history
-    Connection::QuickHistory.render(:connection => connection)
+  def id
+    @id ||= "id#{SecureRandom.alphanumeric}"
+  end
+
+  def draw_metrics_graph_code
+    <<-HTML
+      <script>drawLineGraph("##{id}", #{metrics.to_json})</script>
+    HTML
+  end
+
+  def metrics
+    connection.recent_metrics(100).map(&:run_time)
   end
 
   def resources
