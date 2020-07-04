@@ -82,6 +82,8 @@ GEM
       sexp_processor
     concurrent-ruby (1.1.6)
     crass (1.0.6)
+    d3-rails (5.9.2)
+      railties (>= 3.1)
     daemons (1.3.1)
     delayed_job (4.1.8)
       activesupport (>= 3.0, < 6.1)
@@ -324,6 +326,7 @@ DEPENDENCIES
   bootsnap (>= 1.4.2)
   brakeman
   byebug
+  d3-rails
   daemons
   delayed_job
   delayed_job_active_record
