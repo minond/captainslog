@@ -7,6 +7,9 @@ AllCops:
     - db/schema.rb
     - vendor/bundle/**/*
 
+Naming/MethodParameterName:
+  Enabled: false
+
 Layout/EmptyLinesAroundAttributeAccessor:
   Enabled: false
 
@@ -86,7 +89,7 @@ Lint/MixedRegexpCaptureTypes:
   Enabled: true
 
 Style/AccessorGrouping:
-  Enabled: true
+  Enabled: false
 
 Style/ArrayCoercion:
   Enabled: true
