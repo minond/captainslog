@@ -341,6 +341,7 @@ DEPENDENCIES
   jquery-rails
   lastfm
   listen (>= 3.0.5, < 3.2)
+  oauth2
   opentracing
   opentracing-instrumented
   opentracing-tracers!
