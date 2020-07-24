@@ -1,8 +1,35 @@
+require:
+  - rubocop-performance
+
 AllCops:
   Exclude:
     - bin/*
     - db/schema.rb
     - vendor/bundle/**/*
+
+Layout/EmptyLinesAroundAttributeAccessor:
+  Enabled: false
+
+Lint/DeprecatedOpenSSLConstant:
+  Enabled: true
+
+Style/SlicingWithRange:
+  Enabled: false
+
+Layout/SpaceAroundMethodCallOperator:
+  Enabled: true
+
+Lint/RaiseException:
+  Enabled: true
+
+Lint/StructNewOverride:
+  Enabled: true
+
+Style/StringLiteralsInInterpolation:
+  Enabled: false
+
+Style/ExponentialNotation:
+  Enabled: true
 
 Style/HashSyntax:
   EnforcedStyle: hash_rockets
@@ -43,10 +70,14 @@ Layout/LineLength:
 Naming/MethodParameterName:
   Enabled: false
 
+Metrics/MethodLength:
+  Exclude:
+    - db/migrate/*
+
 Metrics/ClassLength:
   Enabled: false
 
 Metrics/BlockLength:
+  Enabled: false
   Exclude:
-    - spec/**/*
-    - config/*
+    - spec/*

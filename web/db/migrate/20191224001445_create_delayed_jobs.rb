@@ -2,7 +2,6 @@
 # see https://github.com/collectiveidea/delayed_job#installation for more
 # details.
 class CreateDelayedJobs < ActiveRecord::Migration[6.0]
-  # rubocop:disable Metrics/MethodLength Style/SymbolArray Style/HashSyntax
   # rubocop:disable Style/SymbolArray
   # rubocop:disable Style/HashSyntax
   def self.up
@@ -21,7 +20,7 @@ class CreateDelayedJobs < ActiveRecord::Migration[6.0]
 
     add_index :delayed_jobs, [:priority, :run_at], name: "delayed_jobs_priority"
   end
-  # rubocop:enable Metrics/MethodLength Style/SymbolArray Style/HashSyntax
+
   # rubocop:enable Style/SymbolArray
   # rubocop:enable Style/HashSyntax
 
