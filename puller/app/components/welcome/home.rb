@@ -33,7 +33,7 @@ class Welcome::Home < ViewComponent
 
   def separator
     <<-HTML
-      <div class="pt5"></div>
+      <div class="pt4 pt5-ns"></div>
     HTML
   end
 
