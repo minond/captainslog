@@ -1,4 +1,4 @@
-class LoginForm < ViewComponent
+class SignInForm < ViewComponent
   props :user => User,
         :devise_mapping => [NilClass, Devise::Mapping]
 
