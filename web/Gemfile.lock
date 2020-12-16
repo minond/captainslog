@@ -4,6 +4,12 @@ GIT
   specs:
     opentracing-tracers (0.1.0)
 
+GIT
+  remote: https://github.com/minond/ruby-view_component.git
+  revision: 022413cc9af248f88ce4529820871f1467887103
+  specs:
+    view_component (0.1.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -348,6 +354,7 @@ DEPENDENCIES
   thrift (= 0.11.0.0)
   turbolinks (~> 5)
   tzinfo-data
+  view_component!
   web-console (>= 3.3.0)
   webdrivers
   yard

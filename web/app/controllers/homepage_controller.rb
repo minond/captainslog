@@ -22,6 +22,6 @@ private
   end
 
   def public_landing_page
-    render "homepage/welcome"
+    render "devise/sessions/new"
   end
 end
