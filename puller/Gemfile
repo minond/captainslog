@@ -38,8 +38,8 @@ group :development do
   gem "listen", ">= 3.0.5", "< 3.2"
   gem "rails_best_practices"                  # A code metric tool for Rails projects
   gem "reek"                                  # Code smell detector for Ruby
-  gem "rubocop", :require => false            # Static code analyzer and code formatter
-  gem "rubocop-performance", :require => false
+  gem "rubocop", "0.88.0", :require => false  # Static code analyzer and code formatter
+  gem "rubocop-performance", "1.7.1", :require => false
   gem "sandi_meter"                           # Static analysis tool for checking Ruby code for Sandi Metz' rules.
   gem "spring"                                # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem "spring-watcher-listen", "~> 2.0.0"
