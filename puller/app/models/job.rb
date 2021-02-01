@@ -7,6 +7,7 @@ class Job < ApplicationRecord
 
   belongs_to :user
   belongs_to :connection
+  has_many :job_metrics, :dependent => :destroy
 
   validates :connection, :status, :kind, :user, :presence => true
 
