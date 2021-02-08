@@ -51,7 +51,7 @@ private
   # @return <Tuple<String, String>>
   def homepage_book_options
     books.map do |book|
-      [book.name, Rails.application.routes.url_helpers.book_path(book)]
+      [book.name, Rails.application.routes.url_helpers.book_path(book.slug)]
     end
   end
 
