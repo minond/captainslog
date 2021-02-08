@@ -23,7 +23,7 @@ class SignInForm < ViewComponent
   end
 
   def form
-    Form.render(:resource => user, :url => user_session_path) do |f|
+    Form.render(:resource => user, :url => new_user_session_path) do |f|
       [
         fields(f),
         remember_me(f),
@@ -56,6 +56,8 @@ class SignInForm < ViewComponent
     <<-HTML
       <div class="lh-copy mt4">
         #{f.submit t(:sign_in), :class => "f6 link bn pa0 input-reset pointer blue bg-white"}
+        <span class="f6">#{t(:or)}</span>
+        #{link_to t(:sign_up).downcase, new_user_registration_path, :class => "link blue f6 link"}
       </div>
     HTML
   end
