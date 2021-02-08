@@ -3,7 +3,7 @@ class Welcome::Home < ViewComponent
         :jobs => [Job]
 
   def render
-    ::ViewContainer.render do
+    ViewContainer.render do
       if connections.empty?
         zero_state
       else
