@@ -103,6 +103,7 @@ en:
   email: "Email"
   password: "Password"
   remember_me: "Remember me"
+  password_confirmation: "Password confirmation"
   timezone: "Timezone"
 
   processed_data: "Processed data"
