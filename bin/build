@@ -3,7 +3,7 @@
 build() {
   local tag="$1"
   local file="${2:-Dockerfile}"
-  echo -n "build $tag ... "
+  echo -n "building $tag ... "
   start=`date +%s`
   docker build -t "$tag" -f "$file" . &> /dev/null
   end=`date +%s`
