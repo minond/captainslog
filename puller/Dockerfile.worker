@@ -2,4 +2,4 @@ FROM minond/captainslog-puller-base
 
 CMD ["bundle", "exec", "rake", "jobs:work"]
 
-COPY . .
+COPY puller .

@@ -10,6 +10,8 @@ RUN apt-get update \
       && gem install bundler --version 2.1.0 \
       && mkdir -p log tmp public/assets
 
-COPY Gemfile .
-COPY Gemfile.lock .
+COPY puller/Gemfile .
+COPY puller/Gemfile.lock .
 RUN bundle install
+
+COPY shared ../shared

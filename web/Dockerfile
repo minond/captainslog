@@ -10,10 +10,12 @@ RUN apt-get update \
       && gem install bundler --version 2.1.0 \
       && mkdir -p log tmp public/assets
 
-COPY package.json .
-COPY package-lock.json .
+COPY web/package.json .
+COPY web/package-lock.json .
 RUN npm install
 
-COPY Gemfile .
-COPY Gemfile.lock .
+COPY web/Gemfile .
+COPY web/Gemfile.lock .
 RUN bundle install
+
+COPY shared ../shared

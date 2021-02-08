@@ -7,9 +7,9 @@ EXPOSE 3000
 
 CMD ["bundle", "exec", "./bin/rails", "server", "-b", "0.0.0.0"]
 
-COPY app/client/ app/client/
-COPY tsconfig.json .
+COPY web/app/client/ app/client/
+COPY web/tsconfig.json .
 RUN npm run build
 
-COPY . .
+COPY web .
 RUN bundle exec rake assets:precompile
