@@ -2,7 +2,7 @@ class Job::Show < ViewComponent
   props :job => Job
 
   def render
-    ViewContainer.render [details, javascript]
+    ::ViewContainer.render [details, javascript]
   end
 
   def details

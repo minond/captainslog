@@ -11,7 +11,7 @@ class Vertex::Edit < ViewComponent
   delegate :target?, :to => :connection
 
   def render
-    ViewContainer.render [header, existing_edges, form]
+    ::ViewContainer.render [header, existing_edges, form]
   end
 
   def header
