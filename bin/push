@@ -1,19 +1,18 @@
 #!/bin/bash
 
-images=(minond/captainslog-puller-web
-        minond/captainslog-puller-worker
-        minond/captainslog-web
-        minond/captainslog-worker
-        minond/captainslog-processor
-        minond/captainslog-querier)
-
-for image in ${images[@]}; do
-  echo "pushing $image ..."
-done
-
-for image in ${images[@]}; do
+push() {
+  local image="$1"
+  echo -n "pushing $image ... "
+  start=`date +%s`
   docker push "$image:latest" &> /dev/null &
-done
+  end=`date +%s`
+  runtime=$((end-start))
+  echo "done in ${runtime}s"
+}
 
-wait
-echo "done pushing ${#images[@]} images"
+push minond/captainslog-puller-web
+push minond/captainslog-puller-worker
+push minond/captainslog-web
+push minond/captainslog-worker
+push minond/captainslog-processor
+push minond/captainslog-querier

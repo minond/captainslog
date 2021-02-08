@@ -4,17 +4,18 @@ build() {
   local tag="$1"
   local file="${2:-Dockerfile}"
   echo -n "build $tag ... "
+  start=`date +%s`
   docker build -t "$tag" -f "$file" . &> /dev/null
-  echo done
+  end=`date +%s`
+  runtime=$((end-start))
+  echo "done in ${runtime}s"
 }
 
 build minond/captainslog-puller-base puller/Dockerfile
 build minond/captainslog-puller-web puller/Dockerfile.web
 build minond/captainslog-puller-worker puller/Dockerfile.worker
-
 build minond/captainslog-web-base web/Dockerfile
 build minond/captainslog-web web/Dockerfile.web
 build minond/captainslog-worker web/Dockerfile.worker
-
 (cd processor; build minond/captainslog-processor)
 (cd querier;   build minond/captainslog-querier)
