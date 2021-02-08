@@ -5,9 +5,9 @@ import (
 	"flag"
 	"os"
 
-	"github.com/minond/captainslog/internal"
 	"github.com/minond/captainslog/querier/repl"
 	"github.com/minond/captainslog/querier/repository"
+	internal "github.com/minond/captainslog/shared/service"
 
 	_ "github.com/lib/pq"
 )

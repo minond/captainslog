@@ -10,7 +10,8 @@ import (
 	"testing"
 
 	"github.com/DATA-DOG/go-txdb"
-	"github.com/minond/captainslog/internal"
+
+	internal "github.com/minond/captainslog/shared/service"
 
 	"github.com/DATA-DOG/go-sqlmock"
 )

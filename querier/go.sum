@@ -22,8 +22,13 @@ github.com/mattn/go-isatty v0.0.8 h1:HLtExJ+uU2HOZ+wI0Tt5DtUDrx8yhUqDcp7fYERX4CE
 github.com/mattn/go-isatty v0.0.8/go.mod h1:Iq45c/XA43vh69/j3iqttzPXn0bhXyGjM0Hdxcsrc5s=
 github.com/mattn/go-runewidth v0.0.7 h1:Ei8KR0497xHyKJPAv59M1dkC+rOZCMBJ+t3fZ+twI54=
 github.com/mattn/go-runewidth v0.0.7/go.mod h1:H031xJmbD/WCDINGzjvQ9THkh0rPKHF+m2gUSrubnMI=
+github.com/minond/captainslog v0.0.0-20210208033828-b63a19216eb1 h1:rSpdSNqcFqx0YfXLr+9/tkTEQZX/cU6pfym0kcfvmKw=
 github.com/minond/captainslog/internal v0.0.0-20200325052757-59d2092b04a5 h1:LF0dfoJd+PUPVWVzFy3dS8u9TXUNPU+LFVypKsX5p5s=
 github.com/minond/captainslog/internal v0.0.0-20200325052757-59d2092b04a5/go.mod h1:9ungS2IrzqiKW/GEO4Wm7s5z0tz08IC9jaIePSzMOV0=
+github.com/minond/captainslog/shared/internal v0.0.0-20210208033152-efacbca824d8 h1:lkaDipgXS7hzkwnc23KGpFSkUFln8EyJVLGwjloXf8M=
+github.com/minond/captainslog/shared/internal v0.0.0-20210208033152-efacbca824d8/go.mod h1:auP16j7xcVZDklXJRfuBz5klyssRcf5oRNyJx5CATq4=
+github.com/minond/captainslog/shared/service v0.0.0-20210208033828-b63a19216eb1 h1:6TYylA2RQSNPG3nDBeOp9/AQN914yh40004khFbahEA=
+github.com/minond/captainslog/shared/service v0.0.0-20210208033828-b63a19216eb1/go.mod h1:+224f9tQ/D0DHoAeF/wnVLlRZH4oWJkzLsVBSIyOInA=
 github.com/olekukonko/tablewriter v0.0.4 h1:vHD/YYe1Wolo78koG299f7V/VAS08c6IpCLn+Ejf/w8=
 github.com/olekukonko/tablewriter v0.0.4/go.mod h1:zq6QwlOf5SlnkVbMSr5EoBv3636FWnp+qbPhuoO21uA=
 github.com/opentracing/opentracing-go v1.1.0 h1:pWlfV3Bxv7k65HYwkikxat0+s3pV4bsqf19k25Ur8rU=

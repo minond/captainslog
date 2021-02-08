@@ -13,8 +13,11 @@ github.com/golang/protobuf v1.3.1/go.mod h1:6lQm79b+lXiMfvg/cZm0SGofjICqVBUtrP5y
 github.com/lib/pq v1.0.0/go.mod h1:5WUZQaWbwv1U+lTReE5YruASi9Al49XbQIvNi/34Woo=
 github.com/lib/pq v1.3.0 h1:/qkRGz8zljWiDcFvgpwUpwIAPu3r07TDvs3Rws+o/pU=
 github.com/lib/pq v1.3.0/go.mod h1:5WUZQaWbwv1U+lTReE5YruASi9Al49XbQIvNi/34Woo=
+github.com/minond/captainslog v0.0.0-20210208033828-b63a19216eb1 h1:rSpdSNqcFqx0YfXLr+9/tkTEQZX/cU6pfym0kcfvmKw=
 github.com/minond/captainslog/internal v0.0.0-20200325052757-59d2092b04a5 h1:LF0dfoJd+PUPVWVzFy3dS8u9TXUNPU+LFVypKsX5p5s=
 github.com/minond/captainslog/internal v0.0.0-20200325052757-59d2092b04a5/go.mod h1:9ungS2IrzqiKW/GEO4Wm7s5z0tz08IC9jaIePSzMOV0=
+github.com/minond/captainslog/shared/service v0.0.0-20210208033828-b63a19216eb1 h1:6TYylA2RQSNPG3nDBeOp9/AQN914yh40004khFbahEA=
+github.com/minond/captainslog/shared/service v0.0.0-20210208033828-b63a19216eb1/go.mod h1:+224f9tQ/D0DHoAeF/wnVLlRZH4oWJkzLsVBSIyOInA=
 github.com/opentracing/opentracing-go v1.1.0 h1:pWlfV3Bxv7k65HYwkikxat0+s3pV4bsqf19k25Ur8rU=
 github.com/opentracing/opentracing-go v1.1.0/go.mod h1:UkNAQd3GIcIGf0SeVgPpRdFStlNbqXla1AfSYxPUl2o=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=

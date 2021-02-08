@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"os"
 
-	"github.com/minond/captainslog/internal"
+	internal "github.com/minond/captainslog/shared/service"
 )
 
 func main() {

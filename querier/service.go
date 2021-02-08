@@ -4,10 +4,10 @@ import (
 	"context"
 	"errors"
 
-	"github.com/minond/captainslog/internal"
 	"github.com/minond/captainslog/querier/repository"
 	"github.com/minond/captainslog/querier/sqlparse"
 	"github.com/minond/captainslog/querier/sqlrewrite"
+	internal "github.com/minond/captainslog/shared/service"
 )
 
 var (

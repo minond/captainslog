@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	"github.com/minond/captainslog/internal"
+	internal "github.com/minond/captainslog/shared/service"
 )
 
 var (
