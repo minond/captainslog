@@ -1,0 +1,9 @@
+#!/bin/bash
+
+docker build -t minond/captainslog-puller-base -f puller/Dockerfile .
+docker build -t minond/captainslog-puller-web -f puller/Dockerfile.web .
+docker build -t minond/captainslog-puller-worker -f puller/Dockerfile.worker .
+
+docker build -t minond/captainslog-web-base -f web/Dockerfile .
+docker build -t minond/captainslog-web -f web/Dockerfile.web .
+docker build -t minond/captainslog-worker -f web/Dockerfile.worker .

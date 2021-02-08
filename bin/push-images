@@ -1,0 +1,7 @@
+#!/bin/bash
+
+docker push minond/captainslog-puller-web:latest
+docker push minond/captainslog-puller-worker:latest
+
+docker push minond/captainslog-web:latest
+docker push minond/captainslog-worker:latest
