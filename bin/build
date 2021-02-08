@@ -7,3 +7,6 @@ docker build -t minond/captainslog-puller-worker -f puller/Dockerfile.worker .
 docker build -t minond/captainslog-web-base -f web/Dockerfile .
 docker build -t minond/captainslog-web -f web/Dockerfile.web .
 docker build -t minond/captainslog-worker -f web/Dockerfile.worker .
+
+(cd processor; docker build -t minond/captainslog-processor -f Dockerfile .)
+(cd querier; docker build -t minond/captainslog-querier -f Dockerfile .)

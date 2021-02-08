@@ -5,3 +5,6 @@ docker push minond/captainslog-puller-worker:latest
 
 docker push minond/captainslog-web:latest
 docker push minond/captainslog-worker:latest
+
+docker push minond/captainslog-processor:latest
+docker push minond/captainslog-querier:latest
