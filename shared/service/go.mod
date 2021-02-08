@@ -1,4 +1,4 @@
-module github.com/minond/captainslog/shared/internal
+module github.com/minond/captainslog/shared/service
 
 go 1.13
 
