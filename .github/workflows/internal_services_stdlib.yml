@@ -3,7 +3,7 @@ name: Internal Services Standard Library
 on:
   push:
     paths:
-      - internal/**
+      - shared/service/**
       - .github/workflows/internal_services_stdlib.yml
 
 jobs:
@@ -19,9 +19,9 @@ jobs:
       id: go
 
     - name: Run build
-      working-directory: ./internal
+      working-directory: ./shared/service
       run: go build ./...
 
     - name: Run tests
-      working-directory: ./internal
+      working-directory: ./shared/service
       run: go test ./... -v
