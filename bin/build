@@ -1,12 +1,20 @@
 #!/bin/bash
 
-docker build -t minond/captainslog-puller-base -f puller/Dockerfile .
-docker build -t minond/captainslog-puller-web -f puller/Dockerfile.web .
-docker build -t minond/captainslog-puller-worker -f puller/Dockerfile.worker .
+build() {
+  local tag="$1"
+  local file="${2:-Dockerfile}"
+  echo -n "build $tag ... "
+  docker build -t "$tag" -f "$file" . &> /dev/null
+  echo done
+}
 
-docker build -t minond/captainslog-web-base -f web/Dockerfile .
-docker build -t minond/captainslog-web -f web/Dockerfile.web .
-docker build -t minond/captainslog-worker -f web/Dockerfile.worker .
+build minond/captainslog-puller-base puller/Dockerfile
+build minond/captainslog-puller-web puller/Dockerfile.web
+build minond/captainslog-puller-worker puller/Dockerfile.worker
 
-(cd processor; docker build -t minond/captainslog-processor -f Dockerfile .)
-(cd querier; docker build -t minond/captainslog-querier -f Dockerfile .)
+build minond/captainslog-web-base web/Dockerfile
+build minond/captainslog-web web/Dockerfile.web
+build minond/captainslog-worker web/Dockerfile.worker
+
+(cd processor; build minond/captainslog-processor)
+(cd querier;   build minond/captainslog-querier)

@@ -1,10 +1,19 @@
 #!/bin/bash
 
-docker push minond/captainslog-puller-web:latest
-docker push minond/captainslog-puller-worker:latest
+images=(minond/captainslog-puller-web
+        minond/captainslog-puller-worker
+        minond/captainslog-web
+        minond/captainslog-worker
+        minond/captainslog-processor
+        minond/captainslog-querier)
 
-docker push minond/captainslog-web:latest
-docker push minond/captainslog-worker:latest
+for image in ${images[@]}; do
+  echo "pushing $image ..."
+done
 
-docker push minond/captainslog-processor:latest
-docker push minond/captainslog-querier:latest
+for image in ${images[@]}; do
+  docker push "$image:latest" &> /dev/null &
+done
+
+wait
+echo "done pushing ${#images[@]} images"
