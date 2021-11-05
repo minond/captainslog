@@ -45,17 +45,20 @@ where the external services live:
 
 === Container
 
-    # build base image with rails application and all dependencies
-    docker build -t minond/captainslog-web-base -f Dockerfile .
+    # Build base image with rails application and all dependencies. Make sure
+    # to run this from the root directory of this repository.
+    docker build -t minond/captainslog-web-base -f web/Dockerfile .
 
-    # build and run server application
-    docker build -t minond/captainslog-web -f Dockerfile.web .
+    # Build and run server application. Make sure you have a .env file with
+    # the required environment variables in the directory where you run this
+    # command.
+    docker build -t minond/captainslog-web -f web/Dockerfile.web .
     docker run -d --env-file .env --name cl-web -p 8080:3000 minond/captainslog-web
 
-    # build and run worker application
-    docker build -t minond/captainslog-worker -f Dockerfile.worker .
+    # Build and run worker application.
+    docker build -t minond/captainslog-worker -f web/Dockerfile.worker .
     docker run -d --env-file .env --name cl-worker minond/captainslog-worker
 
-    # push to container repo
+    # Push to container repo.
     docker push minond/captainslog-web:latest
     docker push minond/captainslog-worker:latest

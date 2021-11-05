@@ -27,11 +27,14 @@ variables:
 
 === Container
 
-    # build image with processor binary
+    # Build image with processor binary. Make sure to run this in this
+    # directory (<captainslogroot>/processor)
     docker build -t minond/captainslog-processor -f Dockerfile .
 
-    # run it using local configuration and binding to the correct host and container port
+    # Run it using local configuration and binding to the correct host and
+    # container port Make sure you have a .env file with the required environment
+    # variables in the directory where you run this command.
     docker run -d --env-file .env --name cl-processor -p 8081:8081 minond/captainslog-processor
 
-    # push to container repo
+    # Push to container repo.
     docker push minond/captainslog-processor:latest

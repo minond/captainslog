@@ -39,17 +39,20 @@ where the external services live:
 
 === Container
 
-    # build base image with rails application and all dependencies
-    docker build -t minond/captainslog-puller-base -f Dockerfile .
+    # Build base image with rails application and all dependencies. Make sure
+    # to run this from the root directory of this repository.
+    docker build -t minond/captainslog-puller-base -f puller/Dockerfile .
 
-    # build and run server application
-    docker build -t minond/captainslog-puller-web -f Dockerfile.web .
+    # Build and run server application. Make sure you have a .env file with
+    # the required environment variables in the directory where you run this
+    # command.
+    docker build -t minond/captainslog-puller-web -f puller/Dockerfile.web .
     docker run -d --env-file .env --name cl-puller-web -p 8080:3000 minond/captainslog-puller-web
 
-    # build and run worker application
-    docker build -t minond/captainslog-puller-worker -f Dockerfile.worker .
+    # Build and run worker application.
+    docker build -t minond/captainslog-puller-worker -f puller/Dockerfile.worker .
     docker run -d --env-file .env --name cl-puller-worker minond/captainslog-puller-worker
 
-    # push to container repo
+    # Push to container repo.
     docker push minond/captainslog-puller-web:latest
     docker push minond/captainslog-puller-worker:latest
